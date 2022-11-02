@@ -2,7 +2,7 @@
 
 ## :warning: g2-sdk-go is still in development :warning
 
-At the moment, this is "work-in-progres" with Semantic Versions of `0.n.x`.
+At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
 Although it can be reviewed and commented on,
 the recommendation is not to use it yet.
 
