@@ -58,6 +58,7 @@ Once complete, the Senzing library will be installed in the /opt/senzing directo
             --no-cache \
             --tag senzing/installer:${SENZING_VERSION_SENZINGAPI} \
             https://github.com/senzing/docker-installer.git#main
+
         ```
 
     1. Install Senzing.
@@ -76,9 +77,10 @@ Once complete, the Senzing library will be installed in the /opt/senzing directo
             --user 0 \
             --volume /opt/senzing:/opt/senzing \
             senzing/installer:${SENZING_VERSION_SENZINGAPI}
+
     ```
 
-### Create a testable stack
+### Create a stack to test against
 
 The following instructions show how to bring up a test stack to be used
 in testing the `g2-sdk-go` packages.
@@ -86,40 +88,41 @@ in testing the `g2-sdk-go` packages.
 1. Bring up Senzing stack:
 
     ```console
-    export DOCKER_COMPOSE_VAR=~/docker-compose-var
+    export DOCKER_COMPOSE_DIR=~/my-senzing-stack
     export SENZING_DOCKER_COMPOSE_YAML=postgresql/docker-compose-rabbitmq-postgresql-minimal.yaml
 
-    rm -rf ${DOCKER_COMPOSE_VAR:-/tmp/nowhere/for/safety}
-    mkdir -p ${DOCKER_COMPOSE_VAR}
+    rm -rf ${DOCKER_COMPOSE_DIR:-/tmp/nowhere/for/safety}
+    mkdir -p ${DOCKER_COMPOSE_DIR}
 
     curl -X GET \
-        --output ${DOCKER_COMPOSE_VAR}/docker-compose.yaml \
+        --output ${DOCKER_COMPOSE_DIR}/docker-compose.yaml \
         "https://raw.githubusercontent.com/Senzing/docker-compose-demo/main/resources/${SENZING_DOCKER_COMPOSE_YAML}"
 
     curl -X GET \
-        --output /tmp/docker-versions-latest.sh \
+        --output ${DOCKER_COMPOSE_DIR}/docker-versions-latest.sh \
         https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/docker-versions-latest.sh
-    source /tmp/docker-versions-latest.sh
+    source ${DOCKER_COMPOSE_DIR}/docker-versions-latest.sh
 
     export SENZING_DATA_VERSION_DIR=/opt/senzing/data
     export SENZING_ETC_DIR=/etc/opt/senzing
     export SENZING_G2_DIR=/opt/senzing/g2
     export SENZING_VAR_DIR=/var/opt/senzing
 
-    export PGADMIN_DIR=${DOCKER_COMPOSE_VAR}/pgadmin
-    export POSTGRES_DIR=${DOCKER_COMPOSE_VAR}/postgres
-    export RABBITMQ_DIR=${DOCKER_COMPOSE_VAR}/rabbitmq
+    export PGADMIN_DIR=${DOCKER_COMPOSE_DIR}/pgadmin
+    export POSTGRES_DIR=${DOCKER_COMPOSE_DIR}/postgres
+    export RABBITMQ_DIR=${DOCKER_COMPOSE_DIR}/rabbitmq
 
-    sudo mkdir -p ${PGADMIN_DIR}
-    sudo mkdir -p ${POSTGRES_DIR}
-    sudo mkdir -p ${RABBITMQ_DIR}
-    sudo chown $(id -u):$(id -g) -R ${DOCKER_COMPOSE_VAR}
-    sudo chmod -R 770 ${DOCKER_COMPOSE_VAR}
+    sudo mkdir -p ${PGADMIN_DIR} ${POSTGRES_DIR} ${RABBITMQ_DIR}
+    sudo chown $(id -u):$(id -g) -R ${DOCKER_COMPOSE_DIR}
+    sudo chmod -R 770 ${DOCKER_COMPOSE_DIR}
     sudo chmod -R 777 ${PGADMIN_DIR}
 
-    cd ${DOCKER_COMPOSE_VAR}
+    cd ${DOCKER_COMPOSE_DIR}
     sudo --preserve-env docker-compose up
+
     ```
+
+### Run test cases
 
 1. Identify git repository.
 
@@ -128,6 +131,7 @@ in testing the `g2-sdk-go` packages.
     export GIT_REPOSITORY=g2-sdk-go
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+
     ```
 
 1. Using the environment variables values just set, follow steps in
@@ -140,13 +144,15 @@ in testing the `g2-sdk-go` packages.
     ```console
     export LOCAL_IP_ADDRESS=$(curl --silent https://raw.githubusercontent.com/Senzing/knowledge-base/main/gists/find-local-ip-address/find-local-ip-address.py | python3 -)
     export SENZING_TOOLS_DATABASE_URL=postgresql://postgres:postgres@${LOCAL_IP_ADDRESS}:5432/G2
+
     ```
 
 1. Run tests.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make -e test
+    make test
+
     ```
 
 ## Error prefixes
