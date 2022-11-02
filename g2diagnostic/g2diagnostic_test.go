@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	g2diagnosticX G2diagnostic
+	g2diagnosticSingleton G2diagnostic
 )
 
 // ----------------------------------------------------------------------------
@@ -20,10 +20,10 @@ var (
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
-	if g2diagnosticX == nil {
-		g2diagnosticX = &G2diagnosticImpl{}
+	if g2diagnosticSingleton == nil {
+		g2diagnosticSingleton = &G2diagnosticImpl{}
 
-		logger := g2diagnosticX.GetLogger(ctx)
+		logger := g2diagnosticSingleton.GetLogger(ctx)
 		logger.SetLogLevel(messagelogger.LevelTrace)
 
 		moduleName := "Test module name"
@@ -33,12 +33,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2diagnosticX.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2diagnosticX
+	return g2diagnosticSingleton
 }
 
 func truncate(aString string) string {

@@ -95,8 +95,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLogger(ctx context.Context) messagelogg
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2diagnostic.Logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelTrace)
-		g2diagnostic.Logger.SetLogLevel(messagelogger.Level(logger.LevelTrace))
+		g2diagnostic.Logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.Logger
 }
@@ -123,7 +122,13 @@ func (g2diagnostic *G2diagnosticImpl) getMessageGenerator(ctx context.Context) m
 	return g2diagnostic.messageGenerator
 }
 
-func (g2diagnostic *G2diagnosticImpl) isTrace() bool { return true }
+func (g2diagnostic *G2diagnosticImpl) isTrace() bool {
+	result := false
+	if g2diagnostic.Logger != nil {
+		result = g2diagnostic.Logger.GetLogLevel() == messagelogger.Level(logger.LevelTrace)
+	}
+	return result
+}
 
 func (g2diagnostic *G2diagnosticImpl) traceEntry(ctx context.Context, errorNumber int, details ...interface{}) {
 	logger := g2diagnostic.GetLogger(ctx)
