@@ -21,7 +21,7 @@ to the Senzing functions.
 Since the Senzing library is a pre-requisite, it must be installed first.
 This can be done by installing the Senzing package using `apt`, `yum`,
 or a technique using Docker containers.
-Once complete, the Senzing library will be installed in the /opt/senzing directory.
+Once complete, the Senzing library will be installed in the `/opt/senzing` directory.
 
 - Using `apt`:
 
@@ -80,7 +80,7 @@ Once complete, the Senzing library will be installed in the /opt/senzing directo
 
     ```
 
-### Create a stack to test against
+### Create a stack used in testing
 
 The following instructions show how to bring up a test stack to be used
 in testing the `g2-sdk-go` packages.
@@ -156,6 +156,13 @@ in testing the `g2-sdk-go` packages.
     ```
 
 ## Error prefixes
+
+Errors are in the format `senzing-PPPPnnnn` where:
+
+`P` is a prefix used to identify the package.
+`n` is a location within the package.
+
+Prefixes:
 
 1. `6001` - g2config
 1. `6002` - g2configmgr
