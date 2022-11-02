@@ -69,22 +69,22 @@ Once complete, the Senzing library will be installed in the `/opt/senzing` direc
 
     1. Install Senzing.
 
-    ```console
-        curl -X GET \
-            --output /tmp/senzing-versions-latest.sh \
-            https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-latest.sh
-        source /tmp/senzing-versions-latest.sh
+        ```console
+            curl -X GET \
+                --output /tmp/senzing-versions-latest.sh \
+                https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-latest.sh
+            source /tmp/senzing-versions-latest.sh
 
-        sudo rm -rf /opt/senzing
-        sudo mkdir -p /opt/senzing
+            sudo rm -rf /opt/senzing
+            sudo mkdir -p /opt/senzing
 
-        sudo docker run \
-            --rm \
-            --user 0 \
-            --volume /opt/senzing:/opt/senzing \
-            senzing/installer:${SENZING_VERSION_SENZINGAPI}
+            sudo docker run \
+                --rm \
+                --user 0 \
+                --volume /opt/senzing:/opt/senzing \
+                senzing/installer:${SENZING_VERSION_SENZINGAPI}
 
-    ```
+        ```
 
 ### Create a stack used in testing
 
@@ -163,7 +163,7 @@ in testing the `g2-sdk-go` packages.
 
 ## Error prefixes
 
-Errors are in the format `senzing-PPPPnnnn` where:
+Error identifiers are in the format `senzing-PPPPnnnn` where:
 
 `P` is a prefix used to identify the package.
 `n` is a location within the package.
