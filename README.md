@@ -1,6 +1,6 @@
 # g2-sdk-go
 
-## :warning: WARNING: g2-sdk-go is still in development :warning
+## :warning: WARNING: g2-sdk-go is still in development :warning: _
 
 At the moment, this is "work-in-progress" with Semantic Versions of `0.n.x`.
 Although it can be reviewed and commented on,
