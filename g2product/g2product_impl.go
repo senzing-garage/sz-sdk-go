@@ -29,7 +29,7 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2productImpl struct {
-	logger messagelogger.MessageLoggerInterface
+	messageGenerator messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ func (g2product *G2productImpl) getError(ctx context.Context, errorNumber int, d
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	logger := g2product.getLogger(ctx)
-	errorMessage, err := logger.Message(errorNumber, newDetails...)
+	messageGenerator := g2product.getMessageGenerator(ctx)
+	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -72,8 +72,8 @@ func (g2product *G2productImpl) getError(ctx context.Context, errorNumber int, d
 	return errors.New(errorMessage)
 }
 
-func (g2product *G2productImpl) getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
-	if g2product.logger == nil {
+func (g2product *G2productImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if g2product.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
@@ -89,9 +89,9 @@ func (g2product *G2productImpl) getLogger(ctx context.Context) messagelogger.Mes
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2product.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2product.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
-	return g2product.logger
+	return g2product.messageGenerator
 }
 
 // ----------------------------------------------------------------------------
@@ -124,8 +124,8 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		logger := g2product.getLogger(ctx)
-		err = logger.Error(2999)
+		messageGenerator := g2product.getMessageGenerator(ctx)
+		err = messageGenerator.Error(2999)
 	}
 	return string(stringBuffer), err
 }

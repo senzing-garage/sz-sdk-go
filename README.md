@@ -11,7 +11,7 @@ the recommendation is not to use it yet.
 The Senzing g2-sdk-go packages provide a Software Development Kit that wraps the
 Senzing C SDK APIs.
 
-[![GoReportCard example](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/g2-sdk-go.svg)](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
 
 ## Overview

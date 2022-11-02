@@ -7,11 +7,12 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	g2diagnostic G2diagnostic
+	g2diagnosticX G2diagnostic
 )
 
 // ----------------------------------------------------------------------------
@@ -19,8 +20,11 @@ var (
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
-	if g2diagnostic == nil {
-		g2diagnostic = &G2diagnosticImpl{}
+	if g2diagnosticX == nil {
+		g2diagnosticX = &G2diagnosticImpl{}
+
+		logger := g2diagnosticX.GetLogger(ctx)
+		logger.SetLogLevel(messagelogger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -29,12 +33,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2diagnosticX.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2diagnostic
+	return g2diagnosticX
 }
 
 func truncate(aString string) string {

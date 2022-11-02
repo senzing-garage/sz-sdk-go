@@ -140,14 +140,22 @@ func main() {
 		logger.Log(2000, err)
 	}
 
-	// g2diagnostic.CheckDBPerf
+	// Check trace
 
-	secondsToRun := 1
-	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	actual, err := g2diagnostic.GetPhysicalCores(ctx)
 	if err != nil {
 		logger.Log(2001, err)
 	}
-	fmt.Println(actual)
+	fmt.Printf("Physical cores: %d\n", actual)
+
+	// g2diagnostic.CheckDBPerf
+
+	// secondsToRun := 1
+	// actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	// if err != nil {
+	// 	logger.Log(2001, err)
+	// }
+	// fmt.Println(actual)
 
 	// Work with G2engine.
 

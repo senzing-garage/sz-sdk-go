@@ -12,6 +12,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagelogger"
 )
 
 // ----------------------------------------------------------------------------
@@ -36,6 +37,7 @@ type G2diagnostic interface {
 	GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
 	GetLastException(ctx context.Context) (string, error)
 	GetLastExceptionCode(ctx context.Context) (int, error)
+	GetLogger(ctx context.Context) messagelogger.MessageLoggerInterface
 	GetLogicalCores(ctx context.Context) (int, error)
 	GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
 	GetPhysicalCores(ctx context.Context) (int, error)
@@ -58,26 +60,78 @@ const MessageIdTemplate = "senzing-6003%04d"
 // ----------------------------------------------------------------------------
 
 var IdMessages = map[int]string{
-	1:    "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
-	2:    "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
-	3:    "Call to G2Diagnostic_destroy() failed.  Return code: %d",
-	4:    "Call to G2Diagnostic_fetchNextEntityBySize() failed.  Return code: %d",
-	5:    "Call to G2Diagnostic_findEntitiesByFeatureIDs(%s) failed. Return code: %d",
-	6:    "Call to G2Diagnostic_getDataSourceCounts() failed. Return code: %d",
-	7:    "Call to G2Diagnostic_getDBInfo() failed. Return code: %d",
-	8:    "Call to G2Diagnostic_getEntityDetails(%d, %d) failed. Return code: %d",
-	9:    "Call to G2Diagnostic_getEntityListBySize(%d) failed. Return code: %d",
-	10:   "Call to G2Diagnostic_getEntityResume(%d) failed. Return code: %d",
-	11:   "Call to G2Diagnostic_getEntitySizeBreakdown(%d, %d) failed. Return code: %d",
-	12:   "Call to G2Diagnostic_getFeature(%d) failed. Return code: %d",
-	13:   "Call to G2Diagnostic_getGenericFeatures(%s, %d) failed. Return code: %d",
-	14:   "Call to G2Diagnostic_getMappingStatistics(%d) failed. Return code: %d",
-	15:   "Call to G2Diagnostic_getRelationshipDetails(%d, %d) failed. Return code: %d",
-	16:   "Call to G2Diagnostic_getResolutionStatistics() failed. Return code: %d",
-	17:   "Call to G2Diagnostic_init(%s, %s, %d) failed. Return code: %d",
-	18:   "Call to G2Diagnostic_initWithConfigID(%s, %s, %d, %d) failed. Return code: %d",
-	19:   "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
+	2001: "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
+	2002: "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
+	2003: "Call to G2Diagnostic_destroy() failed.  Return code: %d",
+	2004: "Call to G2Diagnostic_fetchNextEntityBySize() failed.  Return code: %d",
+	2005: "Call to G2Diagnostic_findEntitiesByFeatureIDs(%s) failed. Return code: %d",
+	2006: "Call to G2Diagnostic_getDataSourceCounts() failed. Return code: %d",
+	2007: "Call to G2Diagnostic_getDBInfo() failed. Return code: %d",
+	2008: "Call to G2Diagnostic_getEntityDetails(%d, %d) failed. Return code: %d",
+	2009: "Call to G2Diagnostic_getEntityListBySize(%d) failed. Return code: %d",
+	2010: "Call to G2Diagnostic_getEntityResume(%d) failed. Return code: %d",
+	2011: "Call to G2Diagnostic_getEntitySizeBreakdown(%d, %d) failed. Return code: %d",
+	2012: "Call to G2Diagnostic_getFeature(%d) failed. Return code: %d",
+	2013: "Call to G2Diagnostic_getGenericFeatures(%s, %d) failed. Return code: %d",
+	2014: "Call to G2Diagnostic_getMappingStatistics(%d) failed. Return code: %d",
+	2015: "Call to G2Diagnostic_getRelationshipDetails(%d, %d) failed. Return code: %d",
+	2016: "Call to G2Diagnostic_getResolutionStatistics() failed. Return code: %d",
+	2017: "Call to G2Diagnostic_init(%s, %s, %d) failed. Return code: %d",
+	2018: "Call to G2Diagnostic_initWithConfigID(%s, %s, %d, %d) failed. Return code: %d",
+	2019: "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
 	2999: "Cannot retrieve last error message.",
+	4001: "Enter CheckDBPerf(%d)",
+	4002: "Exit  CheckDBPerf(%d)",
+	4003: "Enter ClearLastException()",
+	4004: "Exit  ClearLastException()",
+	4005: "Enter CloseEntityListBySize()",
+	4006: "Exit  CloseEntityListBySize()",
+	4007: "Enter Destroy()",
+	4008: "Exit  Destroy()",
+	4009: "Enter FetchNextEntityBySize()",
+	4010: "Exit  FetchNextEntityBySize()",
+	4011: "Enter FindEntitiesByFeatureIDs(%s)",
+	4012: "Exit  FindEntitiesByFeatureIDs(%s)",
+	4013: "Enter GetAvailableMemory()",
+	4014: "Exit  GetAvailableMemory()",
+	4015: "Enter GetDataSourceCounts()",
+	4016: "Exit  GetDataSourceCounts()",
+	4017: "Enter GetDBInfo()",
+	4018: "Exit  GetDBInfo()",
+	4019: "Enter GetEntityDetails(%d, %d)",
+	4020: "Exit  GetEntityDetails(%d, %d)",
+	4021: "Enter GetEntityListBySize(%d)",
+	4022: "Exit  GetEntityListBySize(%d)",
+	4023: "Enter GetEntityResume(%d)",
+	4024: "Exit  GetEntityResume(%d)",
+	4025: "Enter GetEntitySizeBreakdown(%d, %d)",
+	4026: "Exit  GetEntitySizeBreakdown(%d, %d)",
+	4027: "Enter GetFeature(%d)",
+	4028: "Exit  GetFeature(%d)",
+	4029: "Enter GetGenericFeatures(%s, %d)",
+	4030: "Exit  GetGenericFeatures(%s, %d)",
+	4031: "Enter GetLastException()",
+	4032: "Exit  GetLastException()",
+	4033: "Enter GetLastExceptionCode()",
+	4034: "Exit  GetLastExceptionCode()",
+	4035: "Enter GetLogicalCores()",
+	4036: "Exit  GetLogicalCores()",
+	4037: "Enter GetMappingStatistics(%d)",
+	4038: "Exit  GetMappingStatistics(%d)",
+	4039: "Enter GetPhysicalCores()",
+	4040: "Exit  GetPhysicalCores()",
+	4041: "Enter GetRelationshipDetails(%d, %d)",
+	4042: "Exit  GetRelationshipDetails(%d, %d)",
+	4043: "Enter GetResolutionStatistics()",
+	4044: "Exit  GetResolutionStatistics()",
+	4045: "Enter GetTotalSystemMemory()",
+	4046: "Exit  GetTotalSystemMemory()",
+	4047: "Enter Init(%s, %s, %d)",
+	4048: "Exit  Init(%s, %s, %d)",
+	4049: "Enter InitWithConfigID(%s, %s, %d, %d)",
+	4050: "Exit  InitWithConfigID(%s, %s, %d, %d)",
+	4051: "Enter Reinit(%d) failed",
+	4052: "Exit  Reinit(%d) failed",
 }
 
 var IdRanges = map[int]string{
@@ -88,6 +142,16 @@ var IdRanges = map[int]string{
 	4000: logger.LevelTraceName,
 	5000: logger.LevelFatalName,
 	6000: logger.LevelPanicName,
+}
+
+var IdRangesLogLevel = map[int]logger.Level{
+	0000: logger.LevelInfo,
+	1000: logger.LevelWarn,
+	2000: logger.LevelError,
+	3000: logger.LevelDebug,
+	4000: logger.LevelTrace,
+	5000: logger.LevelFatal,
+	6000: logger.LevelPanic,
 }
 
 var IdStatuses = map[int]string{

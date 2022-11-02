@@ -29,7 +29,7 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2configmgrImpl struct {
-	logger messagelogger.MessageLoggerInterface
+	messageGenerator messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ func (g2configmgr *G2configmgrImpl) getError(ctx context.Context, errorNumber in
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	logger := g2configmgr.getLogger(ctx)
-	errorMessage, err := logger.Message(errorNumber, newDetails...)
+	messageGenerator := g2configmgr.getMessageGenerator(ctx)
+	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -72,8 +72,8 @@ func (g2configmgr *G2configmgrImpl) getError(ctx context.Context, errorNumber in
 	return errors.New(errorMessage)
 }
 
-func (g2configmgr *G2configmgrImpl) getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
-	if g2configmgr.logger == nil {
+func (g2configmgr *G2configmgrImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if g2configmgr.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
@@ -89,9 +89,9 @@ func (g2configmgr *G2configmgrImpl) getLogger(ctx context.Context) messagelogger
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2configmgr.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2configmgr.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
-	return g2configmgr.logger
+	return g2configmgr.messageGenerator
 }
 
 // ----------------------------------------------------------------------------
@@ -168,8 +168,8 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		logger := g2configmgr.getLogger(ctx)
-		err = logger.Error(2999)
+		messageGenerator := g2configmgr.getMessageGenerator(ctx)
+		err = messageGenerator.Error(2999)
 	}
 	return string(stringBuffer), err
 }

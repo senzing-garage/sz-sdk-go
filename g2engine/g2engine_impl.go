@@ -29,7 +29,7 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2engineImpl struct {
-	logger messagelogger.MessageLoggerInterface
+	messageGenerator messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -63,8 +63,8 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	logger := g2engine.getLogger(ctx)
-	errorMessage, err := logger.Message(errorNumber, newDetails...)
+	messageGenerator := g2engine.getMessageGenerator(ctx)
+	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -72,8 +72,8 @@ func (g2engine *G2engineImpl) getError(ctx context.Context, errorNumber int, det
 	return errors.New(errorMessage)
 }
 
-func (g2engine *G2engineImpl) getLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
-	if g2engine.logger == nil {
+func (g2engine *G2engineImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+	if g2engine.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
@@ -89,9 +89,9 @@ func (g2engine *G2engineImpl) getLogger(ctx context.Context) messagelogger.Messa
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2engine.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2engine.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
-	return g2engine.logger
+	return g2engine.messageGenerator
 }
 
 // ----------------------------------------------------------------------------
@@ -658,8 +658,8 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		logger := g2engine.getLogger(ctx)
-		err = logger.Error(2999)
+		messageGenerator := g2engine.getMessageGenerator(ctx)
+		err = messageGenerator.Error(2999)
 	}
 	return string(stringBuffer), err
 }
