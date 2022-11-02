@@ -47,7 +47,6 @@ var buildIteration string = "0"
 // ----------------------------------------------------------------------------
 
 func getG2diagnostic(ctx context.Context) (g2diagnostic.G2diagnostic, error) {
-	var err error = nil
 	g2diagnostic := g2diagnostic.G2diagnosticImpl{}
 
 	moduleName := "Test module name"
@@ -62,7 +61,6 @@ func getG2diagnostic(ctx context.Context) (g2diagnostic.G2diagnostic, error) {
 }
 
 func getG2engine(ctx context.Context) (g2engine.G2engine, error) {
-	var err error = nil
 	g2engine := g2engine.G2engineImpl{}
 
 	moduleName := "Test module name"
