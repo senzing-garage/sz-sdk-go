@@ -24,10 +24,11 @@ to the Senzing functions.
 
 ### Install Senzing library
 
-Since the Senzing library is a pre-requisite, it must be installed first.
+Since the Senzing library is a prerequisite, it must be installed first.
 This can be done by installing the Senzing package using `apt`, `yum`,
 or a technique using Docker containers.
 Once complete, the Senzing library will be installed in the `/opt/senzing` directory.
+This is important as the compiling of the code expects Senzing to be in `/opt/senzing`.
 
 - Using `apt`:
 
