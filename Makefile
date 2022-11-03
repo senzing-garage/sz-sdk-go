@@ -57,8 +57,8 @@ dependencies:
 test:
 #	@go test -v ./...
 #	@go test -v ./.
-	@go test -v ./g2config
-#	@go test -v ./g2configmgr
+#	@go test -v ./g2config
+	@go test -v ./g2configmgr
 #	@go test -v ./g2diagnostic
 #	@go test -v ./g2engine
 #	@go test -v ./g2product

@@ -10,12 +10,13 @@ import (
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
 var (
-	g2configmgr G2configmgr
-	g2configX   g2config.G2config
+	g2configmgrSingleton G2configmgr
+	g2configSingleton    g2config.G2config
 )
 
 // ----------------------------------------------------------------------------
@@ -24,8 +25,10 @@ var (
 
 func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 
-	if g2configmgr == nil {
-		g2configmgr = &G2configmgrImpl{}
+	if g2configmgrSingleton == nil {
+		g2configmgrSingleton = &G2configmgrImpl{}
+
+		g2configmgrSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -34,18 +37,18 @@ func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2configmgrSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2configmgr
+	return g2configmgrSingleton
 }
 
 func getG2Config(ctx context.Context, test *testing.T) g2config.G2config {
 
-	if g2configX == nil {
-		g2configX = &g2config.G2configImpl{}
+	if g2configSingleton == nil {
+		g2configSingleton = &g2config.G2configImpl{}
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -54,12 +57,12 @@ func getG2Config(ctx context.Context, test *testing.T) g2config.G2config {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2configX.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2configX
+	return g2configSingleton
 }
 
 func truncate(aString string) string {
