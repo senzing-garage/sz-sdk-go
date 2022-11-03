@@ -71,7 +71,7 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2diagnostic.getMessageGenerator(ctx)
+	messageGenerator := g2diagnostic.getMessageGenerator()
 	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -80,7 +80,7 @@ func (g2diagnostic *G2diagnosticImpl) getError(ctx context.Context, errorNumber 
 	return errors.New(errorMessage)
 }
 
-func (g2diagnostic *G2diagnosticImpl) GetLogger(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.Logger == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -100,7 +100,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLogger(ctx context.Context) messagelogg
 	return g2diagnostic.Logger
 }
 
-func (g2diagnostic *G2diagnosticImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2diagnostic *G2diagnosticImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -123,21 +123,15 @@ func (g2diagnostic *G2diagnosticImpl) getMessageGenerator(ctx context.Context) m
 }
 
 func (g2diagnostic *G2diagnosticImpl) isTrace() bool {
-	result := false
-	if g2diagnostic.Logger != nil {
-		result = g2diagnostic.Logger.GetLogLevel() == messagelogger.Level(logger.LevelTrace)
-	}
-	return result
+	return g2diagnostic.getLogger().GetLogLevel() == messagelogger.LevelTrace
 }
 
-func (g2diagnostic *G2diagnosticImpl) traceEntry(ctx context.Context, errorNumber int, details ...interface{}) {
-	logger := g2diagnostic.GetLogger(ctx)
-	logger.Log(errorNumber, details...)
+func (g2diagnostic *G2diagnosticImpl) traceEntry(errorNumber int, details ...interface{}) {
+	g2diagnostic.getLogger().Log(errorNumber, details...)
 }
 
-func (g2diagnostic *G2diagnosticImpl) traceExit(ctx context.Context, errorNumber int, details ...interface{}) {
-	logger := g2diagnostic.GetLogger(ctx)
-	logger.Log(errorNumber, details...)
+func (g2diagnostic *G2diagnosticImpl) traceExit(errorNumber int, details ...interface{}) {
+	g2diagnostic.getLogger().Log(errorNumber, details...)
 }
 
 // ----------------------------------------------------------------------------
@@ -148,8 +142,7 @@ func (g2diagnostic *G2diagnosticImpl) traceExit(ctx context.Context, errorNumber
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
 	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4001, secondsToRun)
-		defer g2diagnostic.traceExit(ctx, 4002, secondsToRun)
+		g2diagnostic.traceEntry(4001, secondsToRun)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_checkDBPerf_helper(C.int(secondsToRun)))
@@ -157,31 +150,38 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2001, secondsToRun, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4002, secondsToRun, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
-	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4003)
-		defer g2diagnostic.traceExit(ctx, 4004)
-	}
 	// _DLEXPORT void G2Diagnostic_clearLastException();
+	if g2diagnostic.isTrace() {
+		g2diagnostic.traceEntry(4003)
+	}
 	var err error = nil
 	C.G2Diagnostic_clearLastException()
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4004, err)
+	}
 	return err
 }
 
 func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error {
 	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4005)
-		defer g2diagnostic.traceExit(ctx, 4006)
+		g2diagnostic.traceEntry(4005)
 	}
 	var err error = nil
 	result := C.G2Diagnostic_closeEntityListBySize_helper(C.uintptr_t(entityListBySizeHandle))
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 2002, result)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4006, err)
 	}
 	return err
 }
@@ -189,13 +189,15 @@ func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context,
 func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2Diagnostic_destroy();
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4007)
-		defer g2diagnostic.traceExit(ctx, 4008)
+		g2diagnostic.traceEntry(4007)
 	}
 	var err error = nil
 	result := C.G2Diagnostic_destroy()
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 2003, result)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4008, err)
 	}
 	return err
 }
@@ -203,8 +205,7 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4009)
-		defer g2diagnostic.traceExit(ctx, 4010)
+		g2diagnostic.traceEntry(4009)
 	}
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
@@ -213,14 +214,16 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 		err = g2diagnostic.getError(ctx, 2004, result)
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4010, string(stringBuffer), err)
+	}
 	return string(stringBuffer), err
 }
 
 func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4011, features)
-		defer g2diagnostic.traceExit(ctx, 4012, features)
+		g2diagnostic.traceEntry(4011, features)
 	}
 	var err error = nil
 	featuresForC := C.CString(features)
@@ -230,6 +233,9 @@ func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Conte
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2005, features, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4012, features, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
@@ -237,25 +243,29 @@ func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Conte
 func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getAvailableMemory();
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4013)
-		defer g2diagnostic.traceExit(ctx, 4014)
+		g2diagnostic.traceEntry(4013)
 	}
 	var err error = nil
-	result := C.G2Diagnostic_getAvailableMemory()
-	return int64(result), err
+	result := int64(C.G2Diagnostic_getAvailableMemory())
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4014, result, err)
+	}
+	return result, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4015)
-		defer g2diagnostic.traceExit(ctx, 4016)
+		g2diagnostic.traceEntry(4015)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDataSourceCounts_helper())
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2006, returnCode)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4016, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -264,8 +274,7 @@ func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4017)
-		defer g2diagnostic.traceExit(ctx, 4018)
+		g2diagnostic.traceEntry(4017)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getDBInfo_helper())
@@ -273,14 +282,16 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2007, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4018, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4019, entityID, includeInternalFeatures)
-		defer g2diagnostic.traceExit(ctx, 4020, entityID, includeInternalFeatures)
+		g2diagnostic.traceEntry(4019, entityID, includeInternalFeatures)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityDetails_helper(C.longlong(entityID), C.int(includeInternalFeatures)))
@@ -288,14 +299,16 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2008, entityID, includeInternalFeatures, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4020, entityID, includeInternalFeatures, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4021, entitySize)
-		defer g2diagnostic.traceExit(ctx, 4022, entitySize)
+		g2diagnostic.traceEntry(4021, entitySize)
 	}
 	var err error = nil
 	result := C.G2Diagnostic_getEntityListBySize_helper(C.size_t(entitySize))
@@ -303,14 +316,16 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, e
 	if result == nil {
 		err = g2diagnostic.getError(ctx, 2009, entitySize, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4022, entitySize, (uintptr)(result), err)
+	}
 	return (uintptr)(result), err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4023, entityID)
-		defer g2diagnostic.traceExit(ctx, 4024, entityID)
+		g2diagnostic.traceEntry(4023, entityID)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntityResume_helper(C.longlong(entityID)))
@@ -318,14 +333,16 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entit
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2010, entityID, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4024, entityID, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4025, minimumEntitySize, includeInternalFeatures)
-		defer g2diagnostic.traceExit(ctx, 4026, minimumEntitySize, includeInternalFeatures)
+		g2diagnostic.traceEntry(4025, minimumEntitySize, includeInternalFeatures)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getEntitySizeBreakdown_helper(C.size_t(minimumEntitySize), C.int(includeInternalFeatures)))
@@ -333,14 +350,16 @@ func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2011, minimumEntitySize, includeInternalFeatures, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4026, minimumEntitySize, includeInternalFeatures, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4027, libFeatID)
-		defer g2diagnostic.traceExit(ctx, 4028, libFeatID)
+		g2diagnostic.traceEntry(4027, libFeatID)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getFeature_helper(C.longlong(libFeatID)))
@@ -348,14 +367,16 @@ func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID 
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2012, libFeatID, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4028, libFeatID, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4029, featureType, maximumEstimatedCount)
-		defer g2diagnostic.traceExit(ctx, 4030, featureType, maximumEstimatedCount)
+		g2diagnostic.traceEntry(4029, featureType, maximumEstimatedCount)
 	}
 	var err error = nil
 	featureTypeForC := C.CString(featureType)
@@ -365,23 +386,28 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2013, featureType, maximumEstimatedCount, returnCode)
 	}
-	return stringBuffer, err
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4030, featureType, maximumEstimatedCount, string(stringBuffer), err)
+	}
+	return string(stringBuffer), err
 }
 
 // GetLastException returns the last exception encountered in the Senzing Engine.
 func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getLastException(char *buffer, const size_t bufSize);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4031)
-		defer g2diagnostic.traceExit(ctx, 4032)
+		g2diagnostic.traceEntry(4031)
 	}
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		messageGenerator := g2diagnostic.getMessageGenerator(ctx)
+		messageGenerator := g2diagnostic.getMessageGenerator()
 		err = messageGenerator.Error(2999)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4032, string(stringBuffer), err)
 	}
 	return string(stringBuffer), err
 }
@@ -389,31 +415,34 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4033)
-		defer g2diagnostic.traceExit(ctx, 4034)
+		g2diagnostic.traceEntry(4033)
 	}
 	var err error = nil
-	result := C.G2Diagnostic_getLastExceptionCode()
-	return int(result), err
+	result := int(C.G2Diagnostic_getLastExceptionCode())
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4034, result, err)
+	}
+	return result, err
 }
 
 // GetLogicalCores returns the number of logical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getLogicalCores();
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4035)
-		defer g2diagnostic.traceExit(ctx, 4036)
+		g2diagnostic.traceEntry(4035)
 	}
 	var err error = nil
-	result := C.G2Diagnostic_getLogicalCores()
-	return int(result), err
+	result := int(C.G2Diagnostic_getLogicalCores())
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4036, result, err)
+	}
+	return result, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4037, includeInternalFeatures)
-		defer g2diagnostic.traceExit(ctx, 4038, includeInternalFeatures)
+		g2diagnostic.traceEntry(4037, includeInternalFeatures)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getMappingStatistics_helper(C.int(includeInternalFeatures)))
@@ -421,26 +450,31 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2014, includeInternalFeatures, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4038, includeInternalFeatures, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 // GetPhysicalCores returns the number of physical cores on the host system.
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getPhysicalCores();
+	var result int
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4039)
-		defer g2diagnostic.traceExit(ctx, 4040)
+		g2diagnostic.traceEntry(4039)
 	}
 	var err error = nil
-	result := C.G2Diagnostic_getPhysicalCores()
-	return int(result), err
+	result = int(C.G2Diagnostic_getPhysicalCores())
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4040, result, err)
+	}
+	return result, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4041, relationshipID, includeInternalFeatures)
-		defer g2diagnostic.traceExit(ctx, 4042, relationshipID, includeInternalFeatures)
+		g2diagnostic.traceEntry(4041, relationshipID, includeInternalFeatures)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getRelationshipDetails_helper(C.longlong(relationshipID), C.int(includeInternalFeatures)))
@@ -448,20 +482,25 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2015, relationshipID, includeInternalFeatures, returnCode)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4042, relationshipID, includeInternalFeatures, stringBuffer, err)
+	}
 	return stringBuffer, err
 }
 
 func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4043)
-		defer g2diagnostic.traceExit(ctx, 4044)
+		g2diagnostic.traceEntry(4043)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2Diagnostic_getResolutionStatistics_helper())
 	returnCode := 0 // FIXME:
 	if len(stringBuffer) == 0 {
 		err = g2diagnostic.getError(ctx, 2016, returnCode)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4044, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -470,20 +509,21 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getTotalSystemMemory();
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4057)
-		defer g2diagnostic.traceExit(ctx, 4046)
+		g2diagnostic.traceEntry(4057)
 	}
 	var err error = nil
-	result := C.G2Diagnostic_getTotalSystemMemory()
-	return int64(result), err
+	result := int64(C.G2Diagnostic_getTotalSystemMemory())
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4046, result, err)
+	}
+	return result, err
 }
 
 // Init initializes the Senzing G2diagnosis.
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4047, moduleName, iniParams, verboseLogging)
-		defer g2diagnostic.traceExit(ctx, 4048, moduleName, iniParams, verboseLogging)
+		g2diagnostic.traceEntry(4047, moduleName, iniParams, verboseLogging)
 	}
 	var err error = nil
 	moduleNameForC := C.CString(moduleName)
@@ -494,14 +534,16 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 2017, moduleName, iniParams, verboseLogging, result)
 	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4048, moduleName, iniParams, verboseLogging, err)
+	}
 	return err
 }
 
 func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4049, moduleName, iniParams, initConfigID, verboseLogging)
-		defer g2diagnostic.traceExit(ctx, 4050, moduleName, iniParams, initConfigID, verboseLogging)
+		g2diagnostic.traceEntry(4049, moduleName, iniParams, initConfigID, verboseLogging)
 	}
 	var err error = nil
 	moduleNameForC := C.CString(moduleName)
@@ -511,6 +553,9 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	result := C.G2Diagnostic_initWithConfigID(moduleNameForC, iniParamsForC, C.longlong(initConfigID), C.int(verboseLogging))
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 2018, moduleName, iniParams, initConfigID, verboseLogging, result)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4050, moduleName, iniParams, initConfigID, verboseLogging, err)
 	}
 	return err
 }
@@ -525,13 +570,27 @@ func (g2diagnostic *G2diagnosticImpl) Null(ctx context.Context) (int64, error) {
 func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2Diagnostic_reinit(const long long initConfigID);
 	if g2diagnostic.isTrace() {
-		g2diagnostic.traceEntry(ctx, 4051, initConfigID)
-		defer g2diagnostic.traceExit(ctx, 4052, initConfigID)
+		g2diagnostic.traceEntry(4051, initConfigID)
 	}
 	var err error = nil
 	result := C.G2Diagnostic_reinit(C.longlong(initConfigID))
 	if result != 0 {
 		err = g2diagnostic.getError(ctx, 2019, initConfigID, result)
+	}
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4052, initConfigID, err)
+	}
+	return err
+}
+
+func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	if g2diagnostic.isTrace() {
+		g2diagnostic.traceEntry(4053)
+	}
+	var err error = nil
+	g2diagnostic.getLogger().SetLogLevel(messagelogger.Level(logLevel))
+	if g2diagnostic.isTrace() {
+		defer g2diagnostic.traceExit(4054, err)
 	}
 	return err
 }

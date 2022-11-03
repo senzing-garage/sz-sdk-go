@@ -7,7 +7,7 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
-	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,8 +23,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 	if g2diagnosticSingleton == nil {
 		g2diagnosticSingleton = &G2diagnosticImpl{}
 
-		logger := g2diagnosticSingleton.GetLogger(ctx)
-		logger.SetLogLevel(messagelogger.LevelTrace)
+		g2diagnosticSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
