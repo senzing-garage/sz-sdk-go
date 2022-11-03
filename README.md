@@ -56,9 +56,9 @@ This is important as the compiling of the code expects Senzing to be in `/opt/se
 
         ```console
         curl -X GET \
-            --output /tmp/senzing-versions-latest.sh \
-            https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-latest.sh
-        source /tmp/senzing-versions-latest.sh
+            --output /tmp/senzing-versions-stable.sh \
+            https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-stable.sh
+        source /tmp/senzing-versions-stable.sh
 
         sudo docker build \
             --build-arg SENZING_ACCEPT_EULA=I_ACCEPT_THE_SENZING_EULA \
@@ -74,9 +74,9 @@ This is important as the compiling of the code expects Senzing to be in `/opt/se
 
         ```console
             curl -X GET \
-                --output /tmp/senzing-versions-latest.sh \
-                https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-latest.sh
-            source /tmp/senzing-versions-latest.sh
+                --output /tmp/senzing-versions-stable.sh \
+                https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/senzing-versions-stable.sh
+            source /tmp/senzing-versions-stable.sh
 
             sudo rm -rf /opt/senzing
             sudo mkdir -p /opt/senzing
@@ -108,9 +108,9 @@ in testing the `g2-sdk-go` packages.
         "https://raw.githubusercontent.com/Senzing/docker-compose-demo/main/resources/${SENZING_DOCKER_COMPOSE_YAML}"
 
     curl -X GET \
-        --output ${DOCKER_COMPOSE_DIR}/docker-versions-latest.sh \
-        https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/docker-versions-latest.sh
-    source ${DOCKER_COMPOSE_DIR}/docker-versions-latest.sh
+        --output ${DOCKER_COMPOSE_DIR}/docker-versions-stable.sh \
+        https://raw.githubusercontent.com/Senzing/knowledge-base/main/lists/docker-versions-stable.sh
+    source ${DOCKER_COMPOSE_DIR}/docker-versions-stable.sh
 
     export SENZING_DATA_VERSION_DIR=/opt/senzing/data
     export SENZING_ETC_DIR=/etc/opt/senzing
