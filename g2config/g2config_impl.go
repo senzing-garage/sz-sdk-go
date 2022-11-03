@@ -16,6 +16,7 @@ import (
 	"errors"
 	"unsafe"
 
+	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
@@ -29,8 +30,9 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2configImpl struct {
+	isTrace          bool
+	logger           messagelogger.MessageLoggerInterface
 	messageGenerator messagelogger.MessageLoggerInterface
-	Logger           messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -53,7 +55,7 @@ func (g2config *G2configImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
-func (g2config *G2configImpl) getError(ctx context.Context, errorNumber int, details ...interface{}) error {
+func (g2config *G2configImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2config.GetLastException(ctx)
 	defer g2config.ClearLastException(ctx)
 	message := lastException
@@ -71,6 +73,26 @@ func (g2config *G2configImpl) getError(ctx context.Context, errorNumber int, det
 	}
 
 	return errors.New(errorMessage)
+}
+
+func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
+	if g2config.logger == nil {
+		messageFormat := &messageformat.MessageFormatJson{}
+		messageId := &messageid.MessageIdTemplated{
+			MessageIdTemplate: MessageIdTemplate,
+		}
+		messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+			IdRanges: IdRangesLogLevel,
+		}
+		messageStatus := &messagestatus.MessageStatusByIdRange{
+			IdRanges: IdRanges,
+		}
+		messageText := &messagetext.MessageTextTemplated{
+			IdMessages: IdMessages,
+		}
+		g2config.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	}
+	return g2config.logger
 }
 
 func (g2config *G2configImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
@@ -95,6 +117,14 @@ func (g2config *G2configImpl) getMessageGenerator(ctx context.Context) messagelo
 	return g2config.messageGenerator
 }
 
+func (g2config *G2configImpl) traceEntry(errorNumber int, details ...interface{}) {
+	g2config.getLogger().Log(errorNumber, details...)
+}
+
+func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{}) {
+	g2config.getLogger().Log(errorNumber, details...)
+}
+
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
@@ -106,7 +136,7 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	defer C.free(unsafe.Pointer(inputJsonForC))
 	result := C.G2Config_addDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
 	if result.returnCode != 0 {
-		err = g2config.getError(ctx, 1, inputJson, result.returnCode, result)
+		err = g2config.newError(ctx, 1, inputJson, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 }
@@ -124,7 +154,7 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 	var err error = nil
 	result := C.G2config_close_helper(C.uintptr_t(configHandle))
 	if result != 0 {
-		err = g2config.getError(ctx, 2, result)
+		err = g2config.newError(ctx, 2, result)
 	}
 	return err
 }
@@ -135,7 +165,7 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	result := C.G2config_create_helper()
 	returnCode := 0 // FIXME:
 	if result == nil {
-		err = g2config.getError(ctx, 3, returnCode)
+		err = g2config.newError(ctx, 3, returnCode)
 	}
 	return (uintptr)(result), err
 }
@@ -147,7 +177,7 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 	defer C.free(unsafe.Pointer(inputJsonForC))
 	result := C.G2Config_deleteDataSource_helper(C.uintptr_t(configHandle), inputJsonForC)
 	if result != 0 {
-		err = g2config.getError(ctx, 4, inputJson, result)
+		err = g2config.newError(ctx, 4, inputJson, result)
 	}
 	return err
 }
@@ -157,7 +187,7 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	var err error = nil
 	result := C.G2Config_destroy()
 	if result != 0 {
-		err = g2config.getError(ctx, 5, result)
+		err = g2config.newError(ctx, 5, result)
 	}
 	return err
 }
@@ -192,7 +222,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Config_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2config.getError(ctx, 6, moduleName, iniParams, verboseLogging, result)
+		err = g2config.newError(ctx, 6, moduleName, iniParams, verboseLogging, result)
 	}
 	return err
 }
@@ -202,7 +232,7 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	var err error = nil
 	result := C.G2Config_listDataSources_helper(C.uintptr_t(configHandle))
 	if result.returnCode != 0 {
-		err = g2config.getError(ctx, 7, result.returnCode, result)
+		err = g2config.newError(ctx, 7, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
 }
@@ -214,7 +244,7 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 	defer C.free(unsafe.Pointer(jsonConfigForC))
 	result := C.G2Config_load_helper(C.uintptr_t(configHandle), jsonConfigForC)
 	if result != 0 {
-		err = g2config.getError(ctx, 8, jsonConfig, result)
+		err = g2config.newError(ctx, 8, jsonConfig, result)
 	}
 	return err
 }
@@ -224,7 +254,26 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	var err error = nil
 	result := C.G2Config_save_helper(C.uintptr_t(configHandle))
 	if result.returnCode != 0 {
-		err = g2config.getError(ctx, 9, result.returnCode, result)
+		err = g2config.newError(ctx, 9, result.returnCode, result)
 	}
 	return C.GoString(result.response), err
+}
+
+func (g2config *G2configImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	if g2config.isTrace {
+		g2config.traceEntry(4053, logLevel)
+	}
+	var err error = nil
+	g2config.getLogger().SetLogLevel(messagelogger.Level(logLevel))
+
+	if g2config.getLogger().GetLogLevel() == messagelogger.LevelTrace {
+		g2config.isTrace = true
+	} else {
+		g2config.isTrace = false
+	}
+
+	if g2config.isTrace {
+		defer g2config.traceExit(4054, logLevel, err)
+	}
+	return err
 }

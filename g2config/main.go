@@ -31,6 +31,7 @@ type G2config interface {
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
+	SetLogLevel(ctx context.Context, logLevel logger.Level) error
 }
 
 // ----------------------------------------------------------------------------
@@ -44,16 +45,34 @@ const MessageIdTemplate = "senzing-6001%04d"
 // ----------------------------------------------------------------------------
 
 var IdMessages = map[int]string{
-	1:    "Call to G2Config_addDataSource(%s) failed. Return code: %d",
-	2:    "Call to G2Config_close() failed. Return code: %d",
-	3:    "Call to G2Config_create() failed. Return code: %d",
-	4:    "Call to G2Config_deleteDataSource(%s) failed. Return code: %d",
-	5:    "Call to G2Config_destroy() failed. Return code: %d",
-	6:    "Call to G2Config_init(%s, %s, %d) failed. Return code: %d",
-	7:    "Call to G2Config_listDataSources() failed. Return code: %d",
-	8:    "Call to G2Config_load(%s) failed. Return code: %d",
-	9:    "Call to G2Config_save() failed. Return code: %d",
+	2001: "Call to G2Config_addDataSource(%s) failed. Return code: %d",
+	2002: "Call to G2Config_close() failed. Return code: %d",
+	2003: "Call to G2Config_create() failed. Return code: %d",
+	2004: "Call to G2Config_deleteDataSource(%s) failed. Return code: %d",
+	2005: "Call to G2Config_destroy() failed. Return code: %d",
+	2006: "Call to G2Config_init(%s, %s, %d) failed. Return code: %d",
+	2007: "Call to G2Config_listDataSources() failed. Return code: %d",
+	2008: "Call to G2Config_load(%s) failed. Return code: %d",
+	2009: "Call to G2Config_save() failed. Return code: %d",
 	2999: "Cannot retrieve last error message.",
+	4001: "Enter G2Config_addDataSource(%s).",
+	4002: "Exit  G2Config_addDataSource(%s).",
+	4003: "Enter G2Config_close().",
+	4004: "Exit  G2Config_close().",
+	4005: "Enter G2Config_create().",
+	4006: "Exit  G2Config_create().",
+	4007: "Enter G2Config_deleteDataSource(%s).",
+	4008: "Exit  G2Config_deleteDataSource(%s).",
+	4009: "Enter G2Config_destroy().",
+	4010: "Exit  G2Config_destroy().",
+	4011: "Enter G2Config_init(%s, %s, %d).",
+	4012: "Exit  G2Config_init(%s, %s, %d).",
+	4013: "Enter G2Config_listDataSources().",
+	4014: "Exit  G2Config_listDataSources().",
+	4015: "Enter G2Config_load(%s).",
+	4016: "Exit  G2Config_load(%s).",
+	4017: "Enter G2Config_save().",
+	4018: "Exit  G2Config_save().",
 }
 
 var IdRanges = map[int]string{
@@ -66,15 +85,25 @@ var IdRanges = map[int]string{
 	6000: logger.LevelPanicName,
 }
 
+var IdRangesLogLevel = map[int]logger.Level{
+	0000: logger.LevelInfo,
+	1000: logger.LevelWarn,
+	2000: logger.LevelError,
+	3000: logger.LevelDebug,
+	4000: logger.LevelTrace,
+	5000: logger.LevelFatal,
+	6000: logger.LevelPanic,
+}
+
 var IdStatuses = map[int]string{
-	1:    logger.LevelErrorName,
-	2:    logger.LevelErrorName,
-	3:    logger.LevelErrorName,
-	4:    logger.LevelErrorName,
-	5:    logger.LevelErrorName,
-	6:    logger.LevelErrorName,
-	7:    logger.LevelErrorName,
-	8:    logger.LevelErrorName,
-	9:    logger.LevelErrorName,
+	2001: logger.LevelErrorName,
+	2002: logger.LevelErrorName,
+	2003: logger.LevelErrorName,
+	2004: logger.LevelErrorName,
+	2005: logger.LevelErrorName,
+	2006: logger.LevelErrorName,
+	2007: logger.LevelErrorName,
+	2008: logger.LevelErrorName,
+	2009: logger.LevelErrorName,
 	2999: logger.LevelErrorName,
 }

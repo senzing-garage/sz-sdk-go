@@ -125,7 +125,6 @@ func TestEntityListBySize(test *testing.T) {
 
 	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
 	testError(test, ctx, g2diagnostic, err)
-
 }
 
 func TestFindEntitiesByFeatureIDs(test *testing.T) {
@@ -135,7 +134,6 @@ func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
 	testError(test, ctx, g2diagnostic, err)
 	printResult(test, "len(Actual)", len(actual))
-
 }
 
 func TestGetAvailableMemory(test *testing.T) {
