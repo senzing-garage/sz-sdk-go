@@ -50,6 +50,8 @@ This is important as the compiling of the code expects Senzing to be in `/opt/se
 
 - Using Docker:
 
+  This technique can be handy if you are using MacOS or Windows and cross-compiling.
+
     1. Build Senzing installer.
 
         ```console
