@@ -7,7 +7,6 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
-	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,7 +22,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 	if g2configSingleton == nil {
 		g2configSingleton = &G2configImpl{}
 
-		g2configSingleton.SetLogLevel(ctx, logger.LevelTrace)
+		// g2configSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
