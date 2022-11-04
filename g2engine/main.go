@@ -426,6 +426,16 @@ var IdRanges = map[int]string{
 	6000: logger.LevelPanicName,
 }
 
+var IdRangesLogLevel = map[int]logger.Level{
+	0000: logger.LevelInfo,
+	1000: logger.LevelWarn,
+	2000: logger.LevelError,
+	3000: logger.LevelDebug,
+	4000: logger.LevelTrace,
+	5000: logger.LevelFatal,
+	6000: logger.LevelPanic,
+}
+
 var IdStatuses = map[int]string{
 	1:    logger.LevelErrorName,
 	2:    logger.LevelErrorName,
