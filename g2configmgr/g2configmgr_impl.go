@@ -242,7 +242,7 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 		err = messageGenerator.Error(2999)
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4014)
+		defer g2configmgr.traceExit(4014, string(stringBuffer), err)
 	}
 	return string(stringBuffer), err
 }

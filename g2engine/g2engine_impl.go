@@ -16,6 +16,7 @@ import (
 	"errors"
 	"unsafe"
 
+	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelogger"
@@ -1453,10 +1454,28 @@ func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonDat
 	return stringBuffer, err
 }
 
+func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	if g2engine.isTrace {
+		g2engine.traceEntry(4137, logLevel)
+	}
+	var err error = nil
+	g2engine.getLogger().SetLogLevel(messagelogger.Level(logLevel))
+
+	if g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace {
+		g2engine.isTrace = true
+	} else {
+		g2engine.isTrace = false
+	}
+	if g2engine.isTrace {
+		defer g2engine.traceExit(4138, logLevel, err)
+	}
+	return err
+}
+
 func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_stats(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
-		g2engine.traceEntry(4137)
+		g2engine.traceEntry(4139)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_stats_helper())
@@ -1465,7 +1484,7 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 		err = g2engine.getError(ctx, 2065, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4138, stringBuffer, err)
+		defer g2engine.traceExit(4140, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1473,7 +1492,7 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities(const long long entityID1, const long long entityID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4139, entityID1, entityID2)
+		g2engine.traceEntry(4141, entityID1, entityID2)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_whyEntities_helper(C.longlong(entityID1), C.longlong(entityID2)))
@@ -1482,7 +1501,7 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 		err = g2engine.getError(ctx, 2066, entityID1, entityID2, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4140, entityID1, entityID2, stringBuffer, err)
+		defer g2engine.traceExit(4142, entityID1, entityID2, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1490,7 +1509,7 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities_V2(const long long entityID1, const long long entityID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4141, entityID1, entityID2, flags)
+		g2engine.traceEntry(4143, entityID1, entityID2, flags)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_whyEntities_V2_helper(C.longlong(entityID1), C.longlong(entityID2), C.longlong(flags)))
@@ -1499,7 +1518,7 @@ func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int6
 		err = g2engine.getError(ctx, 2067, entityID1, entityID2, flags, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4142, entityID1, entityID2, flags, stringBuffer, err)
+		defer g2engine.traceExit(4144, entityID1, entityID2, flags, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1507,7 +1526,7 @@ func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int6
 func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4143, entityID)
+		g2engine.traceEntry(4145, entityID)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_whyEntityByEntityID_helper(C.longlong(entityID)))
@@ -1516,7 +1535,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID 
 		err = g2engine.getError(ctx, 2068, entityID, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4144, entityID, stringBuffer, err)
+		defer g2engine.traceExit(4146, entityID, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1524,7 +1543,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID 
 func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4145, entityID, flags)
+		g2engine.traceEntry(4147, entityID, flags)
 	}
 	var err error = nil
 	stringBuffer := C.GoString(C.G2_whyEntityByEntityID_V2_helper(C.longlong(entityID), C.longlong(flags)))
@@ -1533,7 +1552,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entity
 		err = g2engine.getError(ctx, 2069, entityID, flags, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4146, entityID, flags, stringBuffer, err)
+		defer g2engine.traceExit(4148, entityID, flags, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1541,7 +1560,7 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entity
 func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4147, dataSourceCode, recordID)
+		g2engine.traceEntry(4149, dataSourceCode, recordID)
 	}
 	var err error = nil
 	dataSourceCodeForC := C.CString(dataSourceCode)
@@ -1554,7 +1573,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourc
 		err = g2engine.getError(ctx, 2070, dataSourceCode, recordID, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4148, dataSourceCode, recordID, stringBuffer, err)
+		defer g2engine.traceExit(4150, dataSourceCode, recordID, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1562,7 +1581,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourc
 func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4149, dataSourceCode, recordID, flags)
+		g2engine.traceEntry(4151, dataSourceCode, recordID, flags)
 	}
 	var err error = nil
 	dataSourceCodeForC := C.CString(dataSourceCode)
@@ -1575,7 +1594,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSo
 		err = g2engine.getError(ctx, 2071, dataSourceCode, recordID, flags, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4150, dataSourceCode, recordID, flags, stringBuffer, err)
+		defer g2engine.traceExit(4152, dataSourceCode, recordID, flags, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1583,7 +1602,7 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSo
 func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string) (string, error) {
 	//  _DLEXPORT int G2_whyRecords(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4151, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
+		g2engine.traceEntry(4153, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
 	}
 	var err error = nil
 	dataSource1CodeForC := C.CString(dataSourceCode1)
@@ -1600,7 +1619,7 @@ func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 st
 		err = g2engine.getError(ctx, 2072, dataSourceCode1, recordID1, dataSourceCode2, recordID2, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4152, dataSourceCode1, recordID1, dataSourceCode2, recordID2, stringBuffer, err)
+		defer g2engine.traceExit(4154, dataSourceCode1, recordID1, dataSourceCode2, recordID2, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
@@ -1608,7 +1627,7 @@ func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 st
 func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyRecords_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
-		g2engine.traceEntry(4153, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
+		g2engine.traceEntry(4155, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
 	}
 	var err error = nil
 	dataSource1CodeForC := C.CString(dataSourceCode1)
@@ -1625,7 +1644,7 @@ func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1
 		err = g2engine.getError(ctx, 2073, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags, returnCode)
 	}
 	if g2engine.isTrace {
-		defer g2engine.traceExit(4154, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags, stringBuffer, err)
+		defer g2engine.traceExit(4156, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags, stringBuffer, err)
 	}
 	return stringBuffer, err
 }
