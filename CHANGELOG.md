@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.0] - 2022-11-08
+
+### Added to 0.2.0
+
+- Entry/Exit tracing when log level is set to TRACE
+
 ## [0.1.0] - 2022-11-02
 
 ### Added to 0.1.0
