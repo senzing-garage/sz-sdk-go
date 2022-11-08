@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	g2diagnostic G2diagnostic
+	g2diagnosticSingleton G2diagnostic
 )
 
 // ----------------------------------------------------------------------------
@@ -19,8 +19,10 @@ var (
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
-	if g2diagnostic == nil {
-		g2diagnostic = &G2diagnosticImpl{}
+	if g2diagnosticSingleton == nil {
+		g2diagnosticSingleton = &G2diagnosticImpl{}
+
+		// g2diagnosticSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -29,12 +31,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2diagnostic
+	return g2diagnosticSingleton
 }
 
 func truncate(aString string) string {
@@ -122,7 +124,6 @@ func TestEntityListBySize(test *testing.T) {
 
 	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
 	testError(test, ctx, g2diagnostic, err)
-
 }
 
 func TestFindEntitiesByFeatureIDs(test *testing.T) {
@@ -132,7 +133,6 @@ func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
 	testError(test, ctx, g2diagnostic, err)
 	printResult(test, "len(Actual)", len(actual))
-
 }
 
 func TestGetAvailableMemory(test *testing.T) {

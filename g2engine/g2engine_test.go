@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	g2engine G2engine
+	g2engineSingleton G2engine
 )
 
 // ----------------------------------------------------------------------------
@@ -20,8 +20,10 @@ var (
 
 func getTestObject(ctx context.Context, test *testing.T) G2engine {
 
-	if g2engine == nil {
-		g2engine = &G2engineImpl{}
+	if g2engineSingleton == nil {
+		g2engineSingleton = &G2engineImpl{}
+
+		// g2engineSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -30,12 +32,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2engine {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2engineSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2engine
+	return g2engineSingleton
 }
 
 func truncate(aString string) string {

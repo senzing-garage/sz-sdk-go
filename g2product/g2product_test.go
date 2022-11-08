@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	g2product G2product
+	g2productSingleton G2product
 )
 
 // ----------------------------------------------------------------------------
@@ -20,8 +20,10 @@ var (
 
 func getTestObject(ctx context.Context, test *testing.T) G2product {
 
-	if g2product == nil {
-		g2product = &G2productImpl{}
+	if g2productSingleton == nil {
+		g2productSingleton = &G2productImpl{}
+
+		// g2productSingleton.SetLogLevel(ctx, logger.LevelTrace)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -30,12 +32,12 @@ func getTestObject(ctx context.Context, test *testing.T) G2product {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
 
-		initErr := g2product.Init(ctx, moduleName, iniParams, verboseLogging)
+		initErr := g2productSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
 		}
 	}
-	return g2product
+	return g2productSingleton
 }
 
 func truncate(aString string) string {
