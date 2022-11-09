@@ -173,7 +173,73 @@ struct G2_getActiveConfigID_result
     int returnCode;
 };
 
+struct G2_getEntityByEntityID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getEntityByEntityID_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getEntityByRecordID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getEntityByRecordID_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getRecord_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getRecord_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
 struct G2_getRedoRecord_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getRepositoryLastModifiedTime_result
+{
+    long long time;
+    int returnCode;
+};
+
+struct G2_getVirtualEntityByRecordID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_getVirtualEntityByRecordID_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_howEntityByEntityID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_howEntityByEntityID_V2_result
 {
     char *response;
     int returnCode;
@@ -189,6 +255,108 @@ struct G2_processRedoRecordWithInfo_result
 {
     char *response;
     char *withInfo;
+    int returnCode;
+};
+
+struct G2_processWithInfo_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_processWithResponse_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_processWithResponseResize_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_reevaluateEntityWithInfo_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_reevaluateRecordWithInfo_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_replaceRecordWithInfo_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_searchByAttributes_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_searchByAttributes_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_stats_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntities_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntities_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntityByEntityID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntityByEntityID_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntityByRecordID_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyEntityByRecordID_V2_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyRecords_result
+{
+    char *response;
+    int returnCode;
+};
+
+struct G2_whyRecords_V2_result
+{
+    char *response;
     int returnCode;
 };
 
@@ -222,34 +390,34 @@ struct G2_findPathIncludingSourceByRecordID_result G2_findPathIncludingSourceByR
 struct G2_findPathIncludingSourceByRecordID_V2_result G2_findPathIncludingSourceByRecordID_V2_helper(const char *dataSourceCode1, const char *recordID1, const char *dataSourceCode2, const char *recordID2, const int maxDegree, const char *excludedRecords, const char *requiredDsrcs, const long long flags);
 struct G2_fetchNext_result G2_fetchNext_helper(uintptr_t exportHandle);
 struct G2_getActiveConfigID_result G2_getActiveConfigID_helper();
-char *G2_getEntityByEntityID_helper(const long long entityID);
-char *G2_getEntityByEntityID_V2_helper(const long long entityID, const long long flags);
-char *G2_getEntityByRecordID_helper(const char *dataSourceCode, const char *recordID);
-char *G2_getEntityByRecordID_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
-char *G2_getRecord_helper(const char *dataSourceCode, const char *recordID);
-char *G2_getRecord_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
+struct G2_getEntityByEntityID_result G2_getEntityByEntityID_helper(const long long entityID);
+struct G2_getEntityByEntityID_V2_result G2_getEntityByEntityID_V2_helper(const long long entityID, const long long flags);
+struct G2_getEntityByRecordID_result G2_getEntityByRecordID_helper(const char *dataSourceCode, const char *recordID);
+struct G2_getEntityByRecordID_V2_result G2_getEntityByRecordID_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
+struct G2_getRecord_result G2_getRecord_helper(const char *dataSourceCode, const char *recordID);
+struct G2_getRecord_V2_result G2_getRecord_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
 struct G2_getRedoRecord_result G2_getRedoRecord_helper();
-long long G2_getRepositoryLastModifiedTime_helper();
-char *G2_getVirtualEntityByRecordID_helper(const char *recordList);
-char *G2_getVirtualEntityByRecordID_V2_helper(const char *recordList, const long long flags);
-char *G2_howEntityByEntityID_helper(const long long entityID);
-char *G2_howEntityByEntityID_V2_helper(const long long entityID, const long long flags);
+struct G2_getRepositoryLastModifiedTime_result G2_getRepositoryLastModifiedTime_helper();
+struct G2_getVirtualEntityByRecordID_result G2_getVirtualEntityByRecordID_helper(const char *recordList);
+struct G2_getVirtualEntityByRecordID_V2_result G2_getVirtualEntityByRecordID_V2_helper(const char *recordList, const long long flags);
+struct G2_howEntityByEntityID_result G2_howEntityByEntityID_helper(const long long entityID);
+struct G2_howEntityByEntityID_V2_result G2_howEntityByEntityID_V2_helper(const long long entityID, const long long flags);
 struct G2_processRedoRecord_result G2_processRedoRecord_helper();
 struct G2_processRedoRecordWithInfo_result G2_processRedoRecordWithInfo_helper(const long long flags);
-char *G2_processWithInfo_helper(const char *record, const long long flags);
-char *G2_processWithResponse_helper(const char *record);
-char *G2_processWithResponseResize_helper(const char *record);
-char *G2_reevaluateEntityWithInfo_helper(const long long entityID, const long long flags);
-char *G2_reevaluateRecordWithInfo_helper(const char *dataSourceCode, const char *recordID, const long long flags);
-char *G2_replaceRecordWithInfo_helper(const char *dataSourceCode, const char *recordID, const char *jsonData, const char *loadID, const long long flags);
-char *G2_searchByAttributes_helper(const char *jsonData);
-char *G2_searchByAttributes_V2_helper(const char *jsonData, const long long flags);
-char *G2_stats_helper();
-char *G2_whyEntities_helper(const long long entityID1, const long long entityID2);
-char *G2_whyEntities_V2_helper(const long long entityID1, const long long entityID2, const long long flags);
-char *G2_whyEntityByEntityID_helper(const long long entityID1);
-char *G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags);
-char *G2_whyEntityByRecordID_helper(const char *dataSourceCode, const char *recordID);
-char *G2_whyEntityByRecordID_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
-char *G2_whyRecords_helper(const char *dataSourceCode1, const char *recordID1, const char *dataSourceCode2, const char *recordID2);
-char *G2_whyRecords_V2_helper(const char *dataSourceCode1, const char *recordID1, const char *dataSourceCode2, const char *recordID2, const long long flags);
+struct G2_processWithInfo_result G2_processWithInfo_helper(const char *record, const long long flags);
+struct G2_processWithResponse_result G2_processWithResponse_helper(const char *record);
+struct G2_processWithResponseResize_result G2_processWithResponseResize_helper(const char *record);
+struct G2_reevaluateEntityWithInfo_result G2_reevaluateEntityWithInfo_helper(const long long entityID, const long long flags);
+struct G2_reevaluateRecordWithInfo_result G2_reevaluateRecordWithInfo_helper(const char *dataSourceCode, const char *recordID, const long long flags);
+struct G2_replaceRecordWithInfo_result G2_replaceRecordWithInfo_helper(const char *dataSourceCode, const char *recordID, const char *jsonData, const char *loadID, const long long flags);
+struct G2_searchByAttributes_result G2_searchByAttributes_helper(const char *jsonData);
+struct G2_searchByAttributes_V2_result G2_searchByAttributes_V2_helper(const char *jsonData, const long long flags);
+struct G2_stats_result G2_stats_helper();
+struct G2_whyEntities_result G2_whyEntities_helper(const long long entityID1, const long long entityID2);
+struct G2_whyEntities_V2_result G2_whyEntities_V2_helper(const long long entityID1, const long long entityID2, const long long flags);
+struct G2_whyEntityByEntityID_result G2_whyEntityByEntityID_helper(const long long entityID1);
+struct G2_whyEntityByEntityID_V2_result G2_whyEntityByEntityID_V2_helper(const long long entityID1, const long long flags);
+struct G2_whyEntityByRecordID_result G2_whyEntityByRecordID_helper(const char *dataSourceCode, const char *recordID);
+struct G2_whyEntityByRecordID_V2_result G2_whyEntityByRecordID_V2_helper(const char *dataSourceCode, const char *recordID, const long long flags);
+struct G2_whyRecords_result G2_whyRecords_helper(const char *dataSourceCode1, const char *recordID1, const char *dataSourceCode2, const char *recordID2);
+struct G2_whyRecords_V2_result G2_whyRecords_V2_helper(const char *dataSourceCode1, const char *recordID1, const char *dataSourceCode2, const char *recordID2, const long long flags);
