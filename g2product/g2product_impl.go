@@ -167,12 +167,12 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	}
 	var err error = nil
 	stringBuffer := g2product.getByteArray(initialByteArraySize)
-	C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if len(stringBuffer) == 0 {
+	result := C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result != 0 {
 		messageGenerator := g2product.getMessageGenerator()
-		err = messageGenerator.Error(2999)
+		err = messageGenerator.Error(2002, result)
 	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2product.isTrace {
 		defer g2product.traceExit(4006, string(stringBuffer), err)
 	}
@@ -204,7 +204,7 @@ func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, ini
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Product_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2product.newError(ctx, 2002, moduleName, iniParams, verboseLogging, result)
+		err = g2product.newError(ctx, 2003, moduleName, iniParams, verboseLogging, result)
 	}
 	if g2product.isTrace {
 		defer g2product.traceExit(4010, moduleName, iniParams, verboseLogging, err)
@@ -231,12 +231,7 @@ func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger
 	}
 	var err error = nil
 	g2product.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2product.isTrace = true
-	} else {
-		g2product.isTrace = false
-	}
+	g2product.isTrace = g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2product.isTrace {
 		defer g2product.traceExit(4014, logLevel, err)
 	}
@@ -253,7 +248,7 @@ func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, license
 	defer C.free(unsafe.Pointer(licenseFilePathForC))
 	result := C.G2Product_validateLicenseFile_helper(licenseFilePathForC)
 	if result.returnCode != 0 {
-		err = g2product.newError(ctx, 2003, licenseFilePath, result.returnCode, result)
+		err = g2product.newError(ctx, 2004, licenseFilePath, result.returnCode, result)
 	}
 	if g2product.isTrace {
 		defer g2product.traceExit(4016, licenseFilePath, C.GoString(result.response), err)
@@ -271,7 +266,7 @@ func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context,
 	defer C.free(unsafe.Pointer(licenseStringForC))
 	result := C.G2Product_validateLicenseStringBase64_helper(licenseStringForC)
 	if result.returnCode != 0 {
-		err = g2product.newError(ctx, 2004, licenseString, result.returnCode, result)
+		err = g2product.newError(ctx, 2005, licenseString, result.returnCode, result)
 	}
 	if g2product.isTrace {
 		defer g2product.traceExit(4018, licenseString, C.GoString(result.response), err)

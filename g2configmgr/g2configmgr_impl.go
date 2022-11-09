@@ -320,12 +320,7 @@ func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel lo
 	}
 	var err error = nil
 	g2configmgr.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2configmgr.isTrace = true
-	} else {
-		g2configmgr.isTrace = false
-	}
+	g2configmgr.isTrace = g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4024, logLevel, err)
 	}

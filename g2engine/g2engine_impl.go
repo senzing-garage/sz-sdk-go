@@ -1460,12 +1460,7 @@ func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.L
 	}
 	var err error = nil
 	g2engine.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2engine.isTrace = true
-	} else {
-		g2engine.isTrace = false
-	}
+	g2engine.isTrace = g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2engine.isTrace {
 		defer g2engine.traceExit(4138, logLevel, err)
 	}

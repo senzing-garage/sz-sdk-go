@@ -568,13 +568,7 @@ func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel 
 	}
 	var err error = nil
 	g2diagnostic.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2diagnostic.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2diagnostic.isTrace = true
-	} else {
-		g2diagnostic.isTrace = false
-	}
-
+	g2diagnostic.isTrace = g2diagnostic.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2diagnostic.isTrace {
 		defer g2diagnostic.traceExit(4054, logLevel, err)
 	}
