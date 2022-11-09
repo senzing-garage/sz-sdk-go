@@ -66,7 +66,7 @@ func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber in
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2configmgr.getMessageGenerator(ctx)
+	messageGenerator := g2configmgr.getMessageGenerator()
 	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -95,7 +95,7 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 	return g2configmgr.logger
 }
 
-func (g2configmgr *G2configmgrImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2configmgr *G2configmgrImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2configmgr.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -235,12 +235,12 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	}
 	var err error = nil
 	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
-	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if len(stringBuffer) == 0 {
-		messageGenerator := g2configmgr.getMessageGenerator(ctx)
-		err = messageGenerator.Error(2999)
+	result := C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result == 0 {
+		messageGenerator := g2configmgr.getMessageGenerator()
+		err = messageGenerator.Error(2006, result)
 	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4014, string(stringBuffer), err)
 	}
@@ -272,7 +272,7 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2ConfigMgr_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2006, moduleName, iniParams, verboseLogging, result)
+		err = g2configmgr.newError(ctx, 2007, moduleName, iniParams, verboseLogging, result)
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4018, moduleName, iniParams, verboseLogging, err)
@@ -290,7 +290,7 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	var err error = nil
 	result := C.G2ConfigMgr_replaceDefaultConfigID(C.longlong(oldConfigID), C.longlong(newConfigID))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2007, oldConfigID, newConfigID, result)
+		err = g2configmgr.newError(ctx, 2008, oldConfigID, newConfigID, result)
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4020, oldConfigID, newConfigID, err)
@@ -306,7 +306,7 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	var err error = nil
 	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2008, configID, result)
+		err = g2configmgr.newError(ctx, 2009, configID, result)
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4022, configID, err)
@@ -320,12 +320,7 @@ func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel lo
 	}
 	var err error = nil
 	g2configmgr.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2configmgr.isTrace = true
-	} else {
-		g2configmgr.isTrace = false
-	}
+	g2configmgr.isTrace = g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(4024, logLevel, err)
 	}

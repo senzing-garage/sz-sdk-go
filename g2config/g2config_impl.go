@@ -66,7 +66,7 @@ func (g2config *G2configImpl) newError(ctx context.Context, errorNumber int, det
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2config.getMessageGenerator(ctx)
+	messageGenerator := g2config.getMessageGenerator()
 	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -95,7 +95,7 @@ func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 	return g2config.logger
 }
 
-func (g2config *G2configImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2config *G2configImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2config.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -184,14 +184,13 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	}
 	var err error = nil
 	result := C.G2config_create_helper()
-	returnCode := 0 // FIXME:
-	if result == nil {
-		err = g2config.newError(ctx, 2003, returnCode)
+	if result.returnCode != 0 {
+		err = g2config.newError(ctx, 2003, result.returnCode)
 	}
 	if g2config.isTrace {
-		defer g2config.traceExit(4008, (uintptr)(result), err)
+		defer g2config.traceExit(4008, (uintptr)(result.response), err)
 	}
-	return (uintptr)(result), err
+	return (uintptr)(result.response), err
 }
 
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
@@ -236,12 +235,12 @@ func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, err
 	}
 	var err error = nil
 	stringBuffer := g2config.getByteArray(initialByteArraySize)
-	C.G2Config_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if len(stringBuffer) == 0 {
-		messageGenerator := g2config.getMessageGenerator(ctx)
-		err = messageGenerator.Error(2999)
+	result := C.G2Config_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	if result == 0 {
+		messageGenerator := g2config.getMessageGenerator()
+		err = messageGenerator.Error(2005, result)
 	}
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2config.isTrace {
 		defer g2config.traceExit(4014, string(stringBuffer), err)
 	}
@@ -273,7 +272,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2Config_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2config.newError(ctx, 2006, moduleName, iniParams, verboseLogging, result)
+		err = g2config.newError(ctx, 2007, moduleName, iniParams, verboseLogging, result)
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(4018, moduleName, iniParams, verboseLogging, err)
@@ -289,7 +288,7 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	var err error = nil
 	result := C.G2Config_listDataSources_helper(C.uintptr_t(configHandle))
 	if result.returnCode != 0 {
-		err = g2config.newError(ctx, 2007, result.returnCode, result)
+		err = g2config.newError(ctx, 2008, result.returnCode, result)
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(4020, configHandle, C.GoString(result.response), err)
@@ -307,7 +306,7 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 	defer C.free(unsafe.Pointer(jsonConfigForC))
 	result := C.G2Config_load_helper(C.uintptr_t(configHandle), jsonConfigForC)
 	if result != 0 {
-		err = g2config.newError(ctx, 2008, configHandle, jsonConfig, result)
+		err = g2config.newError(ctx, 2009, configHandle, jsonConfig, result)
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(4022, configHandle, jsonConfig, err)
@@ -323,7 +322,7 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	var err error = nil
 	result := C.G2Config_save_helper(C.uintptr_t(configHandle))
 	if result.returnCode != 0 {
-		err = g2config.newError(ctx, 2009, configHandle, result.returnCode, result)
+		err = g2config.newError(ctx, 2010, configHandle, result.returnCode, result)
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(4024, configHandle, C.GoString(result.response), err)
@@ -337,12 +336,7 @@ func (g2config *G2configImpl) SetLogLevel(ctx context.Context, logLevel logger.L
 	}
 	var err error = nil
 	g2config.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-
-	if g2config.getLogger().GetLogLevel() == messagelogger.LevelTrace {
-		g2config.isTrace = true
-	} else {
-		g2config.isTrace = false
-	}
+	g2config.isTrace = g2config.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2config.isTrace {
 		defer g2config.traceExit(4026, logLevel, err)
 	}
