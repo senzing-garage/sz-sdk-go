@@ -236,7 +236,7 @@ func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, err
 	var err error = nil
 	stringBuffer := g2config.getByteArray(initialByteArraySize)
 	result := C.G2Config_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
+	if result == 0 {
 		messageGenerator := g2config.getMessageGenerator()
 		err = messageGenerator.Error(2005, result)
 	}

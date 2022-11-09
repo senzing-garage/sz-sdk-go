@@ -168,7 +168,7 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	var err error = nil
 	stringBuffer := g2product.getByteArray(initialByteArraySize)
 	result := C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
+	if result == 0 {
 		messageGenerator := g2product.getMessageGenerator()
 		err = messageGenerator.Error(2002, result)
 	}

@@ -383,7 +383,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	result := C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
+	if result == 0 {
 		messageGenerator := g2diagnostic.getMessageGenerator()
 		err = messageGenerator.Error(2014, result)
 	}

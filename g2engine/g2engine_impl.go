@@ -897,7 +897,7 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	var err error = nil
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
 	result := C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
+	if result == 0 {
 		messageGenerator := g2engine.getMessageGenerator()
 		err = messageGenerator.Error(2038, result)
 	}
