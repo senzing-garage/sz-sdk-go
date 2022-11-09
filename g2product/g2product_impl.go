@@ -66,7 +66,7 @@ func (g2product *G2productImpl) newError(ctx context.Context, errorNumber int, d
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2product.getMessageGenerator(ctx)
+	messageGenerator := g2product.getMessageGenerator()
 	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -95,7 +95,7 @@ func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface
 	return g2product.logger
 }
 
-func (g2product *G2productImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2product *G2productImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2product.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -170,7 +170,7 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	C.G2Product_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if len(stringBuffer) == 0 {
-		messageGenerator := g2product.getMessageGenerator(ctx)
+		messageGenerator := g2product.getMessageGenerator()
 		err = messageGenerator.Error(2999)
 	}
 	if g2product.isTrace {

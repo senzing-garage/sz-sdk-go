@@ -119,67 +119,62 @@ struct G2Diagnostic_getEntitySizeBreakdown_result G2Diagnostic_getEntitySizeBrea
     return result;
 }
 
-char *G2Diagnostic_getFeature_helper(const long long libFeatID)
+struct G2Diagnostic_getFeature_result G2Diagnostic_getFeature_helper(const long long libFeatID)
 {
     size_t charBufferSize = 1;
     char *charBuffer = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
     int returnCode = G2Diagnostic_getFeature(libFeatID, &charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0)
-    {
-        return "";
-    }
-    return charBuffer;
+    struct G2Diagnostic_getFeature_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
-char *G2Diagnostic_getGenericFeatures_helper(const char *featureType, const size_t maximumEstimatedCount)
+struct G2Diagnostic_getGenericFeatures_result G2Diagnostic_getGenericFeatures_helper(const char *featureType, const size_t maximumEstimatedCount)
 {
     size_t charBufferSize = 1;
     char *charBuffer = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
     int returnCode = G2Diagnostic_getGenericFeatures(featureType, maximumEstimatedCount, &charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0)
-    {
-        return "";
-    }
-    return charBuffer;
+    struct G2Diagnostic_getGenericFeatures_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
-char *G2Diagnostic_getMappingStatistics_helper(const int includeInternalFeatures)
+struct G2Diagnostic_getMappingStatistics_result G2Diagnostic_getMappingStatistics_helper(const int includeInternalFeatures)
 {
     size_t charBufferSize = 1;
     char *charBuffer = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
     int returnCode = G2Diagnostic_getMappingStatistics(includeInternalFeatures, &charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0)
-    {
-        return "";
-    }
-    return charBuffer;
+    struct G2Diagnostic_getMappingStatistics_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
-char *G2Diagnostic_getRelationshipDetails_helper(const long long relationshipID, const int includeInternalFeatures)
+struct G2Diagnostic_getRelationshipDetails_result G2Diagnostic_getRelationshipDetails_helper(const long long relationshipID, const int includeInternalFeatures)
 {
     size_t charBufferSize = 1;
     char *charBuffer = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
     int returnCode = G2Diagnostic_getRelationshipDetails(relationshipID, includeInternalFeatures, &charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0)
-    {
-        return "";
-    }
-    return charBuffer;
+    struct G2Diagnostic_getRelationshipDetails_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }
 
-char *G2Diagnostic_getResolutionStatistics_helper()
+struct G2Diagnostic_getResolutionStatistics_result G2Diagnostic_getResolutionStatistics_helper()
 {
     size_t charBufferSize = 1;
     char *charBuffer = (char *)malloc(1);
     resize_buffer_type resizeFuncPointer = &G2Diagnostic_resizeStringBuffer;
     int returnCode = G2Diagnostic_getResolutionStatistics(&charBuffer, &charBufferSize, resizeFuncPointer);
-    if (returnCode != 0)
-    {
-        return "";
-    }
-    return charBuffer;
+    struct G2Diagnostic_getResolutionStatistics_result result;
+    result.response = charBuffer;
+    result.returnCode = returnCode;
+    return result;
 }

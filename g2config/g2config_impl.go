@@ -66,7 +66,7 @@ func (g2config *G2configImpl) newError(ctx context.Context, errorNumber int, det
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2config.getMessageGenerator(ctx)
+	messageGenerator := g2config.getMessageGenerator()
 	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
@@ -95,7 +95,7 @@ func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 	return g2config.logger
 }
 
-func (g2config *G2configImpl) getMessageGenerator(ctx context.Context) messagelogger.MessageLoggerInterface {
+func (g2config *G2configImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2config.messageGenerator == nil {
 		messageFormat := &messageformat.MessageFormatJson{}
 		messageId := &messageid.MessageIdTemplated{
@@ -237,7 +237,8 @@ func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, err
 	stringBuffer := g2config.getByteArray(initialByteArraySize)
 	result := C.G2Config_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result != 0 {
-		err = g2config.newError(ctx, 2005, result)
+		messageGenerator := g2config.getMessageGenerator()
+		err = messageGenerator.Error(2005, result)
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2config.isTrace {
