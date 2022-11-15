@@ -18,7 +18,6 @@ import (
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagedetails"
 	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
@@ -91,9 +90,7 @@ func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 			CallerSkip: 4,
 		}
 
-		messageDetails := &messagedetails.MessageDetailsSenzing{}
-
-		g2config.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageDetails, messageStatus, messageLocation, messagelogger.LevelInfo)
+		g2config.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2config.logger
 }
@@ -114,9 +111,7 @@ func (g2config *G2configImpl) getMessageGenerator() messagelogger.MessageLoggerI
 			CallerSkip: 4,
 		}
 
-		messageDetails := &messagedetails.MessageDetailsSenzing{}
-
-		g2config.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageDetails, messageStatus, messageLocation, messagelogger.LevelInfo)
+		g2config.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2config.messageGenerator
 }

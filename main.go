@@ -87,8 +87,7 @@ func main() {
 
 	// Configure the "log" standard library.
 
-	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	log.SetFlags(log.LstdFlags)
+	log.SetFlags(0)
 
 	// Configure messagelogger
 
@@ -98,22 +97,23 @@ func main() {
 	}
 	messageLevel := &messagelevel.MessageLevelByIdRange{
 		IdRanges: map[int]logger.Level{
-			0000: logger.LevelInfo,
-			1000: logger.LevelWarn,
-			2000: logger.LevelError,
-			3000: logger.LevelDebug,
-			4000: logger.LevelTrace,
+			0000: logger.LevelTrace,
+			1000: logger.LevelDebug,
+			2000: logger.LevelInfo,
+			3000: logger.LevelWarn,
+			4000: logger.LevelError,
 			5000: logger.LevelFatal,
 			6000: logger.LevelPanic,
 		},
 	}
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
+			4000: logger.LevelTraceName,
+
 			0000: logger.LevelInfoName,
 			1000: logger.LevelWarnName,
 			2000: logger.LevelErrorName,
 			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
 			5000: logger.LevelFatalName,
 			6000: logger.LevelPanicName,
 		},
