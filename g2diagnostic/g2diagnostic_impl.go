@@ -19,8 +19,8 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
@@ -81,7 +81,7 @@ func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInt
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+		messageLevel := &messagelevel.MessageLevelByIdRange{
 			IdRanges: IdRangesLogLevel,
 		}
 		messageStatus := &messagestatus.MessageStatusByIdRange{
@@ -90,7 +90,7 @@ func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInt
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2diagnostic.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2diagnostic.logger, _ = messagelogger.New(messageFormat, messageId, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.logger
 }
@@ -101,7 +101,7 @@ func (g2diagnostic *G2diagnosticImpl) getMessageGenerator() messagelogger.Messag
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{
+		messageLevel := &messagelevel.MessageLevelSenzingApi{
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
@@ -112,7 +112,7 @@ func (g2diagnostic *G2diagnosticImpl) getMessageGenerator() messagelogger.Messag
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2diagnostic.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2diagnostic.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.messageGenerator
 }

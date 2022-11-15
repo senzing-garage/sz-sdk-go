@@ -14,8 +14,8 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
@@ -96,7 +96,7 @@ func main() {
 	messageIdTemplate := &messageid.MessageIdTemplated{
 		MessageIdTemplate: MessageIdTemplate,
 	}
-	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+	messageLevel := &messagelevel.MessageLevelByIdRange{
 		IdRanges: map[int]logger.Level{
 			0000: logger.LevelInfo,
 			1000: logger.LevelWarn,
@@ -121,7 +121,7 @@ func main() {
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: Messages,
 	}
-	logger, _ := messagelogger.New(messageFormat, messageIdTemplate, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	logger, _ := messagelogger.New(messageFormat, messageIdTemplate, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 
 	// Test logger.
 

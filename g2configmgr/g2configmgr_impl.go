@@ -19,8 +19,8 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
@@ -81,7 +81,7 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+		messageLevel := &messagelevel.MessageLevelByIdRange{
 			IdRanges: IdRangesLogLevel,
 		}
 		messageStatus := &messagestatus.MessageStatusByIdRange{
@@ -90,7 +90,7 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2configmgr.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2configmgr.logger, _ = messagelogger.New(messageFormat, messageId, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
 	return g2configmgr.logger
 }
@@ -101,7 +101,7 @@ func (g2configmgr *G2configmgrImpl) getMessageGenerator() messagelogger.MessageL
 		messageId := &messageid.MessageIdTemplated{
 			MessageIdTemplate: MessageIdTemplate,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{
+		messageLevel := &messagelevel.MessageLevelSenzingApi{
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
@@ -112,7 +112,7 @@ func (g2configmgr *G2configmgrImpl) getMessageGenerator() messagelogger.MessageL
 		messageText := &messagetext.MessageTextTemplated{
 			IdMessages: IdMessages,
 		}
-		g2configmgr.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2configmgr.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 	}
 	return g2configmgr.messageGenerator
 }
