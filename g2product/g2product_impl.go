@@ -80,15 +80,12 @@ func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
-
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
 			IdRanges: IdRanges,
 		}
-
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
 		}
-
 		g2product.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2product.logger
@@ -100,15 +97,12 @@ func (g2product *G2productImpl) getMessageGenerator() messagelogger.MessageLogge
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
-
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
 			IdRanges: IdRanges,
 		}
-
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
 		}
-
 		g2product.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2product.messageGenerator

@@ -76,20 +76,16 @@ func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber 
 
 func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.logger == nil {
-
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
-
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
 			IdRanges: IdRanges,
 		}
-
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
 		}
-
 		g2diagnostic.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.logger
@@ -97,20 +93,16 @@ func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInt
 
 func (g2diagnostic *G2diagnosticImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.messageGenerator == nil {
-
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
-
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
 			IdRanges: IdRanges,
 		}
-
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
 		}
-
 		g2diagnostic.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.messageGenerator
