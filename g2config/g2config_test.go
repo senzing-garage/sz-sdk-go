@@ -3,6 +3,7 @@ package g2config
 import (
 	"context"
 	"fmt"
+	"log"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
@@ -23,6 +24,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 		g2configSingleton = &G2configImpl{}
 
 		// g2configSingleton.SetLogLevel(ctx, logger.LevelTrace)
+		log.SetFlags(0)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging

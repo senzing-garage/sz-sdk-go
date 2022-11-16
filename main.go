@@ -14,8 +14,8 @@ import (
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
 )
@@ -87,8 +87,7 @@ func main() {
 
 	// Configure the "log" standard library.
 
-	// log.SetFlags(log.Llongfile | log.Ldate | log.Lmicroseconds | log.LUTC)
-	log.SetFlags(log.LstdFlags)
+	log.SetFlags(0)
 
 	// Configure messagelogger
 
@@ -96,24 +95,24 @@ func main() {
 	messageIdTemplate := &messageid.MessageIdTemplated{
 		MessageIdTemplate: MessageIdTemplate,
 	}
-	messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
+	messageLevel := &messagelevel.MessageLevelByIdRange{
 		IdRanges: map[int]logger.Level{
-			0000: logger.LevelInfo,
-			1000: logger.LevelWarn,
-			2000: logger.LevelError,
-			3000: logger.LevelDebug,
-			4000: logger.LevelTrace,
+			0000: logger.LevelTrace,
+			1000: logger.LevelDebug,
+			2000: logger.LevelInfo,
+			3000: logger.LevelWarn,
+			4000: logger.LevelError,
 			5000: logger.LevelFatal,
 			6000: logger.LevelPanic,
 		},
 	}
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
-			4000: logger.LevelTraceName,
+			0000: logger.LevelTraceName,
+			1000: logger.LevelDebugName,
+			2000: logger.LevelInfoName,
+			3000: logger.LevelWarnName,
+			4000: logger.LevelErrorName,
 			5000: logger.LevelFatalName,
 			6000: logger.LevelPanicName,
 		},
@@ -121,7 +120,7 @@ func main() {
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: Messages,
 	}
-	logger, _ := messagelogger.New(messageFormat, messageIdTemplate, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+	logger, _ := messagelogger.New(messageFormat, messageIdTemplate, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 
 	// Test logger.
 

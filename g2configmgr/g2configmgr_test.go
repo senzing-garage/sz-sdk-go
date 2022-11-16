@@ -3,6 +3,7 @@ package g2configmgr
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"testing"
 	"time"
@@ -28,6 +29,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 		g2configmgrSingleton = &G2configmgrImpl{}
 
 		// g2configmgrSingleton.SetLogLevel(ctx, logger.LevelTrace)
+		log.SetFlags(0)
 
 		moduleName := "Test module name"
 		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging

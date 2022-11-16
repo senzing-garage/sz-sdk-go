@@ -14,15 +14,14 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"time"
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messageformat"
-	"github.com/senzing/go-logging/messageid"
+	"github.com/senzing/go-logging/messagelevel"
+	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messageloglevel"
 	"github.com/senzing/go-logging/messagestatus"
-	"github.com/senzing/go-logging/messagetext"
 )
 
 // ----------------------------------------------------------------------------
@@ -77,42 +76,34 @@ func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber in
 
 func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2configmgr.logger == nil {
-		messageFormat := &messageformat.MessageFormatJson{}
-		messageId := &messageid.MessageIdTemplated{
-			MessageIdTemplate: MessageIdTemplate,
+		messageLevel := &messagelevel.MessageLevelSenzingApi{
+			IdRanges:   IdRanges,
+			IdStatuses: IdStatuses,
 		}
-		messageLogLevel := &messageloglevel.MessageLogLevelByIdRange{
-			IdRanges: IdRangesLogLevel,
-		}
-		messageStatus := &messagestatus.MessageStatusByIdRange{
+		messageStatus := &messagestatus.MessageStatusSenzingApi{
 			IdRanges: IdRanges,
 		}
-		messageText := &messagetext.MessageTextTemplated{
-			IdMessages: IdMessages,
+		messageLocation := &messagelocation.MessageLocationSenzing{
+			CallerSkip: 4,
 		}
-		g2configmgr.logger, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2configmgr.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2configmgr.logger
 }
 
 func (g2configmgr *G2configmgrImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2configmgr.messageGenerator == nil {
-		messageFormat := &messageformat.MessageFormatJson{}
-		messageId := &messageid.MessageIdTemplated{
-			MessageIdTemplate: MessageIdTemplate,
-		}
-		messageLogLevel := &messageloglevel.MessageLogLevelSenzingApi{
+		messageLevel := &messagelevel.MessageLevelSenzingApi{
 			IdRanges:   IdRanges,
 			IdStatuses: IdStatuses,
 		}
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
+			IdRanges: IdRanges,
 		}
-		messageText := &messagetext.MessageTextTemplated{
-			IdMessages: IdMessages,
+		messageLocation := &messagelocation.MessageLocationSenzing{
+			CallerSkip: 4,
 		}
-		g2configmgr.messageGenerator, _ = messagelogger.New(messageFormat, messageId, messageLogLevel, messageStatus, messageText, messagelogger.LevelInfo)
+		g2configmgr.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
 	}
 	return g2configmgr.messageGenerator
 }
@@ -132,8 +123,9 @@ func (g2configmgr *G2configmgrImpl) traceExit(errorNumber int, details ...interf
 func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr string, configComments string) (int64, error) {
 	// _DLEXPORT int G2ConfigMgr_addConfig(const char* configStr, const char* configComments, long long* configID);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4001, configStr, configComments)
+		g2configmgr.traceEntry(1, configStr, configComments)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	configStrForC := C.CString(configStr)
 	defer C.free(unsafe.Pointer(configStrForC))
@@ -141,24 +133,25 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	defer C.free(unsafe.Pointer(configCommentsForC))
 	result := C.G2ConfigMgr_addConfig_helper(configStrForC, configCommentsForC)
 	if result.returnCode != 0 {
-		err = g2configmgr.newError(ctx, 2001, configStr, configComments, result.returnCode, result)
+		err = g2configmgr.newError(ctx, 4001, configStr, configComments, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4002, configStr, configComments, int64(C.longlong(result.configID)), err)
+		defer g2configmgr.traceExit(2, configStr, configComments, int64(C.longlong(result.configID)), err, time.Since(entryTime))
 	}
 	return int64(C.longlong(result.configID)), err
 }
 
 // ClearLastException returns the available memory, in bytes, on the host system.
 func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) error {
-	// _DLEXPORT void G2Config_clearLastException();
+	// _DLEXPORT void G2Config_clearLastException()
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4003)
+		g2configmgr.traceEntry(3)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	C.G2ConfigMgr_clearLastException()
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4004, err)
+		defer g2configmgr.traceExit(4, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -166,15 +159,16 @@ func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) erro
 func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4005)
+		g2configmgr.traceEntry(5)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_destroy()
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2002, result)
+		err = g2configmgr.newError(ctx, 4002, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4006, err)
+		defer g2configmgr.traceExit(6, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -182,15 +176,16 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4007, configID)
+		g2configmgr.traceEntry(7, configID)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_getConfig_helper(C.longlong(configID))
 	if result.returnCode != 0 {
-		err = g2configmgr.newError(ctx, 2003, configID, result.returnCode, result)
+		err = g2configmgr.newError(ctx, 4003, configID, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4008, configID, C.GoString(result.config), err)
+		defer g2configmgr.traceExit(8, configID, C.GoString(result.config), err, time.Since(entryTime))
 	}
 	return C.GoString(result.config), err
 }
@@ -198,15 +193,16 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4009)
+		g2configmgr.traceEntry(9)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_getConfigList_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.newError(ctx, 2004, result.returnCode, result)
+		err = g2configmgr.newError(ctx, 4004, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4010, C.GoString(result.configList), err)
+		defer g2configmgr.traceExit(10, C.GoString(result.configList), err, time.Since(entryTime))
 	}
 	return C.GoString(result.configList), err
 }
@@ -214,15 +210,16 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4011)
+		g2configmgr.traceEntry(11)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
 	if result.returnCode != 0 {
-		err = g2configmgr.newError(ctx, 2005, result.returnCode, result)
+		err = g2configmgr.newError(ctx, 4005, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4012, int64(C.longlong(result.configID)), err)
+		defer g2configmgr.traceExit(12, int64(C.longlong(result.configID)), err, time.Since(entryTime))
 	}
 	return int64(C.longlong(result.configID)), err
 }
@@ -231,18 +228,19 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4013)
+		g2configmgr.traceEntry(13)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
 	result := C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
 	if result == 0 {
 		messageGenerator := g2configmgr.getMessageGenerator()
-		err = messageGenerator.Error(2006, result)
+		err = messageGenerator.Error(4006, result, time.Since(entryTime))
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4014, string(stringBuffer), err)
+		defer g2configmgr.traceExit(14, string(stringBuffer), err, time.Since(entryTime))
 	}
 	return string(stringBuffer), err
 }
@@ -250,12 +248,13 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4015)
+		g2configmgr.traceEntry(15)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := int(C.G2ConfigMgr_getLastExceptionCode())
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4016, result, err)
+		defer g2configmgr.traceExit(16, result, err, time.Since(entryTime))
 	}
 	return result, err
 }
@@ -263,8 +262,9 @@ func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (i
 func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4017, moduleName, iniParams, verboseLogging)
+		g2configmgr.traceEntry(17, moduleName, iniParams, verboseLogging)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	moduleNameForC := C.CString(moduleName)
 	defer C.free(unsafe.Pointer(moduleNameForC))
@@ -272,10 +272,10 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	defer C.free(unsafe.Pointer(iniParamsForC))
 	result := C.G2ConfigMgr_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2007, moduleName, iniParams, verboseLogging, result)
+		err = g2configmgr.newError(ctx, 4007, moduleName, iniParams, verboseLogging, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4018, moduleName, iniParams, verboseLogging, err)
+		defer g2configmgr.traceExit(18, moduleName, iniParams, verboseLogging, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -285,15 +285,16 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error {
 	// _DLEXPORT int G2ConfigMgr_replaceDefaultConfigID(const long long oldConfigID, const long long newConfigID);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4019, oldConfigID, newConfigID)
+		g2configmgr.traceEntry(19, oldConfigID, newConfigID)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_replaceDefaultConfigID(C.longlong(oldConfigID), C.longlong(newConfigID))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2008, oldConfigID, newConfigID, result)
+		err = g2configmgr.newError(ctx, 4008, oldConfigID, newConfigID, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4020, oldConfigID, newConfigID, err)
+		defer g2configmgr.traceExit(20, oldConfigID, newConfigID, err, time.Since(entryTime))
 	}
 	return err
 }
@@ -301,28 +302,30 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
 	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4021, configID)
+		g2configmgr.traceEntry(21, configID)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
 	if result != 0 {
-		err = g2configmgr.newError(ctx, 2009, configID, result)
+		err = g2configmgr.newError(ctx, 4009, configID, result, time.Since(entryTime))
 	}
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4022, configID, err)
+		defer g2configmgr.traceExit(22, configID, err, time.Since(entryTime))
 	}
 	return err
 }
 
 func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(4023, logLevel)
+		g2configmgr.traceEntry(23, logLevel)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	g2configmgr.getLogger().SetLogLevel(messagelogger.Level(logLevel))
 	g2configmgr.isTrace = g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace
 	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4024, logLevel, err)
+		defer g2configmgr.traceExit(24, logLevel, err, time.Since(entryTime))
 	}
 	return err
 }

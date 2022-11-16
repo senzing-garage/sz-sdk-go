@@ -35,56 +35,56 @@ type G2product interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-const MessageIdTemplate = "senzing-6006%04d"
+const ProductId = 6006
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
 var IdMessages = map[int]string{
-	2001: "Call to G2Product_destroy() failed. Return code: %d",
-	2002: "Call to G2Product_getLastException() failed. Return code: %d",
-	2003: "Call to G2Product_init(%s, %s, %s) failed. Return code: %d",
-	2004: "Call to G2Product_validateLicenseFile(%s) failed. Return code: %d",
-	2005: "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
-	4001: "Enter ClearLastException().",
-	4002: "Exit  ClearLastException() returned (%v).",
-	4003: "Enter Destroy().",
-	4004: "Exit  Destroy() returned (%v).",
-	4005: "Enter GetLastException().",
-	4006: "Exit  GetLastException() returned (%s, %v).",
-	4007: "Enter GetLastExceptionCode().",
-	4008: "Exit  GetLastExceptionCode() returned (%d, %v).",
-	4009: "Enter Init(%s, %s, %s).",
-	4010: "Exit  Init(%s, %s, %s) returned (%v).",
-	4011: "Enter License().",
-	4012: "Exit  License() returned (%s, %v).",
-	4013: "Enter SetLogLevel(%v).",
-	4014: "Exit  SetLogLevel(%v) returned (%v).",
-	4015: "Enter ValidateLicenseFile(%s).",
-	4016: "Exit  ValidateLicenseFile(%s) returned (%s, %v).",
-	4017: "Enter ValidateLicenseStringBase64(%s).",
-	4018: "Exit  ValidateLicenseStringBase64(%s) returned (%s, %v).",
-	4019: "Enter Version().",
-	4020: "Exit  Version() returned (%s, %v).",
+	1:    "Enter ClearLastException().",
+	2:    "Exit  ClearLastException() returned (%v).",
+	3:    "Enter Destroy().",
+	4:    "Exit  Destroy() returned (%v).",
+	5:    "Enter GetLastException().",
+	6:    "Exit  GetLastException() returned (%s, %v).",
+	7:    "Enter GetLastExceptionCode().",
+	8:    "Exit  GetLastExceptionCode() returned (%d, %v).",
+	9:    "Enter Init(%s, %s, %s).",
+	10:   "Exit  Init(%s, %s, %s) returned (%v).",
+	11:   "Enter License().",
+	12:   "Exit  License() returned (%s, %v).",
+	13:   "Enter SetLogLevel(%v).",
+	14:   "Exit  SetLogLevel(%v) returned (%v).",
+	15:   "Enter ValidateLicenseFile(%s).",
+	16:   "Exit  ValidateLicenseFile(%s) returned (%s, %v).",
+	17:   "Enter ValidateLicenseStringBase64(%s).",
+	18:   "Exit  ValidateLicenseStringBase64(%s) returned (%s, %v).",
+	19:   "Enter Version().",
+	20:   "Exit  Version() returned (%s, %v).",
+	4001: "Call to G2Product_destroy() failed. Return code: %d",
+	4002: "Call to G2Product_getLastException() failed. Return code: %d",
+	4003: "Call to G2Product_init(%s, %s, %s) failed. Return code: %d",
+	4004: "Call to G2Product_validateLicenseFile(%s) failed. Return code: %d",
+	4005: "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
 }
 
 var IdRanges = map[int]string{
-	0000: logger.LevelInfoName,
-	1000: logger.LevelWarnName,
-	2000: logger.LevelErrorName,
-	3000: logger.LevelDebugName,
-	4000: logger.LevelTraceName,
+	0000: logger.LevelTraceName,
+	1000: logger.LevelDebugName,
+	2000: logger.LevelInfoName,
+	3000: logger.LevelWarnName,
+	4000: logger.LevelErrorName,
 	5000: logger.LevelFatalName,
 	6000: logger.LevelPanicName,
 }
 
 var IdRangesLogLevel = map[int]logger.Level{
-	0000: logger.LevelInfo,
-	1000: logger.LevelWarn,
-	2000: logger.LevelError,
-	3000: logger.LevelDebug,
-	4000: logger.LevelTrace,
+	0000: logger.LevelTrace,
+	1000: logger.LevelDebug,
+	2000: logger.LevelInfo,
+	3000: logger.LevelWarn,
+	4000: logger.LevelError,
 	5000: logger.LevelFatal,
 	6000: logger.LevelPanic,
 }
@@ -94,5 +94,5 @@ var IdStatuses = map[int]string{
 	2002: logger.LevelErrorName,
 	2003: logger.LevelErrorName,
 	2004: logger.LevelErrorName,
-	2999: logger.LevelErrorName,
+	2005: logger.LevelErrorName,
 }
