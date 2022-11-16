@@ -108,12 +108,11 @@ func main() {
 	}
 	messageStatus := &messagestatus.MessageStatusByIdRange{
 		IdRanges: map[int]string{
-			4000: logger.LevelTraceName,
-
-			0000: logger.LevelInfoName,
-			1000: logger.LevelWarnName,
-			2000: logger.LevelErrorName,
-			3000: logger.LevelDebugName,
+			0000: logger.LevelTraceName,
+			1000: logger.LevelDebugName,
+			2000: logger.LevelInfoName,
+			3000: logger.LevelWarnName,
+			4000: logger.LevelErrorName,
 			5000: logger.LevelFatalName,
 			6000: logger.LevelPanicName,
 		},
