@@ -83,7 +83,7 @@ var IdMessages = map[int]string{
 	4010: "Call to G2Config_save(%v) failed. Return code: %d",
 }
 
-var IdRanges = map[int]string{
+var XIdLevelRangeAsString = map[int]string{
 	0000: logger.LevelTraceName,
 	1000: logger.LevelDebugName,
 	2000: logger.LevelInfoName,
@@ -93,7 +93,7 @@ var IdRanges = map[int]string{
 	6000: logger.LevelPanicName,
 }
 
-var IdRangesLogLevel = map[int]logger.Level{
+var IdLevelRanges = map[int]logger.Level{
 	0000: logger.LevelTrace,
 	1000: logger.LevelDebug,
 	2000: logger.LevelInfo,

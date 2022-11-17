@@ -77,11 +77,11 @@ func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, det
 func (g2engine *G2engineImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2engine.logger == nil {
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
+			IdLevelRanges: messagelevel.IdLevelRanges,
+			IdStatuses:    IdStatuses,
 		}
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
+			IdStatuses: IdRanges,
 		}
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
@@ -94,11 +94,11 @@ func (g2engine *G2engineImpl) getLogger() messagelogger.MessageLoggerInterface {
 func (g2engine *G2engineImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2engine.messageGenerator == nil {
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
+			IdLevelRanges: messagelevel.IdLevelRanges,
+			IdStatuses:    IdStatuses,
 		}
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
+			IdStatuses: IdRanges,
 		}
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,

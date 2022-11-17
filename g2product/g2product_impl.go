@@ -77,11 +77,11 @@ func (g2product *G2productImpl) newError(ctx context.Context, errorNumber int, d
 func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2product.logger == nil {
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
+			IdLevelRanges: messagelevel.IdLevelRanges,
+			IdStatuses:    IdStatuses,
 		}
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
+			IdStatuses: IdRanges,
 		}
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
@@ -94,11 +94,11 @@ func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface
 func (g2product *G2productImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
 	if g2product.messageGenerator == nil {
 		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
+			IdLevelRanges: messagelevel.IdLevelRanges,
+			IdStatuses:    IdStatuses,
 		}
 		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
+			IdStatuses: IdRanges,
 		}
 		messageLocation := &messagelocation.MessageLocationSenzing{
 			CallerSkip: 4,
