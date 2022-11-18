@@ -196,7 +196,7 @@ func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger
 	entryTime := time.Now()
 	var err error = nil
 	g2product.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-	g2product.isTrace = g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace
+	g2product.isTrace = (g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2product.isTrace {
 		defer g2product.traceExit(14, logLevel, err, time.Since(entryTime))
 	}

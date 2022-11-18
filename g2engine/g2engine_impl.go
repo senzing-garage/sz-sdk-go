@@ -1445,7 +1445,7 @@ func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.L
 	entryTime := time.Now()
 	var err error = nil
 	g2engine.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-	g2engine.isTrace = g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace
+	g2engine.isTrace = (g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2engine.isTrace {
 		defer g2engine.traceExit(138, logLevel, err, time.Since(entryTime))
 	}
