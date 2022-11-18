@@ -18,8 +18,10 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// Senzing flags.
 type FlagMask int64
 
+// The G2engine interface is a Golang representation of Senzing's libg2.h
 type G2engine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
@@ -105,8 +107,11 @@ type G2engine interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2engine component found messages having the format "senzing-6004xxxx".
 const ProductId = 6004
 
+// Flags used by the Senzing G2Engine.
+// These flags are single-bit flags.
 const (
 	G2_EXPORT_INCLUDE_RESOLVED         FlagMask = 0         // 0 we should include entities with "resolved" relationships
 	G2_EXPORT_INCLUDE_POSSIBLY_SAME    FlagMask = 1 << iota // 1 we should include entities with "possibly same" relationships
@@ -150,6 +155,8 @@ const (
 	G2_SEARCH_INCLUDE_STATS   //  27 include statistics from search results
 )
 
+// Flags used by the Senzing G2Engine.
+// These flags combine single-bit flags.
 const (
 	/* flags for exporting entity data  */
 	G2_EXPORT_INCLUDE_ALL_ENTITIES      = G2_EXPORT_INCLUDE_RESOLVED | G2_EXPORT_INCLUDE_SINGLETONS
@@ -186,6 +193,7 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2engine package.
 var IdMessages = map[int]string{
 	1:    "Enter AddRecord(%s, %s, %s, %s).",
 	2:    "Exit  AddRecord(%s, %s, %s, %s) returned (%v).",
@@ -419,4 +427,5 @@ var IdMessages = map[int]string{
 	4074: "Call to G2_whyRecords_V2(%s, %s, %s, %s, %d) failed. Return code: %d",
 }
 
+// Status strings for specific g2engine messages.
 var IdStatuses = map[int]string{}

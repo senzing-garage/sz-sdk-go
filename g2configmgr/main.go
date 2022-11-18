@@ -18,6 +18,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	ClearLastException(ctx context.Context) error
@@ -37,12 +38,14 @@ type G2configmgr interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2configmgr component found messages having the format "senzing-6002xxxx".
 const ProductId = 6002
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2configmgr package.
 var IdMessages = map[int]string{
 	1:    "Enter AddConfig(%s, %s).",
 	2:    "Exit  AddConfig(%s, %s) returned (%d, %v).",
@@ -79,4 +82,5 @@ var IdMessages = map[int]string{
 	4009: "Call to G2ConfigMgr_setDefaultConfigID(%d) failed. Return code: %d",
 }
 
+// Status strings for specific g2configmgr messages.
 var IdStatuses = map[int]string{}

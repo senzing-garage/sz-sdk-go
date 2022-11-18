@@ -18,6 +18,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The G2config interface is a Golang representation of Senzing's libg2config.h
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
 	ClearLastException(ctx context.Context) error
@@ -38,12 +39,14 @@ type G2config interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2config package found messages having the format "senzing-6001xxxx".
 const ProductId = 6001
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2config package.
 var IdMessages = map[int]string{
 	1:    "Enter AddDataSource(%v, %s).",
 	2:    "Exit  AddDataSource(%v, %s) returned (%s, %v).",
@@ -83,4 +86,5 @@ var IdMessages = map[int]string{
 	4010: "Call to G2Config_save(%v) failed. Return code: %d",
 }
 
+// Status strings for specific g2config messages.
 var IdStatuses = map[int]string{}

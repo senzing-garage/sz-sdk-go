@@ -42,11 +42,11 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 }
 
 func truncate(aString string) string {
-	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, 150, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
+	if 1 == 1 {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
 	}
 }

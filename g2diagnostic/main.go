@@ -18,6 +18,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
 	ClearLastException(ctx context.Context) error
@@ -52,12 +53,14 @@ type G2diagnostic interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2diagnostic component found messages having the format "senzing-6003xxxx".
 const ProductId = 6003
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2diagnostic package.
 var IdMessages = map[int]string{
 	1:    "Enter CheckDBPerf(%d).",
 	2:    "Exit  CheckDBPerf(%d) returned (%s, %v).",
@@ -135,4 +138,5 @@ var IdMessages = map[int]string{
 	4020: "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
 }
 
+// Status strings for specific g2diagnostic messages.
 var IdStatuses = map[int]string{}

@@ -1,5 +1,5 @@
 /*
-The G2configImpl implementation...
+The G2configImpl implementation is a Golang wrapper over the Senzing libg2config library.
 */
 package g2config
 
@@ -88,6 +88,19 @@ func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{})
 // Interface methods
 // ----------------------------------------------------------------------------
 
+/*
+The AddDataSource method adds a data source to an existing configuration.
+
+Input:
+
+	ctx - A context to control lifecycle
+	configHandle - A pointer to a configuration
+	inputJson - A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
+
+Output:
+
+	A string containing a JSON document. Example: `{"DSRC_ID":1001}`
+*/
 func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error) {
 	// _DLEXPORT int G2Config_addDataSource(ConfigHandle configHandle, const char *inputJson, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2config.isTrace {
@@ -107,7 +120,13 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	return C.GoString(result.response), err
 }
 
-// ClearLastException returns the available memory, in bytes, on the host system.
+/*
+The ClearLastException method erases the last exception message held by the Senzing g2config.
+
+Input:
+
+	ctx - A context to control lifecycle
+*/
 func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException();
 	if g2config.isTrace {
@@ -122,6 +141,14 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 	return err
 }
 
+/*
+The Close method cleans up the Senzing G2 Config object pointed to by the handle.
+
+Input:
+
+	ctx - A context to control lifecycle
+	configHandle - A pointer to a configuration
+*/
 func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
 	if g2config.isTrace {
@@ -139,6 +166,13 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 	return err
 }
 
+/*
+The Create method creates a stock G2 JSON config from the template config.
+
+Input:
+
+	ctx - A context to control lifecycle
+*/
 func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
 	if g2config.isTrace {
@@ -156,6 +190,19 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	return (uintptr)(result.response), err
 }
 
+/*
+The DeleteDataSource method removes a data source from an existing configuration.
+
+Input:
+
+	ctx - A context to control lifecycle
+	configHandle - A pointer to a configuration
+	inputJson - A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
+
+Output:
+
+	A string containing a JSON document. Example: `{"DATA_SOURCES":[{"DSRC_ID":1,"DSRC_CODE":"TEST"},{"DSRC_ID":2,"DSRC_CODE":"SEARCH"}]}`
+*/
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
 	// _DLEXPORT int G2Config_deleteDataSource(ConfigHandle configHandle, const char *inputJson);
 	if g2config.isTrace {
@@ -175,6 +222,10 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 	return err
 }
 
+/*
+This method will destroy and perform cleanup for the G2 Config object.
+It should be called after all other calls are complete.
+*/
 func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	if g2config.isTrace {
@@ -192,7 +243,12 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
-// GetLastException returns the last exception encountered in the Senzing Engine.
+/*
+This function retrieves the last exception thrown in G2Config
+GetLastException returns the last exception encountered in the Senzing Engine.
+
+	@return number of bytes copied into buffer
+*/
 func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2config.isTrace {
@@ -212,6 +268,10 @@ func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, err
 	return string(stringBuffer), err
 }
 
+/*
+This function retrieves the code of the last exception thrown in G2Config
+@return number of bytes copied into buffer
+*/
 func (g2config *G2configImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	if g2config.isTrace {
@@ -226,6 +286,16 @@ func (g2config *G2configImpl) GetLastExceptionCode(ctx context.Context) (int, er
 	return result, err
 }
 
+/*
+This method will initialize the G2 Config object.
+It must be called prior to any other calls.
+
+Parameters:
+
+	moduleName - A name for the auditing node, to help identify it within system logs.
+	iniParams - A JSON string containing configuration paramters.
+	verboseLogging - A flag to enable deeper logging of the G2 processing
+*/
 func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2config.isTrace {
@@ -247,6 +317,8 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	return err
 }
 
+/*
+ */
 func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_listDataSources(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2config.isTrace {
@@ -264,6 +336,10 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	return C.GoString(result.response), err
 }
 
+/*
+This method initializes the G2 Config object from a JSON string.
+Any time you need to edit an existing config from an existing repository you will want to use this method to be able to modify it.
+*/
 func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
 	// _DLEXPORT int G2Config_load(const char *jsonConfig,ConfigHandle* configHandle);
 	if g2config.isTrace {
@@ -283,6 +359,9 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 	return err
 }
 
+/*
+This method saves the G2 Config object into a JSON string.
+*/
 func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2config.isTrace {
@@ -300,6 +379,8 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	return C.GoString(result.response), err
 }
 
+/*
+ */
 func (g2config *G2configImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2config.isTrace {
 		g2config.traceEntry(25, logLevel)

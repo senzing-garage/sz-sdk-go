@@ -18,6 +18,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The G2product interface is a Golang representation of Senzing's libg2product.h
 type G2product interface {
 	ClearLastException(ctx context.Context) error
 	Destroy(ctx context.Context) error
@@ -35,12 +36,14 @@ type G2product interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2product component found messages having the format "senzing-6006xxxx".
 const ProductId = 6006
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2product package.
 var IdMessages = map[int]string{
 	1:    "Enter ClearLastException().",
 	2:    "Exit  ClearLastException() returned (%v).",
@@ -69,4 +72,5 @@ var IdMessages = map[int]string{
 	4005: "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
 }
 
+// Status strings for specific g2product messages.
 var IdStatuses = map[int]string{}
