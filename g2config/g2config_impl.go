@@ -89,7 +89,7 @@ func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{})
 // ----------------------------------------------------------------------------
 
 /*
-The AddDataSource method adds a data source to an existing configuration.
+The AddDataSource method adds a data source to an existing in-memory configuration.
 
 # Input
   - ctx: A context to control lifecycle
