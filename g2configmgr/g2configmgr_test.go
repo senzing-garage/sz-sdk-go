@@ -82,9 +82,16 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
 		lastException, _ := g2configmgr.GetLastException(ctx)
+		test.Log("Error:", err.Error())
 		assert.FailNow(test, lastException)
+	}
+}
+
+func testErrorNoFail(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
+	if err != nil {
+		lastException, _ := g2configmgr.GetLastException(ctx)
+		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
 }
 
@@ -194,11 +201,8 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetLastException(ctx)
-	if err != nil {
-		test.Log("Error:", err.Error())
-	} else {
-		printActual(test, actual)
-	}
+	testErrorNoFail(test, ctx, g2configmgr, err)
+	printActual(test, actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
@@ -247,7 +251,6 @@ func TestReplaceDefaultConfigID(test *testing.T) {
 func TestSetDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
-
 	configID, err1 := g2configmgr.GetDefaultConfigID(ctx)
 	if err1 != nil {
 		test.Log("Error:", err1.Error())

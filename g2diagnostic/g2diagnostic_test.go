@@ -57,9 +57,16 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
 		lastException, _ := g2diagnostic.GetLastException(ctx)
+		test.Log("Error:", err.Error())
 		assert.FailNow(test, lastException)
+	}
+}
+
+func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
+	if err != nil {
+		lastException, _ := g2diagnostic.GetLastException(ctx)
+		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
 }
 
@@ -116,14 +123,11 @@ func TestEntityListBySize(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	aSize := 1000
-
 	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
 	testError(test, ctx, g2diagnostic, err)
-
 	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
 	testError(test, ctx, g2diagnostic, err)
 	printResult(test, "Entity", anEntity)
-
 	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
 	testError(test, ctx, g2diagnostic, err)
 }
@@ -168,7 +172,7 @@ func TestGetEntityDetails(test *testing.T) {
 	entityID := int64(1)
 	includeInternalFeatures := 1
 	actual, err := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
-	testError(test, ctx, g2diagnostic, err)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 	printActual(test, actual)
 }
 
@@ -177,7 +181,7 @@ func TestGetEntityResume(test *testing.T) {
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
 	actual, err := g2diagnostic.GetEntityResume(ctx, entityID)
-	testError(test, ctx, g2diagnostic, err)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 	printActual(test, actual)
 }
 
@@ -196,7 +200,7 @@ func TestGetFeature(test *testing.T) {
 	g2diagnostic := getTestObject(ctx, test)
 	libFeatID := int64(1)
 	actual, err := g2diagnostic.GetFeature(ctx, libFeatID)
-	testError(test, ctx, g2diagnostic, err)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 	printActual(test, actual)
 }
 
@@ -214,11 +218,8 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLastException(ctx)
-	if err != nil {
-		test.Log("Error:", err.Error())
-	} else {
-		printActual(test, actual)
-	}
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
@@ -262,7 +263,7 @@ func TestGetRelationshipDetails(test *testing.T) {
 	relationshipID := int64(1)
 	includeInternalFeatures := 1
 	actual, err := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
-	testError(test, ctx, g2diagnostic, err)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 	printActual(test, actual)
 }
 
@@ -311,7 +312,7 @@ func TestReinit(test *testing.T) {
 	g2diagnostic := &G2diagnosticImpl{}
 	initConfigID := int64(1)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
-	testError(test, ctx, g2diagnostic, err)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 }
 
 func TestDestroy(test *testing.T) {

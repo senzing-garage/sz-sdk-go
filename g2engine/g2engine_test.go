@@ -58,9 +58,16 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2engine G2engine, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
 		lastException, _ := g2engine.GetLastException(ctx)
+		test.Log("Error:", err.Error())
 		assert.FailNow(test, lastException)
+	}
+}
+
+func testErrorNoFail(test *testing.T, ctx context.Context, g2engine G2engine, err error) {
+	if err != nil {
+		lastException, _ := g2engine.GetLastException(ctx)
+		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
 }
 
@@ -236,7 +243,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 	buildOutDegree := 1
 	maxEntities := 10
 	actual, err := g2engine.FindNetworkByEntityID(ctx, entityList, maxDegree, buildOutDegree, maxEntities)
-	testError(test, ctx, g2engine, err)
+	testErrorNoFail(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
 
@@ -249,7 +256,7 @@ func TestFindNetworkByEntityID_V2(test *testing.T) {
 	maxEntities := 10
 	var flags int64 = 0
 	actual, err := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
-	testError(test, ctx, g2engine, err)
+	testErrorNoFail(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
 
@@ -492,9 +499,8 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetLastException(ctx)
-	if err == nil {
-		printActual(test, actual)
-	}
+	testErrorNoFail(test, ctx, g2engine, err)
+	printActual(test, actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {

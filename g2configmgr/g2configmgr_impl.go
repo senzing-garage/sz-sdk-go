@@ -201,10 +201,10 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	entryTime := time.Now()
 	var err error = nil
 	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
-	result := C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result == 0 {
-		err = g2configmgr.getLogger().Error(4006, result, time.Since(entryTime))
-	}
+	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2configmgr.getLogger().Error(4006, result, time.Since(entryTime))
+	// }
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(14, string(stringBuffer), err, time.Since(entryTime))

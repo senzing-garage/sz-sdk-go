@@ -18,10 +18,7 @@ import (
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagelevel"
-	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messagestatus"
 )
 
 // ----------------------------------------------------------------------------
@@ -29,9 +26,8 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2diagnosticImpl struct {
-	isTrace          bool
-	logger           messagelogger.MessageLoggerInterface
-	messageGenerator messagelogger.MessageLoggerInterface
+	isTrace bool
+	logger  messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -65,8 +61,7 @@ func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber 
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2diagnostic.getMessageGenerator()
-	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
+	errorMessage, err := g2diagnostic.getLogger().Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -76,36 +71,9 @@ func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber 
 
 func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.logger == nil {
-		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdLevelRanges: messagelevel.IdLevelRanges,
-			IdStatuses:    messagestatus.IdLevelRangesAsString,
-		}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdStatuses: messagestatus.IdLevelRangesAsString,
-		}
-		messageLocation := &messagelocation.MessageLocationSenzing{
-			CallerSkip: 4,
-		}
-		g2diagnostic.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
+		g2diagnostic.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	}
 	return g2diagnostic.logger
-}
-
-func (g2diagnostic *G2diagnosticImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
-	if g2diagnostic.messageGenerator == nil {
-		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdLevelRanges: messagelevel.IdLevelRanges,
-			IdStatuses:    messagestatus.IdLevelRangesAsString,
-		}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdStatuses: messagestatus.IdLevelRangesAsString,
-		}
-		messageLocation := &messagelocation.MessageLocationSenzing{
-			CallerSkip: 4,
-		}
-		g2diagnostic.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
-	}
-	return g2diagnostic.messageGenerator
 }
 
 func (g2diagnostic *G2diagnosticImpl) traceEntry(errorNumber int, details ...interface{}) {
@@ -389,11 +357,10 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	entryTime := time.Now()
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	result := C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result == 0 {
-		messageGenerator := g2diagnostic.getMessageGenerator()
-		err = messageGenerator.Error(4014, result, time.Since(entryTime))
-	}
+	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2diagnostic.getLogger().Error(4014, result, time.Since(entryTime))
+	// }
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2diagnostic.isTrace {
 		defer g2diagnostic.traceExit(32, string(stringBuffer), err, time.Since(entryTime))
