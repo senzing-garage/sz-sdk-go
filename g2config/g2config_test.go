@@ -8,6 +8,7 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -167,6 +168,13 @@ func ExampleG2configImpl_Save() {
 	jsonConfig, _ := g2config.Save(ctx, configHandle)
 	fmt.Println(truncate(jsonConfig))
 	// Output: {"G2_CONFIG":{"CFG_ATTR":[{"ATTR_ID":1001,"ATTR_CODE":"DATA_SOURCE","ATTR...
+}
+
+func ExampleG2configImpl_SetLogLevel() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	g2config.SetLogLevel(ctx, logger.LevelInfo)
+	// Output:
 }
 
 func ExampleG2configImpl_Destroy() {

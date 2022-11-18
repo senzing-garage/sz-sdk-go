@@ -120,7 +120,7 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 }
 
 /*
-The ClearLastException method erases the last exception message held by the Senzing g2config.
+The ClearLastException method erases the last exception message held by the Senzing G2Config object.
 
 Input
   - ctx: A context to control lifecycle
@@ -140,7 +140,7 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 }
 
 /*
-The Close method cleans up the Senzing G2 Config object pointed to by the handle.
+The Close method cleans up the Senzing G2Config object pointed to by the handle.
 
 Input
   - ctx: A context to control lifecycle
@@ -167,7 +167,7 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 The Create method creates a stock G2 JSON config from the template config.
 
 Input
-  - ctx - A context to control lifecycle
+  - ctx: A context to control lifecycle
 
 Output
   - A Pointer to an in-memory configuration
@@ -193,9 +193,9 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 The DeleteDataSource method removes a data source from an existing configuration.
 
 Input
-  - ctx - A context to control lifecycle
-  - configHandle - A pointer to a configuration
-  - inputJson - A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
+  - ctx: A context to control lifecycle
+  - configHandle: A pointer to a configuration
+  - inputJson: A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
 */
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
 	// _DLEXPORT int G2Config_deleteDataSource(ConfigHandle configHandle, const char *inputJson);
@@ -217,11 +217,11 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 }
 
 /*
-The Destroy method will destroy and perform cleanup for the G2 Config object.
+The Destroy method will destroy and perform cleanup for the Senzing G2Config object.
 It should be called after all other calls are complete.
 
 Input
-  - ctx - A context to control lifecycle
+  - ctx: A context to control lifecycle
 */
 func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
@@ -244,7 +244,7 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 The GetLastException method retrieves the last exception thrown in Senzing's G2Config.
 
 Input
-  - ctx - A context to control lifecycle
+  - ctx: A context to control lifecycle
 
 Output
   - A string containing the error received from Senzing's G2Config.
@@ -269,10 +269,10 @@ func (g2config *G2configImpl) GetLastException(ctx context.Context) (string, err
 }
 
 /*
-The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Config
+The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Config.
 
 Input:
-  - ctx - A context to control lifecycle
+  - ctx: A context to control lifecycle
 
 Output:
   - An int containing the error received from Senzing's G2Config.
@@ -292,14 +292,14 @@ func (g2config *G2configImpl) GetLastExceptionCode(ctx context.Context) (int, er
 }
 
 /*
-The Init method initializes the G2 Config object.
+The Init method initializes the Senzing G2Config object.
 It must be called prior to any other calls.
 
 Input
-  - ctx - A context to control lifecycle
-  - moduleName - A name for the auditing node, to help identify it within system logs.
-  - iniParams - A JSON string containing configuration paramters.
-  - verboseLogging - A flag to enable deeper logging of the G2 processing
+  - ctx: A context to control lifecycle
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing
 */
 func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
@@ -326,8 +326,8 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 The ListDataSources method returns a JSON document of data sources.
 
 Input
-  - ctx - A context to control lifecycle
-  - configHandle - A pointer to a configuration
+  - ctx: A context to control lifecycle
+  - configHandle: A pointer to a configuration
 
 Output
   - A string containing a JSON document listing all of the data sources.
@@ -350,12 +350,12 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 }
 
 /*
-The Load method initializes the G2 Config object from a JSON string.
+The Load method initializes the Senzing G2Config object from a JSON string.
 
 Input
-  - ctx - A context to control lifecycle
-  - configHandle - A pointer to a configuration
-  - jsonConfig - A JSON document containing the Senzing configuration
+  - ctx: A context to control lifecycle
+  - configHandle: A pointer to a configuration
+  - jsonConfig: A JSON document containing the Senzing configuration
 */
 func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
 	// _DLEXPORT int G2Config_load(const char *jsonConfig,ConfigHandle* configHandle);
@@ -380,8 +380,8 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 The Save method creates a JSON string representation of the Senzing G2Config object.
 
 Input
-  - ctx - A context to control lifecycle
-  - configHandle - A pointer to a configuration
+  - ctx: A context to control lifecycle
+  - configHandle: A pointer to a configuration
 
 Output
   - A string with a JSON Document representation of the Senzing G2Config object.
@@ -407,8 +407,8 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 The SetLogLevel method sets the level of logging.
 
 Input
-  - ctx - A context to control lifecycle
-  - logLevel - The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC
+  - ctx: A context to control lifecycle
+  - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC
 */
 func (g2config *G2configImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2config.isTrace {
