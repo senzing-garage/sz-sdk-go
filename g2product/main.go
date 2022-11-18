@@ -69,30 +69,4 @@ var IdMessages = map[int]string{
 	4005: "Call to G2Product_validateLicenseStringBase64(%s) failed. Return code: %d",
 }
 
-var IdRanges = map[int]string{
-	0000: logger.LevelTraceName,
-	1000: logger.LevelDebugName,
-	2000: logger.LevelInfoName,
-	3000: logger.LevelWarnName,
-	4000: logger.LevelErrorName,
-	5000: logger.LevelFatalName,
-	6000: logger.LevelPanicName,
-}
-
-var IdRangesLogLevel = map[int]logger.Level{
-	0000: logger.LevelTrace,
-	1000: logger.LevelDebug,
-	2000: logger.LevelInfo,
-	3000: logger.LevelWarn,
-	4000: logger.LevelError,
-	5000: logger.LevelFatal,
-	6000: logger.LevelPanic,
-}
-
-var IdStatuses = map[int]string{
-	2001: logger.LevelErrorName,
-	2002: logger.LevelErrorName,
-	2003: logger.LevelErrorName,
-	2004: logger.LevelErrorName,
-	2005: logger.LevelErrorName,
-}
+var IdStatuses = map[int]string{}

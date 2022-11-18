@@ -57,9 +57,16 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2config G2config, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
 		lastException, _ := g2config.GetLastException(ctx)
+		test.Log("Error:", err.Error())
 		assert.FailNow(test, lastException)
+	}
+}
+
+func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, err error) {
+	if err != nil {
+		lastException, _ := g2config.GetLastException(ctx)
+		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
 }
 
@@ -138,11 +145,8 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastException(ctx)
-	if err != nil {
-		test.Log("Error:", err.Error())
-	} else {
-		printActual(test, actual)
-	}
+	testErrorNoFail(test, ctx, g2config, err)
+	printActual(test, actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
@@ -179,16 +183,12 @@ func TestListDataSources(test *testing.T) {
 func TestLoad(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-
 	aHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-
 	actual, err := g2config.Save(ctx, aHandle)
 	testError(test, ctx, g2config, err)
-
 	err = g2config.Load(ctx, aHandle, actual)
 	testError(test, ctx, g2config, err)
-
 }
 
 func TestSave(test *testing.T) {

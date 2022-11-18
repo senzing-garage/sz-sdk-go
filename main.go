@@ -11,7 +11,6 @@ import (
 	"github.com/senzing/g2-sdk-go/g2diagnostic"
 	"github.com/senzing/g2-sdk-go/g2engine"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
 	"github.com/senzing/go-logging/messagelevel"
@@ -96,26 +95,10 @@ func main() {
 		MessageIdTemplate: MessageIdTemplate,
 	}
 	messageLevel := &messagelevel.MessageLevelByIdRange{
-		IdRanges: map[int]logger.Level{
-			0000: logger.LevelTrace,
-			1000: logger.LevelDebug,
-			2000: logger.LevelInfo,
-			3000: logger.LevelWarn,
-			4000: logger.LevelError,
-			5000: logger.LevelFatal,
-			6000: logger.LevelPanic,
-		},
+		IdLevelRanges: messagelevel.IdLevelRanges,
 	}
 	messageStatus := &messagestatus.MessageStatusByIdRange{
-		IdRanges: map[int]string{
-			0000: logger.LevelTraceName,
-			1000: logger.LevelDebugName,
-			2000: logger.LevelInfoName,
-			3000: logger.LevelWarnName,
-			4000: logger.LevelErrorName,
-			5000: logger.LevelFatalName,
-			6000: logger.LevelPanicName,
-		},
+		IdStatusRanges: messagestatus.IdLevelRangesAsString,
 	}
 	messageText := &messagetext.MessageTextTemplated{
 		IdMessages: Messages,

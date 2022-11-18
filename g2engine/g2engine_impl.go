@@ -18,10 +18,7 @@ import (
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-logging/messagelevel"
-	"github.com/senzing/go-logging/messagelocation"
 	"github.com/senzing/go-logging/messagelogger"
-	"github.com/senzing/go-logging/messagestatus"
 )
 
 // ----------------------------------------------------------------------------
@@ -29,9 +26,8 @@ import (
 // ----------------------------------------------------------------------------
 
 type G2engineImpl struct {
-	isTrace          bool
-	logger           messagelogger.MessageLoggerInterface
-	messageGenerator messagelogger.MessageLoggerInterface
+	isTrace bool
+	logger  messagelogger.MessageLoggerInterface
 }
 
 // ----------------------------------------------------------------------------
@@ -65,8 +61,7 @@ func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, det
 	var newDetails []interface{}
 	newDetails = append(newDetails, details...)
 	newDetails = append(newDetails, errors.New(message))
-	messageGenerator := g2engine.getMessageGenerator()
-	errorMessage, err := messageGenerator.Message(errorNumber, newDetails...)
+	errorMessage, err := g2engine.getLogger().Message(errorNumber, newDetails...)
 	if err != nil {
 		errorMessage = err.Error()
 	}
@@ -76,36 +71,9 @@ func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, det
 
 func (g2engine *G2engineImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2engine.logger == nil {
-		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
-		}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
-		}
-		messageLocation := &messagelocation.MessageLocationSenzing{
-			CallerSkip: 4,
-		}
-		g2engine.logger, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
+		g2engine.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	}
 	return g2engine.logger
-}
-
-func (g2engine *G2engineImpl) getMessageGenerator() messagelogger.MessageLoggerInterface {
-	if g2engine.messageGenerator == nil {
-		messageLevel := &messagelevel.MessageLevelSenzingApi{
-			IdRanges:   IdRanges,
-			IdStatuses: IdStatuses,
-		}
-		messageStatus := &messagestatus.MessageStatusSenzingApi{
-			IdRanges: IdRanges,
-		}
-		messageLocation := &messagelocation.MessageLocationSenzing{
-			CallerSkip: 4,
-		}
-		g2engine.messageGenerator, _ = messagelogger.NewSenzingLogger(ProductId, IdMessages, messageLevel, messageStatus, messageLocation, messagelogger.LevelInfo)
-	}
-	return g2engine.messageGenerator
 }
 
 func (g2engine *G2engineImpl) traceEntry(errorNumber int, details ...interface{}) {
@@ -927,11 +895,10 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	entryTime := time.Now()
 	var err error = nil
 	stringBuffer := g2engine.getByteArray(initialByteArraySize)
-	result := C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result == 0 {
-		messageGenerator := g2engine.getMessageGenerator()
-		err = messageGenerator.Error(4038, result, time.Since(entryTime))
-	}
+	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2engine.getLogger().Error(4038, result, time.Since(entryTime))
+	// }
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2engine.isTrace {
 		defer g2engine.traceExit(80, string(stringBuffer), err, time.Since(entryTime))
@@ -1478,7 +1445,7 @@ func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.L
 	entryTime := time.Now()
 	var err error = nil
 	g2engine.getLogger().SetLogLevel(messagelogger.Level(logLevel))
-	g2engine.isTrace = g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace
+	g2engine.isTrace = (g2engine.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2engine.isTrace {
 		defer g2engine.traceExit(138, logLevel, err, time.Since(entryTime))
 	}

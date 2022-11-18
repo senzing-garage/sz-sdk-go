@@ -135,45 +135,4 @@ var IdMessages = map[int]string{
 	4020: "Call to G2Diagnostic_reinit(%d) failed. Return Code: %d",
 }
 
-var IdRanges = map[int]string{
-	0000: logger.LevelTraceName,
-	1000: logger.LevelDebugName,
-	2000: logger.LevelInfoName,
-	3000: logger.LevelWarnName,
-	4000: logger.LevelErrorName,
-	5000: logger.LevelFatalName,
-	6000: logger.LevelPanicName,
-}
-
-var IdRangesLogLevel = map[int]logger.Level{
-	0000: logger.LevelTrace,
-	1000: logger.LevelDebug,
-	2000: logger.LevelInfo,
-	3000: logger.LevelWarn,
-	4000: logger.LevelError,
-	5000: logger.LevelFatal,
-	6000: logger.LevelPanic,
-}
-
-var IdStatuses = map[int]string{
-	4001: logger.LevelErrorName,
-	4002: logger.LevelErrorName,
-	4003: logger.LevelErrorName,
-	4004: logger.LevelErrorName,
-	4005: logger.LevelErrorName,
-	4006: logger.LevelErrorName,
-	4007: logger.LevelErrorName,
-	4008: logger.LevelErrorName,
-	4009: logger.LevelErrorName,
-	4010: logger.LevelErrorName,
-	4011: logger.LevelErrorName,
-	4012: logger.LevelErrorName,
-	4013: logger.LevelErrorName,
-	4014: logger.LevelErrorName,
-	4015: logger.LevelErrorName,
-	4016: logger.LevelErrorName,
-	4017: logger.LevelErrorName,
-	4018: logger.LevelErrorName,
-	4019: logger.LevelErrorName,
-	4020: logger.LevelErrorName,
-}
+var IdStatuses = map[int]string{}

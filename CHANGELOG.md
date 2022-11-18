@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.2] - 2022-11-18
+
+### Changed in 0.2.2
+
+- Update to github.com/senzing/go-logging v1.1.1
+
 ## [0.2.1] - 2022-11-09
 
 ### Added to 0.2.1

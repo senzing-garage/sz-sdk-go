@@ -58,9 +58,16 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2product G2product, err error) {
 	if err != nil {
-		test.Log("Error:", err.Error())
 		lastException, _ := g2product.GetLastException(ctx)
+		test.Log("Error:", err.Error())
 		assert.FailNow(test, lastException)
+	}
+}
+
+func testErrorNoFail(test *testing.T, ctx context.Context, g2product G2product, err error) {
+	if err != nil {
+		lastException, _ := g2product.GetLastException(ctx)
+		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
 }
 
@@ -96,9 +103,8 @@ func TestGetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	actual, err := g2product.GetLastException(ctx)
-	if err == nil {
-		printActual(test, actual)
-	}
+	testErrorNoFail(test, ctx, g2product, err)
+	printActual(test, actual)
 }
 
 func TestGetLastExceptionCode(test *testing.T) {
@@ -132,8 +138,8 @@ func TestValidateLicenseFile(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	licenseFilePath := ""
-	actual, _ := g2product.ValidateLicenseFile(ctx, licenseFilePath)
-	// testError(test, ctx, g2product, err)
+	actual, err := g2product.ValidateLicenseFile(ctx, licenseFilePath)
+	testErrorNoFail(test, ctx, g2product, err)
 	printActual(test, actual)
 }
 
@@ -141,8 +147,8 @@ func TestValidateLicenseStringBase64(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	licenseString := ""
-	actual, _ := g2product.ValidateLicenseStringBase64(ctx, licenseString)
-	// testError(test, ctx, g2product, err)
+	actual, err := g2product.ValidateLicenseStringBase64(ctx, licenseString)
+	testErrorNoFail(test, ctx, g2product, err)
 	printActual(test, actual)
 }
 
