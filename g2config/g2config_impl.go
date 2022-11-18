@@ -91,11 +91,10 @@ func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{})
 /*
 The AddDataSource method adds a data source to an existing configuration.
 
-Input:
-
-	ctx - A context to control lifecycle
-	configHandle - A pointer to a configuration
-	inputJson - A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
+# Input
+  - ctx: A context to control lifecycle
+  - configHandle: A pointer to a configuration
+  - inputJson: A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`
 
 Output:
 

@@ -41,12 +41,22 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 	return g2configSingleton
 }
 
+func getG2Config() G2config {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+	return g2config
+}
+
 func truncate(aString string) string {
 	return truncator.Truncate(aString, 150, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 1 {
+	if 1 == 0 {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
 	}
 }
@@ -68,6 +78,39 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, er
 		lastException, _ := g2config.GetLastException(ctx)
 		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2configImpl_AddDataSource() {
+	g2config := getG2Config()
+	ctx := context.TODO()
+	aHandle, _ := g2config.Create(ctx)
+	inputJson := `{"DSRC_CODE": "GO_TEST"}`
+	result, _ := g2config.AddDataSource(ctx, aHandle, inputJson)
+	fmt.Println(result)
+	// Output: {"DSRC_ID":1001}
+}
+
+func ExampleG2configImpl_AddDataSource_with() {}
+
+func ExampleG2configImpl_AddDataSource_without() {}
+
+func ExampleG2configImpl_ClearLastException() {
+	g2config := getG2Config()
+	ctx := context.TODO()
+	g2config.ClearLastException(ctx)
+	// Output:
+}
+
+func ExampleG2configImpl_Close() {
+	g2config := getG2Config()
+	ctx := context.TODO()
+	aHandle, _ := g2config.Create(ctx)
+	g2config.Close(ctx, aHandle)
+	// Output:
 }
 
 // ----------------------------------------------------------------------------
