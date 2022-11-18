@@ -35,10 +35,6 @@ type G2config interface {
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
 }
 
-func Bob() error {
-	return nil
-}
-
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------

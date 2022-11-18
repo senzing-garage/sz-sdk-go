@@ -84,16 +84,6 @@ func ExampleG2configImpl_AddDataSource() {
 	// Output: {"DSRC_ID":1001}
 }
 
-func ExampleG2configImpl_AddDataSource_with() {
-	fmt.Println("FIXME: test 1")
-	// Output: FIXME: test 1
-}
-
-func ExampleG2configImpl_AddDataSource_without() {
-	fmt.Println("FIXME: test 2")
-	// Output: FIXME: test 2
-}
-
 func ExampleG2configImpl_ClearLastException() {
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
@@ -112,8 +102,8 @@ func ExampleG2configImpl_Close() {
 func ExampleG2configImpl_Create() {
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
-	aHandle, _ := g2config.Create(ctx)
-	fmt.Println(aHandle > 0)
+	configHandle, _ := g2config.Create(ctx)
+	fmt.Println(configHandle > 0)
 	// Output: true
 }
 
