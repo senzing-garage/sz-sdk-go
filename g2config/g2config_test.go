@@ -41,18 +41,8 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 	return g2configSingleton
 }
 
-func getG2Config() G2config {
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
-	return g2config
-}
-
 func truncate(aString string) string {
-	return truncator.Truncate(aString, 150, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, 76, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
@@ -85,31 +75,114 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, er
 // ----------------------------------------------------------------------------
 
 func ExampleG2configImpl_AddDataSource() {
-	g2config := getG2Config()
+	g2config := &G2configImpl{}
 	ctx := context.TODO()
-	aHandle, _ := g2config.Create(ctx)
+	configHandle, _ := g2config.Create(ctx)
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	result, _ := g2config.AddDataSource(ctx, aHandle, inputJson)
+	result, _ := g2config.AddDataSource(ctx, configHandle, inputJson)
 	fmt.Println(result)
 	// Output: {"DSRC_ID":1001}
 }
 
-func ExampleG2configImpl_AddDataSource_with() {}
+func ExampleG2configImpl_AddDataSource_with() {
+	fmt.Println("FIXME: test 1")
+	// Output: FIXME: test 1
+}
 
-func ExampleG2configImpl_AddDataSource_without() {}
+func ExampleG2configImpl_AddDataSource_without() {
+	fmt.Println("FIXME: test 2")
+	// Output: FIXME: test 2
+}
 
 func ExampleG2configImpl_ClearLastException() {
-	g2config := getG2Config()
+	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	g2config.ClearLastException(ctx)
 	// Output:
 }
 
 func ExampleG2configImpl_Close() {
-	g2config := getG2Config()
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	g2config.Close(ctx, configHandle)
+	// Output:
+}
+
+func ExampleG2configImpl_Create() {
+	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	aHandle, _ := g2config.Create(ctx)
-	g2config.Close(ctx, aHandle)
+	fmt.Println(aHandle > 0)
+	// Output: true
+}
+
+func ExampleG2configImpl_DeleteDataSource() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	inputJson := `{"DSRC_CODE": "TEST"}`
+	g2config.DeleteDataSource(ctx, configHandle, inputJson)
+	// Output:
+}
+
+func ExampleG2configImpl_GetLastException() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	result, _ := g2config.GetLastException(ctx)
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2configImpl_GetLastExceptionCode() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	result, _ := g2config.GetLastExceptionCode(ctx)
+	fmt.Println(result)
+	// Output: 0
+}
+
+func ExampleG2configImpl_Init() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	// Output:
+}
+
+func ExampleG2configImpl_ListDataSources() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	result, _ := g2config.ListDataSources(ctx, configHandle)
+	fmt.Println(result)
+	// Output: {"DATA_SOURCES":[{"DSRC_ID":1,"DSRC_CODE":"TEST"},{"DSRC_ID":2,"DSRC_CODE":"SEARCH"}]}
+}
+
+func ExampleG2configImpl_Load() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	jsonConfig, _ := g2config.Save(ctx, configHandle)
+	g2config.Load(ctx, configHandle, jsonConfig)
+	// Output:
+}
+
+func ExampleG2configImpl_Save() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	jsonConfig, _ := g2config.Save(ctx, configHandle)
+	fmt.Println(truncate(jsonConfig))
+	// Output: {"G2_CONFIG":{"CFG_ATTR":[{"ATTR_ID":1001,"ATTR_CODE":"DATA_SOURCE","ATTR...
+}
+
+func ExampleG2configImpl_Destroy() {
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	g2config.Destroy(ctx)
 	// Output:
 }
 
@@ -117,7 +190,7 @@ func ExampleG2configImpl_Close() {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestAddDataSource(test *testing.T) {
+func TestG2configImpl_AddDataSource(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
@@ -130,14 +203,14 @@ func TestAddDataSource(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2configImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	err := g2config.ClearLastException(ctx)
 	testError(test, ctx, g2config, err)
 }
 
-func TestClose(test *testing.T) {
+func TestG2configImpl_Close(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
@@ -146,7 +219,7 @@ func TestClose(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestCreate(test *testing.T) {
+func TestG2configImpl_Create(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.Create(ctx)
@@ -154,7 +227,7 @@ func TestCreate(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestDeleteDataSource(test *testing.T) {
+func TestG2configImpl_DeleteDataSource(test *testing.T) {
 
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
@@ -184,7 +257,7 @@ func TestDeleteDataSource(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2configImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastException(ctx)
@@ -192,7 +265,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2configImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastExceptionCode(ctx)
@@ -200,7 +273,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2configImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	moduleName := "Test module name"
@@ -211,7 +284,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestListDataSources(test *testing.T) {
+func TestG2configImpl_ListDataSources(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
@@ -223,7 +296,7 @@ func TestListDataSources(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestLoad(test *testing.T) {
+func TestG2configImpl_Load(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
@@ -234,7 +307,7 @@ func TestLoad(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestSave(test *testing.T) {
+func TestG2configImpl_Save(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	aHandle, err := g2config.Create(ctx)
@@ -244,7 +317,7 @@ func TestSave(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2configImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	err := g2config.Destroy(ctx)
