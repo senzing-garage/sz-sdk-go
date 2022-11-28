@@ -1,5 +1,5 @@
 /*
-Package g2engine is a Go wrapper over Senzing's G2Engine C binding.
+Package g2engine is a wrapper over Senzing's G2Engine C binding.
 
 To use G2engine, the LD_LIBRARY_PATH environment variable must include
 a path to Senzing's libraries.  Example:

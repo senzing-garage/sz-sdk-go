@@ -1,7 +1,7 @@
 /*
 # Synopsis
 
-The Senzing g2-sdk-go packages are a Go wrapper over Senzing's C-based library.
+The Senzing g2-sdk-go packages are wrappers over Senzing's C-based library.
 
 # Overview
 

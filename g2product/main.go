@@ -1,5 +1,5 @@
 /*
-Package g2product is a Go wrapper over Senzing's G2product C binding.
+Package g2product is a wrapper over Senzing's G2product C binding.
 
 To use G2product, the LD_LIBRARY_PATH environment variable must include
 a path to Senzing's libraries.  Example:

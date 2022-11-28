@@ -1,5 +1,5 @@
 /*
-The G2configmgrImpl implementation is a Golang wrapper over the Senzing libg2configmgr library.
+The G2configmgrImpl implementation is a wrapper over the Senzing libg2configmgr library.
 */
 package g2configmgr
 

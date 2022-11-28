@@ -1,5 +1,5 @@
 /*
-Package G2configmgr is a Go wrapper over Senzing's G2Configmgr C binding.
+Package G2configmgr is a wrapper over Senzing's G2Configmgr C binding.
 
 To use G2configmgr, the LD_LIBRARY_PATH environment variable must include
 a path to Senzing's libraries.  Example:
