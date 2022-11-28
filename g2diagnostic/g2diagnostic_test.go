@@ -60,7 +60,7 @@ func truncate(aString string, length int) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 1 {
+	if 1 == 0 {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
@@ -96,6 +96,133 @@ func ExampleG2diagnosticImpl_CheckDBPerf() {
 	results, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
 	fmt.Println(truncate(results, 25))
 	// Output: {"numRecordsInserted":...
+}
+
+func ExampleG2diagnosticImpl_ClearLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	g2diagnostic.ClearLastException(ctx)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_CloseEntityListBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	aSize := 1000
+	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	g2diagnostic.Destroy(ctx)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_FetchNextEntityBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	aSize := 1000
+	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	anEntity, _ := g2diagnostic.FetchNextEntityBySize(ctx, entityListBySizeHandle)
+	fmt.Println(anEntity)
+	g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_FindEntitiesByFeatureIDs() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
+	result, _ := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
+	fmt.Println(result)
+	// Output: []
+}
+
+func ExampleG2diagnosticImpl_GetAvailableMemory() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetAvailableMemory(ctx)
+	fmt.Println(result > 0)
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetDataSourceCounts() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetDataSourceCounts(ctx)
+	fmt.Println(truncate(result, 96))
+	// Output: [{"DSRC_ID":1001,"DSRC_CODE":"CUSTOMERS","ETYPE_ID":3,"ETYPE_CODE":"GENERIC","OBS_ENT_COUNT":...
+}
+
+func ExampleG2diagnosticImpl_GetDBInfo() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetDBInfo(ctx)
+	fmt.Println(truncate(result, 52))
+	// Output: {"Hybrid Mode":false,"Database Details":[{"Name":...
+}
+
+func ExampleG2diagnosticImpl_GetEntityDetails() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	entityID := int64(1)
+	includeInternalFeatures := 1
+	result, _ := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
+	fmt.Println(truncate(result, 79))
+	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":...
+}
+
+func ExampleG2diagnosticImpl_GetEntityListBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	aSize := 1000
+	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	fmt.Println(entityListBySizeHandle > 0)
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetEntityResume() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	entityID := int64(1)
+	result, _ := g2diagnostic.GetEntityResume(ctx, entityID)
+	fmt.Println(truncate(result, 79))
+	// Output: [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":...
+}
+
+func ExampleG2diagnosticImpl_GetEntitySizeBreakdown() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	minimumEntitySize := 1
+	includeInternalFeatures := 1
+	result, _ := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
+	fmt.Println(truncate(result, 19))
+	// Output: [{"ENTITY_SIZE":...
+}
+
+func ExampleG2diagnosticImpl_GetFeature() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	libFeatID := int64(1)
+	result, _ := g2diagnostic.GetFeature(ctx, libFeatID)
+	fmt.Println(truncate(result, 95))
+	// Output: {"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":...
 }
 
 // ----------------------------------------------------------------------------
