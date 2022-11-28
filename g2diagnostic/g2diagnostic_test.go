@@ -11,6 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	defaultTruncation = 76
+)
+
 var (
 	g2diagnosticSingleton G2diagnostic
 )
@@ -41,13 +45,22 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 	return g2diagnosticSingleton
 }
 
-func truncate(aString string) string {
-	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
+func getG2Diagnostic(ctx context.Context) G2diagnostic {
+	g2diagnostic := &G2diagnosticImpl{}
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	return g2diagnostic
+}
+
+func truncate(aString string, length int) string {
+	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
-		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+	if 1 == 1 {
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
 
@@ -71,6 +84,20 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagno
 }
 
 // ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2diagnosticImpl_CheckDBPerf() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	secondsToRun := 1
+	results, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	fmt.Println(truncate(results, 25))
+	// Output: {"numRecordsInserted":...
+}
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -84,7 +111,7 @@ func setupSuite(test testing.TB) func(test testing.TB) {
 	}
 }
 
-func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
 		test.Log("Error:", err.Error())
@@ -93,7 +120,7 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetObject(test *testing.T) {
+func TestG2diagnosticImpl_GetObject(test *testing.T) {
 	ctx := context.TODO()
 	getTestObject(ctx, test)
 }
@@ -102,7 +129,7 @@ func TestGetObject(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestCheckDBPerf(test *testing.T) {
+func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {
 	ctx := context.TODO()
 	teardownSuite := setupSuite(test)
 	defer teardownSuite(test)
@@ -113,13 +140,13 @@ func TestCheckDBPerf(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2diagnosticImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	g2diagnostic.ClearLastException(ctx)
 }
 
-func TestEntityListBySize(test *testing.T) {
+func TestG2diagnosticImpl_EntityListBySize(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	aSize := 1000
@@ -132,7 +159,7 @@ func TestEntityListBySize(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestFindEntitiesByFeatureIDs(test *testing.T) {
+func TestG2diagnosticImpl_FindEntitiesByFeatureIDs(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
@@ -141,7 +168,7 @@ func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	printResult(test, "len(Actual)", len(actual))
 }
 
-func TestGetAvailableMemory(test *testing.T) {
+func TestG2diagnosticImpl_GetAvailableMemory(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetAvailableMemory(ctx)
@@ -150,7 +177,7 @@ func TestGetAvailableMemory(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetDataSourceCounts(test *testing.T) {
+func TestG2diagnosticImpl_GetDataSourceCounts(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetDataSourceCounts(ctx)
@@ -158,7 +185,7 @@ func TestGetDataSourceCounts(test *testing.T) {
 	printResult(test, "Data Source counts", actual)
 }
 
-func TestGetDBInfo(test *testing.T) {
+func TestG2diagnosticImpl_GetDBInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetDBInfo(ctx)
@@ -166,7 +193,7 @@ func TestGetDBInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityDetails(test *testing.T) {
+func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
@@ -176,7 +203,7 @@ func TestGetEntityDetails(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityResume(test *testing.T) {
+func TestG2diagnosticImpl_GetEntityResume(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
@@ -185,7 +212,7 @@ func TestGetEntityResume(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntitySizeBreakdown(test *testing.T) {
+func TestG2diagnosticImpl_GetEntitySizeBreakdown(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	minimumEntitySize := 1
@@ -195,7 +222,7 @@ func TestGetEntitySizeBreakdown(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetFeature(test *testing.T) {
+func TestG2diagnosticImpl_GetFeature(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	libFeatID := int64(1)
@@ -204,7 +231,7 @@ func TestGetFeature(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetGenericFeatures(test *testing.T) {
+func TestG2diagnosticImpl_GetGenericFeatures(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	featureType := "PHONE"
@@ -214,7 +241,7 @@ func TestGetGenericFeatures(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2diagnosticImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLastException(ctx)
@@ -222,7 +249,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2diagnosticImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLastExceptionCode(ctx)
@@ -230,7 +257,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLogicalCores(test *testing.T) {
+func TestG2diagnosticImpl_GetLogicalCores(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLogicalCores(ctx)
@@ -239,7 +266,7 @@ func TestGetLogicalCores(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetMappingStatistics(test *testing.T) {
+func TestG2diagnosticImpl_GetMappingStatistics(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	includeInternalFeatures := 1
@@ -248,7 +275,7 @@ func TestGetMappingStatistics(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetPhysicalCores(test *testing.T) {
+func TestG2diagnosticImpl_GetPhysicalCores(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetPhysicalCores(ctx)
@@ -257,7 +284,7 @@ func TestGetPhysicalCores(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRelationshipDetails(test *testing.T) {
+func TestG2diagnosticImpl_GetRelationshipDetails(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	relationshipID := int64(1)
@@ -267,7 +294,7 @@ func TestGetRelationshipDetails(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetResolutionStatistics(test *testing.T) {
+func TestG2diagnosticImpl_GetResolutionStatistics(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetResolutionStatistics(ctx)
@@ -275,7 +302,7 @@ func TestGetResolutionStatistics(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetTotalSystemMemory(test *testing.T) {
+func TestG2diagnosticImpl_GetTotalSystemMemory(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetTotalSystemMemory(ctx)
@@ -284,7 +311,7 @@ func TestGetTotalSystemMemory(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2diagnosticImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
@@ -295,7 +322,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestInitWithConfigID(test *testing.T) {
+func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
@@ -307,7 +334,7 @@ func TestInitWithConfigID(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestReinit(test *testing.T) {
+func TestG2diagnosticImpl_Reinit(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
 	initConfigID := int64(1)
@@ -315,7 +342,7 @@ func TestReinit(test *testing.T) {
 	testErrorNoFail(test, ctx, g2diagnostic, err)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2diagnosticImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	err := g2diagnostic.Destroy(ctx)

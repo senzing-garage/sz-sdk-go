@@ -1,11 +1,3 @@
-/*
-Package g2diagnostic is a wrapper over Senzing's G2Diagnostic C binding.
-
-To use G2diagnostic, the LD_LIBRARY_PATH environment variable must include
-a path to Senzing's libraries.  Example:
-
-	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-*/
 package g2diagnostic
 
 import (

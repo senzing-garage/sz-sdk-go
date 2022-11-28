@@ -47,10 +47,12 @@ func (g2configmgr *G2configmgrImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2configmgr *G2configmgrImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2configmgr.GetLastException(ctx)
 	defer g2configmgr.ClearLastException(ctx)
@@ -70,6 +72,7 @@ func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber in
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2configmgr.logger == nil {
 		g2configmgr.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -77,10 +80,12 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 	return g2configmgr.logger
 }
 
+// Trace method entry.
 func (g2configmgr *G2configmgrImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2configmgr.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2configmgr *G2configmgrImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2configmgr.getLogger().Log(errorNumber, details...)
 }

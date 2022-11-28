@@ -1,5 +1,5 @@
 /*
-The G2diagnosticImpl implementation...
+The G2diagnosticImpl implementation is a wrapper over the Senzing libg2diagnostic library.
 */
 package g2diagnostic
 
@@ -25,6 +25,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// G2diagnosticImpl is the default implementation of the G2diagnostic interface.
 type G2diagnosticImpl struct {
 	isTrace bool
 	logger  messagelogger.MessageLoggerInterface
@@ -46,10 +47,12 @@ func (g2diagnostic *G2diagnosticImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2diagnostic.GetLastException(ctx)
 	defer g2diagnostic.ClearLastException(ctx)
@@ -69,6 +72,7 @@ func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber 
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2diagnostic.logger == nil {
 		g2diagnostic.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -76,10 +80,12 @@ func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInt
 	return g2diagnostic.logger
 }
 
+// Trace method entry.
 func (g2diagnostic *G2diagnosticImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2diagnostic.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2diagnostic *G2diagnosticImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2diagnostic.getLogger().Log(errorNumber, details...)
 }
@@ -89,6 +95,17 @@ func (g2diagnostic *G2diagnosticImpl) traceExit(errorNumber int, details ...inte
 // ----------------------------------------------------------------------------
 
 // CheckDBPerf performs inserts to determine rate of insertion.
+
+/*
+The CheckDBPerf method performs inserts to determine rate of insertion.
+
+Input
+  - ctx: A context to control lifecycle.
+  - secondsToRun: Duration of the test in seconds.
+
+Output
+  - A string containing a JSON document. Example: `{"numRecordsInserted":nnnn,"insertTime":nnnn}`
+*/
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
 	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -107,7 +124,12 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 
 }
 
-// ClearLastException returns the available memory, in bytes, on the host system.
+/*
+The ClearLastException method erases the last exception message held by the Senzing G2Config object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Diagnostic_clearLastException();
 	if g2diagnostic.isTrace {
@@ -139,6 +161,13 @@ func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context,
 	return err
 }
 
+/*
+The Destroy method will destroy and perform cleanup for the Senzing G2Diagnostic object.
+It should be called after all other calls are complete.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2Diagnostic_destroy();
 	if g2diagnostic.isTrace {
@@ -348,7 +377,15 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 	return C.GoString(result.response), err
 }
 
-// GetLastException returns the last exception encountered in the Senzing Engine.
+/*
+The GetLastException method retrieves the last exception thrown in Senzing's G2Diagnostic.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2Config.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2diagnostic.isTrace {
@@ -368,6 +405,15 @@ func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (str
 	return string(stringBuffer), err
 }
 
+/*
+The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Diagnostic.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2Config.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
 	if g2diagnostic.isTrace {
@@ -479,7 +525,16 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 	return result, err
 }
 
-// Init initializes the Senzing G2diagnosis.
+/*
+The Init method initializes the Senzing G2Diagnosis object.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing.
+*/
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2diagnostic.isTrace {
@@ -546,6 +601,13 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	return err
 }
 
+/*
+The SetLogLevel method sets the level of logging.
+
+Input
+  - ctx: A context to control lifecycle.
+  - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
+*/
 func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(53, logLevel)
