@@ -1,5 +1,5 @@
 /*
-Package g2configmgr is used to modify Senzing configurations in the Senzing database.
+The g2configmgr package is used to modify Senzing configurations in the Senzing database.
 It is a wrapper over Senzing's G2Configmgr C binding.
 
 To use g2configmgr,

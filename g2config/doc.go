@@ -1,5 +1,5 @@
 /*
-Package g2config is used to modify the in-memory representation of a Senzing configuration.
+The g2config package is used to modify the in-memory representation of a Senzing configuration.
 It is a wrapper over Senzing's G2Config C binding.
 
 To use g2config,

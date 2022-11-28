@@ -76,6 +76,7 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, er
 // ----------------------------------------------------------------------------
 
 func ExampleG2configImpl_AddDataSource() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -86,6 +87,7 @@ func ExampleG2configImpl_AddDataSource() {
 }
 
 func ExampleG2configImpl_ClearLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	g2config.ClearLastException(ctx)
@@ -93,6 +95,7 @@ func ExampleG2configImpl_ClearLastException() {
 }
 
 func ExampleG2configImpl_Close() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -101,6 +104,7 @@ func ExampleG2configImpl_Close() {
 }
 
 func ExampleG2configImpl_Create() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -109,6 +113,7 @@ func ExampleG2configImpl_Create() {
 }
 
 func ExampleG2configImpl_DeleteDataSource() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -117,7 +122,16 @@ func ExampleG2configImpl_DeleteDataSource() {
 	// Output:
 }
 
+func ExampleG2configImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	g2config.Destroy(ctx)
+	// Output:
+}
+
 func ExampleG2configImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	result, _ := g2config.GetLastException(ctx)
@@ -126,6 +140,7 @@ func ExampleG2configImpl_GetLastException() {
 }
 
 func ExampleG2configImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	result, _ := g2config.GetLastExceptionCode(ctx)
@@ -134,6 +149,7 @@ func ExampleG2configImpl_GetLastExceptionCode() {
 }
 
 func ExampleG2configImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	moduleName := "Test module name"
@@ -144,6 +160,7 @@ func ExampleG2configImpl_Init() {
 }
 
 func ExampleG2configImpl_ListDataSources() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -153,6 +170,7 @@ func ExampleG2configImpl_ListDataSources() {
 }
 
 func ExampleG2configImpl_Load() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -162,6 +180,7 @@ func ExampleG2configImpl_Load() {
 }
 
 func ExampleG2configImpl_Save() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
@@ -171,16 +190,10 @@ func ExampleG2configImpl_Save() {
 }
 
 func ExampleG2configImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	g2config.SetLogLevel(ctx, logger.LevelInfo)
-	// Output:
-}
-
-func ExampleG2configImpl_Destroy() {
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	g2config.Destroy(ctx)
 	// Output:
 }
 
