@@ -94,8 +94,6 @@ func (g2diagnostic *G2diagnosticImpl) traceExit(errorNumber int, details ...inte
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// CheckDBPerf performs inserts to determine rate of insertion.
-
 /*
 The CheckDBPerf method performs inserts to determine rate of insertion.
 
@@ -104,7 +102,9 @@ Input
   - secondsToRun: Duration of the test in seconds.
 
 Output
-  - A string containing a JSON document. Example: `{"numRecordsInserted":nnnn,"insertTime":nnnn}`
+
+  - A string containing a JSON document.
+    Example: `{"numRecordsInserted":0,"insertTime":0}`
 */
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
 	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
@@ -144,6 +144,15 @@ func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) er
 	return err
 }
 
+/*
+The CloseEntityListBySize method closes the list created by GetEntityListBySize().
+It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
+lifecycle of a list of sized entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityListBySizeHandle: A handle created by GetEntityListBySize().
+*/
 func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error {
 	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
 	if g2diagnostic.isTrace {
@@ -185,6 +194,19 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
+/*
+The FetchNextEntityBySize method gets the next section of the list created by GetEntityListBySize().
+It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
+lifecycle of a list of sized entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityListBySizeHandle: A handle created by GetEntityListBySize().
+
+Output
+  - A string containing a JSON document.
+    Example: `{FIXME:}`
+*/
 func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
 	if g2diagnostic.isTrace {
@@ -204,6 +226,19 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 	return string(stringBuffer), err
 }
 
+/*
+The FindEntitiesByFeatureIDs method finds entities having any of the lib feat id specified in the "features" JSON document.
+The "features" also contains an entity id.
+This entity is ignored in the returned values.
+
+Input
+  - ctx: A context to control lifecycle.
+  - features: A JSON document having the format: `{"ENTITY_ID":<entity id>,"LIB_FEAT_IDS":[<id1>,<id2>,...<idn>]}` where ENTITY_ID specifies the entity to ignore in the returns and <id#> are the lib feat ids used to query for entities.
+
+Output
+  - A string containing a JSON document.
+    Example: `{FIXME:}`
+*/
 func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2diagnostic.isTrace {
@@ -223,7 +258,15 @@ func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Conte
 	return C.GoString(result.response), err
 }
 
-// GetAvailableMemory returns the available memory, in bytes, on the host system.
+/*
+The GetAvailableMemory method returns the available memory, in bytes, on the host system.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - Number of bytes of available memory.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getAvailableMemory();
 	if g2diagnostic.isTrace {
@@ -238,6 +281,16 @@ func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (i
 	return result, err
 }
 
+/*
+The GetDataSourceCounts method returns information about data sources.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document enumerating data sources.
+    Example: `[{"DSRC_ID":0,"DSRC_CODE":"CUSTOMERS","ETYPE_ID":0,"ETYPE_CODE":"GENERIC","OBS_ENT_COUNT":0,"DSRC_RECORD_COUNT":0}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -255,7 +308,16 @@ func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (
 	return C.GoString(result.response), err
 }
 
-// GetDBInfo returns information about the database connection.
+/*
+The GetDBInfo method returns information about the database connection.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document enumerating data sources.
+    Example: `{"Hybrid Mode":false,"Database Details":[{"Name":"0.0.0.0","Type":"postgresql"}]}`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -273,6 +335,18 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntityDetails method returns information about the database connection.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: Unique number identifying an entity.
+  - includeInternalFeatures: FIXME:
+
+Output
+  - A JSON document enumerating FIXME:.
+    Example: `[{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":"+NAME+DOB+EMAIL","DSRC_CODE":"CUSTOMERS","ETYPE_CODE":"GENERIC","RECORD_ID":"1003","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"PRIMARY","FEAT_DESC":"Bob J Smith"}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -290,6 +364,19 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntityListBySize method gets the next section of the list created by GetEntityListBySize().
+It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
+lifecycle of a list of sized entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entitySize: FIXME:
+
+Output
+  - A string containing a JSON document.
+    Example: `{FIXME:}`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
 	if g2diagnostic.isTrace {
@@ -307,6 +394,17 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, e
 	return (uintptr)(result.response), err
 }
 
+/*
+The GetEntityResume method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: Unique number identifying an entity.
+
+Output
+  - A string containing a JSON document.
+    Example: `[{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":"+NAME+DOB+EMAIL","DSRC_CODE":"CUSTOMERS","ETYPE_CODE":"GENERIC","RECORD_ID":"1003","ENT_SRC_DESC":"Bob J Smith","JSON_DATA":"{\"AMOUNT\":\"300\",\"DATE\":\"4/9/16\",\"DATE_OF_BIRTH\":\"12/11/1978\",\"EMAIL_ADDRESS\": ...}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -324,6 +422,18 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entit
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntitySizeBreakdown method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - minimumEntitySize: FIXME:
+  - includeInternalFeatures: FIXME:
+
+Output
+  - A string containing a JSON document.
+    Example: ` [{"ENTITY_SIZE": 6,"ENTITY_COUNT": 1,"NAME": 4.00,"DOB": 1.00,"ADDRESS": 2.00,"SSN": 2.00,"DRLIC": 1.00,"PASSPORT": 1.00,"NAME_KEY": 12.00,"ADDR_KEY": 1.00,"ID_KEY": 3.00,"RECORD_TYPE": 1.00,"MIN_RES_ENT_ID": 18,"MAX_RES_ENT_ID": 18}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -341,6 +451,17 @@ func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context
 	return C.GoString(result.response), err
 }
 
+/*
+The GetFeature method retrieves a stored feature.
+
+Input
+  - ctx: A context to control lifecycle.
+  - libFeatID: The identifier of the feature requested in the search.
+
+Output
+  - A string containing a JSON document.
+    Example: `{"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":"BOB|J|SMITH"}, ...], ...}`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2diagnostic.isTrace {
@@ -358,6 +479,18 @@ func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID 
 	return C.GoString(result.response), err
 }
 
+/*
+The GetGenericFeatures method retrieves a stored feature.
+
+Input
+  - ctx: A context to control lifecycle.
+  - featureType: FIXME:
+  - maximumEstimatedCount: FIXME:
+
+Output
+  - A string containing a JSON document.
+    Example: `{FIXME:}`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -428,7 +561,15 @@ func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) 
 	return result, err
 }
 
-// GetLogicalCores returns the number of logical cores on the host system.
+/*
+The GetLogicalCores method returns the number of logical cores on the host system.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - Number of logical cores.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getLogicalCores();
 	if g2diagnostic.isTrace {
@@ -443,6 +584,17 @@ func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int,
 	return result, err
 }
 
+/*
+The GetMappingStatistics method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - includeInternalFeatures: FIXME:
+
+Output
+  - A string containing a JSON document.
+    Example: ` [{"DSRC_CODE":"CUSTOMERS","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"NATIVE","REC_COUNT":5,"REC_PCT":0.041667,"UNIQ_COUNT":5,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"刘杰","MAX_FEAT_DESC":"王杰"}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -460,7 +612,15 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	return C.GoString(result.response), err
 }
 
-// GetPhysicalCores returns the number of physical cores on the host system.
+/*
+The GetPhysicalCores method returns the number of physical cores on the host system.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - Number of physical cores.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getPhysicalCores();
 	var result int
@@ -476,6 +636,18 @@ func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int
 	return result, err
 }
 
+/*
+The GetRelationshipDetails method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - relationshipID: FIXME:
+  - includeInternalFeatures: FIXME:
+
+Output
+  - A string containing a JSON document.
+    Example: `[{"RES_ENT_ID":10,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+SURNAME-DOB","FTYPE_CODE":"NAME","FEAT_DESC":"John Smith"}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -493,6 +665,16 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	return C.GoString(result.response), err
 }
 
+/*
+The GetResolutionStatistics method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing a JSON document.
+    Example: `[{"MATCH_LEVEL":11,"MATCH_KEY":"+REL_POINTER(:GLOBAL PARENT)","RAW_MATCH_KEYS":[{"MATCH_KEY":"+REL_POINTER(DOMAIN:|MIN:GLOBAL PARENT|MAX:)"}],"ERRULE_ID":0,"ERRULE_CODE":"DISCLOSED","IS_AMBIGUOUS":"No","RECORD_COUNT":3, ...}, ...]`
+*/
 func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2diagnostic.isTrace {
@@ -510,7 +692,15 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 	return C.GoString(result.response), err
 }
 
-// GetTotalSystemMemory returns the total memory, in bytes, on the host system.
+/*
+The GetTotalSystemMemory method returns the total memory, in bytes, on the host system.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - Number of bytes of memory.
+*/
 func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getTotalSystemMemory();
 	if g2diagnostic.isTrace {
@@ -556,6 +746,17 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 	return err
 }
 
+/*
+The InitWithConfigID method initializes the Senzing G2Diagnosis object with a non-default configuration ID.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - initConfigID: The configuration ID used for the initialization.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing.
+*/
 func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
 	if g2diagnostic.isTrace {
@@ -584,6 +785,13 @@ func (g2diagnostic *G2diagnosticImpl) Null(ctx context.Context) (int64, error) {
 	return 1, err
 }
 
+/*
+The Reinit method re-initializes the Senzing G2Diagnosis object.
+
+Input
+  - ctx: A context to control lifecycle.
+  - initConfigID: The configuration ID used for the initialization.
+*/
 func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2Diagnostic_reinit(const long long initConfigID);
 	if g2diagnostic.isTrace {

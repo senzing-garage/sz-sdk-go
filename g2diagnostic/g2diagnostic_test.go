@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	defaultTruncation = 76
+	// defaultTruncation = 76
+	defaultTruncation = 300
 )
 
 var (
