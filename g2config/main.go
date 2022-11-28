@@ -18,7 +18,11 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The G2config interface is a Golang representation of Senzing's libg2config.h
+/*
+The G2config interface is a Golang representation of Senzing's libg2config.h
+
+The G2config interface is used to modify the in-memory representation of a Senzing configuration.
+*/
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
 	ClearLastException(ctx context.Context) error

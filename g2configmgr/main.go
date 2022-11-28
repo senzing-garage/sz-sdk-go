@@ -18,7 +18,11 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
+/*
+The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
+
+The G2configmgr interface is used to modify Senzing configurations in the Senzing database.
+*/
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	ClearLastException(ctx context.Context) error
