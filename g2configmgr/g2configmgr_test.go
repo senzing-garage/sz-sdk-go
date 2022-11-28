@@ -96,6 +96,20 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2configmgr G2configm
 }
 
 // ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2configImpl_AddDataSource() {
+	g2config := &G2configmgrImpl{}
+	ctx := context.TODO()
+	configHandle, _ := g2config.Create(ctx)
+	inputJson := `{"DSRC_CODE": "GO_TEST"}`
+	result, _ := g2config.AddDataSource(ctx, configHandle, inputJson)
+	fmt.Println(result)
+	// Output: {"DSRC_ID":1001}
+}
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -117,7 +131,7 @@ func TestGetObject(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestAddConfig(test *testing.T) {
+func TestG2configmgrImpl_AddConfig(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	now := time.Now()
@@ -157,14 +171,14 @@ func TestAddConfig(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2configmgrImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	err := g2configmgr.ClearLastException(ctx)
 	testError(test, ctx, g2configmgr, err)
 }
 
-func TestGetConfig(test *testing.T) {
+func TestG2configmgrImpl_GetConfig(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 
@@ -181,7 +195,7 @@ func TestGetConfig(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetConfigList(test *testing.T) {
+func TestG2configmgrImpl_GetConfigList(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetConfigList(ctx)
@@ -189,7 +203,7 @@ func TestGetConfigList(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetDefaultConfigID(test *testing.T) {
+func TestG2configmgrImpl_GetDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetDefaultConfigID(ctx)
@@ -197,7 +211,7 @@ func TestGetDefaultConfigID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2configmgrImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetLastException(ctx)
@@ -205,7 +219,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2configmgrImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetLastExceptionCode(ctx)
@@ -213,7 +227,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2configmgrImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	moduleName := "Test module name"
@@ -226,7 +240,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2configmgr, err)
 }
 
-func TestReplaceDefaultConfigID(test *testing.T) {
+func TestG2configmgrImpl_ReplaceDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 
@@ -248,7 +262,7 @@ func TestReplaceDefaultConfigID(test *testing.T) {
 	testError(test, ctx, g2configmgr, err)
 }
 
-func TestSetDefaultConfigID(test *testing.T) {
+func TestG2configmgrImpl_SetDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	configID, err1 := g2configmgr.GetDefaultConfigID(ctx)
@@ -260,7 +274,7 @@ func TestSetDefaultConfigID(test *testing.T) {
 	testError(test, ctx, g2configmgr, err)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2configmgrImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	err := g2configmgr.Destroy(ctx)

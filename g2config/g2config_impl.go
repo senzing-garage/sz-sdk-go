@@ -1,6 +1,4 @@
-/*
-The G2configImpl implementation is a wrapper over the Senzing libg2config library.
-*/
+// The G2configImpl implementation is a wrapper over the Senzing libg2config library.
 package g2config
 
 /*
@@ -47,10 +45,12 @@ func (g2config *G2configImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2config *G2configImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2config *G2configImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2config.GetLastException(ctx)
 	defer g2config.ClearLastException(ctx)
@@ -70,6 +70,7 @@ func (g2config *G2configImpl) newError(ctx context.Context, errorNumber int, det
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2config.logger == nil {
 		g2config.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -77,10 +78,12 @@ func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 	return g2config.logger
 }
 
+// Trace method entry.
 func (g2config *G2configImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2config.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2config.getLogger().Log(errorNumber, details...)
 }

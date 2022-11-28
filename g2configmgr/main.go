@@ -1,11 +1,3 @@
-/*
-Package G2configmgr is a wrapper over Senzing's G2Configmgr C binding.
-
-To use G2configmgr, the LD_LIBRARY_PATH environment variable must include
-a path to Senzing's libraries.  Example:
-
-	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-*/
 package g2configmgr
 
 import (
@@ -20,8 +12,6 @@ import (
 
 /*
 The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-
-The G2configmgr interface is used to modify Senzing configurations in the Senzing database.
 */
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
