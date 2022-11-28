@@ -102,7 +102,7 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2configmgr G2configm
 func ExampleG2configImpl_AddDataSource() {
 	g2config := &G2configmgrImpl{}
 	ctx := context.TODO()
-	configHandle, _ := g2config.Create(ctx)
+	configHandle, _ := g2config.AddConfig(ctx)
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
 	result, _ := g2config.AddDataSource(ctx, configHandle, inputJson)
 	fmt.Println(result)

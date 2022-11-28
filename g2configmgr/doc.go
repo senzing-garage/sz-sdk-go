@@ -1,6 +1,6 @@
 /*
-Package g2configmgr is a wrapper over Senzing's G2Configmgr C binding.
-g2configmgr is used to modify Senzing configurations in the Senzing database.
+Package g2configmgr is used to modify Senzing configurations in the Senzing database.
+It is a wrapper over Senzing's G2Configmgr C binding.
 
 To use g2configmgr,
 the LD_LIBRARY_PATH environment variable must include a path to Senzing's libraries.

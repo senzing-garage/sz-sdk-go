@@ -1,6 +1,6 @@
 /*
-Package g2config is a wrapper over Senzing's G2Config C binding.
-g2config is used to modify the in-memory representation of a Senzing configuration.
+Package g2config is used to modify the in-memory representation of a Senzing configuration.
+It is a wrapper over Senzing's G2Config C binding.
 
 To use g2config,
 the LD_LIBRARY_PATH environment variable must include a path to Senzing's libraries.
