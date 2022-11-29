@@ -652,6 +652,7 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Cont
 /*
 The FindNetworkByEntityID method finds all entities surrounding a requested set of entities.
 This includes the requested entities, paths between them, and relations to other nearby entities.
+To control output, use FindNetworkByEntityID_V2() instead.
 
 Input
   - ctx: A context to control lifecycle.
@@ -685,8 +686,9 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityL
 }
 
 /*
-The FindNetworkByEntityID method finds all entities surrounding a requested set of entities.
+The FindNetworkByEntityID_V2 method finds all entities surrounding a requested set of entities.
 This includes the requested entities, paths between them, and relations to other nearby entities.
+It extends FindNetworkByEntityID() by adding output control flags.
 
 Input
   - ctx: A context to control lifecycle.
@@ -720,6 +722,23 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, enti
 	return C.GoString(result.response), err
 }
 
+/*
+The FindNetworkByRecordID method finds all entities surrounding a requested set of entities identified by record identifiers.
+This includes the requested entities, paths between them, and relations to other nearby entities.
+To control output, use FindNetworkByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityList: A JSON document listing entities.
+    Example: `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - buildOutDegree: The number of degrees of relationships to show around each search entity.
+  - maxEntities: The maximum number of entities to return in the discovered network.
+
+Output
+  - A JSON document.
+    Example:
+*/
 func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -739,6 +758,24 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordL
 	return C.GoString(result.response), err
 }
 
+/*
+The FindNetworkByRecordID_V2 method finds all entities surrounding a requested set of entities identified by record identifiers.
+This includes the requested entities, paths between them, and relations to other nearby entities.
+It extends FindNetworkByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityList: A JSON document listing entities.
+    Example: `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - buildOutDegree: The number of degrees of relationships to show around each search entity.
+  - maxEntities: The maximum number of entities to return in the discovered network.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}},{"RESOLVED_ENTITY":{"ENTITY_ID":3}}]}`
+*/
 func (g2engine *G2engineImpl) FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID_V2(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {

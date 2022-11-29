@@ -100,6 +100,18 @@ func ExampleG2engineImpl_AddRecord() {
 	// Output:
 }
 
+func ExampleG2engineImpl_AddRecord_secondRecord() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode := "TEST"
+	recordID := "222"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh2", "DATE_OF_BIRTH": "6/9/1983", "ADDR_STATE": "WI", "ADDR_POSTAL_CODE": "53543", "SSN_NUMBER": "153-33-5185", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "OCEANGUY", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	// Output:
+}
+
 func ExampleG2engineImpl_AddRecordWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
@@ -182,7 +194,7 @@ func ExampleG2engineImpl_DeleteRecord() {
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "TEST"
-	recordID := "111"
+	recordID := "333"
 	loadID := "TEST"
 	g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
 	// Output:
@@ -193,12 +205,12 @@ func ExampleG2engineImpl_DeleteRecordWithInfo() {
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "TEST"
-	recordID := "111"
+	recordID := "333"
 	loadID := "TEST"
 	var flags int64 = 0
 	result, _ := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
 	fmt.Println(result)
-	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
+	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"333","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
 
 func ExampleG2engineImpl_Destroy() {
@@ -307,7 +319,34 @@ func ExampleG2engineImpl_FindNetworkByEntityID_V2() {
 	result, _ := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
 	// fmt.Println(truncate(result, 124))
 	fmt.Println(result)
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}},{"RESOLVED_ENTITY":{"ENTITY_ID":3}}]}
+}
+
+func ExampleG2engineImpl_FindNetworkByRecordID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}]}`
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	result, _ := g2engine.FindNetworkByRecordID(ctx, recordList, maxDegree, buildOutDegree, maxEntities)
+	fmt.Println(truncate(result, 138))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":...
+}
+
+func ExampleG2engineImpl_FindNetworkByRecordID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}]}`
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	var flags int64 = 0
+	result, _ := g2engine.FindNetworkByRecordID_V2(ctx, recordList, maxDegree, buildOutDegree, maxEntities, flags)
+	fmt.Println(result)
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}},{"RESOLVED_ENTITY":{"ENTITY_ID":3}}]}
 }
 
 // ----------------------------------------------------------------------------
@@ -513,7 +552,7 @@ func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
 func TestG2engineImpl_FindNetworkByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	recordList := ""
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
 	maxDegree := 1
 	buildOutDegree := 2
 	maxEntities := 10
