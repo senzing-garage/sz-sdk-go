@@ -331,7 +331,7 @@ Input
   - ctx: A context to control lifecycle.
 
 Output
-  - FIXME:
+  - {"PRODUCT_NAME":"Senzing API","VERSION":"3.3.2","BUILD_VERSION":"3.3.2.22299","BUILD_DATE":"2022-10-26","BUILD_NUMBER":"2022_10_26__19_38","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.3","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
 */
 func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
