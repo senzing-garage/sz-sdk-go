@@ -146,7 +146,7 @@ func TestValidateLicenseFile(test *testing.T) {
 func TestValidateLicenseStringBase64(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
-	licenseString := "/etc/opt/senzing/g2.lic"
+	licenseString := ""
 	actual, err := g2product.ValidateLicenseStringBase64(ctx, licenseString)
 	testErrorNoFail(test, ctx, g2product, err)
 	printActual(test, actual)
