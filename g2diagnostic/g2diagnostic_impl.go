@@ -723,7 +723,7 @@ Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
   - iniParams: A JSON string containing configuration paramters.
-  - verboseLogging: A flag to enable deeper logging of the G2 processing.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
@@ -755,7 +755,7 @@ Input
   - moduleName: A name for the auditing node, to help identify it within system logs.
   - iniParams: A JSON string containing configuration paramters.
   - initConfigID: The configuration ID used for the initialization.
-  - verboseLogging: A flag to enable deeper logging of the G2 processing.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);

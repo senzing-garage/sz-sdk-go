@@ -195,7 +195,7 @@ Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
   - iniParams: A JSON string containing configuration paramters.
-  - verboseLogging: A flag to enable deeper logging of the G2 processing.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
@@ -270,8 +270,9 @@ Input
   - licenseFilePath: A fully qualified path to the Senzing license file.
 
 Output
-  - 0: Valid license
-  - 1: Expired license
+  - if error is nil, license is valid.
+  - If error not nil, license is not valid.
+  - The returned string has additional information.
 */
 func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseFile(const char* licenseFilePath, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
@@ -300,8 +301,9 @@ Input
   - licenseString: A Senzing license represented by a Base-64 encoded string.
 
 Output
-  - 0: Valid license
-  - 1: Expired license
+  - if error is nil, license is valid.
+  - If error not nil, license is not valid.
+  - The returned string has additional information.
 */
 func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));

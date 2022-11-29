@@ -37,7 +37,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 		log.SetFlags(0)
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
@@ -54,7 +54,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2configmgr {
 func getG2Configmgr(ctx context.Context) G2configmgr {
 	g2configmgr := &G2configmgrImpl{}
 	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 	return g2configmgr
@@ -66,7 +66,7 @@ func getG2Config(ctx context.Context, test *testing.T) g2config.G2config {
 		g2configSingleton = &g2config.G2configImpl{}
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
@@ -197,7 +197,7 @@ func ExampleG2configmgrImpl_Init() {
 	ctx := context.TODO()
 	moduleName := "Test module name"
 	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("") // See https://pkg.go.dev/github.com/senzing/go-helpers
-	verboseLogging := 0                                                              // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 	// Output:
 }
@@ -358,7 +358,7 @@ func TestG2configmgrImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if jsonErr != nil {
 		test.Fatalf("Cannot construct system configuration: %v", jsonErr)

@@ -8,6 +8,7 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -28,7 +29,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2product {
 		log.SetFlags(0)
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
@@ -72,6 +73,109 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2product G2product, 
 }
 
 // ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2productImpl_ClearLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	g2product.ClearLastException(ctx)
+	// Output:
+}
+
+func ExampleG2productImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	g2product.Destroy(ctx)
+	// Output:
+}
+
+func ExampleG2productImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	result, _ := g2product.GetLastException(ctx)
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2productImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	result, _ := g2product.GetLastExceptionCode(ctx)
+	fmt.Println(result)
+	// Output: 0
+}
+
+func ExampleG2productImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	verboseLogging := 0
+	g2product.Init(ctx, moduleName, iniParams, verboseLogging)
+	// Output:
+}
+
+func ExampleG2productImpl_License() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	result, _ := g2product.License(ctx)
+	fmt.Println(result)
+	// Output: {"customer":"","contract":"","issueDate":"2022-10-26","licenseType":"EVAL (Solely for non-productive use)","licenseLevel":"","billing":"","expireDate":"2023-10-27","recordLimit":100000}
+}
+
+func ExampleG2productImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	g2product.SetLogLevel(ctx, logger.LevelInfo)
+	// Output:
+}
+
+func ExampleG2productImpl_ValidateLicenseFile() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	licenseFilePath := "/etc/opt/senzing/g2.lic"
+	result, err := g2product.ValidateLicenseFile(ctx, licenseFilePath)
+	if err != nil {
+		fmt.Println("Invalid license")
+	} else {
+		fmt.Println(result)
+	}
+	// Output: Invalid license
+}
+
+func ExampleG2productImpl_ValidateLicenseStringBase64() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	licenseString := ""
+	result, err := g2product.ValidateLicenseStringBase64(ctx, licenseString)
+	if err != nil {
+		fmt.Println("Invalid license")
+	} else {
+		fmt.Println(result)
+	}
+	// Output: Invalid license
+}
+
+func ExampleG2productImpl_Version() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	result, _ := g2product.Version(ctx)
+	fmt.Println(result)
+	// Output: {"PRODUCT_NAME":"Senzing API","VERSION":"3.3.2","BUILD_VERSION":"3.3.2.22299","BUILD_DATE":"2022-10-26","BUILD_NUMBER":"2022_10_26__19_38","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.3","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+}
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -93,13 +197,13 @@ func TestGetObject(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestClearLastException(test *testing.T) {
+func TestG2productImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	g2product.ClearLastException(ctx)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2productImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	actual, err := g2product.GetLastException(ctx)
@@ -107,7 +211,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2productImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	actual, err := g2product.GetLastExceptionCode(ctx)
@@ -115,7 +219,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2productImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2product := &G2productImpl{}
 	moduleName := "Test module name"
@@ -126,7 +230,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2product, err)
 }
 
-func TestLicense(test *testing.T) {
+func TestG2productImpl_License(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	actual, err := g2product.License(ctx)
@@ -134,7 +238,7 @@ func TestLicense(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestValidateLicenseFile(test *testing.T) {
+func TestG2productImpl_ValidateLicenseFile(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	licenseFilePath := "/etc/opt/senzing/g2.lic"
@@ -143,7 +247,7 @@ func TestValidateLicenseFile(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestValidateLicenseStringBase64(test *testing.T) {
+func TestG2productImpl_ValidateLicenseStringBase64(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	licenseString := ""
@@ -152,7 +256,7 @@ func TestValidateLicenseStringBase64(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestVersion(test *testing.T) {
+func TestG2productImpl_Version(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	actual, err := g2product.Version(ctx)
@@ -160,7 +264,7 @@ func TestVersion(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2productImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
 	err := g2product.Destroy(ctx)

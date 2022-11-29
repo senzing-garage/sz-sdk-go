@@ -28,7 +28,7 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 		log.SetFlags(0)
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
@@ -154,7 +154,7 @@ func ExampleG2configImpl_Init() {
 	ctx := context.TODO()
 	moduleName := "Test module name"
 	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	g2config.Init(ctx, moduleName, iniParams, verboseLogging)
 	// Output:
 }
@@ -288,7 +288,7 @@ func TestG2configImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2config, jsonErr)
 	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
