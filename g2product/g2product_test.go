@@ -137,7 +137,7 @@ func TestLicense(test *testing.T) {
 func TestValidateLicenseFile(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
-	licenseFilePath := ""
+	licenseFilePath := "/etc/opt/senzing/g2.lic"
 	actual, err := g2product.ValidateLicenseFile(ctx, licenseFilePath)
 	testErrorNoFail(test, ctx, g2product, err)
 	printActual(test, actual)
@@ -146,7 +146,7 @@ func TestValidateLicenseFile(test *testing.T) {
 func TestValidateLicenseStringBase64(test *testing.T) {
 	ctx := context.TODO()
 	g2product := getTestObject(ctx, test)
-	licenseString := ""
+	licenseString := "/etc/opt/senzing/g2.lic"
 	actual, err := g2product.ValidateLicenseStringBase64(ctx, licenseString)
 	testErrorNoFail(test, ctx, g2product, err)
 	printActual(test, actual)
