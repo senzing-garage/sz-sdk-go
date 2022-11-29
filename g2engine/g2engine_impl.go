@@ -99,13 +99,10 @@ The AddRecord method adds a record into the Senzing repository.
 
 Input
   - ctx: A context to control lifecycle.
-  - dataSourceCode: Identifies the source of the data. The data source is helpful with data provenance.
+  - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
   - jsonData: A JSON document containing the record to be added to the Senzing repository.
   - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
-
-Output
-  - A string containing a JSON document. Example: `{"DSRC_ID":1001}`
 */
 func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
@@ -132,6 +129,21 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 	return err
 }
 
+/*
+The AddRecordWithInfo method adds a record into the Senzing repository and returns information on the affected entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+  - flags: Flags used to control information returned.
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"333","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -157,6 +169,22 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 	return C.GoString(result.response), err
 }
 
+/*
+The AddRecordWithInfoWithReturnedRecordID method adds a record into the Senzing repository and returns information on the affected entities and the record identifier.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+  - flags: Flags used to control information returned.
+
+Output
+  - A JSON document containing the AFFECTED_ENTITIES, INTERESTING_ENTITIES, and RECORD_ID.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"2D4DABB3FAEAFBD452E9487D06FABC22DC69C846","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+  - The record identifier.
+    Example: 2D4DABB3FAEAFBD452E9487D06FABC22DC69C846
+*/
 func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -180,6 +208,19 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	return C.GoString(result.withInfo), C.GoString(result.recordID), err
 }
 
+/*
+The AddRecordWithReturnedRecordID method adds a record into the Senzing repository and returns the record identifier.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+
+Output
+  - The record identifier.
+    Example: 2D4DABB3FAEAFBD452E9487D06FABC22DC69C846
+*/
 func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
 	if g2engine.isTrace {
@@ -205,6 +246,18 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 	return string(stringBuffer), err
 }
 
+/*
+The CheckRecord method FIXME:.
+
+Input
+  - ctx: A context to control lifecycle.
+  - record: A JSON document with the attribute data for the record to check with the "DATA_SOURCE" field.
+  - recordQueryList: A JSON document with the datasource codes and recordID's of the records to check against.
+
+Output
+  - A JSON document that FIXME:
+    Example: `{"CHECK_RECORD_RESPONSE":[{"DSRC_CODE":"TEST","RECORD_ID":"111","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","MATCH_KEY":"","ERRULE_CODE":"","ERRULE_ID":0,"CANDIDATE_MATCH":"N","NON_GENERIC_CANDIDATE_MATCH":"N"}]}`
+*/
 func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error) {
 	//  _DLEXPORT int G2_checkRecord(const char *record, const char* recordQueryList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -226,7 +279,12 @@ func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, re
 	return C.GoString(result.response), err
 }
 
-// ClearLastException returns the available memory, in bytes, on the host system.
+/*
+The ClearLastException method erases the last exception message held by the Senzing G2 object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2engine *G2engineImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2_clearLastException();
 	if g2engine.isTrace {
@@ -241,6 +299,15 @@ func (g2engine *G2engineImpl) ClearLastException(ctx context.Context) error {
 	return err
 }
 
+/*
+The CloseExport method closes the exported document created by ExportJSONEntityReport().
+It is part of the ExportJSONEntityReport(), FetchNext(), CloseExport()
+lifecycle of a list of sized entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - responseHandle: A handle created by ExportJSONEntityReport().
+*/
 func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle uintptr) error {
 	//  _DLEXPORT int G2_closeExport(ExportHandle responseHandle);
 	if g2engine.isTrace {
@@ -258,6 +325,15 @@ func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle ui
 	return err
 }
 
+/*
+The CountRedoRecords method returns the number of records in need of redo-ing.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - The number of redo records in Senzing's redo queue.
+*/
 func (g2engine *G2engineImpl) CountRedoRecords(ctx context.Context) (int64, error) {
 	//  _DLEXPORT long long G2_countRedoRecords();
 	if g2engine.isTrace {
@@ -272,6 +348,16 @@ func (g2engine *G2engineImpl) CountRedoRecords(ctx context.Context) (int64, erro
 	return int64(result), err
 }
 
+/*
+The DeleteRecord method deletes a record from the Senzing repository.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+    FIXME: How does the "loadID" affect what is deleted?
+*/
 func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error {
 	//  _DLEXPORT int G2_deleteRecord(const char* dataSourceCode, const char* recordID, const char* loadID);
 	if g2engine.isTrace {
@@ -295,6 +381,21 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	return err
 }
 
+/*
+The DeleteRecordWithInfo method deletes a record from the Senzing repository and returns information on the affected entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+    FIXME: How does the "loadID" affect what is deleted?
+  - flags: Flags used to control information returned.
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_deleteRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -318,6 +419,13 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	return C.GoString(result.response), err
 }
 
+/*
+The Destroy method will destroy and perform cleanup for the Senzing G2 object.
+It should be called after all other calls are complete.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2_destroy();
 	if g2engine.isTrace {
@@ -335,23 +443,15 @@ func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
-func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (string, int64, error) {
-	//  _DLEXPORT int G2_exportConfigAndConfigID(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize), long long* configID );
-	if g2engine.isTrace {
-		g2engine.traceEntry(23)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	result := C.G2_exportConfigAndConfigID_helper()
-	if result.returnCode != 0 {
-		err = g2engine.newError(ctx, 4010, result.returnCode, result, time.Since(entryTime))
-	}
-	if g2engine.isTrace {
-		defer g2engine.traceExit(24, C.GoString(result.config), int64(C.longlong(result.configID)), err, time.Since(entryTime))
-	}
-	return C.GoString(result.config), int64(C.longlong(result.configID)), err
-}
+/*
+The ExportConfig method returns the Senzing engine configuration.
 
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+*/
 func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_exportConfig(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -369,6 +469,46 @@ func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) 
 	return C.GoString(result.response), err
 }
 
+/*
+Similar to ExportConfig(), the ExportConfigAndConfigID method returns the Senzing engine configuration and it's identifier.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+  - The unique identifier of the configuration.
+*/
+func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (string, int64, error) {
+	//  _DLEXPORT int G2_exportConfigAndConfigID(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize), long long* configID );
+	if g2engine.isTrace {
+		g2engine.traceEntry(23)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	result := C.G2_exportConfigAndConfigID_helper()
+	if result.returnCode != 0 {
+		err = g2engine.newError(ctx, 4010, result.returnCode, result, time.Since(entryTime))
+	}
+	if g2engine.isTrace {
+		defer g2engine.traceExit(24, C.GoString(result.config), int64(C.longlong(result.configID)), err, time.Since(entryTime))
+	}
+	return C.GoString(result.config), int64(C.longlong(result.configID)), err
+}
+
+/*
+The ExportCSVEntityReport method initializes a cursor over a document of exported entities.
+It is part of the ExportCSVEntityReport(), FetchNext(), CloseExport()
+lifecycle of a list of entities to export.
+
+Input
+  - ctx: A context to control lifecycle.
+  - csvColumnList: A comma-separated list of column names for the CSV export.
+  - flags: Any combination of G2_EXPORT_ flags to control what is exported.
+
+Output
+  - A handle that identifies the document to be scrolled through using FetchNext().
+*/
 func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
 	if g2engine.isTrace {
@@ -388,6 +528,18 @@ func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColu
 	return (uintptr)(result.exportHandle), err
 }
 
+/*
+The ExportJSONEntityReport method initializes a cursor over a document of exported entities.
+It is part of the ExportJSONEntityReport(), FetchNext(), CloseExport()
+lifecycle of a list of entities to export.
+
+Input
+  - ctx: A context to control lifecycle.
+  - flags: Any combination of G2_EXPORT_ flags to control what is exported.
+
+Output
+  - A handle that identifies the document to be scrolled through using FetchNext().
+*/
 func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportJSONEntityReport(const long long flags, ExportHandle* responseHandle);
 	if g2engine.isTrace {
@@ -405,6 +557,18 @@ func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags 
 	return (uintptr)(result.exportHandle), err
 }
 
+/*
+The FetchNext method is used to scroll through an exported document.
+It is part of the ExportJSONEntityReport() or ExportCSVEntityReport(), FetchNext(), CloseExport()
+lifecycle of a list of exported entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - responseHandle: A handle created by ExportJSONEntityReport() or ExportCSVEntityReport().
+
+Output
+  - FIXME:
+*/
 func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2_fetchNext(ExportHandle responseHandle, char *responseBuf, const size_t bufSize);
 	if g2engine.isTrace {
@@ -422,6 +586,18 @@ func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uint
 	return C.GoString(result.response), err
 }
 
+/*
+The FindInterestingEntitiesByEntityID method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The unique identifier of an entity.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByEntityID(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -439,6 +615,19 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Cont
 	return C.GoString(result.response), err
 }
 
+/*
+The FindInterestingEntitiesByRecordID method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByRecordID(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -460,6 +649,22 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Cont
 	return C.GoString(result.response), err
 }
 
+/*
+The FindNetworkByEntityID method finds all entities surrounding a requested set of entities.
+This includes the requested entities, paths between them, and relations to other nearby entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityList: A JSON document listing entities.
+    Example: `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - buildOutDegree: The number of degrees of relationships to show around each search entity.
+  - maxEntities: The maximum number of entities to return in the discovered network.
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-29 22:25:18.997","LAST_SEEN_DT":"2022-11-29 22:25:19.005"}],"LAST_SEEN_DT":"2022-11-29 22:25:19.005"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"Smith","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-29 22:25:19.009","LAST_SEEN_DT":"2022-11-29 22:25:19.009"}],"LAST_SEEN_DT":"2022-11-29 22:25:19.009"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -479,6 +684,23 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityL
 	return C.GoString(result.response), err
 }
 
+/*
+The FindNetworkByEntityID method finds all entities surrounding a requested set of entities.
+This includes the requested entities, paths between them, and relations to other nearby entities.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityList: A JSON document listing entities.
+    Example: `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - buildOutDegree: The number of degrees of relationships to show around each search entity.
+  - maxEntities: The maximum number of entities to return in the discovered network.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID_V2(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -905,7 +1127,15 @@ func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSo
 	return C.GoString(result.response), err
 }
 
-// GetLastException returns the last exception encountered in the Senzing Engine.
+/*
+The GetLastException method retrieves the last exception thrown in Senzing's G2.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2Product.
+*/
 func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_getLastException(char *buffer, const size_t bufSize);
 	if g2engine.isTrace {
@@ -925,6 +1155,15 @@ func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, err
 	return string(stringBuffer), err
 }
 
+/*
+The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2Product.
+*/
 func (g2engine *G2engineImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2_getLastExceptionCode();
 	if g2engine.isTrace {
@@ -1088,7 +1327,16 @@ func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entity
 	return C.GoString(result.response), err
 }
 
-// Init initializes the Senzing G2diagnosis.
+/*
+The Init method initializes the Senzing G2 object.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
+*/
 func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2engine.isTrace {
@@ -1457,6 +1705,13 @@ func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonDat
 	return C.GoString(result.response), err
 }
 
+/*
+The SetLogLevel method sets the level of logging.
+
+Input
+  - ctx: A context to control lifecycle.
+  - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
+*/
 func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2engine.isTrace {
 		g2engine.traceEntry(137, logLevel)

@@ -125,7 +125,7 @@ func ExampleG2configmgrImpl_AddConfig() {
 	configStr, _ := g2config.Save(ctx, configHandle)
 	configComments := "Example configuration"
 	configID, _ := g2configmgr.AddConfig(ctx, configStr, configComments)
-	fmt.Println(configID > 0)
+	fmt.Println(configID > 0) // Dummy output.
 	// Output: true
 }
 
@@ -169,7 +169,7 @@ func ExampleG2configmgrImpl_GetDefaultConfigID() {
 	ctx := context.TODO()
 	g2configmgr := getG2Configmgr(ctx)
 	configID, _ := g2configmgr.GetDefaultConfigID(ctx)
-	fmt.Println(configID > 0)
+	fmt.Println(configID > 0) // Dummy output.
 	// Output: true
 }
 

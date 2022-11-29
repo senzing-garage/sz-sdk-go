@@ -108,7 +108,7 @@ func ExampleG2configImpl_Create() {
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	configHandle, _ := g2config.Create(ctx)
-	fmt.Println(configHandle > 0)
+	fmt.Println(configHandle > 0) // Dummy output.
 	// Output: true
 }
 
