@@ -9,6 +9,8 @@ The Senzing g2-sdk-go packages enable Go programs to call Senzing library functi
 Under the covers, Golang's CGO is used by the g2-sdk-go packages to make the calls
 to the Senzing functions.
 
+More information at https://github.com/senzing/g2-sdk-go
+
 # Installing Senzing library
 
 Since the Senzing library is a pre-requisite, it must be installed first.

@@ -8,6 +8,7 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -140,7 +141,7 @@ func ExampleG2diagnosticImpl_FindEntitiesByFeatureIDs() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
-	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
+	features := `{"ENTITY_ID":1,"LIB_FEAT_IDS":[1,3,4]}`
 	result, _ := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
 	fmt.Println(result)
 	// Output: []
@@ -188,8 +189,8 @@ func ExampleG2diagnosticImpl_GetEntityListBySize() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
-	aSize := 1000
-	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	entitySize := 1000
+	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, entitySize)
 	fmt.Println(entityListBySizeHandle > 0)
 	// Output: true
 }
@@ -223,6 +224,132 @@ func ExampleG2diagnosticImpl_GetFeature() {
 	result, _ := g2diagnostic.GetFeature(ctx, libFeatID)
 	fmt.Println(truncate(result, 95))
 	// Output: {"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":...
+}
+
+func ExampleG2diagnosticImpl_GetGenericFeatures() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	featureType := "PHONE"
+	maximumEstimatedCount := 10
+	result, _ := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
+	fmt.Println(result)
+	// Output: []
+}
+
+func ExampleG2diagnosticImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetLastException(ctx)
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetLastExceptionCode(ctx)
+	fmt.Println(result)
+	// Output: 0
+}
+
+func ExampleG2diagnosticImpl_GetLogicalCores() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetLogicalCores(ctx)
+	fmt.Println(result > 0)
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetMappingStatistics() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	includeInternalFeatures := 1
+	result, _ := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
+	fmt.Println(truncate(result, 109))
+	// Output: [{"DSRC_CODE":"CUSTOMERS","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"NATIVE",...
+}
+
+func ExampleG2diagnosticImpl_GetPhysicalCores() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetPhysicalCores(ctx)
+	fmt.Println(result > 0)
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetRelationshipDetails() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	relationshipID := int64(1)
+	includeInternalFeatures := 1
+	result, _ := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
+	fmt.Println(result)
+	// Output: FIXME:
+}
+
+func ExampleG2diagnosticImpl_GetResolutionStatistics() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetResolutionStatistics(ctx)
+	fmt.Println(truncate(result, 34))
+	// Output: [{"MATCH_LEVEL":11,"MATCH_KEY":...
+}
+
+func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, _ := g2diagnostic.GetTotalSystemMemory(ctx)
+	fmt.Println(result > 0)
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("") // See https://pkg.go.dev/github.com/senzing/go-helpers
+	verboseLogging := 0                                                              // 0 for no Senzing logging; 1 for logging
+	g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_InitWithConfigID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	initConfigID := int64(1)
+	verboseLogging := 0
+	g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_Reinit() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	initConfigID := int64(1)
+	g2diagnostic.Reinit(ctx, initConfigID)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
+	// Output:
 }
 
 // ----------------------------------------------------------------------------
