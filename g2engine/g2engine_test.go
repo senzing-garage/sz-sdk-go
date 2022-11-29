@@ -72,6 +72,10 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2engine G2engine, er
 }
 
 // ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
 
@@ -93,7 +97,7 @@ func TestGetObject(test *testing.T) {
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestAddRecord(test *testing.T) {
+func TestG2engineImpl_AddRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -110,7 +114,7 @@ func TestAddRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err2)
 }
 
-func TestAddRecordWithInfo(test *testing.T) {
+func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -123,7 +127,7 @@ func TestAddRecordWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestAddRecordWithInfoWithReturnedRecordID(test *testing.T) {
+func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -136,7 +140,7 @@ func TestAddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestAddRecordWithReturnedRecordID(test *testing.T) {
+func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -147,7 +151,7 @@ func TestAddRecordWithReturnedRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestCheckRecord(test *testing.T) {
+func TestG2engineImpl_CheckRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
@@ -157,7 +161,7 @@ func TestCheckRecord(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2engineImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	err := g2engine.ClearLastException(ctx)
@@ -165,7 +169,7 @@ func TestClearLastException(test *testing.T) {
 }
 
 // FAIL:
-func TestExportJSONEntityReport(test *testing.T) {
+func TestG2engineImpl_ExportJSONEntityReport(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	flags := int64(0)
@@ -178,7 +182,7 @@ func TestExportJSONEntityReport(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestCountRedoRecords(test *testing.T) {
+func TestG2engineImpl_CountRedoRecords(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.CountRedoRecords(ctx)
@@ -186,7 +190,7 @@ func TestCountRedoRecords(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestExportConfigAndConfigID(test *testing.T) {
+func TestG2engineImpl_ExportConfigAndConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actualConfig, actualConfigId, err := g2engine.ExportConfigAndConfigID(ctx)
@@ -195,7 +199,7 @@ func TestExportConfigAndConfigID(test *testing.T) {
 	printResult(test, "Actual Config ID", actualConfigId)
 }
 
-func TestExportConfig(test *testing.T) {
+func TestG2engineImpl_ExportConfig(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.ExportConfig(ctx)
@@ -203,7 +207,7 @@ func TestExportConfig(test *testing.T) {
 	printActual(test, actual)
 }
 
-//func TestExportCSVEntityReport(test *testing.T) {
+//func TestG2engineImpl_ExportCSVEntityReport(test *testing.T) {
 //	ctx := context.TODO()
 //	g2engine := getTestObject(ctx, test)
 //	csvColumnList := ""
@@ -214,7 +218,7 @@ func TestExportConfig(test *testing.T) {
 //}
 //
 
-func TestFindInterestingEntitiesByEntityID(test *testing.T) {
+func TestG2engineImpl_FindInterestingEntitiesByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -224,7 +228,7 @@ func TestFindInterestingEntitiesByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindInterestingEntitiesByRecordID(test *testing.T) {
+func TestG2engineImpl_FindInterestingEntitiesByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -235,7 +239,7 @@ func TestFindInterestingEntitiesByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindNetworkByEntityID(test *testing.T) {
+func TestG2engineImpl_FindNetworkByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
@@ -247,7 +251,7 @@ func TestFindNetworkByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindNetworkByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_FindNetworkByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
@@ -260,7 +264,7 @@ func TestFindNetworkByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindNetworkByRecordID(test *testing.T) {
+func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
@@ -272,7 +276,7 @@ func TestFindNetworkByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindNetworkByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_FindNetworkByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	recordList := ""
@@ -285,7 +289,7 @@ func TestFindNetworkByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathByEntityID(test *testing.T) {
+func TestG2engineImpl_FindPathByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -296,7 +300,7 @@ func TestFindPathByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -308,7 +312,7 @@ func TestFindPathByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathByRecordID(test *testing.T) {
+func TestG2engineImpl_FindPathByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -321,7 +325,7 @@ func TestFindPathByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -335,7 +339,7 @@ func TestFindPathByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathExcludingByEntityID(test *testing.T) {
+func TestG2engineImpl_FindPathExcludingByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -347,7 +351,7 @@ func TestFindPathExcludingByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathExcludingByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathExcludingByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -360,7 +364,7 @@ func TestFindPathExcludingByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathExcludingByRecordID(test *testing.T) {
+func TestG2engineImpl_FindPathExcludingByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -374,7 +378,7 @@ func TestFindPathExcludingByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathExcludingByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathExcludingByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -389,7 +393,7 @@ func TestFindPathExcludingByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathIncludingSourceByEntityID(test *testing.T) {
+func TestG2engineImpl_FindPathIncludingSourceByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -402,7 +406,7 @@ func TestFindPathIncludingSourceByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -416,7 +420,7 @@ func TestFindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathIncludingSourceByRecordID(test *testing.T) {
+func TestG2engineImpl_FindPathIncludingSourceByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -431,7 +435,7 @@ func TestFindPathIncludingSourceByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestFindPathIncludingSourceByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_FindPathIncludingSourceByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -447,7 +451,7 @@ func TestFindPathIncludingSourceByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetActiveConfigID(test *testing.T) {
+func TestG2engineImpl_GetActiveConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetActiveConfigID(ctx)
@@ -455,7 +459,7 @@ func TestGetActiveConfigID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityByEntityID(test *testing.T) {
+func TestG2engineImpl_GetEntityByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -464,7 +468,7 @@ func TestGetEntityByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_GetEntityByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -474,7 +478,7 @@ func TestGetEntityByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityByRecordID(test *testing.T) {
+func TestG2engineImpl_GetEntityByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -484,7 +488,7 @@ func TestGetEntityByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_GetEntityByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -495,7 +499,7 @@ func TestGetEntityByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2engineImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetLastException(ctx)
@@ -503,7 +507,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2engineImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetLastExceptionCode(ctx)
@@ -511,7 +515,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRecord(test *testing.T) {
+func TestG2engineImpl_GetRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -521,7 +525,7 @@ func TestGetRecord(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRecord_V2(test *testing.T) {
+func TestG2engineImpl_GetRecord_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -532,7 +536,7 @@ func TestGetRecord_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRedoRecord(test *testing.T) {
+func TestG2engineImpl_GetRedoRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetRedoRecord(ctx)
@@ -540,7 +544,7 @@ func TestGetRedoRecord(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRepositoryLastModifiedTime(test *testing.T) {
+func TestG2engineImpl_GetRepositoryLastModifiedTime(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
@@ -548,7 +552,7 @@ func TestGetRepositoryLastModifiedTime(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetVirtualEntityByRecordID(test *testing.T) {
+func TestG2engineImpl_GetVirtualEntityByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
@@ -557,7 +561,7 @@ func TestGetVirtualEntityByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_GetVirtualEntityByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
@@ -567,7 +571,7 @@ func TestGetVirtualEntityByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestHowEntityByEntityID(test *testing.T) {
+func TestG2engineImpl_HowEntityByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -576,7 +580,7 @@ func TestHowEntityByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestHowEntityByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_HowEntityByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -586,7 +590,7 @@ func TestHowEntityByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2engineImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	moduleName := "Test module name"
@@ -597,7 +601,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestInitWithConfigID(test *testing.T) {
+func TestG2engineImpl_InitWithConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	moduleName := "Test module name"
@@ -609,14 +613,14 @@ func TestInitWithConfigID(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestPrimeEngine(test *testing.T) {
+func TestG2engineImpl_PrimeEngine(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	err := g2engine.PrimeEngine(ctx)
 	testError(test, ctx, g2engine, err)
 }
 
-func TestProcess(test *testing.T) {
+func TestG2engineImpl_Process(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "444", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
@@ -624,7 +628,7 @@ func TestProcess(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestProcessRedoRecord(test *testing.T) {
+func TestG2engineImpl_ProcessRedoRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.ProcessRedoRecord(ctx)
@@ -632,7 +636,7 @@ func TestProcessRedoRecord(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestProcessRedoRecordWithInfo(test *testing.T) {
+func TestG2engineImpl_ProcessRedoRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var flags int64 = 0
@@ -642,7 +646,7 @@ func TestProcessRedoRecordWithInfo(test *testing.T) {
 	printResult(test, "Actual Info", actualInfo)
 }
 
-func TestProcessWithInfo(test *testing.T) {
+func TestG2engineImpl_ProcessWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "555", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
@@ -652,7 +656,7 @@ func TestProcessWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestProcessWithResponse(test *testing.T) {
+func TestG2engineImpl_ProcessWithResponse(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "666", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
@@ -661,7 +665,7 @@ func TestProcessWithResponse(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestProcessWithResponseResize(test *testing.T) {
+func TestG2engineImpl_ProcessWithResponseResize(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "777", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
@@ -670,7 +674,7 @@ func TestProcessWithResponseResize(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestReevaluateEntity(test *testing.T) {
+func TestG2engineImpl_ReevaluateEntity(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -679,7 +683,7 @@ func TestReevaluateEntity(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestReevaluateEntityWithInfo(test *testing.T) {
+func TestG2engineImpl_ReevaluateEntityWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -689,7 +693,7 @@ func TestReevaluateEntityWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestReevaluateRecord(test *testing.T) {
+func TestG2engineImpl_ReevaluateRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -699,7 +703,7 @@ func TestReevaluateRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestReevaluateRecordWithInfo(test *testing.T) {
+func TestG2engineImpl_ReevaluateRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -710,7 +714,7 @@ func TestReevaluateRecordWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestReinit(test *testing.T) {
+func TestG2engineImpl_Reinit(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	initConfigID, err := g2engine.GetActiveConfigID(ctx)
@@ -720,7 +724,7 @@ func TestReinit(test *testing.T) {
 	printActual(test, initConfigID)
 }
 
-func TestReplaceRecord(test *testing.T) {
+func TestG2engineImpl_ReplaceRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -731,7 +735,7 @@ func TestReplaceRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestReplaceRecordWithInfo(test *testing.T) {
+func TestG2engineImpl_ReplaceRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -744,7 +748,7 @@ func TestReplaceRecordWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestSearchByAttributes(test *testing.T) {
+func TestG2engineImpl_SearchByAttributes(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
@@ -753,7 +757,7 @@ func TestSearchByAttributes(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestSearchByAttributes_V2(test *testing.T) {
+func TestG2engineImpl_SearchByAttributes_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
@@ -763,7 +767,7 @@ func TestSearchByAttributes_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestStats(test *testing.T) {
+func TestG2engineImpl_Stats(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	actual, err := g2engine.Stats(ctx)
@@ -771,7 +775,7 @@ func TestStats(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntities(test *testing.T) {
+func TestG2engineImpl_WhyEntities(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -781,7 +785,7 @@ func TestWhyEntities(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntities_V2(test *testing.T) {
+func TestG2engineImpl_WhyEntities_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID1 int64 = 1
@@ -792,7 +796,7 @@ func TestWhyEntities_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntityByEntityID(test *testing.T) {
+func TestG2engineImpl_WhyEntityByEntityID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -801,7 +805,7 @@ func TestWhyEntityByEntityID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntityByEntityID_V2(test *testing.T) {
+func TestG2engineImpl_WhyEntityByEntityID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	var entityID int64 = 1
@@ -811,7 +815,7 @@ func TestWhyEntityByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntityByRecordID(test *testing.T) {
+func TestG2engineImpl_WhyEntityByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -821,7 +825,7 @@ func TestWhyEntityByRecordID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyEntityByRecordID_V2(test *testing.T) {
+func TestG2engineImpl_WhyEntityByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -832,7 +836,7 @@ func TestWhyEntityByRecordID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyRecords(test *testing.T) {
+func TestG2engineImpl_WhyRecords(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -844,7 +848,7 @@ func TestWhyRecords(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestWhyRecords_V2(test *testing.T) {
+func TestG2engineImpl_WhyRecords_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode1 := "TEST"
@@ -857,7 +861,7 @@ func TestWhyRecords_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestDeleteRecord(test *testing.T) {
+func TestG2engineImpl_DeleteRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -867,7 +871,7 @@ func TestDeleteRecord(test *testing.T) {
 	testError(test, ctx, g2engine, err)
 }
 
-func TestDeleteRecordWithInfo(test *testing.T) {
+func TestG2engineImpl_DeleteRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	dataSourceCode := "TEST"
@@ -879,14 +883,14 @@ func TestDeleteRecordWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestPurgeRepository(test *testing.T) {
+func TestG2engineImpl_PurgeRepository(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	err := g2engine.PurgeRepository(ctx)
 	testError(test, ctx, g2engine, err)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2engineImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	err := g2engine.Destroy(ctx)

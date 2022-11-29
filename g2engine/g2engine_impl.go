@@ -1,5 +1,5 @@
 /*
-The G2engineImpl implementation...
+// The G2engineImpl implementation is a wrapper over the Senzing libg2 library.
 */
 package g2engine
 
@@ -25,6 +25,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// G2engineImpl is the default implementation of the G2engine interface.
 type G2engineImpl struct {
 	isTrace bool
 	logger  messagelogger.MessageLoggerInterface
@@ -46,10 +47,12 @@ func (g2engine *G2engineImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2engine *G2engineImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2engine.GetLastException(ctx)
 	defer g2engine.ClearLastException(ctx)
@@ -69,6 +72,7 @@ func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, det
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2engine *G2engineImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2engine.logger == nil {
 		g2engine.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -76,10 +80,12 @@ func (g2engine *G2engineImpl) getLogger() messagelogger.MessageLoggerInterface {
 	return g2engine.logger
 }
 
+// Trace method entry.
 func (g2engine *G2engineImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2engine.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2engine *G2engineImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2engine.getLogger().Log(errorNumber, details...)
 }
@@ -88,6 +94,19 @@ func (g2engine *G2engineImpl) traceExit(errorNumber int, details ...interface{})
 // Interface methods
 // ----------------------------------------------------------------------------
 
+/*
+The AddRecord method adds a record into the Senzing repository.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the source of the data. The data source is helpful with data provenance.
+  - recordID: The unique identifier within the records of the same data source.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+
+Output
+  - A string containing a JSON document. Example: `{"DSRC_ID":1001}`
+*/
 func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	if g2engine.isTrace {
