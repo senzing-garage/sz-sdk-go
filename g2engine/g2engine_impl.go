@@ -989,9 +989,8 @@ Paths are found using known relationships with other entities.
 In addition, it will find paths that exclude certain entities from being on the path.
 It extends FindPathExcludingByEntityID() by adding output control flags.
 
-When excluding entities, the user may choose to either (a) strictly exclude the entities,
-or (b) prefer to exclude the entities,
-but still include them if no other path is found.
+When excluding entities, the user may choose to either strictly exclude the entities,
+or prefer to exclude the entities but still include them if no other path is found.
 By default, entities will be strictly excluded.
 A "preferred exclude" may be done by specifying the G2_FIND_PATH_PREFER_EXCLUDE control flag.
 
@@ -1072,6 +1071,31 @@ func (g2engine *G2engineImpl) FindPathExcludingByRecordID(ctx context.Context, d
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathExcludingByRecordID_V2 method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+In addition, it will find paths that exclude certain entities from being on the path.
+It extends FindPathExcludingByRecordID() by adding output control flags.
+
+When excluding entities, the user may choose to either strictly exclude the entities,
+or prefer to exclude the entities but still include them if no other path is found.
+By default, entities will be strictly excluded.
+A "preferred exclude" may be done by specifying the G2_FIND_PATH_PREFER_EXCLUDE control flag.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) FindPathExcludingByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1099,6 +1123,25 @@ func (g2engine *G2engineImpl) FindPathExcludingByRecordID_V2(ctx context.Context
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathIncludingSourceByEntityID method finds single relationship paths between two entities.
+In addition, one of the enties along the path must include a specified data source.
+Specific entities may also be excluded,
+using the same methodology as the FindPathExcludingByEntityID() and FindPathExcludingByRecordID().
+To control output, use FindPathIncludingSourceByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 16:20:53.885","LAST_SEEN_DT":"2022-11-30 16:20:54.020"}],"LAST_SEEN_DT":"2022-11-30 16:20:54.020"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 16:20:53.956","LAST_SEEN_DT":"2022-11-30 16:20:53.956"}],"LAST_SEEN_DT":"2022-11-30 16:20:53.956"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1120,6 +1163,26 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID(ctx context.Cont
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathIncludingSourceByEntityID_V2 method finds single relationship paths between two entities.
+In addition, one of the enties along the path must include a specified data source.
+Specific entities may also be excluded,
+using the same methodology as the FindPathExcludingByEntityID_V2() and FindPathExcludingByRecordID_V2().
+It extends FindPathIncludingSourceByEntityID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
+*/
 func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
