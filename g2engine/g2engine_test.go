@@ -579,6 +579,17 @@ func ExampleG2engineImpl_GetLastExceptionCode() {
 	// Output: 0
 }
 
+func ExampleG2engineImpl_GetRecord() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	result, _ := g2engine.GetRecord(ctx, dataSourceCode, recordID)
+	fmt.Println(result)
+	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"111","JSON_DATA":{"SOCIAL_HANDLE":"flavorh","DATE_OF_BIRTH":"4/8/1983","ADDR_STATE":"LA","ADDR_POSTAL_CODE":"71232","SSN_NUMBER":"053-39-3251","GENDER":"F","srccode":"MDMPER","CC_ACCOUNT_NUMBER":"5534202208773608","ADDR_CITY":"Delhi","DRIVERS_LICENSE_STATE":"DE","PHONE_NUMBER":"225-671-0796","NAME_LAST":"SEAMAN","entityid":"284430058","ADDR_LINE1":"772 Armstrong RD","DATA_SOURCE":"TEST","ENTITY_TYPE":"TEST","DSRC_ACTION":"A","RECORD_ID":"111"}}
+}
+
 // ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------

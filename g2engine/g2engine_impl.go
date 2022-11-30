@@ -1511,6 +1511,19 @@ func (g2engine *G2engineImpl) GetLastExceptionCode(ctx context.Context) (int, er
 	return result, err
 }
 
+/*
+The GetRecord method returns a JSON document of a single record from the Senzing repository.
+To control output, use GetRecord_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","JSON_DATA":{"SOCIAL_HANDLE":"flavorh","DATE_OF_BIRTH":"4/8/1983","ADDR_STATE":"LA","ADDR_POSTAL_CODE":"71232","SSN_NUMBER":"053-39-3251","GENDER":"F","srccode":"MDMPER","CC_ACCOUNT_NUMBER":"5534202208773608","ADDR_CITY":"Delhi","DRIVERS_LICENSE_STATE":"DE","PHONE_NUMBER":"225-671-0796","NAME_LAST":"SEAMAN","entityid":"284430058","ADDR_LINE1":"772 Armstrong RD","DATA_SOURCE":"TEST","ENTITY_TYPE":"TEST","DSRC_ACTION":"A","RECORD_ID":"111"}}`
+*/
 func (g2engine *G2engineImpl) GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_getRecord(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
