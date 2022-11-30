@@ -1204,6 +1204,27 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.C
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathIncludingSourceByRecordID method finds single relationship paths between two entities.
+In addition, one of the enties along the path must include a specified data source.
+Specific entities may also be excluded,
+using the same methodology as the FindPathExcludingByEntityID() and FindPathExcludingByRecordID().
+To control output, use FindPathIncludingSourceByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 16:38:41.531","LAST_SEEN_DT":"2022-11-30 16:38:41.667"}],"LAST_SEEN_DT":"2022-11-30 16:38:41.667"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 16:38:41.606","LAST_SEEN_DT":"2022-11-30 16:38:41.606"}],"LAST_SEEN_DT":"2022-11-30 16:38:41.606"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1233,6 +1254,28 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Cont
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathIncludingSourceByRecordID method finds single relationship paths between two entities.
+In addition, one of the enties along the path must include a specified data source.
+Specific entities may also be excluded,
+using the same methodology as the FindPathExcludingByEntityID_V2() and FindPathExcludingByRecordID_V2().
+It extends FindPathIncludingSourceByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1262,6 +1305,16 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.C
 	return C.GoString(result.response), err
 }
 
+/*
+The GetActiveConfigID method returns the identifier of the loaded Senzing engine configuration.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+    Example:
+*/
 func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getActiveConfigID(long long* configID);
 	if g2engine.isTrace {
@@ -1279,6 +1332,18 @@ func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, err
 	return int64(C.longlong(result.configID)), err
 }
 
+/*
+The GetEntityByEntityID method returns entity data based on the ID of a resolved identity.
+To control output, use GetEntityByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID of the requested data.
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"5534202208773608","LIB_FEAT_ID":8,"USAGE_TYPE":"CC","FEAT_DESC_VALUES":[{"FEAT_DESC":"5534202208773608","LIB_FEAT_ID":8}]}],"ADDRESS":[{"FEAT_DESC":"772 Armstrong RD Delhi LA 71232","LIB_FEAT_ID":4,"FEAT_DESC_VALUES":[{"FEAT_DESC":"772 Armstrong RD Delhi LA 71232","LIB_FEAT_ID":4}]}],"DOB":[{"FEAT_DESC":"4/8/1983","LIB_FEAT_ID":2,"FEAT_DESC_VALUES":[{"FEAT_DESC":"4/8/1983","LIB_FEAT_ID":2}]}],"GENDER":[{"FEAT_DESC":"F","LIB_FEAT_ID":3,"FEAT_DESC_VALUES":[{"FEAT_DESC":"F","LIB_FEAT_ID":3}]}],"LOGIN_ID":[{"FEAT_DESC":"flavorh","LIB_FEAT_ID":7,"FEAT_DESC_VALUES":[{"FEAT_DESC":"flavorh","LIB_FEAT_ID":7}]}],"NAME":[{"FEAT_DESC":"SEAMAN","LIB_FEAT_ID":1,"FEAT_DESC_VALUES":[{"FEAT_DESC":"SEAMAN","LIB_FEAT_ID":1}]}],"PHONE":[{"FEAT_DESC":"225-671-0796","LIB_FEAT_ID":5,"FEAT_DESC_VALUES":[{"FEAT_DESC":"225-671-0796","LIB_FEAT_ID":5}]}],"SSN":[{"FEAT_DESC":"053-39-3251","LIB_FEAT_ID":6,"FEAT_DESC_VALUES":[{"FEAT_DESC":"053-39-3251","LIB_FEAT_ID":6}]}]},"RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 17:03:40.372","LAST_SEEN_DT":"2022-11-30 17:03:40.503"}],"LAST_SEEN_DT":"2022-11-30 17:03:40.503","RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111","ENTITY_TYPE":"TEST","INTERNAL_ID":1,"ENTITY_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENTITY_DESC":"SEAMAN","MATCH_KEY":"","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","ERRULE_CODE":"","LAST_SEEN_DT":"2022-11-30 17:03:40.372"},{"DATA_SOURCE":"TEST","RECORD_ID":"2D4DABB3FAEAFBD452E9487D06FABC22DC69C846","ENTITY_TYPE":"TEST","INTERNAL_ID":1,"ENTITY_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENTITY_DESC":"SEAMAN","MATCH_KEY":"+EXACTLY_SAME","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","ERRULE_CODE":"","LAST_SEEN_DT":"2022-11-30 17:03:40.503"}]},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 17:03:40.444","LAST_SEEN_DT":"2022-11-30 17:03:40.444"}],"LAST_SEEN_DT":"2022-11-30 17:03:40.444"},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0,"ENTITY_NAME":"Smith","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 17:03:40.510","LAST_SEEN_DT":"2022-11-30 17:03:40.510"}],"LAST_SEEN_DT":"2022-11-30 17:03:40.510"}]}`
+*/
 func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1296,6 +1361,19 @@ func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID 
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntityByEntityID_V2 method returns entity data based on the ID of a resolved identity.
+It extends GetEntityByEntityID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID of the requested data.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
+*/
 func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1313,6 +1391,19 @@ func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entity
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntityByRecordID method returns entity data based on the ID of a record which is a member of the entity.
+To control output, use GetEntityByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"5534202208773608","LIB_FEAT_ID":8,"USAGE_TYPE":"CC","FEAT_DESC_VALUES":[{"FEAT_DESC":"5534202208773608","LIB_FEAT_ID":8}]}],"ADDRESS":[{"FEAT_DESC":"772 Armstrong RD Delhi LA 71232","LIB_FEAT_ID":4,"FEAT_DESC_VALUES":[{"FEAT_DESC":"772 Armstrong RD Delhi LA 71232","LIB_FEAT_ID":4}]}],"DOB":[{"FEAT_DESC":"4/8/1983","LIB_FEAT_ID":2,"FEAT_DESC_VALUES":[{"FEAT_DESC":"4/8/1983","LIB_FEAT_ID":2}]}],"GENDER":[{"FEAT_DESC":"F","LIB_FEAT_ID":3,"FEAT_DESC_VALUES":[{"FEAT_DESC":"F","LIB_FEAT_ID":3}]}],"LOGIN_ID":[{"FEAT_DESC":"flavorh","LIB_FEAT_ID":7,"FEAT_DESC_VALUES":[{"FEAT_DESC":"flavorh","LIB_FEAT_ID":7}]}],"NAME":[{"FEAT_DESC":"SEAMAN","LIB_FEAT_ID":1,"FEAT_DESC_VALUES":[{"FEAT_DESC":"SEAMAN","LIB_FEAT_ID":1}]}],"PHONE":[{"FEAT_DESC":"225-671-0796","LIB_FEAT_ID":5,"FEAT_DESC_VALUES":[{"FEAT_DESC":"225-671-0796","LIB_FEAT_ID":5}]}],"SSN":[{"FEAT_DESC":"053-39-3251","LIB_FEAT_ID":6,"FEAT_DESC_VALUES":[{"FEAT_DESC":"053-39-3251","LIB_FEAT_ID":6}]}]},"RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 17:13:04.312","LAST_SEEN_DT":"2022-11-30 17:13:04.441"}],"LAST_SEEN_DT":"2022-11-30 17:13:04.441","RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111","ENTITY_TYPE":"TEST","INTERNAL_ID":1,"ENTITY_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENTITY_DESC":"SEAMAN","MATCH_KEY":"","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","ERRULE_CODE":"","LAST_SEEN_DT":"2022-11-30 17:13:04.312"},{"DATA_SOURCE":"TEST","RECORD_ID":"2D4DABB3FAEAFBD452E9487D06FABC22DC69C846","ENTITY_TYPE":"TEST","INTERNAL_ID":1,"ENTITY_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENTITY_DESC":"SEAMAN","MATCH_KEY":"+EXACTLY_SAME","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","ERRULE_CODE":"","LAST_SEEN_DT":"2022-11-30 17:13:04.441"}]},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 17:13:04.384","LAST_SEEN_DT":"2022-11-30 17:13:04.384"}],"LAST_SEEN_DT":"2022-11-30 17:13:04.384"},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0,"ENTITY_NAME":"Smith","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 17:13:04.445","LAST_SEEN_DT":"2022-11-30 17:13:04.445"}],"LAST_SEEN_DT":"2022-11-30 17:13:04.445"}]}`
+*/
 func (g2engine *G2engineImpl) GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1334,6 +1425,20 @@ func (g2engine *G2engineImpl) GetEntityByRecordID(ctx context.Context, dataSourc
 	return C.GoString(result.response), err
 }
 
+/*
+The GetEntityByRecordID_V2 method returns entity data based on the ID of a record which is a member of the entity.
+It extends GetEntityByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
+*/
 func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {

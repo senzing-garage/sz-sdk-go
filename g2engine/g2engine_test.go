@@ -475,6 +475,110 @@ func ExampleG2engineImpl_FindPathIncludingSourceByEntityID_V2() {
 	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
 }
 
+func ExampleG2engineImpl_FindPathIncludingSourceByRecordID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	result, _ := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs)
+	fmt.Println(truncate(result, 119))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":...
+}
+
+func ExampleG2engineImpl_FindPathIncludingSourceByRecordID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	var flags int64 = 0
+	result, _ := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs, flags)
+	fmt.Println(result)
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
+}
+
+func ExampleG2engineImpl_GetActiveConfigID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	result, _ := g2engine.GetActiveConfigID(ctx)
+	fmt.Println(result > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2engineImpl_GetEntityByEntityID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID int64 = 1
+	result, _ := g2engine.GetEntityByEntityID(ctx, entityID)
+	fmt.Println(truncate(result, 51))
+	// Output: {"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":...
+}
+
+func ExampleG2engineImpl_GetEntityByEntityID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID int64 = 1
+	var flags int64 = 0
+	result, _ := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
+	fmt.Println(result)
+	// Output: {"RESOLVED_ENTITY":{"ENTITY_ID":1}}
+}
+
+func ExampleG2engineImpl_GetEntityByRecordID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	result, _ := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
+	fmt.Println(truncate(result, 35))
+	// Output: {"RESOLVED_ENTITY":{"ENTITY_ID":...
+}
+
+func ExampleG2engineImpl_GetEntityByRecordID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	result, _ := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+	fmt.Println(result)
+	// Output: {"RESOLVED_ENTITY":{"ENTITY_ID":1}}
+}
+
+func ExampleG2engineImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	result, _ := g2engine.GetLastException(ctx)
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2engineImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	result, _ := g2engine.GetLastExceptionCode(ctx)
+	fmt.Println(result)
+	// Output: 0
+}
+
 // ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------
@@ -811,8 +915,8 @@ func TestG2engineImpl_FindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	var entityID1 int64 = 1
 	var entityID2 int64 = 2
 	maxDegree := 1
-	excludedEntities := ""
-	requiredDsrcs := ""
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
 	var flags int64 = 0
 	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
 	testError(test, ctx, g2engine, err)
@@ -827,9 +931,9 @@ func TestG2engineImpl_FindPathIncludingSourceByRecordID(test *testing.T) {
 	dataSourceCode2 := "TEST"
 	recordID2 := "222"
 	maxDegree := 1
-	excludedRecords := ""
-	requiredDsrcs := ""
-	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs)
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -842,10 +946,10 @@ func TestG2engineImpl_FindPathIncludingSourceByRecordID_V2(test *testing.T) {
 	dataSourceCode2 := "TEST"
 	recordID2 := "222"
 	maxDegree := 1
-	excludedRecords := ""
-	requiredDsrcs := ""
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
 	var flags int64 = 0
-	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs, flags)
+	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
