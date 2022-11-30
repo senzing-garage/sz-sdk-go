@@ -349,6 +349,87 @@ func ExampleG2engineImpl_FindNetworkByRecordID_V2() {
 	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}},{"RESOLVED_ENTITY":{"ENTITY_ID":3}}]}
 }
 
+func ExampleG2engineImpl_FindPathByEntityID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	result, _ := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
+	fmt.Println(truncate(result, 109))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+}
+
+func ExampleG2engineImpl_FindPathByEntityID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	var flags int64 = 0
+	result, _ := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
+	fmt.Println(result)
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
+}
+
+func ExampleG2engineImpl_FindPathByRecordID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	result, _ := g2engine.FindPathByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
+	fmt.Println(truncate(result, 89))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":...
+}
+
+func ExampleG2engineImpl_FindPathExcludingByEntityID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	result, _ := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
+	fmt.Println(truncate(result, 109))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+}
+
+func ExampleG2engineImpl_FindPathExcludingByEntityID_V2() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	var flags int64 = 0
+	result, _ := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
+	fmt.Println(result)
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
+}
+
+func ExampleG2engineImpl_FindPathExcludingByRecordID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	ctx := context.TODO()
+	g2engine := getG2Engine(ctx)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
+	result, _ := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
+	fmt.Println(truncate(result, 109))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+}
+
 // ----------------------------------------------------------------------------
 // Test harness
 // ----------------------------------------------------------------------------

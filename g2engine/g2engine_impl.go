@@ -795,6 +795,21 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID_V2(ctx context.Context, reco
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathByEntityID method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+To control output, use FindPathByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 15:10:20.351","LAST_SEEN_DT":"2022-11-30 15:10:20.488"}],"LAST_SEEN_DT":"2022-11-30 15:10:20.488"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 15:10:20.426","LAST_SEEN_DT":"2022-11-30 15:10:20.426"}],"LAST_SEEN_DT":"2022-11-30 15:10:20.426"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -812,6 +827,22 @@ func (g2engine *G2engineImpl) FindPathByEntityID(ctx context.Context, entityID1 
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathByEntityID_V2 method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+It extends FindPathByEntityID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -829,6 +860,24 @@ func (g2engine *G2engineImpl) FindPathByEntityID_V2(ctx context.Context, entityI
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathByRecordID method finds single relationship paths between two entities.
+The entities are identified by starting and ending records.
+Paths are found using known relationships with other entities.
+To control output, use FindPathByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 15:31:32.996","LAST_SEEN_DT":"2022-11-30 15:31:33.128"}],"LAST_SEEN_DT":"2022-11-30 15:31:33.128"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 15:31:33.068","LAST_SEEN_DT":"2022-11-30 15:31:33.068"}],"LAST_SEEN_DT":"2022-11-30 15:31:33.068"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -854,6 +903,25 @@ func (g2engine *G2engineImpl) FindPathByRecordID(ctx context.Context, dataSource
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathByRecordID_V2 method finds single relationship paths between two entities.
+The entities are identified by starting and ending records.
+Paths are found using known relationships with other entities.
+It extends FindPathByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 15:31:32.996","LAST_SEEN_DT":"2022-11-30 15:31:33.128"}],"LAST_SEEN_DT":"2022-11-30 15:31:33.128"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 15:31:33.068","LAST_SEEN_DT":"2022-11-30 15:31:33.068"}],"LAST_SEEN_DT":"2022-11-30 15:31:33.068"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -879,6 +947,23 @@ func (g2engine *G2engineImpl) FindPathByRecordID_V2(ctx context.Context, dataSou
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathExcludingByEntityID method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+In addition, it will find paths that exclude certain entities from being on the path.
+To control output, use FindPathExcludingByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 15:42:04.049","LAST_SEEN_DT":"2022-11-30 15:42:04.209"}],"LAST_SEEN_DT":"2022-11-30 15:42:04.209"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 15:42:04.148","LAST_SEEN_DT":"2022-11-30 15:42:04.148"}],"LAST_SEEN_DT":"2022-11-30 15:42:04.148"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -898,6 +983,30 @@ func (g2engine *G2engineImpl) FindPathExcludingByEntityID(ctx context.Context, e
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathExcludingByEntityID_V2 method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+In addition, it will find paths that exclude certain entities from being on the path.
+It extends FindPathExcludingByEntityID() by adding output control flags.
+
+When excluding entities, the user may choose to either (a) strictly exclude the entities,
+or (b) prefer to exclude the entities,
+but still include them if no other path is found.
+By default, entities will be strictly excluded.
+A "preferred exclude" may be done by specifying the G2_FIND_PATH_PREFER_EXCLUDE control flag.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example:
+*/
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -917,6 +1026,25 @@ func (g2engine *G2engineImpl) FindPathExcludingByEntityID_V2(ctx context.Context
 	return C.GoString(result.response), err
 }
 
+/*
+The FindPathExcludingByRecordID method finds single relationship paths between two entities.
+Paths are found using known relationships with other entities.
+In addition, it will find paths that exclude certain entities from being on the path.
+To control output, use FindPathExcludingByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the record for the starting entity of the search path.
+  - recordID1: The unique identifier within the records of the same data source for the starting entity of the search path.
+  - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
+  - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
+  - maxDegree: The maximum number of degrees in paths between search entities.
+  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+
+Output
+  - A JSON document.
+    Example: `{"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"SEAMAN","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":2,"FIRST_SEEN_DT":"2022-11-30 15:57:10.826","LAST_SEEN_DT":"2022-11-30 15:57:10.959"}],"LAST_SEEN_DT":"2022-11-30 15:57:10.959"},"RELATED_ENTITIES":[{"ENTITY_ID":2,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]},{"RESOLVED_ENTITY":{"ENTITY_ID":2,"ENTITY_NAME":"OCEANGUY","RECORD_SUMMARY":[{"DATA_SOURCE":"TEST","RECORD_COUNT":1,"FIRST_SEEN_DT":"2022-11-30 15:57:10.898","LAST_SEEN_DT":"2022-11-30 15:57:10.898"}],"LAST_SEEN_DT":"2022-11-30 15:57:10.898"},"RELATED_ENTITIES":[{"ENTITY_ID":1,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+PHONE+ACCT_NUM-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0},{"ENTITY_ID":3,"MATCH_LEVEL":3,"MATCH_LEVEL_CODE":"POSSIBLY_RELATED","MATCH_KEY":"+ADDRESS+PHONE+ACCT_NUM-DOB-SSN","ERRULE_CODE":"SF1","IS_DISCLOSED":0,"IS_AMBIGUOUS":0}]}]}`
+*/
 func (g2engine *G2engineImpl) FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
