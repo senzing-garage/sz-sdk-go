@@ -1545,6 +1545,20 @@ func (g2engine *G2engineImpl) GetRecord(ctx context.Context, dataSourceCode stri
 	return C.GoString(result.response), err
 }
 
+/*
+The GetRecord_V2 method returns a JSON document of a single record from the Senzing repository.
+It extends GetRecord() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111"}`
+*/
 func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getRecord_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1566,6 +1580,17 @@ func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode s
 	return C.GoString(result.response), err
 }
 
+/*
+The GetRedoRecord method returns the next internally queued maintenance record from the Senzing repository.
+Usually, the ProcessRedoRecord() or ProcessRedoRecordWithInfo() method is called to process the maintenance record
+retrieved by GetRedoRecord().
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+*/
 func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_getRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -1584,6 +1609,16 @@ func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error)
 
 }
 
+/*
+The  method returns ordWithInfo() method retrieves the last modified time of the Senzing repository,
+measured in the number of seconds between the last modified time and January 1, 1970 12:00am GMT (epoch time).
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A Unix TimestampA JSON document.
+*/
 func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getRepositoryLastModifiedTime(long long* lastModifiedTime);
 	if g2engine.isTrace {
@@ -1601,6 +1636,19 @@ func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context)
 	return int64(result.time), err
 }
 
+/*
+The GetVirtualEntityByRecordID method FIXME:
+To control output, use GetVirtualEntityByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - recordList: A JSON document.
+    Example: `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":...`
+*/
 func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID(const char* recordList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1620,6 +1668,20 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, re
 	return C.GoString(result.response), err
 }
 
+/*
+The GetVirtualEntityByRecordID_V2 method FIXME:
+It extends GetVirtualEntityByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - recordList: A JSON document.
+    Example: `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
+*/
 func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID_V2(const char* recordList, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1639,6 +1701,18 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context,
 	return C.GoString(result.response), err
 }
 
+/*
+The HowEntityByEntityID method FIXME:
+To control output, use HowEntityByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID of the requested data.
+
+Output
+  - A JSON document.
+    Example: `{"HOW_RESULTS":{"RESOLUTION_STEPS":[],"FINAL_STATE":{"NEED_REEVALUATION":0,"VIRTUAL_ENTITIES":[{"VIRTUAL_ENTITY_ID":"V1","MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"},{"DATA_SOURCE":"TEST","RECORD_ID":"2D4DABB3FAEAFBD452E9487D06FABC22DC69C846"}]}]}]}}}`
+*/
 func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	entryTime := time.Now()
@@ -1656,6 +1730,19 @@ func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID 
 	return C.GoString(result.response), err
 }
 
+/*
+The HowEntityByEntityID_V2 method FIXME:
+It extends HowEntityByEntityID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID of the requested data.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"HOW_RESULTS":{"RESOLUTION_STEPS":[],"FINAL_STATE":{"NEED_REEVALUATION":0,"VIRTUAL_ENTITIES":[{"VIRTUAL_ENTITY_ID":"V1","MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"},{"DATA_SOURCE":"TEST","RECORD_ID":"2D4DABB3FAEAFBD452E9487D06FABC22DC69C846"}]}]}]}}}`
+*/
 func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	entryTime := time.Now()
@@ -1704,6 +1791,17 @@ func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniPa
 	return err
 }
 
+/*
+The InitWithConfigID method initializes the Senzing G2 object with a non-default configuration ID.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - initConfigID: The configuration ID used for the initialization.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
+*/
 func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
 	if g2engine.isTrace {
@@ -1725,6 +1823,14 @@ func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName s
 	return err
 }
 
+/*
+The PrimeEngine method pre-initializes some of the heavier weight internal resources of the G2 engine.
+The G2 Engine uses "lazy initialization".
+PrimeEngine() forces initialization.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	//  _DLEXPORT int G2_primeEngine();
 	if g2engine.isTrace {
@@ -1742,6 +1848,13 @@ func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	return err
 }
 
+/*
+The Process method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - record: A JSON document containing the record to be added to the Senzing repository.
+*/
 func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error {
 	//  _DLEXPORT int G2_process(const char *record);
 	if g2engine.isTrace {
@@ -1761,6 +1874,16 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 	return err
 }
 
+/*
+The ProcessRedoRecord method processes the next redo record and returns it.
+Calling ProcessRedoRecord() has the potential to create more redo records in certian situations.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+*/
 func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_processRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -1776,9 +1899,20 @@ func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, er
 		defer g2engine.traceExit(108, C.GoString(result.response), err, time.Since(entryTime))
 	}
 	return C.GoString(result.response), err
-
 }
 
+/*
+The ProcessRedoRecordWithInfo method processes the next redo record and returns it and affected entities.
+Calling ProcessRedoRecordWithInfo() has the potential to create more redo records in certian situations.
+
+Input
+  - ctx: A context to control lifecycle.
+  - flags: FIXME:
+
+Output
+  - A JSON document with the record that was re-done.
+  - A JSON document with affected entities.
+*/
 func (g2engine *G2engineImpl) ProcessRedoRecordWithInfo(ctx context.Context, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_processRedoRecordWithInfo(const long long flags, char **responseBuf, size_t *bufSize, char **infoBuf, size_t *infoBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
