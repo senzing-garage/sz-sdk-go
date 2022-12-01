@@ -1764,3 +1764,12 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 	fmt.Println(result)
 	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"}],"INTERNAL_ID_2":2,"ENTITY_ID_2":2,"FOCUS_RECORDS_2":[{"DATA_SOURCE":"TEST","RECORD_ID":"222"}],"MATCH_INFO":{"WHY_KEY":"+PHONE+ACCT_NUM-DOB-SSN","WHY_ERRULE_CODE":"SF1","MATCH_LEVEL_CODE":"POSSIBLY_RELATED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
 }
+
+// PurgeRepository() is first to start with a clean database.
+func ExampleG2engineImpl_PurgeRepository_FinalCleanup() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	g2engine.PurgeRepository(ctx)
+	// Output:
+}

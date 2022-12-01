@@ -5,24 +5,61 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	truncator "github.com/aquilax/truncate"
+	"github.com/senzing/g2-sdk-go/g2config"
+	"github.com/senzing/g2-sdk-go/g2configmgr"
+	"github.com/senzing/g2-sdk-go/g2engine"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
 )
 
 const (
-	// defaultTruncation = 76
-	defaultTruncation = 300
+	defaultTruncation = 76
 )
 
 var (
 	g2diagnosticSingleton G2diagnostic
 )
 
+var testDataSources = []struct {
+	Data string
+}{
+	{
+		Data: `{"DSRC_CODE": "TEST_G2DIAGNOSTIC"}`,
+	},
+}
+
+var testRecords = []struct {
+	DataSource string
+	Id         string
+	Data       string
+	LoadId     string
+}{
+	{
+		DataSource: "TEST_G2DIAGNOSTIC",
+		Id:         "9001",
+		Data:       `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST_G2DIAGNOSTIC", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "9001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`,
+		LoadId:     "TEST",
+	},
+	{
+		DataSource: "TEST_G2DIAGNOSTIC",
+		Id:         "9002",
+		Data:       `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST_G2DIAGNOSTIC", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "9002", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`,
+		LoadId:     "TEST",
+	},
+	{
+		DataSource: "TEST_G2DIAGNOSTIC",
+		Id:         "9003",
+		Data:       `{"ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "ENTITY_TYPE": "TEST_G2DIAGNOSTIC", "GENDER": "M", "srccode": "MDMPER", "RECORD_ID": "9003", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "Smith", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`,
+		LoadId:     "TEST",
+	},
+}
+
 // ----------------------------------------------------------------------------
-// Internal functions - names begin with lowercase letter
+// Internal functions
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
@@ -38,7 +75,6 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
-
 		initErr := g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
@@ -83,6 +119,334 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagno
 		lastException, _ := g2diagnostic.GetLastException(ctx)
 		test.Log("Error:", err.Error(), "LastException:", lastException)
 	}
+}
+
+// ----------------------------------------------------------------------------
+// Test harness
+// ----------------------------------------------------------------------------
+
+// Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
+func setupSuite(test *testing.T, ctx context.Context) func(test testing.TB) {
+
+	now := time.Now()
+	moduleName := "Test module name"
+	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	verboseLogging := 0
+
+	// Add Data Sources to in-memory Senzing configuration.
+
+	g2config := &g2config.G2configImpl{}
+	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		test.Logf("Cannot Initialize g2config. Error: %v", err)
+	}
+
+	configHandle, _ := g2config.Create(ctx)
+	for _, testDataSource := range testDataSources {
+		_, err := g2config.AddDataSource(ctx, configHandle, testDataSource.Data)
+		if err != nil {
+			test.Logf("Cannot add data source %s. Error: %v", testDataSource.Data, err)
+		}
+	}
+	configStr, err := g2config.Save(ctx, configHandle)
+	if err != nil {
+		test.Logf("Cannot save config to string. Error: %v", err)
+	}
+
+	err = g2config.Close(ctx, configHandle)
+	if err != nil {
+		test.Logf("Cannot close configuration handle. Error: %v", err)
+	}
+
+	err = g2config.Destroy(ctx)
+	if err != nil {
+		test.Logf("Cannot destroy g2config. Error: %v", err)
+	}
+
+	// Persist the Senzing configuration to the Senzing repository.
+
+	g2configmgr := &g2configmgr.G2configmgrImpl{}
+	err = g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		test.Logf("Cannot Initialize g2configmgr. Error: %v", err)
+	}
+
+	configComments := fmt.Sprintf("g2diagnostic_test at %s", now.UTC())
+	configID, err := g2configmgr.AddConfig(ctx, configStr, configComments)
+	if err != nil {
+		test.Logf("Cannot add configuration to Senzing repository. Error: %v", err)
+	}
+
+	err = g2configmgr.SetDefaultConfigID(ctx, configID)
+	if err != nil {
+		test.Logf("Cannot set default config ID. Error: %v", err)
+	}
+
+	err = g2configmgr.Destroy(ctx)
+	if err != nil {
+		test.Logf("Cannot destroy g2configmgr. Error: %v", err)
+	}
+
+	// Initialize g2engine.
+
+	g2engine := &g2engine.G2engineImpl{}
+	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		test.Logf("Cannot Init. Error: %v", err)
+	}
+
+	// Add records.
+
+	for _, testRecord := range testRecords {
+		err := g2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
+		if err != nil {
+			test.Logf("Cannot add test record. Error: %v  Record: %v", err, testRecord)
+		}
+	}
+
+	// Return a function to teardown the test.
+	return func(test testing.TB) {
+		// g2engine.PurgeRepository(ctx)
+	}
+}
+
+func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
+	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, actual)
+	}
+	printActual(test, actual)
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	secondsToRun := 1
+	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_ClearLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	g2diagnostic.ClearLastException(ctx)
+}
+
+func TestG2diagnosticImpl_EntityListBySize(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	aSize := 1000
+	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	testError(test, ctx, g2diagnostic, err)
+	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
+	testError(test, ctx, g2diagnostic, err)
+	printResult(test, "Entity", anEntity)
+	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestG2diagnosticImpl_FindEntitiesByFeatureIDs(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
+	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
+	testError(test, ctx, g2diagnostic, err)
+	printResult(test, "len(Actual)", len(actual))
+}
+
+func TestG2diagnosticImpl_GetAvailableMemory(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetAvailableMemory(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	assert.Greater(test, actual, int64(0))
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetDataSourceCounts(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetDataSourceCounts(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	printResult(test, "Data Source counts", actual)
+}
+
+func TestG2diagnosticImpl_GetDBInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetDBInfo(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
+	ctx := context.TODO()
+	teardownSuite := setupSuite(test, ctx)
+	defer teardownSuite(test)
+	g2diagnostic := getTestObject(ctx, test)
+	entityID := int64(1)
+	includeInternalFeatures := 1
+	actual, err := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetEntityResume(test *testing.T) {
+	ctx := context.TODO()
+	teardownSuite := setupSuite(test, ctx)
+	defer teardownSuite(test)
+	g2diagnostic := getTestObject(ctx, test)
+	entityID := int64(1)
+	actual, err := g2diagnostic.GetEntityResume(ctx, entityID)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetEntitySizeBreakdown(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	minimumEntitySize := 1
+	includeInternalFeatures := 1
+	actual, err := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetFeature(test *testing.T) {
+	ctx := context.TODO()
+	teardownSuite := setupSuite(test, ctx)
+	defer teardownSuite(test)
+	g2diagnostic := getTestObject(ctx, test)
+	libFeatID := int64(1)
+	actual, err := g2diagnostic.GetFeature(ctx, libFeatID)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetGenericFeatures(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	featureType := "PHONE"
+	maximumEstimatedCount := 10
+	actual, err := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetLastException(ctx)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetLastExceptionCode(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetLastExceptionCode(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetLogicalCores(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetLogicalCores(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	assert.Greater(test, actual, 0)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetMappingStatistics(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	includeInternalFeatures := 1
+	actual, err := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetPhysicalCores(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetPhysicalCores(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	assert.Greater(test, actual, 0)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetRelationshipDetails(test *testing.T) {
+	ctx := context.TODO()
+	teardownSuite := setupSuite(test, ctx)
+	defer teardownSuite(test)
+	g2diagnostic := getTestObject(ctx, test)
+	relationshipID := int64(1)
+	includeInternalFeatures := 1
+	actual, err := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetResolutionStatistics(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetResolutionStatistics(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_GetTotalSystemMemory(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	actual, err := g2diagnostic.GetTotalSystemMemory(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	assert.Greater(test, actual, int64(0))
+	printActual(test, actual)
+}
+
+func TestG2diagnosticImpl_Init(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
+	moduleName := "Test module name"
+	verboseLogging := 0
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2diagnostic, jsonErr)
+	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
+	moduleName := "Test module name"
+	initConfigID := int64(1)
+	verboseLogging := 0
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2diagnostic, jsonErr)
+	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestG2diagnosticImpl_Reinit(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
+	initConfigID := int64(3173568616) // Must match value in sys_cfg.config_data_id.
+	err := g2diagnostic.Reinit(ctx, initConfigID)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+}
+
+func TestG2diagnosticImpl_Destroy(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := getTestObject(ctx, test)
+	err := g2diagnostic.Destroy(ctx)
+	testError(test, ctx, g2diagnostic, err)
 }
 
 // ----------------------------------------------------------------------------
@@ -161,8 +525,8 @@ func ExampleG2diagnosticImpl_GetDataSourceCounts() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetDataSourceCounts(ctx)
-	fmt.Println(truncate(result, 96))
-	// Output: [{"DSRC_ID":1001,"DSRC_CODE":"CUSTOMERS","ETYPE_ID":3,"ETYPE_CODE":"GENERIC","OBS_ENT_COUNT":...
+	fmt.Println(result)
+	// Output: [{"DSRC_ID":1001,"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_ID":3,"ETYPE_CODE":"GENERIC","OBS_ENT_COUNT":2,"DSRC_RECORD_COUNT":3}]
 }
 
 func ExampleG2diagnosticImpl_GetDBInfo() {
@@ -181,8 +545,8 @@ func ExampleG2diagnosticImpl_GetEntityDetails() {
 	entityID := int64(1)
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
-	fmt.Println(truncate(result, 79))
-	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":...
+	fmt.Println(truncate(result, 134))
+	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":...
 }
 
 func ExampleG2diagnosticImpl_GetEntityListBySize() {
@@ -201,8 +565,8 @@ func ExampleG2diagnosticImpl_GetEntityResume() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	entityID := int64(1)
 	result, _ := g2diagnostic.GetEntityResume(ctx, entityID)
-	fmt.Println(truncate(result, 79))
-	// Output: [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"SF1_PNAME_CSTAB","MATCH_KEY":...
+	fmt.Println(truncate(result, 177))
+	// Output: [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","ENT_SRC_DESC":"SEAMAN","JSON_DATA":...
 }
 
 func ExampleG2diagnosticImpl_GetEntitySizeBreakdown() {
@@ -270,8 +634,8 @@ func ExampleG2diagnosticImpl_GetMappingStatistics() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
-	fmt.Println(truncate(result, 109))
-	// Output: [{"DSRC_CODE":"CUSTOMERS","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"NATIVE",...
+	fmt.Println(truncate(result, 169))
+	// Output: [{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,...
 }
 
 func ExampleG2diagnosticImpl_GetPhysicalCores() {
@@ -299,8 +663,8 @@ func ExampleG2diagnosticImpl_GetResolutionStatistics() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetResolutionStatistics(ctx)
-	fmt.Println(truncate(result, 34))
-	// Output: [{"MATCH_LEVEL":11,"MATCH_KEY":...
+	fmt.Println(result)
+	// Output: [{"MATCH_LEVEL":1,"MATCH_KEY":"+NAME+DOB+ADDRESS+PHONE+SSN+LOGIN_ID+ACCT_NUM-GENDER","RAW_MATCH_KEYS":[{"MATCH_KEY":"+NAME+DOB+ADDRESS+PHONE+SSN+LOGIN_ID+ACCT_NUM-GENDER"}],"ERRULE_ID":140,"ERRULE_CODE":"MSTAB_LNAME_SF1","IS_AMBIGUOUS":"No","RECORD_COUNT":1,"MIN_RES_ENT_ID":1,"MAX_RES_ENT_ID":1,"MIN_RES_REL_ID":0,"MAX_RES_REL_ID":0}]
 }
 
 func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
@@ -350,256 +714,4 @@ func ExampleG2diagnosticImpl_SetLogLevel() {
 	ctx := context.TODO()
 	g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
 	// Output:
-}
-
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-// Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
-func setupSuite(test testing.TB) func(test testing.TB) {
-	test.Log("setup suite")
-
-	// Return a function to teardown the test
-	return func(test testing.TB) {
-		test.Log("teardown suite")
-	}
-}
-
-func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
-	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		test.Log("Error:", err.Error())
-		assert.FailNow(test, actual)
-	}
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetObject(test *testing.T) {
-	ctx := context.TODO()
-	getTestObject(ctx, test)
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
-// ----------------------------------------------------------------------------
-
-func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {
-	ctx := context.TODO()
-	teardownSuite := setupSuite(test)
-	defer teardownSuite(test)
-	g2diagnostic := getTestObject(ctx, test)
-	secondsToRun := 1
-	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	g2diagnostic.ClearLastException(ctx)
-}
-
-func TestG2diagnosticImpl_EntityListBySize(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	aSize := 1000
-	aHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
-	testError(test, ctx, g2diagnostic, err)
-	anEntity, err := g2diagnostic.FetchNextEntityBySize(ctx, aHandle)
-	testError(test, ctx, g2diagnostic, err)
-	printResult(test, "Entity", anEntity)
-	err = g2diagnostic.CloseEntityListBySize(ctx, aHandle)
-	testError(test, ctx, g2diagnostic, err)
-}
-
-func TestG2diagnosticImpl_FindEntitiesByFeatureIDs(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
-	actual, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
-	testError(test, ctx, g2diagnostic, err)
-	printResult(test, "len(Actual)", len(actual))
-}
-
-func TestG2diagnosticImpl_GetAvailableMemory(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetAvailableMemory(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	assert.Greater(test, actual, int64(0))
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetDataSourceCounts(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetDataSourceCounts(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	printResult(test, "Data Source counts", actual)
-}
-
-func TestG2diagnosticImpl_GetDBInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetDBInfo(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	entityID := int64(1)
-	includeInternalFeatures := 1
-	actual, err := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetEntityResume(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	entityID := int64(1)
-	actual, err := g2diagnostic.GetEntityResume(ctx, entityID)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetEntitySizeBreakdown(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	minimumEntitySize := 1
-	includeInternalFeatures := 1
-	actual, err := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetFeature(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	libFeatID := int64(1)
-	actual, err := g2diagnostic.GetFeature(ctx, libFeatID)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetGenericFeatures(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	featureType := "PHONE"
-	maximumEstimatedCount := 10
-	actual, err := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetLogicalCores(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetLogicalCores(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	assert.Greater(test, actual, 0)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetMappingStatistics(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	includeInternalFeatures := 1
-	actual, err := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetPhysicalCores(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetPhysicalCores(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	assert.Greater(test, actual, 0)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetRelationshipDetails(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	relationshipID := int64(1)
-	includeInternalFeatures := 1
-	actual, err := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetResolutionStatistics(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetResolutionStatistics(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetTotalSystemMemory(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetTotalSystemMemory(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	assert.Greater(test, actual, int64(0))
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_Init(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
-	moduleName := "Test module name"
-	verboseLogging := 0
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2diagnostic, jsonErr)
-	err := g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2diagnostic, err)
-}
-
-func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
-	moduleName := "Test module name"
-	initConfigID := int64(1)
-	verboseLogging := 0
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2diagnostic, jsonErr)
-	err := g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-	testError(test, ctx, g2diagnostic, err)
-}
-
-func TestG2diagnosticImpl_Reinit(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(1)
-	err := g2diagnostic.Reinit(ctx, initConfigID)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-}
-
-func TestG2diagnosticImpl_Destroy(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	err := g2diagnostic.Destroy(ctx)
-	testError(test, ctx, g2diagnostic, err)
 }
