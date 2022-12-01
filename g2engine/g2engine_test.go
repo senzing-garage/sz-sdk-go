@@ -85,9 +85,832 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2engine G2engine, er
 }
 
 // ----------------------------------------------------------------------------
+// Test harness
+// ----------------------------------------------------------------------------
+
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, actual)
+	}
+	printActual(test, actual)
+}
+
+func TestGetObject(test *testing.T) {
+	ctx := context.TODO()
+	getTestObject(ctx, test)
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions - names begin with "Test"
+// ----------------------------------------------------------------------------
+
+// PurgeRepository() is first to start with a clean database.
+func TestG2engineImpl_PurgeRepository(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	err := g2engine.PurgeRepository(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_AddRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	testError(test, ctx, g2engine, err)
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	jsonData2 := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID2 := "TEST"
+	err2 := g2engine.AddRecord(ctx, dataSourceCode2, recordID2, jsonData2, loadID2)
+	testError(test, ctx, g2engine, err2)
+}
+
+func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "333"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "333", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	var flags int64 = 0
+	actual, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	var flags int64 = 0
+	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	printResult(test, "Actual RecordID", actualRecordID)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	jsonData := `{"SOCIAL_HANDLE": "bobby", "DATE_OF_BIRTH": "1/2/1983", "ADDR_STATE": "WI", "ADDR_POSTAL_CODE": "54434", "SSN_NUMBER": "987-65-4321", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "Smith", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_CheckRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
+	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
+	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ClearLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	err := g2engine.ClearLastException(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+// FAIL:
+func TestG2engineImpl_ExportJSONEntityReport(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	flags := int64(0)
+	aHandle, err := g2engine.ExportJSONEntityReport(ctx, flags)
+	testError(test, ctx, g2engine, err)
+	anEntity, err := g2engine.FetchNext(ctx, aHandle)
+	testError(test, ctx, g2engine, err)
+	printResult(test, "Entity", anEntity)
+	err = g2engine.CloseExport(ctx, aHandle)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_CountRedoRecords(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.CountRedoRecords(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ExportConfigAndConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actualConfig, actualConfigId, err := g2engine.ExportConfigAndConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	printResult(test, "Actual Config", actualConfig)
+	printResult(test, "Actual Config ID", actualConfigId)
+}
+
+func TestG2engineImpl_ExportConfig(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.ExportConfig(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+//func TestG2engineImpl_ExportCSVEntityReport(test *testing.T) {
+//	ctx := context.TODO()
+//	g2engine := getTestObject(ctx, test)
+//	csvColumnList := ""
+//	var flags int64 = 0
+//	actual, err := g2engine.ExportCSVEntityReport(ctx, csvColumnList, flags)
+//	testError(test, ctx, g2engine, err)
+//	test.Log("Actual:", actual)
+//}
+
+func TestG2engineImpl_FindInterestingEntitiesByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.FindInterestingEntitiesByEntityID(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindInterestingEntitiesByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.FindInterestingEntitiesByRecordID(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindNetworkByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}]}`
+	maxDegree := 2
+	buildOutDegree := 1
+	maxEntities := 10
+	actual, err := g2engine.FindNetworkByEntityID(ctx, entityList, maxDegree, buildOutDegree, maxEntities)
+	testErrorNoFail(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindNetworkByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}]}`
+	maxDegree := 2
+	buildOutDegree := 1
+	maxEntities := 10
+	var flags int64 = 0
+	actual, err := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
+	testErrorNoFail(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	actual, err := g2engine.FindNetworkByRecordID(ctx, recordList, maxDegree, buildOutDegree, maxEntities)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindNetworkByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
+	maxDegree := 1
+	buildOutDegree := 2
+	maxEntities := 10
+	var flags int64 = 0
+	actual, err := g2engine.FindNetworkByRecordID_V2(ctx, recordList, maxDegree, buildOutDegree, maxEntities, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	actual, err := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	var flags int64 = 0
+	actual, err := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	actual, err := g2engine.FindPathByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	var flags int64 = 0
+	actual, err := g2engine.FindPathByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathExcludingByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	actual, err := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathExcludingByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathExcludingByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
+	actual, err := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathExcludingByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathExcludingByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathIncludingSourceByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	actual, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathIncludingSourceByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathIncludingSourceByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_FindPathIncludingSourceByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	maxDegree := 1
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
+	var flags int64 = 0
+	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetActiveConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.GetActiveConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetEntityByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetEntityByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetLastException(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.GetLastException(ctx)
+	testErrorNoFail(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetLastExceptionCode(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.GetLastExceptionCode(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetRecord_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetRedoRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.GetRedoRecord(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetRepositoryLastModifiedTime(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetVirtualEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_GetVirtualEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
+	var flags int64 = 0
+	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_HowEntityByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_HowEntityByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_Init(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, jsonErr)
+	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_InitWithConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	var initConfigID int64 = 1
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, jsonErr)
+	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_PrimeEngine(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	err := g2engine.PrimeEngine(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_Process(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "444", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	err := g2engine.Process(ctx, record)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_ProcessRedoRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.ProcessRedoRecord(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ProcessRedoRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var flags int64 = 0
+	actual, actualInfo, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+	printResult(test, "Actual Info", actualInfo)
+}
+
+func TestG2engineImpl_ProcessWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "555", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	var flags int64 = 0
+	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ProcessWithResponse(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "666", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	actual, err := g2engine.ProcessWithResponse(ctx, record)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ProcessWithResponseResize(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "777", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ReevaluateEntity(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_ReevaluateEntityWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_ReevaluateRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	err := g2engine.ReevaluateRecord(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_ReevaluateRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_Reinit(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	initConfigID, err := g2engine.GetActiveConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	err = g2engine.Reinit(ctx, initConfigID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, initConfigID)
+}
+
+func TestG2engineImpl_ReplaceRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1984", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_ReplaceRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "TEST"
+	var flags int64 = 0
+	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_SearchByAttributes(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
+	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_SearchByAttributes_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
+	var flags int64 = 0
+	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_Stats(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	actual, err := g2engine.Stats(ctx)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntities(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	actual, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntities_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID1 int64 = 1
+	var entityID2 int64 = 2
+	var flags int64 = 0
+	actual, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntityByEntityID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	actual, err := g2engine.WhyEntityByEntityID(ctx, entityID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntityByEntityID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	var entityID int64 = 1
+	var flags int64 = 0
+	actual, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntityByRecordID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyEntityByRecordID_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	var flags int64 = 0
+	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyRecords(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_WhyRecords_V2(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode1 := "TEST"
+	recordID1 := "111"
+	dataSourceCode2 := "TEST"
+	recordID2 := "222"
+	var flags int64 = 0
+	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_DeleteRecord(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	loadID := "TEST"
+	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_DeleteRecordWithInfo(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	dataSourceCode := "TEST"
+	recordID := "111"
+	loadID := "TEST"
+	var flags int64 = 0
+	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
+	testError(test, ctx, g2engine, err)
+	printActual(test, actual)
+}
+
+func TestG2engineImpl_Destroy(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	err := g2engine.Destroy(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
+// ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
+// PurgeRepository() is first to start with a clean database.
 func ExampleG2engineImpl_PurgeRepository() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
@@ -940,825 +1763,4 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 	result, _ := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
 	fmt.Println(result)
 	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"}],"INTERNAL_ID_2":2,"ENTITY_ID_2":2,"FOCUS_RECORDS_2":[{"DATA_SOURCE":"TEST","RECORD_ID":"222"}],"MATCH_INFO":{"WHY_KEY":"+PHONE+ACCT_NUM-DOB-SSN","WHY_ERRULE_CODE":"SF1","MATCH_LEVEL_CODE":"POSSIBLY_RELATED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
-}
-
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
-	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		test.Log("Error:", err.Error())
-		assert.FailNow(test, actual)
-	}
-	printActual(test, actual)
-}
-
-func TestGetObject(test *testing.T) {
-	ctx := context.TODO()
-	getTestObject(ctx, test)
-}
-
-// ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
-// ----------------------------------------------------------------------------
-
-func TestG2engineImpl_AddRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
-	testError(test, ctx, g2engine, err)
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	jsonData2 := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID2 := "TEST"
-	err2 := g2engine.AddRecord(ctx, dataSourceCode2, recordID2, jsonData2, loadID2)
-	testError(test, ctx, g2engine, err2)
-}
-
-func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "333"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "333", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	var flags int64 = 0
-	actual, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	var flags int64 = 0
-	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	printResult(test, "Actual RecordID", actualRecordID)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	jsonData := `{"SOCIAL_HANDLE": "bobby", "DATE_OF_BIRTH": "1/2/1983", "ADDR_STATE": "WI", "ADDR_POSTAL_CODE": "54434", "SSN_NUMBER": "987-65-4321", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "Smith", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_CheckRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "TEST", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
-	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "123456789"}]}`
-	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.ClearLastException(ctx)
-	testError(test, ctx, g2engine, err)
-}
-
-// FAIL:
-func TestG2engineImpl_ExportJSONEntityReport(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	flags := int64(0)
-	aHandle, err := g2engine.ExportJSONEntityReport(ctx, flags)
-	testError(test, ctx, g2engine, err)
-	anEntity, err := g2engine.FetchNext(ctx, aHandle)
-	testError(test, ctx, g2engine, err)
-	printResult(test, "Entity", anEntity)
-	err = g2engine.CloseExport(ctx, aHandle)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_CountRedoRecords(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.CountRedoRecords(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ExportConfigAndConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actualConfig, actualConfigId, err := g2engine.ExportConfigAndConfigID(ctx)
-	testError(test, ctx, g2engine, err)
-	printResult(test, "Actual Config", actualConfig)
-	printResult(test, "Actual Config ID", actualConfigId)
-}
-
-func TestG2engineImpl_ExportConfig(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.ExportConfig(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-//func TestG2engineImpl_ExportCSVEntityReport(test *testing.T) {
-//	ctx := context.TODO()
-//	g2engine := getTestObject(ctx, test)
-//	csvColumnList := ""
-//	var flags int64 = 0
-//	actual, err := g2engine.ExportCSVEntityReport(ctx, csvColumnList, flags)
-//	testError(test, ctx, g2engine, err)
-//	test.Log("Actual:", actual)
-//}
-
-func TestG2engineImpl_FindInterestingEntitiesByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.FindInterestingEntitiesByEntityID(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindInterestingEntitiesByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	actual, err := g2engine.FindInterestingEntitiesByRecordID(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindNetworkByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
-	maxDegree := 2
-	buildOutDegree := 1
-	maxEntities := 10
-	actual, err := g2engine.FindNetworkByEntityID(ctx, entityList, maxDegree, buildOutDegree, maxEntities)
-	testErrorNoFail(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindNetworkByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 2}, {"ENTITY_ID": 3}]}`
-	maxDegree := 2
-	buildOutDegree := 1
-	maxEntities := 10
-	var flags int64 = 0
-	actual, err := g2engine.FindNetworkByEntityID_V2(ctx, entityList, maxDegree, buildOutDegree, maxEntities, flags)
-	testErrorNoFail(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
-	maxDegree := 1
-	buildOutDegree := 2
-	maxEntities := 10
-	actual, err := g2engine.FindNetworkByRecordID(ctx, recordList, maxDegree, buildOutDegree, maxEntities)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindNetworkByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST", "RECORD_ID": "111"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "222"}, {"DATA_SOURCE": "TEST", "RECORD_ID": "333"}]}`
-	maxDegree := 1
-	buildOutDegree := 2
-	maxEntities := 10
-	var flags int64 = 0
-	actual, err := g2engine.FindNetworkByRecordID_V2(ctx, recordList, maxDegree, buildOutDegree, maxEntities, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	actual, err := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	var flags int64 = 0
-	actual, err := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	actual, err := g2engine.FindPathByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	var flags int64 = 0
-	actual, err := g2engine.FindPathByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathExcludingByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	actual, err := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathExcludingByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	var flags int64 = 0
-	actual, err := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathExcludingByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
-	actual, err := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathExcludingByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "TEST", "RECORD_ID": "111"}]}`
-	var flags int64 = 0
-	actual, err := g2engine.FindPathExcludingByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathIncludingSourceByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
-	actual, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathIncludingSourceByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
-	var flags int64 = 0
-	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathIncludingSourceByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
-	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_FindPathIncludingSourceByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["TEST"]}`
-	var flags int64 = 0
-	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetActiveConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetActiveConfigID(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	actual, err := g2engine.GetEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	actual, err := g2engine.GetEntityByRecordID(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	actual, err := g2engine.GetRecord(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetRecord_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	actual, err := g2engine.GetRecord_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetRedoRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetRedoRecord(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetRepositoryLastModifiedTime(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetRepositoryLastModifiedTime(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetVirtualEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
-	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetVirtualEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
-	var flags int64 = 0
-	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_HowEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	actual, err := g2engine.HowEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_HowEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_Init(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, jsonErr)
-	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_InitWithConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	var initConfigID int64 = 1
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, jsonErr)
-	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_PrimeEngine(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.PrimeEngine(ctx)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_Process(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "444", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	err := g2engine.Process(ctx, record)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_ProcessRedoRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.ProcessRedoRecord(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ProcessRedoRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var flags int64 = 0
-	actual, actualInfo, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-	printResult(test, "Actual Info", actualInfo)
-}
-
-func TestG2engineImpl_ProcessWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "555", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	var flags int64 = 0
-	actual, err := g2engine.ProcessWithInfo(ctx, record, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ProcessWithResponse(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "666", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	actual, err := g2engine.ProcessWithResponse(ctx, record)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ProcessWithResponseResize(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "TEST", "SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "777", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	actual, err := g2engine.ProcessWithResponseResize(ctx, record)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ReevaluateEntity(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_ReevaluateEntityWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_ReevaluateRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	err := g2engine.ReevaluateRecord(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_ReevaluateRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_Reinit(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	initConfigID, err := g2engine.GetActiveConfigID(ctx)
-	testError(test, ctx, g2engine, err)
-	err = g2engine.Reinit(ctx, initConfigID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, initConfigID)
-}
-
-func TestG2engineImpl_ReplaceRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1984", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_ReplaceRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "SEAMAN", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	var flags int64 = 0
-	actual, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_SearchByAttributes(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
-	actual, err := g2engine.SearchByAttributes(ctx, jsonData)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_SearchByAttributes_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "SEAMAN"}], "SSN_NUMBER": "053-39-3251"}`
-	var flags int64 = 0
-	actual, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_Stats(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.Stats(ctx)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntities(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	actual, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntities_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 2
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntityByEntityID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	actual, err := g2engine.WhyEntityByEntityID(ctx, entityID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntityByEntityID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	var entityID int64 = 1
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntityByRecordID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	actual, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyEntityByRecordID_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	var flags int64 = 0
-	actual, err := g2engine.WhyEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyRecords(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	actual, err := g2engine.WhyRecords(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_WhyRecords_V2(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode1 := "TEST"
-	recordID1 := "111"
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	var flags int64 = 0
-	actual, err := g2engine.WhyRecords_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_DeleteRecord(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	loadID := "TEST"
-	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_DeleteRecordWithInfo(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	loadID := "TEST"
-	var flags int64 = 0
-	actual, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_PurgeRepository(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.PurgeRepository(ctx)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_Destroy(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.Destroy(ctx)
-	testError(test, ctx, g2engine, err)
 }
