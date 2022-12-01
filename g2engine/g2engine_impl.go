@@ -1930,6 +1930,18 @@ func (g2engine *G2engineImpl) ProcessRedoRecordWithInfo(ctx context.Context, fla
 	return C.GoString(result.response), C.GoString(result.withInfo), err
 }
 
+/*
+The Process method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - record: A JSON document containing the record to be added to the Senzing repository.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"555","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) ProcessWithInfo(ctx context.Context, record string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_processWithInfo(const char *record, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -1949,6 +1961,17 @@ func (g2engine *G2engineImpl) ProcessWithInfo(ctx context.Context, record string
 	return C.GoString(result.response), err
 }
 
+/*
+The ProcessWithResponse method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - record: A JSON document containing the record to be added to the Senzing repository.
+
+Output
+  - A JSON document.
+    Example: `{"MESSAGE": "ER SKIPPED - DUPLICATE RECORD IN G2"}`
+*/
 func (g2engine *G2engineImpl) ProcessWithResponse(ctx context.Context, record string) (string, error) {
 	//  _DLEXPORT int G2_processWithResponse(const char *record, char *responseBuf, const size_t bufSize);
 	if g2engine.isTrace {
@@ -1968,6 +1991,17 @@ func (g2engine *G2engineImpl) ProcessWithResponse(ctx context.Context, record st
 	return C.GoString(result.response), err
 }
 
+/*
+The ProcessWithResponseResize method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - record: A JSON document containing the record to be added to the Senzing repository.
+
+Output
+  - A JSON document.
+    Example: `{"MESSAGE": "ER SKIPPED - DUPLICATE RECORD IN G2"}`
+*/
 func (g2engine *G2engineImpl) ProcessWithResponseResize(ctx context.Context, record string) (string, error) {
 	//  _DLEXPORT int G2_processWithResponseResize(const char *record, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -1987,6 +2021,16 @@ func (g2engine *G2engineImpl) ProcessWithResponseResize(ctx context.Context, rec
 	return C.GoString(result.response), err
 }
 
+/*
+The PurgeRepository method removes every record in the Senzing repository.
+
+Before calling purgeRepository() all other instances of the Senzing API
+(whether in custom code, REST API, stream-loader, redoer, G2Loader, etc)
+MUST be destroyed or shutdown.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2engine *G2engineImpl) PurgeRepository(ctx context.Context) error {
 	//  _DLEXPORT int G2_purgeRepository();
 	if g2engine.isTrace {
@@ -2004,6 +2048,14 @@ func (g2engine *G2engineImpl) PurgeRepository(ctx context.Context) error {
 	return err
 }
 
+/*
+The ReevaluateEntity method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The unique identifier of an entity.
+  - flags: FIXME:
+*/
 func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int64, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateEntity(const long long entityID, const long long flags);
 	if g2engine.isTrace {
@@ -2021,6 +2073,19 @@ func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int
 	return err
 }
 
+/*
+The ReevaluateEntityWithInfo method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The unique identifier of an entity.
+  - flags: FIXME:
+
+Output
+
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) ReevaluateEntityWithInfo(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_reevaluateEntityWithInfo(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2038,6 +2103,15 @@ func (g2engine *G2engineImpl) ReevaluateEntityWithInfo(ctx context.Context, enti
 	return C.GoString(result.response), err
 }
 
+/*
+The ReevaluateRecord method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+*/
 func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateRecord(const char* dataSourceCode, const char* recordID, const long long flags);
 	if g2engine.isTrace {
@@ -2059,6 +2133,20 @@ func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCo
 	return err
 }
 
+/*
+The ReevaluateRecordWithInfo method FIXME:
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_reevaluateRecordWithInfo(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2080,6 +2168,13 @@ func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, data
 	return C.GoString(result.response), err
 }
 
+/*
+The Reinit method re-initializes the Senzing G2Engine object using a specified configuration identifier.
+
+Input
+  - ctx: A context to control lifecycle.
+  - initConfigID: The configuration ID used for the initialization.
+*/
 func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2_reinit(const long long initConfigID);
 	if g2engine.isTrace {
@@ -2097,6 +2192,17 @@ func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) er
 	return err
 }
 
+/*
+The ReplaceRecord method updates/replaces a record in the Senzing repository.
+If record doesn't exist, a new record is added to the data repository.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+*/
 func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_replaceRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
 	if g2engine.isTrace {
@@ -2122,6 +2228,22 @@ func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode 
 	return err
 }
 
+/*
+The ReplaceRecordWithInfo method updates/replaces a record in the Senzing repository and returns information on the affected entities.
+If record doesn't exist, a new record is added to the data repository.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_replaceRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2147,6 +2269,18 @@ func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSou
 	return C.GoString(result.response), err
 }
 
+/*
+The SearchByAttributes method retrieves entity data based on a user-specified set of entity attributes.
+To control output, use SearchByAttributes_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+
+Output
+  - A JSON document.
+    Example: `{"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
+*/
 func (g2engine *G2engineImpl) SearchByAttributes(ctx context.Context, jsonData string) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes(const char* jsonData, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2166,6 +2300,19 @@ func (g2engine *G2engineImpl) SearchByAttributes(ctx context.Context, jsonData s
 	return C.GoString(result.response), err
 }
 
+/*
+The SearchByAttributes_V2 method retrieves entity data based on a user-specified set of entity attributes.
+It extends SearchByAttributes() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - jsonData: A JSON document containing the record to be added to the Senzing repository.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"RESOLVED_ENTITIES":[{"MATCH_INFO":{"MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"RESOLVED","MATCH_KEY":"+NAME+SSN","ERRULE_CODE":"SF1_PNAME_CSTAB"},"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}}}]}`
+*/
 func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes_V2(const char* jsonData, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2206,6 +2353,17 @@ func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.L
 	return err
 }
 
+/*
+The Stats method retrieves workload statistics for the current process.
+These statistics will automatically reset after retrieval.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document.
+    Example: { "workload": { "loadedRecords":...
+*/
 func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_stats(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
 	if g2engine.isTrace {
@@ -2223,6 +2381,22 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntities method explains why records belong to their resolved entities.
+WhyEntities() will compare the record data within an entity
+against the rest of the entity data and show why they are connected.
+This is calculated based on the features that record data represents.
+To control output, use WhyEntities_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":2,"MATCH_INFO":{"WHY_KEY":...`
+*/
 func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities(const long long entityID1, const long long entityID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2240,6 +2414,23 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntities_V2 method explains why records belong to their resolved entities.
+WhyEntities_V2() will compare the record data within an entity
+against the rest of the entity data and show why they are connected.
+This is calculated based on the features that record data represents.
+It extends WhyEntities() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID1: The entity ID for the starting entity of the search path.
+  - entityID2: The entity ID for the ending entity of the search path.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":2,"MATCH_INFO":{"WHY_KEY":"+PHONE+ACCT_NUM-SSN","WHY_ERRULE_CODE":"SF1","MATCH_LEVEL_CODE":"POSSIBLY_RELATED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities_V2(const long long entityID1, const long long entityID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2257,6 +2448,18 @@ func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int6
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntityByEntityID method explains why records belong to their resolved entities.
+To control output, use WhyEntityByEntityID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID for the starting entity of the search path.
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":1,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":...`
+*/
 func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2274,6 +2477,19 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID 
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntityByEntityID_V2 method explains why records belong to their resolved entities.
+It extends WhyEntityByEntityID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - entityID: The entity ID for the starting entity of the search path.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":1,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":...`
+*/
 func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2291,6 +2507,19 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entity
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntityByRecordID method explains why records belong to their resolved entities.
+To control output, use WhyEntityByRecordID_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":1,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":...`
+*/
 func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2312,6 +2541,20 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourc
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyEntityByRecordID_V2 method explains why records belong to their resolved entities.
+It extends WhyEntityByRecordID() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode: Identifies the provenance of the data.
+  - recordID: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":1,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":...`
+*/
 func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2333,6 +2576,21 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSo
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyRecords method explains why records belong to their resolved entities.
+To control output, use WhyRecords_V2() instead.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the data.
+  - recordID1: The unique identifier within the records of the same data source.
+  - dataSourceCode2: Identifies the provenance of the data.
+  - recordID2: The unique identifier within the records of the same data source.
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"}],...`
+*/
 func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string) (string, error) {
 	//  _DLEXPORT int G2_whyRecords(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
@@ -2358,6 +2616,22 @@ func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 st
 	return C.GoString(result.response), err
 }
 
+/*
+The WhyRecords_V2 method explains why records belong to their resolved entities.
+It extends WhyRecords() by adding output control flags.
+
+Input
+  - ctx: A context to control lifecycle.
+  - dataSourceCode1: Identifies the provenance of the data.
+  - recordID1: The unique identifier within the records of the same data source.
+  - dataSourceCode2: Identifies the provenance of the data.
+  - recordID2: The unique identifier within the records of the same data source.
+  - flags: FIXME:
+
+Output
+  - A JSON document.
+    Example: `{"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"}],"INTERNAL_ID_2":2,"ENTITY_ID_2":2,"FOCUS_RECORDS_2":[{"DATA_SOURCE":"TEST","RECORD_ID":"222"}],"MATCH_INFO":{"WHY_KEY":"+PHONE+ACCT_NUM-DOB-SSN","WHY_ERRULE_CODE":"SF1","MATCH_LEVEL_CODE":"POSSIBLY_RELATED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}`
+*/
 func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyRecords_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2engine.isTrace {
