@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"testing"
 	"time"
 
@@ -125,6 +126,23 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagno
 // Test harness
 // ----------------------------------------------------------------------------
 
+// FIXME: START HERE.
+
+func TestMain(m *testing.M) {
+	setup()
+	code := m.Run()
+	teardown()
+	os.Exit(code)
+}
+
+func setup() {
+	fmt.Printf(">>>>>>>>>>>>>> setup()\n")
+}
+
+func teardown() {
+	fmt.Printf(">>>>>>>>>>>>>> teardown()\n")
+}
+
 // Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
 func setupSuite(test *testing.T, ctx context.Context) func(test testing.TB) {
 
@@ -206,7 +224,7 @@ func setupSuite(test *testing.T, ctx context.Context) func(test testing.TB) {
 
 	// Return a function to teardown the test.
 	return func(test testing.TB) {
-		// g2engine.PurgeRepository(ctx)
+		g2engine.PurgeRepository(ctx)
 	}
 }
 
@@ -218,6 +236,10 @@ func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 	}
 	printActual(test, actual)
 }
+
+// ----------------------------------------------------------------------------
+// Test interface functions - names begin with "Test"
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
@@ -508,7 +530,7 @@ func ExampleG2diagnosticImpl_FindEntitiesByFeatureIDs() {
 	features := `{"ENTITY_ID":1,"LIB_FEAT_IDS":[1,3,4]}`
 	result, _ := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
 	fmt.Println(result)
-	// Output: []
+	// Output: [{"LIB_FEAT_ID":4,"USAGE_TYPE":"","RES_ENT_ID":2}]
 }
 
 func ExampleG2diagnosticImpl_GetAvailableMemory() {
