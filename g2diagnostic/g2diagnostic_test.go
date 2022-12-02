@@ -14,6 +14,7 @@ import (
 	"github.com/senzing/g2-sdk-go/g2engine"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -126,106 +127,150 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagno
 // Test harness
 // ----------------------------------------------------------------------------
 
-// FIXME: START HERE.
-
 func TestMain(m *testing.M) {
-	setup()
+	err := setup()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
 	code := m.Run()
-	teardown()
+	err = teardown()
+	if err != nil {
+		fmt.Print(err)
+	}
 	os.Exit(code)
 }
 
-func setup() {
-	fmt.Printf(">>>>>>>>>>>>>> setup()\n")
-}
-
-func teardown() {
-	fmt.Printf(">>>>>>>>>>>>>> teardown()\n")
-}
-
-// Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
-func setupSuite(test *testing.T, ctx context.Context) func(test testing.TB) {
-
+func setup() error {
+	var err error = nil
+	ctx := context.TODO()
 	now := time.Now()
 	moduleName := "Test module name"
 	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	verboseLogging := 0
+	logger, _ := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+
+	// Purge repository.
+
+	aG2engine := &g2engine.G2engineImpl{}
+	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5901, err)
+	}
+
+	err = aG2engine.PurgeRepository(ctx)
+	if err != nil {
+		return logger.Error(5902, err)
+	}
+
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5903, err)
+	}
 
 	// Add Data Sources to in-memory Senzing configuration.
 
-	g2config := &g2config.G2configImpl{}
-	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	aG2config := &g2config.G2configImpl{}
+	err = aG2config.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
-		test.Logf("Cannot Initialize g2config. Error: %v", err)
+		return logger.Error(5904, err)
 	}
 
-	configHandle, _ := g2config.Create(ctx)
+	configHandle, _ := aG2config.Create(ctx)
 	for _, testDataSource := range testDataSources {
-		_, err := g2config.AddDataSource(ctx, configHandle, testDataSource.Data)
+		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
-			test.Logf("Cannot add data source %s. Error: %v", testDataSource.Data, err)
+			return logger.Error(5905, err)
 		}
 	}
-	configStr, err := g2config.Save(ctx, configHandle)
+	configStr, err := aG2config.Save(ctx, configHandle)
 	if err != nil {
-		test.Logf("Cannot save config to string. Error: %v", err)
+		return logger.Error(5906, err)
 	}
 
-	err = g2config.Close(ctx, configHandle)
+	err = aG2config.Close(ctx, configHandle)
 	if err != nil {
-		test.Logf("Cannot close configuration handle. Error: %v", err)
+		return logger.Error(5907, err)
 	}
 
-	err = g2config.Destroy(ctx)
+	err = aG2config.Destroy(ctx)
 	if err != nil {
-		test.Logf("Cannot destroy g2config. Error: %v", err)
+		return logger.Error(5908, err)
 	}
 
 	// Persist the Senzing configuration to the Senzing repository.
 
-	g2configmgr := &g2configmgr.G2configmgrImpl{}
-	err = g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
+	aG2configmgr := &g2configmgr.G2configmgrImpl{}
+	err = aG2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
-		test.Logf("Cannot Initialize g2configmgr. Error: %v", err)
+		return logger.Error(5909, err)
 	}
 
-	configComments := fmt.Sprintf("g2diagnostic_test at %s", now.UTC())
-	configID, err := g2configmgr.AddConfig(ctx, configStr, configComments)
+	configComments := fmt.Sprintf("Created by g2diagnostic_test at %s", now.UTC())
+	configID, err := aG2configmgr.AddConfig(ctx, configStr, configComments)
 	if err != nil {
-		test.Logf("Cannot add configuration to Senzing repository. Error: %v", err)
+		return logger.Error(5910, err)
 	}
 
-	err = g2configmgr.SetDefaultConfigID(ctx, configID)
+	err = aG2configmgr.SetDefaultConfigID(ctx, configID)
 	if err != nil {
-		test.Logf("Cannot set default config ID. Error: %v", err)
+		return logger.Error(5911, err)
 	}
 
-	err = g2configmgr.Destroy(ctx)
+	err = aG2configmgr.Destroy(ctx)
 	if err != nil {
-		test.Logf("Cannot destroy g2configmgr. Error: %v", err)
-	}
-
-	// Initialize g2engine.
-
-	g2engine := &g2engine.G2engineImpl{}
-	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		test.Logf("Cannot Init. Error: %v", err)
+		return logger.Error(5912, err)
 	}
 
 	// Add records.
 
+	aG2engine = &g2engine.G2engineImpl{}
+	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5913, err)
+	}
+
 	for _, testRecord := range testRecords {
-		err := g2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
+		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
 		if err != nil {
-			test.Logf("Cannot add test record. Error: %v  Record: %v", err, testRecord)
+			return logger.Error(5914, err)
 		}
 	}
 
-	// Return a function to teardown the test.
-	return func(test testing.TB) {
-		g2engine.PurgeRepository(ctx)
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5914, err)
 	}
+
+	return err
+}
+
+func teardown() error {
+	var err error = nil
+	// ctx := context.TODO()
+	// moduleName := "Test module name2"
+	// iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	// verboseLogging := 0
+	// logger, _ := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+
+	// // Purge repository.
+
+	// aG2engine := &g2engine.G2engineImpl{}
+	// err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	// if err != nil {
+	// 	return logger.Error(5931, err)
+	// }
+
+	// err = aG2engine.PurgeRepository(ctx)
+	// if err != nil {
+	// 	return logger.Error(5932, err)
+	// }
+
+	// err = aG2engine.Destroy(ctx)
+	// if err != nil {
+	// 	return logger.Error(5933, err)
+	// }
+	return err
 }
 
 func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
@@ -309,8 +354,6 @@ func TestG2diagnosticImpl_GetDBInfo(test *testing.T) {
 
 func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
 	ctx := context.TODO()
-	teardownSuite := setupSuite(test, ctx)
-	defer teardownSuite(test)
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
 	includeInternalFeatures := 1
@@ -321,8 +364,6 @@ func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
 
 func TestG2diagnosticImpl_GetEntityResume(test *testing.T) {
 	ctx := context.TODO()
-	teardownSuite := setupSuite(test, ctx)
-	defer teardownSuite(test)
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
 	actual, err := g2diagnostic.GetEntityResume(ctx, entityID)
@@ -342,8 +383,6 @@ func TestG2diagnosticImpl_GetEntitySizeBreakdown(test *testing.T) {
 
 func TestG2diagnosticImpl_GetFeature(test *testing.T) {
 	ctx := context.TODO()
-	teardownSuite := setupSuite(test, ctx)
-	defer teardownSuite(test)
 	g2diagnostic := getTestObject(ctx, test)
 	libFeatID := int64(1)
 	actual, err := g2diagnostic.GetFeature(ctx, libFeatID)
@@ -406,8 +445,6 @@ func TestG2diagnosticImpl_GetPhysicalCores(test *testing.T) {
 
 func TestG2diagnosticImpl_GetRelationshipDetails(test *testing.T) {
 	ctx := context.TODO()
-	teardownSuite := setupSuite(test, ctx)
-	defer teardownSuite(test)
 	g2diagnostic := getTestObject(ctx, test)
 	relationshipID := int64(1)
 	includeInternalFeatures := 1
@@ -480,8 +517,8 @@ func ExampleG2diagnosticImpl_CheckDBPerf() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	secondsToRun := 1
-	results, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
-	fmt.Println(truncate(results, 25))
+	result, _ := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	fmt.Println(truncate(result, 25))
 	// Output: {"numRecordsInserted":...
 }
 
@@ -515,12 +552,12 @@ func ExampleG2diagnosticImpl_FetchNextEntityBySize() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
-	aSize := 1000
+	aSize := 1
 	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, aSize)
 	anEntity, _ := g2diagnostic.FetchNextEntityBySize(ctx, entityListBySizeHandle)
-	fmt.Println(anEntity)
 	g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
-	// Output:
+	fmt.Println(anEntity)
+	// Output: [{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","ENT_SRC_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENT_SRC_DESC":"SEAMAN","RECORD_ID":"9001","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"SEAMAN\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"TEST_G2DIAGNOSTIC\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9001\"}","OBS_ENT_ID":1,"ER_ID":0},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","ENT_SRC_KEY":"2E83FCA24AF2996D77569554CC4FD7775F861A8F","ENT_SRC_DESC":"SEAMAN","RECORD_ID":"9002","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"SEAMAN\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"TEST_G2DIAGNOSTIC\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9002\"}","OBS_ENT_ID":1,"ER_ID":0}]
 }
 
 func ExampleG2diagnosticImpl_FindEntitiesByFeatureIDs() {
@@ -538,7 +575,7 @@ func ExampleG2diagnosticImpl_GetAvailableMemory() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetAvailableMemory(ctx)
-	fmt.Println(result > 0)
+	fmt.Println(result > 0) // Dummy output.
 	// Output: true
 }
 
@@ -567,8 +604,8 @@ func ExampleG2diagnosticImpl_GetEntityDetails() {
 	entityID := int64(1)
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
-	fmt.Println(truncate(result, 134))
-	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":...
+	fmt.Println(result)
+	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","FEAT_DESC":"SEAMAN"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"DOB","USAGE_TYPE":"","FEAT_DESC":"4/8/1983"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"GENDER","USAGE_TYPE":"","FEAT_DESC":"F"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"ADDRESS","USAGE_TYPE":"","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"PHONE","USAGE_TYPE":"","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"SSN","USAGE_TYPE":"","FEAT_DESC":"053-39-3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"LOGIN_ID","USAGE_TYPE":"","FEAT_DESC":"flavorh"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"ACCT_NUM","USAGE_TYPE":"CC","FEAT_DESC":"5534202208773608"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|SSN=3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|DOB=80804"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|DOB.MMDD_HASH=0804"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|POST=71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN|DOB.MMYY_HASH=0483"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"SMN"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","FEAT_DESC":"ACCT_NUM=5534202208773608"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","FEAT_DESC":"SSN=053-39-3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"PHONE_KEY","USAGE_TYPE":"","FEAT_DESC":"2256710796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","FEAT_DESC":"LOGIN_ID:FLAVORH|"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","FEAT_DESC":"SSN:3251|80804|"}]
 }
 
 func ExampleG2diagnosticImpl_GetEntityListBySize() {
@@ -577,7 +614,7 @@ func ExampleG2diagnosticImpl_GetEntityListBySize() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	entitySize := 1000
 	entityListBySizeHandle, _ := g2diagnostic.GetEntityListBySize(ctx, entitySize)
-	fmt.Println(entityListBySizeHandle > 0)
+	fmt.Println(entityListBySizeHandle > 0) // Dummy output.
 	// Output: true
 }
 
@@ -587,8 +624,8 @@ func ExampleG2diagnosticImpl_GetEntityResume() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	entityID := int64(1)
 	result, _ := g2diagnostic.GetEntityResume(ctx, entityID)
-	fmt.Println(truncate(result, 177))
-	// Output: [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","ENT_SRC_DESC":"SEAMAN","JSON_DATA":...
+	fmt.Println(result)
+	// Output:  [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","ENT_SRC_DESC":"SEAMAN","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"SEAMAN\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"TEST_G2DIAGNOSTIC\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9001\"}"},{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9002","ENT_SRC_DESC":"SEAMAN","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"SEAMAN\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"TEST_G2DIAGNOSTIC\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9002\"}"},{"RES_ENT_ID":1,"REL_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","RECORD_ID":"9003","ENT_SRC_DESC":"Smith","JSON_DATA":"{\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"GENDER\":\"M\",\"srccode\":\"MDMPER\",\"ADDR_CITY\":\"Delhi\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"Smith\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"TEST_G2DIAGNOSTIC\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9003\"}"}]
 }
 
 func ExampleG2diagnosticImpl_GetEntitySizeBreakdown() {
@@ -598,8 +635,8 @@ func ExampleG2diagnosticImpl_GetEntitySizeBreakdown() {
 	minimumEntitySize := 1
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
-	fmt.Println(truncate(result, 19))
-	// Output: [{"ENTITY_SIZE":...
+	fmt.Println(result)
+	// Output: [{"ENTITY_SIZE": 1,"ENTITY_COUNT": 2,"NAME": 1.00,"DOB": 0.50,"GENDER": 1.00,"ADDRESS": 1.00,"PHONE": 1.00,"SSN": 0.50,"LOGIN_ID": 0.50,"ACCT_NUM": 0.50,"NAME_KEY": 6.00,"ADDR_KEY": 2.00,"ID_KEY": 1.00,"PHONE_KEY": 1.00,"SEARCH_KEY": 1.00,"MIN_RES_ENT_ID": 1,"MAX_RES_ENT_ID": 2}]
 }
 
 func ExampleG2diagnosticImpl_GetFeature() {
@@ -608,8 +645,8 @@ func ExampleG2diagnosticImpl_GetFeature() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	libFeatID := int64(1)
 	result, _ := g2diagnostic.GetFeature(ctx, libFeatID)
-	fmt.Println(truncate(result, 95))
-	// Output: {"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":...
+	fmt.Println(result)
+	// Output: {"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":"SEAMAN"},{"FELEM_CODE":"CATEGORY","FELEM_VALUE":"PERSON"},{"FELEM_CODE":"CULTURE","FELEM_VALUE":"ANGLO"},{"FELEM_CODE":"SUR_NAME","FELEM_VALUE":"SEAMAN"},{"FELEM_CODE":"FULL_NAME","FELEM_VALUE":"SEAMAN"}]}
 }
 
 func ExampleG2diagnosticImpl_GetGenericFeatures() {
@@ -646,7 +683,7 @@ func ExampleG2diagnosticImpl_GetLogicalCores() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetLogicalCores(ctx)
-	fmt.Println(result > 0)
+	fmt.Println(result > 0) // Dummy output.
 	// Output: true
 }
 
@@ -656,8 +693,8 @@ func ExampleG2diagnosticImpl_GetMappingStatistics() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
-	fmt.Println(truncate(result, 169))
-	// Output: [{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,...
+	fmt.Println(result)
+	// Output: [{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"SEAMAN","MAX_FEAT_DESC":"Smith"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"DOB","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"4/8/1983","MAX_FEAT_DESC":"4/8/1983"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"GENDER","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"F","MAX_FEAT_DESC":"M"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"ADDRESS","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"772 Armstrong RD Delhi LA 71232","MAX_FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"PHONE","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"225-671-0796","MAX_FEAT_DESC":"225-671-0796"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"SSN","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"053-39-3251","MAX_FEAT_DESC":"053-39-3251"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"LOGIN_ID","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"flavorh","MAX_FEAT_DESC":"flavorh"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"ACCT_NUM","USAGE_TYPE":"CC","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"5534202208773608","MAX_FEAT_DESC":"5534202208773608"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","REC_COUNT":12,"REC_PCT":6.0,"UNIQ_COUNT":12,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"SM0","MAX_FEAT_DESC":"SMN|SSN=3251"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","REC_COUNT":4,"REC_PCT":2.0,"UNIQ_COUNT":2,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"772|ARMSTRNK||71232","MAX_FEAT_DESC":"772|ARMSTRNK||TL"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"ACCT_NUM=5534202208773608","MAX_FEAT_DESC":"SSN=053-39-3251"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"PHONE_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"2256710796","MAX_FEAT_DESC":"2256710796"},{"DSRC_CODE":"TEST_G2DIAGNOSTIC","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"LOGIN_ID:FLAVORH|","MAX_FEAT_DESC":"SSN:3251|80804|"}]
 }
 
 func ExampleG2diagnosticImpl_GetPhysicalCores() {
@@ -665,7 +702,7 @@ func ExampleG2diagnosticImpl_GetPhysicalCores() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetPhysicalCores(ctx)
-	fmt.Println(result > 0)
+	fmt.Println(result > 0) // Dummy output.
 	// Output: true
 }
 
@@ -677,7 +714,7 @@ func ExampleG2diagnosticImpl_GetRelationshipDetails() {
 	includeInternalFeatures := 1
 	result, _ := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
 	fmt.Println(result)
-	// Output: FIXME:
+	// Output: [{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME","FEAT_DESC":"SEAMAN"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"DOB","FEAT_DESC":"4/8/1983"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"GENDER","FEAT_DESC":"F"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDRESS","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SSN","FEAT_DESC":"053-39-3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"LOGIN_ID","FEAT_DESC":"flavorh"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ACCT_NUM","FEAT_DESC":"5534202208773608"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|SSN=3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|DOB=80804"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|DOB.MMDD_HASH=0804"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|POST=71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN|DOB.MMYY_HASH=0483"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SMN"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ID_KEY","FEAT_DESC":"ACCT_NUM=5534202208773608"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ID_KEY","FEAT_DESC":"SSN=053-39-3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE_KEY","FEAT_DESC":"2256710796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SEARCH_KEY","FEAT_DESC":"LOGIN_ID:FLAVORH|"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SEARCH_KEY","FEAT_DESC":"SSN:3251|80804|"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME","FEAT_DESC":"Smith"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"GENDER","FEAT_DESC":"M"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDRESS","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|POST=71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE_KEY","FEAT_DESC":"2256710796"}]
 }
 
 func ExampleG2diagnosticImpl_GetResolutionStatistics() {
@@ -686,7 +723,7 @@ func ExampleG2diagnosticImpl_GetResolutionStatistics() {
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetResolutionStatistics(ctx)
 	fmt.Println(result)
-	// Output: [{"MATCH_LEVEL":1,"MATCH_KEY":"+NAME+DOB+ADDRESS+PHONE+SSN+LOGIN_ID+ACCT_NUM-GENDER","RAW_MATCH_KEYS":[{"MATCH_KEY":"+NAME+DOB+ADDRESS+PHONE+SSN+LOGIN_ID+ACCT_NUM-GENDER"}],"ERRULE_ID":140,"ERRULE_CODE":"MSTAB_LNAME_SF1","IS_AMBIGUOUS":"No","RECORD_COUNT":1,"MIN_RES_ENT_ID":1,"MAX_RES_ENT_ID":1,"MIN_RES_REL_ID":0,"MAX_RES_REL_ID":0}]
+	// Output: [{"MATCH_LEVEL":3,"MATCH_KEY":"+ADDRESS+PHONE-GENDER","RAW_MATCH_KEYS":[{"MATCH_KEY":"+ADDRESS+PHONE-GENDER"}],"ERRULE_ID":200,"ERRULE_CODE":"MFF","IS_AMBIGUOUS":"No","RECORD_COUNT":1,"MIN_RES_ENT_ID":1,"MAX_RES_ENT_ID":2,"MIN_RES_REL_ID":1,"MAX_RES_REL_ID":1}]
 }
 
 func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
@@ -694,7 +731,7 @@ func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
 	ctx := context.TODO()
 	g2diagnostic := getG2Diagnostic(ctx)
 	result, _ := g2diagnostic.GetTotalSystemMemory(ctx)
-	fmt.Println(result > 0)
+	fmt.Println(result > 0) // Dummy output.
 	// Output: true
 }
 
