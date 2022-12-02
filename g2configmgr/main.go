@@ -74,6 +74,11 @@ var IdMessages = map[int]string{
 	4007: "Call to G2ConfigMgr_init(%s, %s, %d) failed. Return code: %d",
 	4008: "Call to G2ConfigMgr_replaceDefaultConfigID(%d, %d) failed. Return code: %d",
 	4009: "Call to G2ConfigMgr_setDefaultConfigID(%d) failed. Return code: %d",
+	5901: "In g2diagnostic_test.go, setup() call to messagelogger.NewSenzingApiLogger() failed.",
+	5902: "In g2diagnostic_test.go, setup() call to g2eg2engineconfigurationjson.BuildSimpleSystemConfigurationJson() failed.",
+	5903: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5904: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5905: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
 }
 
 // Status strings for specific g2configmgr messages.

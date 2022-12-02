@@ -134,7 +134,7 @@ var IdMessages = map[int]string{
 	5904: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
 	5905: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
 	5906: "In g2diagnostic_test.go, setup() call to g2config.Init() failed.",
-	5907: "In g2diagnostic_test.go, setup() call to aG2config.Create() failed.",
+	5907: "In g2diagnostic_test.go, setup() call to g2config.Create() failed.",
 	5908: "In g2diagnostic_test.go, setup() call to g2config.AddDataSource() failed.",
 	5909: "In g2diagnostic_test.go, setup() call to g2config.Save() failed.",
 	5910: "In g2diagnostic_test.go, setup() call to g2config.Close() failed.",
