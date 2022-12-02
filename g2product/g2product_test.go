@@ -176,7 +176,10 @@ func ExampleG2productImpl_ClearLastException() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	g2product.ClearLastException(ctx)
+	err := g2product.ClearLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	// Output:
 }
 
@@ -184,7 +187,10 @@ func ExampleG2productImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	g2product.Destroy(ctx)
+	err := g2product.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	// Output:
 }
 
@@ -192,7 +198,10 @@ func ExampleG2productImpl_GetLastException() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	result, _ := g2product.GetLastException(ctx)
+	result, err := g2product.GetLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	// Output:
 }
@@ -201,7 +210,10 @@ func ExampleG2productImpl_GetLastExceptionCode() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	result, _ := g2product.GetLastExceptionCode(ctx)
+	result, err := g2product.GetLastExceptionCode(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	// Output: 0
 }
@@ -211,9 +223,12 @@ func ExampleG2productImpl_Init() {
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
 	moduleName := "Test module name"
-	iniParams, _ := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
 	verboseLogging := 0
-	g2product.Init(ctx, moduleName, iniParams, verboseLogging)
+	err = g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 	// Output:
 }
 
@@ -221,7 +236,10 @@ func ExampleG2productImpl_License() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	result, _ := g2product.License(ctx)
+	result, err := g2product.License(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	// Output: {"customer":"Senzing Public Test License","contract":"EVALUATION - support@senzing.com","issueDate":"2022-11-29","licenseType":"EVAL (Solely for non-productive use)","licenseLevel":"STANDARD","billing":"MONTHLY","expireDate":"2023-11-29","recordLimit":50000}
 }
@@ -230,7 +248,10 @@ func ExampleG2productImpl_SetLogLevel() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	g2product.SetLogLevel(ctx, logger.LevelInfo)
+	err := g2product.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
 	// Output:
 }
 
@@ -266,7 +287,10 @@ func ExampleG2productImpl_Version() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
 	ctx := context.TODO()
-	result, _ := g2product.Version(ctx)
+	result, err := g2product.Version(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(result)
 	// Output: {"PRODUCT_NAME":"Senzing API","VERSION":"3.3.2","BUILD_VERSION":"3.3.2.22299","BUILD_DATE":"2022-10-26","BUILD_NUMBER":"2022_10_26__19_38","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.3","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
 }
