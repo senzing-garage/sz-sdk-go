@@ -399,8 +399,8 @@ func ExampleG2configImpl_Save() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(jsonConfig, defaultTruncation))
-	// Output: {"G2_CONFIG":{"CFG_ATTR":[{"ATTR_ID":1001,"ATTR_CODE":"DATA_SOURCE","ATTR...
+	fmt.Println(truncate(jsonConfig, 207))
+	// Output: {"G2_CONFIG":{"CFG_ATTR":[{"ATTR_ID":1001,"ATTR_CODE":"DATA_SOURCE","ATTR_CLASS":"OBSERVATION","FTYPE_CODE":null,"FELEM_CODE":null,"FELEM_REQ":"Yes","DEFAULT_VALUE":null,"ADVANCED":"Yes","INTERNAL":"No"},...
 }
 
 func ExampleG2configImpl_SetLogLevel() {

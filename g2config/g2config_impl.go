@@ -101,7 +101,8 @@ Input
   - inputJson: A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`.
 
 Output
-  - A string containing a JSON document. Example: `{"DSRC_ID":1001}`
+  - A string containing a JSON document listing the newly created data source.
+    See the example output.
 */
 func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error) {
 	// _DLEXPORT int G2Config_addDataSource(ConfigHandle configHandle, const char *inputJson, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
@@ -387,7 +388,8 @@ Input
   - configHandle: A pointer to a configuration.
 
 Output
-  - A string with a JSON Document representation of the Senzing G2Config object.
+  - A string containing a JSON Document representation of the Senzing G2Config object.
+    See the example output.
 */
 func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
