@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
@@ -12,16 +13,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	defaultTruncation = 76
+)
+
 var (
 	g2productSingleton G2product
 )
 
 // ----------------------------------------------------------------------------
-// Internal functions - names begin with lowercase letter
+// Internal functions
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2product {
-
 	if g2productSingleton == nil {
 		g2productSingleton = &G2productImpl{}
 
@@ -43,13 +47,13 @@ func getTestObject(ctx context.Context, test *testing.T) G2product {
 	return g2productSingleton
 }
 
-func truncate(aString string) string {
-	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
+func truncate(aString string, length int) string {
+	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
 	if 1 == 0 {
-		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
 
@@ -76,6 +80,30 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2product G2product, 
 // Test harness
 // ----------------------------------------------------------------------------
 
+func TestMain(m *testing.M) {
+	err := setup()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+	code := m.Run()
+	err = teardown()
+	if err != nil {
+		fmt.Print(err)
+	}
+	os.Exit(code)
+}
+
+func setup() error {
+	var err error = nil
+	return err
+}
+
+func teardown() error {
+	var err error = nil
+	return err
+}
+
 func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -85,13 +113,8 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetObject(test *testing.T) {
-	ctx := context.TODO()
-	getTestObject(ctx, test)
-}
-
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions
 // ----------------------------------------------------------------------------
 
 func TestG2productImpl_ClearLastException(test *testing.T) {
