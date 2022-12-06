@@ -2067,7 +2067,7 @@ func ExampleG2engineImpl_Stats() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 135))
+	fmt.Println(truncate(result, 125))
 	// Output: { "workload": { "loadedRecords": 5,  "addedRecords": 2,  "deletedRecords": 0,  "reevaluations": 0,  "repairedEntities": 0,...
 }
 
