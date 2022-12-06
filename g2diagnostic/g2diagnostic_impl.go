@@ -340,7 +340,7 @@ The GetEntityDetails method returns information about the database connection.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: Unique number identifying an entity.
+  - entityID: The unique identifier of an entity.
   - includeInternalFeatures: FIXME:
 
 Output
@@ -398,7 +398,7 @@ The GetEntityResume method FIXME:
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: Unique number identifying an entity.
+  - entityID: The unique identifier of an entity.
 
 Output
   - A string containing a JSON document.

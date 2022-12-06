@@ -175,7 +175,7 @@ The GetConfig method retrieves a specific Senzing configuration JSON document fr
 
 Input
   - ctx: A context to control lifecycle.
-  - configID: The configuration identifier of the desired JSON document to retrieve.
+  - configID: The configuration identifier of the desired Senzing Engine configuration JSON document to retrieve.
 
 Output
   - A JSON document containing the Senzing configuration.
@@ -367,7 +367,7 @@ To serialize modifying of the configuration identifier, see ReplaceDefaultConfig
 
 Input
   - ctx: A context to control lifecycle.
-  - configID: The configuration identifier to use as the default.
+  - configID: The configuration identifier of the Senzing Engine configuration to use as the default.
 */
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
 	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);

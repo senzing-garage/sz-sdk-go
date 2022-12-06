@@ -307,7 +307,7 @@ lifecycle of a list of sized entities.
 
 Input
   - ctx: A context to control lifecycle.
-  - responseHandle: A handle created by ExportJSONEntityReport().
+  - responseHandle: A handle created by ExportJSONEntityReport() or ExportCSVEntityReport().
 */
 func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle uintptr) error {
 	//  _DLEXPORT int G2_closeExport(ExportHandle responseHandle);
@@ -505,7 +505,7 @@ lifecycle of a list of entities to export.
 Input
   - ctx: A context to control lifecycle.
   - csvColumnList: A comma-separated list of column names for the CSV export.
-  - flags: Any combination of G2_EXPORT_ flags to control what is exported.
+  - flags: Flags used to control information returned.
 
 Output
   - A handle that identifies the document to be scrolled through using FetchNext().
@@ -536,7 +536,7 @@ lifecycle of a list of entities to export.
 
 Input
   - ctx: A context to control lifecycle.
-  - flags: Any combination of G2_EXPORT_ flags to control what is exported.
+  - flags: Flags used to control information returned.
 
 Output
   - A handle that identifies the document to be scrolled through using FetchNext().
@@ -593,7 +593,7 @@ The FindInterestingEntitiesByEntityID method FIXME:
 Input
   - ctx: A context to control lifecycle.
   - entityID: The unique identifier of an entity.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -623,7 +623,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -698,7 +698,7 @@ Input
   - maxDegree: The maximum number of degrees in paths between search entities.
   - buildOutDegree: The number of degrees of relationships to show around each search entity.
   - maxEntities: The maximum number of entities to return in the discovered network.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -771,7 +771,7 @@ Input
   - maxDegree: The maximum number of degrees in paths between search entities.
   - buildOutDegree: The number of degrees of relationships to show around each search entity.
   - maxEntities: The maximum number of entities to return in the discovered network.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -838,7 +838,7 @@ Input
   - entityID1: The entity ID for the starting entity of the search path.
   - entityID2: The entity ID for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -918,7 +918,7 @@ Input
   - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
   - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1002,7 +1002,7 @@ Input
   - entityID2: The entity ID for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
   - excludedEntities: A JSON document listing entities that should be avoided on the path.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1040,7 +1040,7 @@ Input
   - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
   - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - excludedRecords: A JSON document listing entities that should be avoided on the path.
 
 Output
   - A JSON document.
@@ -1091,8 +1091,8 @@ Input
   - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
   - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - excludedEntities: A JSON document listing entities that should be avoided on the path.
-  - flags: FIXME:
+  - excludedRecords: A JSON document listing entities that should be avoided on the path.
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1179,7 +1179,7 @@ Input
   - maxDegree: The maximum number of degrees in paths between search entities.
   - excludedEntities: A JSON document listing entities that should be avoided on the path.
   - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1220,7 +1220,7 @@ Input
   - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
   - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - excludedRecords: A JSON document listing entities that should be avoided on the path.
   - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
 
 Output
@@ -1270,9 +1270,9 @@ Input
   - dataSourceCode2: Identifies the provenance of the record for the ending entity of the search path.
   - recordID2: The unique identifier within the records of the same data source for the ending entity of the search path.
   - maxDegree: The maximum number of degrees in paths between search entities.
-  - excludedEntities: A JSON document listing entities that should be avoided on the path.
+  - excludedRecords: A JSON document listing entities that should be avoided on the path.
   - requiredDsrcs: A JSON document listing data sources that should be included on the path. FIXME:
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1339,7 +1339,7 @@ To control output, use GetEntityByEntityID_V2() instead.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID of the requested data.
+  - entityID: The unique identifier of an entity.
 
 Output
 
@@ -1369,8 +1369,8 @@ It extends GetEntityByEntityID() by adding output control flags.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID of the requested data.
-  - flags: FIXME:
+  - entityID: The unique identifier of an entity.
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1435,7 +1435,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1555,7 +1555,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1677,7 +1677,7 @@ Input
   - ctx: A context to control lifecycle.
   - recordList: A JSON document.
     Example: `{"RECORDS": [{"DATA_SOURCE": "TEST","RECORD_ID": "111"},{"DATA_SOURCE": "TEST","RECORD_ID": "222"}]}`
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1708,7 +1708,7 @@ To control output, use HowEntityByEntityID_V2() instead.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID of the requested data.
+  - entityID: The unique identifier of an entity.
 
 Output
   - A JSON document.
@@ -1737,8 +1737,8 @@ It extends HowEntityByEntityID() by adding output control flags.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID of the requested data.
-  - flags: FIXME:
+  - entityID: The unique identifier of an entity.
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -1908,7 +1908,7 @@ Calling ProcessRedoRecordWithInfo() has the potential to create more redo record
 
 Input
   - ctx: A context to control lifecycle.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document with the record that was re-done.
@@ -1937,7 +1937,7 @@ The ProcessWithInfo method FIXME:
 Input
   - ctx: A context to control lifecycle.
   - record: A JSON document containing the record to be added to the Senzing repository.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2055,7 +2055,7 @@ The ReevaluateEntity method FIXME:
 Input
   - ctx: A context to control lifecycle.
   - entityID: The unique identifier of an entity.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 */
 func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int64, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateEntity(const long long entityID, const long long flags);
@@ -2080,7 +2080,7 @@ The ReevaluateEntityWithInfo method FIXME:
 Input
   - ctx: A context to control lifecycle.
   - entityID: The unique identifier of an entity.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
 
@@ -2111,7 +2111,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 */
 func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateRecord(const char* dataSourceCode, const char* recordID, const long long flags);
@@ -2141,7 +2141,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
 
@@ -2239,7 +2239,7 @@ Input
   - recordID: The unique identifier within the records of the same data source.
   - jsonData: A JSON document containing the record to be added to the Senzing repository.
   - loadID: An identifier used to distinguish different load batches/sessions. An empty string is acceptable.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2308,7 +2308,7 @@ It extends SearchByAttributes() by adding output control flags.
 Input
   - ctx: A context to control lifecycle.
   - jsonData: A JSON document containing the record to be added to the Senzing repository.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2426,7 +2426,7 @@ Input
   - ctx: A context to control lifecycle.
   - entityID1: The entity ID for the starting entity of the search path.
   - entityID2: The entity ID for the ending entity of the search path.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2455,7 +2455,7 @@ To control output, use WhyEntityByEntityID_V2() instead.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID for the starting entity of the search path.
+  - entityID: The unique identifier of an entity for the starting entity of the search path.
 
 Output
 
@@ -2485,8 +2485,8 @@ It extends WhyEntityByEntityID() by adding output control flags.
 
 Input
   - ctx: A context to control lifecycle.
-  - entityID: The entity ID for the starting entity of the search path.
-  - flags: FIXME:
+  - entityID: The unique identifier of an entity for the starting entity of the search path.
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2551,7 +2551,7 @@ Input
   - ctx: A context to control lifecycle.
   - dataSourceCode: Identifies the provenance of the data.
   - recordID: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
@@ -2629,7 +2629,7 @@ Input
   - recordID1: The unique identifier within the records of the same data source.
   - dataSourceCode2: Identifies the provenance of the data.
   - recordID2: The unique identifier within the records of the same data source.
-  - flags: FIXME:
+  - flags: Flags used to control information returned.
 
 Output
   - A JSON document.
