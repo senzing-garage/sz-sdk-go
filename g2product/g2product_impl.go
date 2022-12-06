@@ -225,7 +225,8 @@ Input
   - ctx: A context to control lifecycle.
 
 Output
-  - A string containing the error received from Senzing's G2Product.
+  - A JSON document containing Senzing license metadata.
+    See the example output.
 */
 func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
@@ -304,6 +305,7 @@ Output
   - if error is nil, license is valid.
   - If error not nil, license is not valid.
   - The returned string has additional information.
+    See the example output.
 */
 func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
@@ -331,7 +333,8 @@ Input
   - ctx: A context to control lifecycle.
 
 Output
-  - {"PRODUCT_NAME":"Senzing API","VERSION":"3.3.2","BUILD_VERSION":"3.3.2.22299","BUILD_DATE":"2022-10-26","BUILD_NUMBER":"2022_10_26__19_38","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.3","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+  - A JSON document containing metadata about the Senzing Engine version being used.
+    See the example output.
 */
 func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
