@@ -88,7 +88,7 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions
 // ----------------------------------------------------------------------------
 
 func TestG2configImpl_AddDataSource(test *testing.T) {
