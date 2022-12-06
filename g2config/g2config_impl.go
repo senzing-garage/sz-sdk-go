@@ -174,7 +174,7 @@ Input
   - ctx: A context to control lifecycle.
 
 Output
-  - A Pointer to an in-memory configuration.
+  - A Pointer to an in-memory Senzing configuration.
 */
 func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
@@ -335,6 +335,7 @@ Input
 
 Output
   - A string containing a JSON document listing all of the data sources.
+    See the example output.
 */
 func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_listDataSources(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));

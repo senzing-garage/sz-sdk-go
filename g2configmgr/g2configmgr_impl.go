@@ -179,6 +179,7 @@ Input
 
 Output
   - A JSON document containing the Senzing configuration.
+    See the example output.
 */
 func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
@@ -205,6 +206,7 @@ Input
 
 Output
   - A JSON document containing Senzing configurations.
+    See the example output.
 */
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
