@@ -1148,8 +1148,8 @@ func ExampleG2engineImpl_CheckRecord() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 61))
-	// Output: {"CHECK_RECORD_RESPONSE":[{"DSRC_CODE":"TEST","RECORD_ID":...
+	fmt.Println(result)
+	// Output: {"CHECK_RECORD_RESPONSE":[{"DSRC_CODE":"TEST","RECORD_ID":"111","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","MATCH_KEY":"","ERRULE_CODE":"","ERRULE_ID":0,"CANDIDATE_MATCH":"N","NON_GENERIC_CANDIDATE_MATCH":"N"}]}
 }
 
 func ExampleG2engineImpl_ClearLastException() {
@@ -1308,8 +1308,8 @@ func ExampleG2engineImpl_FindInterestingEntitiesByRecordID() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(len(result) > 0) // Dummy output.
-	// Output: true
+	fmt.Println(result)
+	// Output: {"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
 
 func ExampleG2engineImpl_FindNetworkByEntityID() {
@@ -1341,7 +1341,6 @@ func ExampleG2engineImpl_FindNetworkByEntityID_V2() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// fmt.Println(truncate(result, 124))
 	fmt.Println(result)
 	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":2,"ENTITIES":[1,2]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}},{"RESOLVED_ENTITY":{"ENTITY_ID":3}}]}
 }
@@ -2068,8 +2067,8 @@ func ExampleG2engineImpl_Stats() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 35))
-	// Output: { "workload": { "loadedRecords":...
+	fmt.Println(truncate(result, 135))
+	// Output: { "workload": { "loadedRecords": 5,  "addedRecords": 2,  "deletedRecords": 0,  "reevaluations": 0,  "repairedEntities": 0,...
 }
 
 func ExampleG2engineImpl_WhyEntities() {
