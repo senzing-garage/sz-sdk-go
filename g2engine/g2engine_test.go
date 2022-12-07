@@ -116,10 +116,10 @@ func setup() error {
 	now := time.Now()
 	moduleName := "Test module name"
 	verboseLogging := 0
-	logger, err := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
-	if err != nil {
-		// return logger.Error(5901, err)
-	}
+	logger, _ := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+	// if err != nil {
+	// 	return logger.Error(5901, err)
+	// }
 
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {

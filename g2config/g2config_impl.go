@@ -94,6 +94,7 @@ func (g2config *G2configImpl) traceExit(errorNumber int, details ...interface{})
 
 /*
 The AddDataSource method adds a data source to an existing in-memory configuration.
+The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -145,6 +146,7 @@ func (g2config *G2configImpl) ClearLastException(ctx context.Context) error {
 
 /*
 The Close method cleans up the Senzing G2Config object pointed to by the handle.
+The handle was created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -169,6 +171,8 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 
 /*
 The Create method creates a stock G2 JSON config from the template config.
+The handle is used by the AddDataSource(), ListDataSources(), DeleteDataSource(), Load(), and Save() methods.
+The handle is terminated by the Close() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -195,6 +199,7 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 
 /*
 The DeleteDataSource method removes a data source from an existing configuration.
+The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -328,6 +333,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 
 /*
 The ListDataSources method returns a JSON document of data sources.
+The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -356,6 +362,7 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 
 /*
 The Load method initializes the Senzing G2Config object from a JSON string.
+The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -383,6 +390,7 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 
 /*
 The Save method creates a JSON string representation of the Senzing G2Config object.
+The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.

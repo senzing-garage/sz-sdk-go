@@ -148,6 +148,7 @@ func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) er
 The CloseEntityListBySize method closes the list created by GetEntityListBySize().
 It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
 lifecycle of a list of sized entities.
+The entityListBySizeHandle is created by the GetEntityListBySize() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -198,6 +199,7 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 The FetchNextEntityBySize method gets the next section of the list created by GetEntityListBySize().
 It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
 lifecycle of a list of sized entities.
+The entityListBySizeHandle is created by the GetEntityListBySize() method.
 
 Input
   - ctx: A context to control lifecycle.
@@ -368,6 +370,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 The GetEntityListBySize method gets the next section of the list created by GetEntityListBySize().
 It is part of the GetEntityListBySize(), FetchNextEntityBySize(), CloseEntityListBySize()
 lifecycle of a list of sized entities.
+The entityListBySizeHandle is used by the FetchNextEntityBySize() and CloseEntityListBySize() methods.
 
 Input
   - ctx: A context to control lifecycle.

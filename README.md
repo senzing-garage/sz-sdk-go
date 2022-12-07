@@ -143,10 +143,13 @@ This is important as the compiling of the code expects Senzing to be in `/opt/se
     ```console
     docker run \
         --env SQLITE_DATABASE=G2C.db \
+        --interactive \
         --publish 9174:8080 \
         --rm \
+        --tty \
         --volume /tmp/sqlite:/data \
         coleifer/sqlite-web
+
     ```
 
    Visit [localhost:9174](http://localhost:9174).

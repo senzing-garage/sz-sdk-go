@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.3] - 2022-12-08
+
+### Changed in 0.2.3
+
+- Improved godoc documentation
+- Improved tests to initialize database prior to each run
+- Add ability for GitHub Action testing
+
 ## [0.2.2] - 2022-11-18
 
 ### Changed in 0.2.2
