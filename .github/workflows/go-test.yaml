@@ -6,6 +6,7 @@ name: go-test.yaml
 on: [push]
 
 env:
+  LD_LIBRARY_PATH: /opt/senzing/g2/lib
   SENZING_ACCEPT_EULA: I_ACCEPT_THE_SENZING_EULA
 
 jobs:
@@ -21,8 +22,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
-      - run: env
-      - run: echo ${SENZING_ACCEPT_EULA}
       - run: wget -qO /tmp/senzingrepo_1.0.1-1_amd64.deb https://senzing-production-apt.s3.amazonaws.com/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get -y install /tmp/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get update
