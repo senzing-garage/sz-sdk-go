@@ -31,6 +31,7 @@ jobs:
       - run: sudo mv /opt/senzing/data/3.0.0/* /opt/senzing/data/
       - run: sudo mkdir /etc/opt/senzing
       - run: sudo cp /opt/senzing/g2/resources/templates/cfgVariant.json     /etc/opt/senzing
+      - run: sudo cp /opt/senzing/g2/resources/templates/customGn.txt        /etc/opt/senzing
       - run: sudo cp /opt/senzing/g2/resources/templates/defaultGNRCP.config /etc/opt/senzing
       - run: sudo cp /opt/senzing/g2/resources/templates/stb.config          /etc/opt/senzing
       - run: sudo cp testdata/senzing-license/g2.lic                         /etc/opt/senzing
