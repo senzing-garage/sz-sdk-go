@@ -25,7 +25,8 @@ jobs:
       - run: wget -qO /tmp/senzingrepo_1.0.1-1_amd64.deb https://senzing-production-apt.s3.amazonaws.com/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get -y install /tmp/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get update
-      - run: sudo --preserve-env apt-get -y install senzingapi-runtime
+      - run: sudo --preserve-env apt-get -y install senzingapi
+      - run: sudo mv /opt/senzing/data/3.0.0/* /opt/senzing/data/
       - run: mkdir /tmp/sqlite
       - run: cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
       - run: go test -v -p 1 ./...
