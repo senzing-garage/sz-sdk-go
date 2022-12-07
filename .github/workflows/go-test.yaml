@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
+      - run: pwd
       - run: wget -qO /tmp/senzingrepo_1.0.1-1_amd64.deb https://senzing-production-apt.s3.amazonaws.com/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get -y install /tmp/senzingrepo_1.0.1-1_amd64.deb
       - run: sudo apt-get update
@@ -30,6 +31,8 @@ jobs:
       - run: sudo mv /opt/senzing/data/3.0.0/* /opt/senzing/data/
       - run: sudo mkdir /etc/opt/senzing
       - run: sudo cp /opt/senzing/g2/resources/templates/cfgVariant.json /etc/opt/senzing
+      - run: sudo cp testdata/senzing-license/g2.lic                     /etc/opt/senzing
+      - run: sudo cp /opt/senzing/g2/resources/templates/stb.config      /etc/opt/senzing
       - run: ls -la /opt/senzing/data
       - run: mkdir /tmp/sqlite
       - run: cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
