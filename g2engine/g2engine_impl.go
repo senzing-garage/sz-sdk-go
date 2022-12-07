@@ -1768,7 +1768,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
@@ -1799,7 +1799,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - initConfigID: The configuration ID used for the initialization.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
@@ -1877,7 +1877,7 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 
 /*
 The ProcessRedoRecord method processes the next redo record and returns it.
-Calling ProcessRedoRecord() has the potential to create more redo records in certian situations.
+Calling ProcessRedoRecord() has the potential to create more redo records in certain situations.
 
 Input
   - ctx: A context to control lifecycle.
@@ -1904,7 +1904,7 @@ func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, er
 
 /*
 The ProcessRedoRecordWithInfo method processes the next redo record and returns it and affected entities.
-Calling ProcessRedoRecordWithInfo() has the potential to create more redo records in certian situations.
+Calling ProcessRedoRecordWithInfo() has the potential to create more redo records in certain situations.
 
 Input
   - ctx: A context to control lifecycle.

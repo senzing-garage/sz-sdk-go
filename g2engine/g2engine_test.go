@@ -1134,8 +1134,8 @@ func ExampleG2engineImpl_AddRecordWithReturnedRecordID() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("Length of record identifier is %d hexidecimal characters.\n", len(result))
-	// Output: Length of record identifier is 40 hexidecimal characters.
+	fmt.Printf("Length of record identifier is %d hexadecimal characters.\n", len(result))
+	// Output: Length of record identifier is 40 hexadecimal characters.
 }
 
 func ExampleG2engineImpl_CheckRecord() {
