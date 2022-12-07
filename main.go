@@ -122,6 +122,8 @@ func main() {
 	ctx := context.TODO()
 	now := time.Now()
 
+	return
+
 	// Randomize random number generator.
 
 	rand.Seed(time.Now().UnixNano())

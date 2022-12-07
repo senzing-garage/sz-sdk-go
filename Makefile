@@ -63,7 +63,7 @@ test:
 	@rm -rf /tmp/sqlite
 	@mkdir  /tmp/sqlite
 	@cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
-	@go test -v ./...
+	@go test -v -p 1 ./...
 #	@go test -v ./.
 #	@go test -v ./g2config
 #	@go test -v ./g2configmgr
@@ -92,6 +92,7 @@ update-pkg-cache:
 .PHONY: clean
 clean:
 	@go clean -cache
+	@go clean -testcache
 	@docker rm --force $(DOCKER_CONTAINER_NAME) 2> /dev/null || true
 	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true
 	@rm -rf $(TARGET_DIRECTORY) || true
