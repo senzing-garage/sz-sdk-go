@@ -18,4 +18,10 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go }}
-      - run: go test ./...
+      - run: wget -qO /senzingrepo_1.0.1-1_amd64.deb https://senzing-production-apt.s3.amazonaws.com/senzingrepo_1.0.1-1_amd64.deb
+      - run: apt-get -y install /senzingrepo_1.0.1-1_amd64.deb
+      - run: apt-get update
+      - run: apt-get -y install senzingapi-runtime
+      - run: mkdir /tmp/sqlite
+      - run: cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
+      - run: go test -v -p 1 ./...
