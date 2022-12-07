@@ -28,6 +28,9 @@ jobs:
       - run: sudo apt-get update
       - run: sudo --preserve-env apt-get -y install senzingapi
       - run: sudo mv /opt/senzing/data/3.0.0/* /opt/senzing/data/
+      - run: sudo mkdir /etc/opt/senzing
+      - run: sudo cp /opt/senzing/g2/resources/templates/cfgVariant.json /etc/opt/senzing
+      - run: ls -la /opt/senzing/data
       - run: mkdir /tmp/sqlite
       - run: cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
       - run: go test -v -p 1 ./...
