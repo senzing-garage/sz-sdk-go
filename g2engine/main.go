@@ -1,11 +1,3 @@
-/*
-Package g2engine is a Go wrapper over Senzing's G2Engine C binding.
-
-To use G2engine, the LD_LIBRARY_PATH environment variable must include
-a path to Senzing's libraries.  Example:
-
-	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-*/
 package g2engine
 
 import (
@@ -18,8 +10,10 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// Senzing flags.
 type FlagMask int64
 
+// The G2engine interface is a Golang representation of Senzing's libg2.h
 type G2engine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
@@ -105,8 +99,11 @@ type G2engine interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2engine component found messages having the format "senzing-6004xxxx".
 const ProductId = 6004
 
+// Flags used by the Senzing G2Engine.
+// These flags are single-bit flags.
 const (
 	G2_EXPORT_INCLUDE_RESOLVED         FlagMask = 0         // 0 we should include entities with "resolved" relationships
 	G2_EXPORT_INCLUDE_POSSIBLY_SAME    FlagMask = 1 << iota // 1 we should include entities with "possibly same" relationships
@@ -150,6 +147,8 @@ const (
 	G2_SEARCH_INCLUDE_STATS   //  27 include statistics from search results
 )
 
+// Flags used by the Senzing G2Engine.
+// These flags combine single-bit flags.
 const (
 	/* flags for exporting entity data  */
 	G2_EXPORT_INCLUDE_ALL_ENTITIES      = G2_EXPORT_INCLUDE_RESOLVED | G2_EXPORT_INCLUDE_SINGLETONS
@@ -186,6 +185,7 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2engine package.
 var IdMessages = map[int]string{
 	1:    "Enter AddRecord(%s, %s, %s, %s).",
 	2:    "Exit  AddRecord(%s, %s, %s, %s) returned (%v).",
@@ -417,6 +417,28 @@ var IdMessages = map[int]string{
 	4072: "Call to G2_whyEntityByRecordID_V2(%s, %s, %d) failed. Return code: %d",
 	4073: "Call to G2_whyRecords(%s, %s, %s, %s) failed. Return code: %d",
 	4074: "Call to G2_whyRecords_V2(%s, %s, %s, %s, %d) failed. Return code: %d",
+	5901: "In g2diagnostic_test.go, setup() call to messagelogger.NewSenzingApiLogger() failed.",
+	5902: "In g2diagnostic_test.go, setup() call to g2eg2engineconfigurationjson.BuildSimpleSystemConfigurationJson() failed.",
+	5903: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5904: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5905: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5906: "In g2diagnostic_test.go, setup() call to g2config.Init() failed.",
+	5907: "In g2diagnostic_test.go, setup() call to g2config.Create() failed.",
+	5908: "In g2diagnostic_test.go, setup() call to g2config.AddDataSource() failed.",
+	5909: "In g2diagnostic_test.go, setup() call to g2config.Save() failed.",
+	5910: "In g2diagnostic_test.go, setup() call to g2config.Close() failed.",
+	5911: "In g2diagnostic_test.go, setup() call to g2config.Destroy() failed.",
+	5912: "In g2diagnostic_test.go, setup() call to g2configmgr.Init() failed.",
+	5913: "In g2diagnostic_test.go, setup() call to g2configmgr.AddConfig() failed.",
+	5914: "In g2diagnostic_test.go, setup() call to g2configmgr.SetDefaultConfigID() failed.",
+	5915: "In g2diagnostic_test.go, setup() call to g2configmgr.Destroy() failed.",
+	5916: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5917: "In g2diagnostic_test.go, setup() call to g2engine.AddRecord() failed.",
+	5918: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5931: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5932: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5933: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
 }
 
+// Status strings for specific g2engine messages.
 var IdStatuses = map[int]string{}

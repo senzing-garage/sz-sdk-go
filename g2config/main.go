@@ -1,11 +1,3 @@
-/*
-Package g2config is a Go wrapper over Senzing's G2Config C binding.
-
-To use G2config, the LD_LIBRARY_PATH environment variable must include
-a path to Senzing's libraries.  Example:
-
-	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-*/
 package g2config
 
 import (
@@ -18,6 +10,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// The G2config interface is a Golang representation of Senzing's libg2config.h
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
 	ClearLastException(ctx context.Context) error
@@ -38,12 +31,14 @@ type G2config interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2config package found messages having the format "senzing-6001xxxx".
 const ProductId = 6001
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2config package.
 var IdMessages = map[int]string{
 	1:    "Enter AddDataSource(%v, %s).",
 	2:    "Exit  AddDataSource(%v, %s) returned (%s, %v).",
@@ -83,4 +78,5 @@ var IdMessages = map[int]string{
 	4010: "Call to G2Config_save(%v) failed. Return code: %d",
 }
 
+// Status strings for specific g2config messages.
 var IdStatuses = map[int]string{}

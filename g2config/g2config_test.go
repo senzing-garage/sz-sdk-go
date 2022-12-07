@@ -8,7 +8,12 @@ import (
 
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
 	"github.com/stretchr/testify/assert"
+)
+
+const (
+	defaultTruncation = 76
 )
 
 var (
@@ -16,7 +21,7 @@ var (
 )
 
 // ----------------------------------------------------------------------------
-// Internal functions - names begin with lowercase letter
+// Internal functions
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2config {
@@ -27,12 +32,11 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 		log.SetFlags(0)
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
-
 		initErr := g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
@@ -41,13 +45,13 @@ func getTestObject(ctx context.Context, test *testing.T) G2config {
 	return g2configSingleton
 }
 
-func truncate(aString string) string {
-	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
+func truncate(aString string, length int) string {
+	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
 	if 1 == 0 {
-		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
 
@@ -71,39 +75,52 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, er
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test harness
 // ----------------------------------------------------------------------------
 
-func TestAddDataSource(test *testing.T) {
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, actual)
+	}
+	printActual(test, actual)
+}
+
+// ----------------------------------------------------------------------------
+// Test interface functions
+// ----------------------------------------------------------------------------
+
+func TestG2configImpl_AddDataSource(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	actual, err := g2config.AddDataSource(ctx, aHandle, inputJson)
+	actual, err := g2config.AddDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
-	err = g2config.Close(ctx, aHandle)
+	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2configImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	err := g2config.ClearLastException(ctx)
 	testError(test, ctx, g2config, err)
 }
 
-func TestClose(test *testing.T) {
+func TestG2configImpl_Close(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	err = g2config.Close(ctx, aHandle)
+	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }
 
-func TestCreate(test *testing.T) {
+func TestG2configImpl_Create(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.Create(ctx)
@@ -111,37 +128,37 @@ func TestCreate(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestDeleteDataSource(test *testing.T) {
+func TestG2configImpl_DeleteDataSource(test *testing.T) {
 
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
 
-	actual, err := g2config.ListDataSources(ctx, aHandle)
+	actual, err := g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "Original", actual)
 
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
-	_, err = g2config.AddDataSource(ctx, aHandle, inputJson)
+	_, err = g2config.AddDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
-	actual, err = g2config.ListDataSources(ctx, aHandle)
+	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "     Add", actual)
 
-	err = g2config.DeleteDataSource(ctx, aHandle, inputJson)
+	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
 
-	actual, err = g2config.ListDataSources(ctx, aHandle)
+	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "  Delete", actual)
 
-	err = g2config.Close(ctx, aHandle)
+	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2configImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastException(ctx)
@@ -149,7 +166,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2configImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	actual, err := g2config.GetLastExceptionCode(ctx)
@@ -157,53 +174,242 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2configImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	testError(test, ctx, g2config, jsonErr)
 	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2config, err)
 }
 
-func TestListDataSources(test *testing.T) {
+func TestG2configImpl_ListDataSources(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	actual, err := g2config.ListDataSources(ctx, aHandle)
+	actual, err := g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
-	err = g2config.Close(ctx, aHandle)
+	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }
 
-func TestLoad(test *testing.T) {
+func TestG2configImpl_Load(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	actual, err := g2config.Save(ctx, aHandle)
+	jsonConfig, err := g2config.Save(ctx, configHandle)
 	testError(test, ctx, g2config, err)
-	err = g2config.Load(ctx, aHandle, actual)
+	err = g2config.Load(ctx, configHandle, jsonConfig)
 	testError(test, ctx, g2config, err)
 }
 
-func TestSave(test *testing.T) {
+func TestG2configImpl_Save(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
-	aHandle, err := g2config.Create(ctx)
+	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-	actual, err := g2config.Save(ctx, aHandle)
+	actual, err := g2config.Save(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2configImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	err := g2config.Destroy(ctx)
 	testError(test, ctx, g2config, err)
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2configImpl_AddDataSource() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	inputJson := `{"DSRC_CODE": "GO_TEST"}`
+	result, err := g2config.AddDataSource(ctx, configHandle, inputJson)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: {"DSRC_ID":1001}
+}
+
+func ExampleG2configImpl_ClearLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	err := g2config.ClearLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Close() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = g2config.Close(ctx, configHandle)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Create() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(configHandle > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2configImpl_DeleteDataSource() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	inputJson := `{"DSRC_CODE": "TEST"}`
+	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	err := g2config.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	result, err := g2config.GetLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2configImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	result, err := g2config.GetLastExceptionCode(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: 0
+}
+
+func ExampleG2configImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	verboseLogging := 0
+	err = g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_ListDataSources() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	result, err := g2config.ListDataSources(ctx, configHandle)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: {"DATA_SOURCES":[{"DSRC_ID":1,"DSRC_CODE":"TEST"},{"DSRC_ID":2,"DSRC_CODE":"SEARCH"}]}
+}
+
+func ExampleG2configImpl_Load() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	jsonConfig, err := g2config.Save(ctx, configHandle)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = g2config.Load(ctx, configHandle, jsonConfig)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Save() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	configHandle, err := g2config.Create(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	jsonConfig, err := g2config.Save(ctx, configHandle)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(truncate(jsonConfig, 207))
+	// Output: {"G2_CONFIG":{"CFG_ATTR":[{"ATTR_ID":1001,"ATTR_CODE":"DATA_SOURCE","ATTR_CLASS":"OBSERVATION","FTYPE_CODE":null,"FELEM_CODE":null,"FELEM_REQ":"Yes","DEFAULT_VALUE":null,"ADVANCED":"Yes","INTERNAL":"No"},...
+}
+
+func ExampleG2configImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	err := g2config.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
 }

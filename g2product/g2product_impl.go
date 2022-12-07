@@ -1,6 +1,4 @@
-/*
-The G2productImpl implementation...
-*/
+// The G2productImpl implementation is a wrapper over the Senzing libg2product library.
 package g2product
 
 /*
@@ -25,6 +23,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// G2productImpl is the default implementation of the G2product interface.
 type G2productImpl struct {
 	isTrace bool
 	logger  messagelogger.MessageLoggerInterface
@@ -46,10 +45,12 @@ func (g2product *G2productImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2product *G2productImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2product *G2productImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2product.GetLastException(ctx)
 	defer g2product.ClearLastException(ctx)
@@ -69,6 +70,7 @@ func (g2product *G2productImpl) newError(ctx context.Context, errorNumber int, d
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2product.logger == nil {
 		g2product.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -76,10 +78,12 @@ func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface
 	return g2product.logger
 }
 
+// Trace method entry.
 func (g2product *G2productImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2product.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2product *G2productImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2product.getLogger().Log(errorNumber, details...)
 }
@@ -88,7 +92,12 @@ func (g2product *G2productImpl) traceExit(errorNumber int, details ...interface{
 // Interface methods
 // ----------------------------------------------------------------------------
 
-// ClearLastException returns the available memory, in bytes, on the host system.
+/*
+The ClearLastException method erases the last exception message held by the Senzing G2Config object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2product *G2productImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException();
 	if g2product.isTrace {
@@ -103,6 +112,13 @@ func (g2product *G2productImpl) ClearLastException(ctx context.Context) error {
 	return err
 }
 
+/*
+The Destroy method will destroy and perform cleanup for the Senzing G2Product object.
+It should be called after all other calls are complete.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	if g2product.isTrace {
@@ -120,7 +136,15 @@ func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
-// GetLastException returns the last exception encountered in the Senzing Engine.
+/*
+The GetLastException method retrieves the last exception thrown in Senzing's G2Product.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2Product.
+*/
 func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2product.isTrace {
@@ -140,6 +164,15 @@ func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, e
 	return string(stringBuffer), err
 }
 
+/*
+The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Product.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2Product.
+*/
 func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	if g2product.isTrace {
@@ -154,6 +187,16 @@ func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, 
 	return result, err
 }
 
+/*
+The Init method initializes the Senzing G2Product object.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
+*/
 func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2product.isTrace {
@@ -175,6 +218,16 @@ func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, ini
 	return err
 }
 
+/*
+The License method retrieves information about the currently used license by the Senzing API.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document containing Senzing license metadata.
+    See the example output.
+*/
 func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
 	if g2product.isTrace {
@@ -189,6 +242,13 @@ func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 	return C.GoString(result), err
 }
 
+/*
+The SetLogLevel method sets the level of logging.
+
+Input
+  - ctx: A context to control lifecycle.
+  - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
+*/
 func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2product.isTrace {
 		g2product.traceEntry(13, logLevel)
@@ -203,6 +263,18 @@ func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger
 	return err
 }
 
+/*
+The ValidateLicenseFile method validates the licence file has not expired.
+
+Input
+  - ctx: A context to control lifecycle.
+  - licenseFilePath: A fully qualified path to the Senzing license file.
+
+Output
+  - if error is nil, license is valid.
+  - If error not nil, license is not valid.
+  - The returned string has additional information.
+*/
 func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseFile(const char* licenseFilePath, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
 	if g2product.isTrace {
@@ -222,6 +294,19 @@ func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, license
 	return C.GoString(result.response), err
 }
 
+/*
+The ValidateLicenseStringBase64 method validates the licence, represented by a Base-64 string, has not expired.
+
+Input
+  - ctx: A context to control lifecycle.
+  - licenseString: A Senzing license represented by a Base-64 encoded string.
+
+Output
+  - if error is nil, license is valid.
+  - If error not nil, license is not valid.
+  - The returned string has additional information.
+    See the example output.
+*/
 func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
 	if g2product.isTrace {
@@ -241,6 +326,16 @@ func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context,
 	return C.GoString(result.response), err
 }
 
+/*
+The Version method returns the version of the Senzing API.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document containing metadata about the Senzing Engine version being used.
+    See the example output.
+*/
 func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
 	if g2product.isTrace {

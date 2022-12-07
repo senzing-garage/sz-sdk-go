@@ -1,13 +1,15 @@
 /*
 # Synopsis
 
-The Senzing g2-sdk-go packages are a Go wrapper over Senzing's C-based library.
+The Senzing g2-sdk-go packages are wrappers over Senzing's C-based library.
 
 # Overview
 
 The Senzing g2-sdk-go packages enable Go programs to call Senzing library functions.
 Under the covers, Golang's CGO is used by the g2-sdk-go packages to make the calls
 to the Senzing functions.
+
+More information at https://github.com/senzing/g2-sdk-go
 
 # Installing Senzing library
 

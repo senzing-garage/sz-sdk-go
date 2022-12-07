@@ -1,5 +1,5 @@
 /*
-The G2configmgrImpl implementation...
+The G2configmgrImpl implementation is a wrapper over the Senzing libg2configmgr library.
 */
 package g2configmgr
 
@@ -14,6 +14,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -25,6 +26,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+// G2configmgrImpl is the default implementation of the G2configmgr interface.
 type G2configmgrImpl struct {
 	isTrace bool
 	logger  messagelogger.MessageLoggerInterface
@@ -46,10 +48,12 @@ func (g2configmgr *G2configmgrImpl) getByteArrayC(size int) *C.char {
 	return (*C.char)(bytes)
 }
 
+// Make a byte array.
 func (g2configmgr *G2configmgrImpl) getByteArray(size int) []byte {
 	return make([]byte, size)
 }
 
+// Create a new error.
 func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
 	lastException, err := g2configmgr.GetLastException(ctx)
 	defer g2configmgr.ClearLastException(ctx)
@@ -69,6 +73,7 @@ func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber in
 	return errors.New(errorMessage)
 }
 
+// Get the Logger singleton.
 func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInterface {
 	if g2configmgr.logger == nil {
 		g2configmgr.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -76,10 +81,12 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 	return g2configmgr.logger
 }
 
+// Trace method entry.
 func (g2configmgr *G2configmgrImpl) traceEntry(errorNumber int, details ...interface{}) {
 	g2configmgr.getLogger().Log(errorNumber, details...)
 }
 
+// Trace method exit.
 func (g2configmgr *G2configmgrImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2configmgr.getLogger().Log(errorNumber, details...)
 }
@@ -88,6 +95,17 @@ func (g2configmgr *G2configmgrImpl) traceExit(errorNumber int, details ...interf
 // Interface methods
 // ----------------------------------------------------------------------------
 
+/*
+The AddConfig method adds a Senzing configuration JSON document to the Senzing database.
+
+Input
+  - ctx: A context to control lifecycle.
+  - configStr: The Senzing configuration JSON document.
+  - configComments: A free-form string of comments describing the configuration document.
+
+Output
+  - A configuration identifier.
+*/
 func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr string, configComments string) (int64, error) {
 	// _DLEXPORT int G2ConfigMgr_addConfig(const char* configStr, const char* configComments, long long* configID);
 	if g2configmgr.isTrace {
@@ -109,7 +127,12 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	return int64(C.longlong(result.configID)), err
 }
 
-// ClearLastException returns the available memory, in bytes, on the host system.
+/*
+The ClearLastException method erases the last exception message held by the Senzing G2ConfigMgr object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException()
 	if g2configmgr.isTrace {
@@ -124,8 +147,17 @@ func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) erro
 	return err
 }
 
+/*
+The Destroy method will destroy and perform cleanup for the Senzing G2ConfigMgr object.
+It should be called after all other calls are complete.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
 func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(5)
 	}
@@ -141,6 +173,17 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	return err
 }
 
+/*
+The GetConfig method retrieves a specific Senzing configuration JSON document from the Senzing database.
+
+Input
+  - ctx: A context to control lifecycle.
+  - configID: The configuration identifier of the desired Senzing Engine configuration JSON document to retrieve.
+
+Output
+  - A JSON document containing the Senzing configuration.
+    See the example output.
+*/
 func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2configmgr.isTrace {
@@ -158,6 +201,16 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 	return C.GoString(result.config), err
 }
 
+/*
+The GetConfigList method retrieves a list of Senzing configurations from the Senzing database.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A JSON document containing Senzing configurations.
+    See the example output.
+*/
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	if g2configmgr.isTrace {
@@ -175,6 +228,15 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	return C.GoString(result.configList), err
 }
 
+/*
+The GetDefaultConfigID method retrieves from the Senzing database the configuration identifier of the default Senzing configuration.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A configuration identifier which identifies the current configuration in use.
+*/
 func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
 	if g2configmgr.isTrace {
@@ -192,7 +254,15 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	return int64(C.longlong(result.configID)), err
 }
 
-// GetLastException returns the last exception encountered in the Senzing Engine.
+/*
+The GetLastException method retrieves the last exception thrown in Senzing's G2ConfigMgr.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2ConfigMgr.
+*/
 func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2configmgr.isTrace {
@@ -212,6 +282,15 @@ func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (strin
 	return string(stringBuffer), err
 }
 
+/*
+The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2ConfigMgr.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2ConfigMgr.
+*/
 func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	if g2configmgr.isTrace {
@@ -226,6 +305,16 @@ func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (i
 	return result, err
 }
 
+/*
+The Init method initializes the Senzing G2ConfigMgr object.
+It must be called prior to any other calls.
+
+Input
+  - ctx: A context to control lifecycle.
+  - moduleName: A name for the auditing node, to help identify it within system logs.
+  - iniParams: A JSON string containing configuration paramters.
+  - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
+*/
 func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
 	if g2configmgr.isTrace {
@@ -247,8 +336,17 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	return err
 }
 
-// Very much like a "compare-and-swap" instruction to serialize concurrent editing of configuration.
-// To simply set the default configuration ID, use SetDefaultConfigID().
+/*
+The ReplaceDefaultConfigID method replaces the old configuration identifier with a new configuration identifier in the Senzing database.
+It is like a "compare-and-swap" instruction to serialize concurrent editing of configuration.
+If oldConfigID is no longer the "old configuration identifier", the operation will fail.
+To simply set the default configuration ID, use SetDefaultConfigID().
+
+Input
+  - ctx: A context to control lifecycle.
+  - oldConfigID: The configuration identifier to replace.
+  - newConfigID: The configuration identifier to use as the default.
+*/
 func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error {
 	// _DLEXPORT int G2ConfigMgr_replaceDefaultConfigID(const long long oldConfigID, const long long newConfigID);
 	if g2configmgr.isTrace {
@@ -266,6 +364,14 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	return err
 }
 
+/*
+The SetDefaultConfigID method replaces the sets a new configuration identifier in the Senzing database.
+To serialize modifying of the configuration identifier, see ReplaceDefaultConfigID().
+
+Input
+  - ctx: A context to control lifecycle.
+  - configID: The configuration identifier of the Senzing Engine configuration to use as the default.
+*/
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
 	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
 	if g2configmgr.isTrace {
@@ -283,6 +389,13 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	return err
 }
 
+/*
+The SetLogLevel method sets the level of logging.
+
+Input
+  - ctx: A context to control lifecycle.
+  - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
+*/
 func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(23, logLevel)

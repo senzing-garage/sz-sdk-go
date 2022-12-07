@@ -4,11 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"testing"
+	"time"
 
 	truncator "github.com/aquilax/truncate"
+	"github.com/senzing/g2-sdk-go/g2config"
+	"github.com/senzing/g2-sdk-go/g2configmgr"
+	"github.com/senzing/g2-sdk-go/g2engine"
+	"github.com/senzing/g2-sdk-go/testhelpers"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
+	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-logging/messagelogger"
 	"github.com/stretchr/testify/assert"
+)
+
+const (
+	defaultTruncation = 76
 )
 
 var (
@@ -16,7 +28,7 @@ var (
 )
 
 // ----------------------------------------------------------------------------
-// Internal functions - names begin with lowercase letter
+// Internal functions
 // ----------------------------------------------------------------------------
 
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
@@ -27,12 +39,11 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 		log.SetFlags(0)
 
 		moduleName := "Test module name"
-		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		verboseLogging := 0
 		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
-
 		initErr := g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)
@@ -41,13 +52,25 @@ func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 	return g2diagnosticSingleton
 }
 
-func truncate(aString string) string {
-	return truncator.Truncate(aString, 50, "...", truncator.PositionEnd)
+func getG2Diagnostic(ctx context.Context) G2diagnostic {
+	g2diagnostic := &G2diagnosticImpl{}
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	return g2diagnostic
+}
+
+func truncate(aString string, length int) string {
+	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
 	if 1 == 0 {
-		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result)))
+		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
 
@@ -74,17 +97,171 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagno
 // Test harness
 // ----------------------------------------------------------------------------
 
-// Reference: https://medium.com/nerd-for-tech/setup-and-teardown-unit-test-in-go-bd6fa1b785cd
-func setupSuite(test testing.TB) func(test testing.TB) {
-	test.Log("setup suite")
-
-	// Return a function to teardown the test
-	return func(test testing.TB) {
-		test.Log("teardown suite")
+func TestMain(m *testing.M) {
+	err := setup()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
 	}
+	code := m.Run()
+	err = teardown()
+	if err != nil {
+		fmt.Print(err)
+	}
+	os.Exit(code)
 }
 
-func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
+func setup() error {
+	var err error = nil
+	ctx := context.TODO()
+	now := time.Now()
+	moduleName := "Test module name"
+	verboseLogging := 0
+	logger, err := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+	if err != nil {
+		// return logger.Error(5901, err)
+	}
+
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		return logger.Error(5902, err)
+	}
+
+	// Add Data Sources to in-memory Senzing configuration.
+
+	aG2config := &g2config.G2configImpl{}
+	err = aG2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5906, err)
+	}
+
+	configHandle, err := aG2config.Create(ctx)
+	if err != nil {
+		return logger.Error(5907, err)
+	}
+
+	for _, testDataSource := range testhelpers.TestDataSources {
+		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
+		if err != nil {
+			return logger.Error(5908, err)
+		}
+	}
+
+	configStr, err := aG2config.Save(ctx, configHandle)
+	if err != nil {
+		return logger.Error(5909, err)
+	}
+
+	err = aG2config.Close(ctx, configHandle)
+	if err != nil {
+		return logger.Error(5910, err)
+	}
+
+	err = aG2config.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5911, err)
+	}
+
+	// Persist the Senzing configuration to the Senzing repository.
+
+	aG2configmgr := &g2configmgr.G2configmgrImpl{}
+	err = aG2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5912, err)
+	}
+
+	configComments := fmt.Sprintf("Created by g2diagnostic_test at %s", now.UTC())
+	configID, err := aG2configmgr.AddConfig(ctx, configStr, configComments)
+	if err != nil {
+		return logger.Error(5913, err)
+	}
+
+	err = aG2configmgr.SetDefaultConfigID(ctx, configID)
+	if err != nil {
+		return logger.Error(5914, err)
+	}
+
+	err = aG2configmgr.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5915, err)
+	}
+
+	// Purge repository.
+
+	aG2engine := &g2engine.G2engineImpl{}
+	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5903, err)
+	}
+
+	err = aG2engine.PurgeRepository(ctx)
+	if err != nil {
+		return logger.Error(5904, err)
+	}
+
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5905, err)
+	}
+
+	// Add records.
+
+	aG2engine = &g2engine.G2engineImpl{}
+	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5916, err)
+	}
+
+	for _, testRecord := range testhelpers.TestRecords {
+		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
+		if err != nil {
+			return logger.Error(5917, err)
+		}
+	}
+
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5918, err)
+	}
+
+	return err
+}
+
+func teardown() error {
+	var err error = nil
+	// ctx := context.TODO()
+	// moduleName := "Test module name2"
+	// iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// verboseLogging := 0
+	// logger, err := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// // Purge repository.
+
+	// aG2engine := &g2engine.G2engineImpl{}
+	// err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	// if err != nil {
+	// 	return logger.Error(5931, err)
+	// }
+
+	// err = aG2engine.PurgeRepository(ctx)
+	// if err != nil {
+	// 	return logger.Error(5932, err)
+	// }
+
+	// err = aG2engine.Destroy(ctx)
+	// if err != nil {
+	// 	return logger.Error(5933, err)
+	// }
+	return err
+}
+
+func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
 		test.Log("Error:", err.Error())
@@ -93,19 +270,12 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetObject(test *testing.T) {
-	ctx := context.TODO()
-	getTestObject(ctx, test)
-}
-
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
 
-func TestCheckDBPerf(test *testing.T) {
+func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {
 	ctx := context.TODO()
-	teardownSuite := setupSuite(test)
-	defer teardownSuite(test)
 	g2diagnostic := getTestObject(ctx, test)
 	secondsToRun := 1
 	actual, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
@@ -113,13 +283,13 @@ func TestCheckDBPerf(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestClearLastException(test *testing.T) {
+func TestG2diagnosticImpl_ClearLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	g2diagnostic.ClearLastException(ctx)
 }
 
-func TestEntityListBySize(test *testing.T) {
+func TestG2diagnosticImpl_EntityListBySize(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	aSize := 1000
@@ -132,7 +302,7 @@ func TestEntityListBySize(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestFindEntitiesByFeatureIDs(test *testing.T) {
+func TestG2diagnosticImpl_FindEntitiesByFeatureIDs(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	features := "{\"ENTITY_ID\":1,\"LIB_FEAT_IDS\":[1,3,4]}"
@@ -141,7 +311,7 @@ func TestFindEntitiesByFeatureIDs(test *testing.T) {
 	printResult(test, "len(Actual)", len(actual))
 }
 
-func TestGetAvailableMemory(test *testing.T) {
+func TestG2diagnosticImpl_GetAvailableMemory(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetAvailableMemory(ctx)
@@ -150,7 +320,7 @@ func TestGetAvailableMemory(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetDataSourceCounts(test *testing.T) {
+func TestG2diagnosticImpl_GetDataSourceCounts(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetDataSourceCounts(ctx)
@@ -158,7 +328,7 @@ func TestGetDataSourceCounts(test *testing.T) {
 	printResult(test, "Data Source counts", actual)
 }
 
-func TestGetDBInfo(test *testing.T) {
+func TestG2diagnosticImpl_GetDBInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetDBInfo(ctx)
@@ -166,7 +336,7 @@ func TestGetDBInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityDetails(test *testing.T) {
+func TestG2diagnosticImpl_GetEntityDetails(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
@@ -176,7 +346,7 @@ func TestGetEntityDetails(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntityResume(test *testing.T) {
+func TestG2diagnosticImpl_GetEntityResume(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	entityID := int64(1)
@@ -185,7 +355,7 @@ func TestGetEntityResume(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetEntitySizeBreakdown(test *testing.T) {
+func TestG2diagnosticImpl_GetEntitySizeBreakdown(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	minimumEntitySize := 1
@@ -195,7 +365,7 @@ func TestGetEntitySizeBreakdown(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetFeature(test *testing.T) {
+func TestG2diagnosticImpl_GetFeature(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	libFeatID := int64(1)
@@ -204,7 +374,7 @@ func TestGetFeature(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetGenericFeatures(test *testing.T) {
+func TestG2diagnosticImpl_GetGenericFeatures(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	featureType := "PHONE"
@@ -214,7 +384,7 @@ func TestGetGenericFeatures(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastException(test *testing.T) {
+func TestG2diagnosticImpl_GetLastException(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLastException(ctx)
@@ -222,7 +392,7 @@ func TestGetLastException(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLastExceptionCode(test *testing.T) {
+func TestG2diagnosticImpl_GetLastExceptionCode(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLastExceptionCode(ctx)
@@ -230,7 +400,7 @@ func TestGetLastExceptionCode(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetLogicalCores(test *testing.T) {
+func TestG2diagnosticImpl_GetLogicalCores(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetLogicalCores(ctx)
@@ -239,7 +409,7 @@ func TestGetLogicalCores(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetMappingStatistics(test *testing.T) {
+func TestG2diagnosticImpl_GetMappingStatistics(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	includeInternalFeatures := 1
@@ -248,7 +418,7 @@ func TestGetMappingStatistics(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetPhysicalCores(test *testing.T) {
+func TestG2diagnosticImpl_GetPhysicalCores(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetPhysicalCores(ctx)
@@ -257,7 +427,7 @@ func TestGetPhysicalCores(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetRelationshipDetails(test *testing.T) {
+func TestG2diagnosticImpl_GetRelationshipDetails(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	relationshipID := int64(1)
@@ -267,7 +437,7 @@ func TestGetRelationshipDetails(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetResolutionStatistics(test *testing.T) {
+func TestG2diagnosticImpl_GetResolutionStatistics(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetResolutionStatistics(ctx)
@@ -275,7 +445,7 @@ func TestGetResolutionStatistics(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestGetTotalSystemMemory(test *testing.T) {
+func TestG2diagnosticImpl_GetTotalSystemMemory(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	actual, err := g2diagnostic.GetTotalSystemMemory(ctx)
@@ -284,7 +454,7 @@ func TestGetTotalSystemMemory(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestInit(test *testing.T) {
+func TestG2diagnosticImpl_Init(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
@@ -295,7 +465,7 @@ func TestInit(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestInitWithConfigID(test *testing.T) {
+func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
@@ -307,17 +477,374 @@ func TestInitWithConfigID(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestReinit(test *testing.T) {
+func TestG2diagnosticImpl_Reinit(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(1)
+	initConfigID := int64(testhelpers.TestConfigDataId)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
 	testErrorNoFail(test, ctx, g2diagnostic, err)
 }
 
-func TestDestroy(test *testing.T) {
+func TestG2diagnosticImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	err := g2diagnostic.Destroy(ctx)
 	testError(test, ctx, g2diagnostic, err)
+}
+
+// ----------------------------------------------------------------------------
+// Examples for godoc documentation
+// ----------------------------------------------------------------------------
+
+func ExampleG2diagnosticImpl_CheckDBPerf() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	secondsToRun := 1
+	result, err := g2diagnostic.CheckDBPerf(ctx, secondsToRun)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(truncate(result, 25))
+	// Output: {"numRecordsInserted":...
+}
+
+func ExampleG2diagnosticImpl_ClearLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	err := g2diagnostic.ClearLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_CloseEntityListBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	aSize := 1000
+	entityListBySizeHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	err := g2diagnostic.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_FetchNextEntityBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	aSize := 1
+	entityListBySizeHandle, err := g2diagnostic.GetEntityListBySize(ctx, aSize)
+	if err != nil {
+		fmt.Println(err)
+	}
+	anEntity, _ := g2diagnostic.FetchNextEntityBySize(ctx, entityListBySizeHandle)
+	g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
+	fmt.Println(anEntity)
+	// Output: [{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","ENT_SRC_KEY":"C6063D4396612FBA7324DB0739273BA1FE815C43","ENT_SRC_DESC":"JOHNSON","RECORD_ID":"9001","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"JOHNSON\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"EXAMPLE_DATA_SOURCE\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9001\"}","OBS_ENT_ID":1,"ER_ID":0},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","ENT_SRC_KEY":"C6063D4396612FBA7324DB0739273BA1FE815C43","ENT_SRC_DESC":"JOHNSON","RECORD_ID":"9002","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"JOHNSON\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"EXAMPLE_DATA_SOURCE\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9002\"}","OBS_ENT_ID":1,"ER_ID":0}]
+}
+
+func ExampleG2diagnosticImpl_FindEntitiesByFeatureIDs() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	features := `{"ENTITY_ID":1,"LIB_FEAT_IDS":[1,3,4]}`
+	result, err := g2diagnostic.FindEntitiesByFeatureIDs(ctx, features)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"LIB_FEAT_ID":4,"USAGE_TYPE":"","RES_ENT_ID":2}]
+}
+
+func ExampleG2diagnosticImpl_GetAvailableMemory() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetAvailableMemory(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetDataSourceCounts() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetDataSourceCounts(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"DSRC_ID":1001,"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_ID":3,"ETYPE_CODE":"GENERIC","OBS_ENT_COUNT":2,"DSRC_RECORD_COUNT":3}]
+}
+
+func ExampleG2diagnosticImpl_GetDBInfo() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetDBInfo(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(truncate(result, 52))
+	// Output: {"Hybrid Mode":false,"Database Details":[{"Name":...
+}
+
+func ExampleG2diagnosticImpl_GetEntityDetails() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	entityID := int64(1)
+	includeInternalFeatures := 1
+	result, err := g2diagnostic.GetEntityDetails(ctx, entityID, includeInternalFeatures)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","FEAT_DESC":"JOHNSON"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"DOB","USAGE_TYPE":"","FEAT_DESC":"4/8/1983"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"GENDER","USAGE_TYPE":"","FEAT_DESC":"F"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"ADDRESS","USAGE_TYPE":"","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"PHONE","USAGE_TYPE":"","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"SSN","USAGE_TYPE":"","FEAT_DESC":"053-39-3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"LOGIN_ID","USAGE_TYPE":"","FEAT_DESC":"flavorh"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"No","FTYPE_CODE":"ACCT_NUM","USAGE_TYPE":"CC","FEAT_DESC":"5534202208773608"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|DOB.MMDD_HASH=0804"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|DOB.MMYY_HASH=0483"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|DOB=80804"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|POST=71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","FEAT_DESC":"JNSN|SSN=3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","FEAT_DESC":"ACCT_NUM=5534202208773608"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","FEAT_DESC":"SSN=053-39-3251"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"PHONE_KEY","USAGE_TYPE":"","FEAT_DESC":"2256710796"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","FEAT_DESC":"LOGIN_ID:FLAVORH|"},{"RES_ENT_ID":1,"OBS_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","FEAT_DESC":"SSN:3251|80804|"}]
+}
+
+func ExampleG2diagnosticImpl_GetEntityListBySize() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	entitySize := 1000
+	entityListBySizeHandle, err := g2diagnostic.GetEntityListBySize(ctx, entitySize)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(entityListBySizeHandle > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetEntityResume() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	entityID := int64(1)
+	result, err := g2diagnostic.GetEntityResume(ctx, entityID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9001","ENT_SRC_DESC":"JOHNSON","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"JOHNSON\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"EXAMPLE_DATA_SOURCE\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9001\"}"},{"RES_ENT_ID":1,"REL_ENT_ID":0,"ERRULE_CODE":"","MATCH_KEY":"","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9002","ENT_SRC_DESC":"JOHNSON","JSON_DATA":"{\"SOCIAL_HANDLE\":\"flavorh\",\"DATE_OF_BIRTH\":\"4/8/1983\",\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"SSN_NUMBER\":\"053-39-3251\",\"GENDER\":\"F\",\"srccode\":\"MDMPER\",\"CC_ACCOUNT_NUMBER\":\"5534202208773608\",\"ADDR_CITY\":\"Delhi\",\"DRIVERS_LICENSE_STATE\":\"DE\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"JOHNSON\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"EXAMPLE_DATA_SOURCE\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9002\"}"},{"RES_ENT_ID":1,"REL_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","RECORD_ID":"9003","ENT_SRC_DESC":"Smith","JSON_DATA":"{\"ADDR_STATE\":\"LA\",\"ADDR_POSTAL_CODE\":\"71232\",\"GENDER\":\"M\",\"srccode\":\"MDMPER\",\"ADDR_CITY\":\"Delhi\",\"PHONE_NUMBER\":\"225-671-0796\",\"NAME_LAST\":\"Smith\",\"entityid\":\"284430058\",\"ADDR_LINE1\":\"772 Armstrong RD\",\"DATA_SOURCE\":\"EXAMPLE_DATA_SOURCE\",\"ENTITY_TYPE\":\"GENERIC\",\"DSRC_ACTION\":\"A\",\"RECORD_ID\":\"9003\"}"}]
+}
+
+func ExampleG2diagnosticImpl_GetEntitySizeBreakdown() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	minimumEntitySize := 1
+	includeInternalFeatures := 1
+	result, err := g2diagnostic.GetEntitySizeBreakdown(ctx, minimumEntitySize, includeInternalFeatures)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"ENTITY_SIZE": 1,"ENTITY_COUNT": 2,"NAME": 1.00,"DOB": 0.50,"GENDER": 1.00,"ADDRESS": 1.00,"PHONE": 1.00,"SSN": 0.50,"LOGIN_ID": 0.50,"ACCT_NUM": 0.50,"NAME_KEY": 6.00,"ADDR_KEY": 2.00,"ID_KEY": 1.00,"PHONE_KEY": 1.00,"SEARCH_KEY": 1.00,"MIN_RES_ENT_ID": 1,"MAX_RES_ENT_ID": 2}]
+}
+
+func ExampleG2diagnosticImpl_GetFeature() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	libFeatID := int64(1)
+	result, err := g2diagnostic.GetFeature(ctx, libFeatID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: {"LIB_FEAT_ID":1,"FTYPE_CODE":"NAME","ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":"JOHNSON"},{"FELEM_CODE":"CATEGORY","FELEM_VALUE":"PERSON"},{"FELEM_CODE":"CULTURE","FELEM_VALUE":"ANGLO"},{"FELEM_CODE":"SUR_NAME","FELEM_VALUE":"JOHNSON"},{"FELEM_CODE":"FULL_NAME","FELEM_VALUE":"JOHNSON"}]}
+}
+
+func ExampleG2diagnosticImpl_GetGenericFeatures() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	featureType := "PHONE"
+	maximumEstimatedCount := 10
+	result, err := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: []
+}
+
+func ExampleG2diagnosticImpl_GetLastException() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetLastException(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_GetLastExceptionCode() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetLastExceptionCode(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: 0
+}
+
+func ExampleG2diagnosticImpl_GetLogicalCores() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetLogicalCores(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetMappingStatistics() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	includeInternalFeatures := 1
+	result, err := g2diagnostic.GetMappingStatistics(ctx, includeInternalFeatures)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"NAME","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"JOHNSON","MAX_FEAT_DESC":"Smith"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"DOB","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"4/8/1983","MAX_FEAT_DESC":"4/8/1983"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"GENDER","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"F","MAX_FEAT_DESC":"M"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"ADDRESS","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"772 Armstrong RD Delhi LA 71232","MAX_FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"PHONE","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"225-671-0796","MAX_FEAT_DESC":"225-671-0796"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"SSN","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"053-39-3251","MAX_FEAT_DESC":"053-39-3251"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"LOGIN_ID","USAGE_TYPE":"","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"flavorh","MAX_FEAT_DESC":"flavorh"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"No","FTYPE_CODE":"ACCT_NUM","USAGE_TYPE":"CC","REC_COUNT":1,"REC_PCT":0.5,"UNIQ_COUNT":1,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"5534202208773608","MAX_FEAT_DESC":"5534202208773608"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"NAME_KEY","USAGE_TYPE":"","REC_COUNT":12,"REC_PCT":6.0,"UNIQ_COUNT":12,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"JNSN","MAX_FEAT_DESC":"SM0|POST=71232"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"ADDR_KEY","USAGE_TYPE":"","REC_COUNT":4,"REC_PCT":2.0,"UNIQ_COUNT":2,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"772|ARMSTRNK||71232","MAX_FEAT_DESC":"772|ARMSTRNK||TL"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"ID_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"ACCT_NUM=5534202208773608","MAX_FEAT_DESC":"SSN=053-39-3251"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"PHONE_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":1,"UNIQ_PCT":0.5,"MIN_FEAT_DESC":"2256710796","MAX_FEAT_DESC":"2256710796"},{"DSRC_CODE":"EXAMPLE_DATA_SOURCE","ETYPE_CODE":"GENERIC","DERIVED":"Yes","FTYPE_CODE":"SEARCH_KEY","USAGE_TYPE":"","REC_COUNT":2,"REC_PCT":1.0,"UNIQ_COUNT":2,"UNIQ_PCT":1.0,"MIN_FEAT_DESC":"LOGIN_ID:FLAVORH|","MAX_FEAT_DESC":"SSN:3251|80804|"}]
+}
+
+func ExampleG2diagnosticImpl_GetPhysicalCores() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetPhysicalCores(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_GetRelationshipDetails() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	relationshipID := int64(1)
+	includeInternalFeatures := 1
+	result, err := g2diagnostic.GetRelationshipDetails(ctx, relationshipID, includeInternalFeatures)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME","FEAT_DESC":"JOHNSON"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"DOB","FEAT_DESC":"4/8/1983"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"GENDER","FEAT_DESC":"F"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDRESS","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SSN","FEAT_DESC":"053-39-3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"LOGIN_ID","FEAT_DESC":"flavorh"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ACCT_NUM","FEAT_DESC":"5534202208773608"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|DOB.MMDD_HASH=0804"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|DOB.MMYY_HASH=0483"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|DOB=80804"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|POST=71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"JNSN|SSN=3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ID_KEY","FEAT_DESC":"ACCT_NUM=5534202208773608"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ID_KEY","FEAT_DESC":"SSN=053-39-3251"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE_KEY","FEAT_DESC":"2256710796"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SEARCH_KEY","FEAT_DESC":"LOGIN_ID:FLAVORH|"},{"RES_ENT_ID":1,"ERRULE_CODE":"","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"SEARCH_KEY","FEAT_DESC":"SSN:3251|80804|"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME","FEAT_DESC":"Smith"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"GENDER","FEAT_DESC":"M"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDRESS","FEAT_DESC":"772 Armstrong RD Delhi LA 71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE","FEAT_DESC":"225-671-0796"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|POST=71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|ADDRESS.CITY_STD=TL"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0|PHONE.PHONE_LAST_5=10796"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"NAME_KEY","FEAT_DESC":"SM0"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||TL"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"ADDR_KEY","FEAT_DESC":"772|ARMSTRNK||71232"},{"RES_ENT_ID":2,"ERRULE_CODE":"MFF","MATCH_KEY":"+ADDRESS+PHONE-GENDER","FTYPE_CODE":"PHONE_KEY","FEAT_DESC":"2256710796"}]
+}
+
+func ExampleG2diagnosticImpl_GetResolutionStatistics() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetResolutionStatistics(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: [{"MATCH_LEVEL":3,"MATCH_KEY":"+ADDRESS+PHONE-GENDER","RAW_MATCH_KEYS":[{"MATCH_KEY":"+ADDRESS+PHONE-GENDER"}],"ERRULE_ID":200,"ERRULE_CODE":"MFF","IS_AMBIGUOUS":"No","RECORD_COUNT":1,"MIN_RES_ENT_ID":1,"MAX_RES_ENT_ID":2,"MIN_RES_REL_ID":1,"MAX_RES_REL_ID":1}]
+}
+
+func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	result, err := g2diagnostic.GetTotalSystemMemory(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result > 0) // Dummy output.
+	// Output: true
+}
+
+func ExampleG2diagnosticImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("") // See https://pkg.go.dev/github.com/senzing/go-helpers
+	if err != nil {
+		fmt.Println(err)
+	}
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_InitWithConfigID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	initConfigID := int64(1)
+	verboseLogging := 0
+	err = g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_Reinit() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	initConfigID := int64(testhelpers.TestConfigDataId)
+	err := g2diagnostic.Reinit(ctx, initConfigID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	err := g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
 }

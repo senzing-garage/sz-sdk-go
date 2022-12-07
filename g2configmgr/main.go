@@ -1,11 +1,3 @@
-/*
-Package G2configmgr is a Go wrapper over Senzing's G2Configmgr C binding.
-
-To use G2configmgr, the LD_LIBRARY_PATH environment variable must include
-a path to Senzing's libraries.  Example:
-
-	export LD_LIBRARY_PATH=/opt/senzing/g2/lib
-*/
 package g2configmgr
 
 import (
@@ -18,6 +10,9 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
+/*
+The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
+*/
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	ClearLastException(ctx context.Context) error
@@ -37,12 +32,14 @@ type G2configmgr interface {
 // Constants
 // ----------------------------------------------------------------------------
 
+// Identfier of the g2configmgr component found messages having the format "senzing-6002xxxx".
 const ProductId = 6002
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
+// Message templates for the g2configmgr package.
 var IdMessages = map[int]string{
 	1:    "Enter AddConfig(%s, %s).",
 	2:    "Exit  AddConfig(%s, %s) returned (%d, %v).",
@@ -77,6 +74,28 @@ var IdMessages = map[int]string{
 	4007: "Call to G2ConfigMgr_init(%s, %s, %d) failed. Return code: %d",
 	4008: "Call to G2ConfigMgr_replaceDefaultConfigID(%d, %d) failed. Return code: %d",
 	4009: "Call to G2ConfigMgr_setDefaultConfigID(%d) failed. Return code: %d",
+	5901: "In g2diagnostic_test.go, setup() call to messagelogger.NewSenzingApiLogger() failed.",
+	5902: "In g2diagnostic_test.go, setup() call to g2eg2engineconfigurationjson.BuildSimpleSystemConfigurationJson() failed.",
+	5903: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5904: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5905: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5906: "In g2diagnostic_test.go, setup() call to g2config.Init() failed.",
+	5907: "In g2diagnostic_test.go, setup() call to g2config.Create() failed.",
+	5908: "In g2diagnostic_test.go, setup() call to g2config.AddDataSource() failed.",
+	5909: "In g2diagnostic_test.go, setup() call to g2config.Save() failed.",
+	5910: "In g2diagnostic_test.go, setup() call to g2config.Close() failed.",
+	5911: "In g2diagnostic_test.go, setup() call to g2config.Destroy() failed.",
+	5912: "In g2diagnostic_test.go, setup() call to g2configmgr.Init() failed.",
+	5913: "In g2diagnostic_test.go, setup() call to g2configmgr.AddConfig() failed.",
+	5914: "In g2diagnostic_test.go, setup() call to g2configmgr.SetDefaultConfigID() failed.",
+	5915: "In g2diagnostic_test.go, setup() call to g2configmgr.Destroy() failed.",
+	5916: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5917: "In g2diagnostic_test.go, setup() call to g2engine.AddRecord() failed.",
+	5918: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5931: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5932: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5933: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
 }
 
+// Status strings for specific g2configmgr messages.
 var IdStatuses = map[int]string{}
