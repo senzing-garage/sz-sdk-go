@@ -19,10 +19,15 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 # Recursive assignment ('=')
 
 CC = gcc
+
 # Conditional assignment. ('?=')
 
 SENZING_G2_DIR ?= /opt/senzing/g2
 SENZING_DATABASE_URL ?= postgresql://postgres:postgres@127.0.0.1:5432/G2
+
+# Exports
+
+export SENZING_TOOLS_DATABASE_URL=sqlite3://na:na@/tmp/sqlite/G2C.db
 
 # The first "make" target runs as default.
 
@@ -55,12 +60,15 @@ dependencies:
 
 .PHONY: test
 test:
-#	@go test -v ./...
+	@rm -rf /tmp/sqlite
+	@mkdir  /tmp/sqlite
+	@cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
+	@go test -v ./...
 #	@go test -v ./.
 #	@go test -v ./g2config
 #	@go test -v ./g2configmgr
 #	@go test -v ./g2diagnostic
-	@go test -v ./g2engine
+#	@go test -v ./g2engine
 #	@go test -v ./g2product
 
 
@@ -79,7 +87,7 @@ run:
 .PHONY: update-pkg-cache
 update-pkg-cache:
 	@GOPROXY=https://proxy.golang.org GO111MODULE=on \
-	echo go get $(GO_PACKAGE_NAME)@$(BUILD_TAG)
+	go get $(GO_PACKAGE_NAME)@$(BUILD_TAG)
 
 .PHONY: clean
 clean:

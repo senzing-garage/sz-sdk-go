@@ -127,24 +127,6 @@ func setup() error {
 		return logger.Error(5902, err)
 	}
 
-	// Purge repository.
-
-	aG2engine := &g2engine.G2engineImpl{}
-	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return logger.Error(5903, err)
-	}
-
-	err = aG2engine.PurgeRepository(ctx)
-	if err != nil {
-		return logger.Error(5904, err)
-	}
-
-	err = aG2engine.Destroy(ctx)
-	if err != nil {
-		return logger.Error(5905, err)
-	}
-
 	// Add Data Sources to in-memory Senzing configuration.
 
 	aG2config := &g2config.G2configImpl{}
@@ -202,6 +184,24 @@ func setup() error {
 	err = aG2configmgr.Destroy(ctx)
 	if err != nil {
 		return logger.Error(5915, err)
+	}
+
+	// Purge repository.
+
+	aG2engine := &g2engine.G2engineImpl{}
+	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return logger.Error(5903, err)
+	}
+
+	err = aG2engine.PurgeRepository(ctx)
+	if err != nil {
+		return logger.Error(5904, err)
+	}
+
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return logger.Error(5905, err)
 	}
 
 	// Add records.

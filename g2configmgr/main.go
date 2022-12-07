@@ -79,6 +79,22 @@ var IdMessages = map[int]string{
 	5903: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
 	5904: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
 	5905: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5906: "In g2diagnostic_test.go, setup() call to g2config.Init() failed.",
+	5907: "In g2diagnostic_test.go, setup() call to g2config.Create() failed.",
+	5908: "In g2diagnostic_test.go, setup() call to g2config.AddDataSource() failed.",
+	5909: "In g2diagnostic_test.go, setup() call to g2config.Save() failed.",
+	5910: "In g2diagnostic_test.go, setup() call to g2config.Close() failed.",
+	5911: "In g2diagnostic_test.go, setup() call to g2config.Destroy() failed.",
+	5912: "In g2diagnostic_test.go, setup() call to g2configmgr.Init() failed.",
+	5913: "In g2diagnostic_test.go, setup() call to g2configmgr.AddConfig() failed.",
+	5914: "In g2diagnostic_test.go, setup() call to g2configmgr.SetDefaultConfigID() failed.",
+	5915: "In g2diagnostic_test.go, setup() call to g2configmgr.Destroy() failed.",
+	5916: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5917: "In g2diagnostic_test.go, setup() call to g2engine.AddRecord() failed.",
+	5918: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
+	5931: "In g2diagnostic_test.go, setup() call to g2engine.Init() failed.",
+	5932: "In g2diagnostic_test.go, setup() call to g2engine.PurgeRepository() failed.",
+	5933: "In g2diagnostic_test.go, setup() call to g2engine.Destroy() failed.",
 }
 
 // Status strings for specific g2configmgr messages.

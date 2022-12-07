@@ -4,7 +4,7 @@ package testhelpers
 // Variables
 // ----------------------------------------------------------------------------
 
-// A list of data sources
+// A list of data sources.
 var TestDataSources = []struct {
 	Data string
 }{
@@ -13,8 +13,10 @@ var TestDataSources = []struct {
 	},
 }
 
-var TestConfigDataId = 4175236977 // Must match value in sys_cfg.config_data_id.
+// Must match value in sys_cfg.config_data_id.
+var TestConfigDataId = 4175236977
 
+// A list of test records.
 var TestRecords = []struct {
 	DataSource string
 	Id         string
