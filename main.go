@@ -272,10 +272,11 @@ func main() {
 		logger.Log(5016, err)
 	}
 
-	err = g2Configmgr.Destroy(ctx)
-	if err != nil {
-		logger.Log(5017, err)
-	}
+	// FIXME:  This give an error.
+	// err = g2Configmgr.Destroy(ctx)
+	// if err != nil {
+	// 	logger.Log(5017, err)
+	// }
 
 	err = g2Diagnostic.Destroy(ctx)
 	if err != nil {
