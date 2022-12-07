@@ -11,8 +11,8 @@ the recommendation is not to use it yet.
 The Senzing g2-sdk-go packages provide a Software Development Kit that wraps the
 Senzing C SDK APIs.
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/g2-sdk-go.svg)](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
 [![go-test.yaml](https://github.com/Senzing/g2-sdk-go/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/g2-sdk-go/actions/workflows/go-test.yaml)
 
 ## Overview
@@ -90,7 +90,68 @@ This is important as the compiling of the code expects Senzing to be in `/opt/se
 
         ```
 
-### Create a stack used in testing
+### Configure Senzing
+
+1. Move the "versioned" Senzing data to the system location.
+   Example:
+
+    ```console
+      sudo mv /opt/senzing/data/3.0.0/* /opt/senzing/data/
+
+    ```
+
+1. Create initial configuration.
+   Example:
+
+    ```console
+      sudo mkdir /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/cfgVariant.json     /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/customGn.txt        /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/customOn.txt        /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/customSn.txt        /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/defaultGNRCP.config /etc/opt/senzing
+      sudo cp /opt/senzing/g2/resources/templates/stb.config          /etc/opt/senzing
+
+    ```
+
+### Test using SQLite database
+
+1. Identify git repository.
+
+    ```console
+    export GIT_ACCOUNT=senzing
+    export GIT_REPOSITORY=g2-sdk-go
+    export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
+    export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
+
+    ```
+
+1. Using the environment variables values just set, follow steps in
+   [clone-repository](https://github.com/Senzing/knowledge-base/blob/main/HOWTO/clone-repository.md) to install the Git repository.
+
+1. Run tests.
+
+    ```console
+    cd ${GIT_REPOSITORY_DIR}
+    make test
+
+    ```
+
+1. **Optional:** View the SQLite database.
+   Example:
+
+    ```console
+    docker run \
+        --env SQLITE_DATABASE=G2C.db \
+        --publish 9174:8080 \
+        --rm \
+        --volume /tmp/sqlite:/data \
+        coleifer/sqlite-web
+    ```
+
+   Visit [localhost:9174](http://localhost:9174).
+
+### Test using Docker-compose stack with PostgreSql database
 
 The following instructions show how to bring up a test stack to be used
 in testing the `g2-sdk-go` packages.
@@ -181,3 +242,5 @@ Prefixes:
 1. `6005` - g2hasher
 1. `6006` - g2product
 1. `6007` - g2ssadm
+1. `6008` - test
+1. `6009` - testhelpers
