@@ -63,16 +63,14 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2product G2product, err error) {
 	if err != nil {
-		lastException, _ := g2product.GetLastException(ctx)
 		test.Log("Error:", err.Error())
-		assert.FailNow(test, lastException)
+		assert.FailNow(test, err.Error())
 	}
 }
 
 func testErrorNoFail(test *testing.T, ctx context.Context, g2product G2product, err error) {
 	if err != nil {
-		lastException, _ := g2product.GetLastException(ctx)
-		test.Log("Error:", err.Error(), "LastException:", lastException)
+		test.Log("Error:", err.Error())
 	}
 }
 
@@ -116,28 +114,6 @@ func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
-
-func TestG2productImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2product := getTestObject(ctx, test)
-	g2product.ClearLastException(ctx)
-}
-
-func TestG2productImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2product := getTestObject(ctx, test)
-	actual, err := g2product.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2product, err)
-	printActual(test, actual)
-}
-
-func TestG2productImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2product := getTestObject(ctx, test)
-	actual, err := g2product.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2product, err)
-	printActual(test, actual)
-}
 
 func TestG2productImpl_Init(test *testing.T) {
 	ctx := context.TODO()
@@ -195,17 +171,6 @@ func TestG2productImpl_Destroy(test *testing.T) {
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleG2productImpl_ClearLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
-	ctx := context.TODO()
-	err := g2product.ClearLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2productImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
@@ -215,30 +180,6 @@ func ExampleG2productImpl_Destroy() {
 		fmt.Println(err)
 	}
 	// Output:
-}
-
-func ExampleG2productImpl_GetLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
-	ctx := context.TODO()
-	result, err := g2product.GetLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output:
-}
-
-func ExampleG2productImpl_GetLastExceptionCode() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
-	ctx := context.TODO()
-	result, err := g2product.GetLastExceptionCode(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: 0
 }
 
 func ExampleG2productImpl_Init() {

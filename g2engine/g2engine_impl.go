@@ -54,8 +54,8 @@ func (g2engine *G2engineImpl) getByteArray(size int) []byte {
 
 // Create a new error.
 func (g2engine *G2engineImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
-	lastException, err := g2engine.GetLastException(ctx)
-	defer g2engine.ClearLastException(ctx)
+	lastException, err := g2engine.getLastException(ctx)
+	defer g2engine.clearLastException(ctx)
 	message := lastException
 	if err != nil {
 		message = err.Error()
@@ -88,6 +88,77 @@ func (g2engine *G2engineImpl) traceEntry(errorNumber int, details ...interface{}
 // Trace method exit.
 func (g2engine *G2engineImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2engine.getLogger().Log(errorNumber, details...)
+}
+
+/*
+The clearLastException method erases the last exception message held by the Senzing G2 object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
+func (g2engine *G2engineImpl) clearLastException(ctx context.Context) error {
+	// _DLEXPORT void G2_clearLastException();
+	if g2engine.isTrace {
+		g2engine.traceEntry(11)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	C.G2_clearLastException()
+	if g2engine.isTrace {
+		defer g2engine.traceExit(12, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The getLastException method retrieves the last exception thrown in Senzing's G2.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2Product.
+*/
+func (g2engine *G2engineImpl) getLastException(ctx context.Context) (string, error) {
+	//  _DLEXPORT int G2_getLastException(char *buffer, const size_t bufSize);
+	if g2engine.isTrace {
+		g2engine.traceEntry(79)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	stringBuffer := g2engine.getByteArray(initialByteArraySize)
+	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2engine.getLogger().Error(4038, result, time.Since(entryTime))
+	// }
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	if g2engine.isTrace {
+		defer g2engine.traceExit(80, string(stringBuffer), err, time.Since(entryTime))
+	}
+	return string(stringBuffer), err
+}
+
+/*
+The getLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2Product.
+*/
+func (g2engine *G2engineImpl) getLastExceptionCode(ctx context.Context) (int, error) {
+	//  _DLEXPORT int G2_getLastExceptionCode();
+	if g2engine.isTrace {
+		g2engine.traceEntry(81)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	result := int(C.G2_getLastExceptionCode())
+	if g2engine.isTrace {
+		defer g2engine.traceExit(82, result, err, time.Since(entryTime))
+	}
+	return result, err
 }
 
 // ----------------------------------------------------------------------------
@@ -278,26 +349,6 @@ func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, re
 		defer g2engine.traceExit(10, record, recordQueryList, C.GoString(result.response), err, time.Since(entryTime))
 	}
 	return C.GoString(result.response), err
-}
-
-/*
-The ClearLastException method erases the last exception message held by the Senzing G2 object.
-
-Input
-  - ctx: A context to control lifecycle.
-*/
-func (g2engine *G2engineImpl) ClearLastException(ctx context.Context) error {
-	// _DLEXPORT void G2_clearLastException();
-	if g2engine.isTrace {
-		g2engine.traceEntry(11)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	C.G2_clearLastException()
-	if g2engine.isTrace {
-		defer g2engine.traceExit(12, err, time.Since(entryTime))
-	}
-	return err
 }
 
 /*
@@ -1463,57 +1514,6 @@ func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSo
 }
 
 /*
-The GetLastException method retrieves the last exception thrown in Senzing's G2.
-
-Input
-  - ctx: A context to control lifecycle.
-
-Output
-  - A string containing the error received from Senzing's G2Product.
-*/
-func (g2engine *G2engineImpl) GetLastException(ctx context.Context) (string, error) {
-	//  _DLEXPORT int G2_getLastException(char *buffer, const size_t bufSize);
-	if g2engine.isTrace {
-		g2engine.traceEntry(79)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	stringBuffer := g2engine.getByteArray(initialByteArraySize)
-	C.G2_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	// if result == 0 { // "result" is length of exception message.
-	// 	err = g2engine.getLogger().Error(4038, result, time.Since(entryTime))
-	// }
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if g2engine.isTrace {
-		defer g2engine.traceExit(80, string(stringBuffer), err, time.Since(entryTime))
-	}
-	return string(stringBuffer), err
-}
-
-/*
-The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2.
-
-Input:
-  - ctx: A context to control lifecycle.
-
-Output:
-  - An int containing the error received from Senzing's G2Product.
-*/
-func (g2engine *G2engineImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
-	//  _DLEXPORT int G2_getLastExceptionCode();
-	if g2engine.isTrace {
-		g2engine.traceEntry(81)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	result := int(C.G2_getLastExceptionCode())
-	if g2engine.isTrace {
-		defer g2engine.traceExit(82, result, err, time.Since(entryTime))
-	}
-	return result, err
-}
-
-/*
 The GetRecord method returns a JSON document of a single record from the Senzing repository.
 To control output, use GetRecord_V2() instead.
 
@@ -1768,7 +1768,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
@@ -1799,7 +1799,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - initConfigID: The configuration ID used for the initialization.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
@@ -1877,7 +1877,7 @@ func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error 
 
 /*
 The ProcessRedoRecord method processes the next redo record and returns it.
-Calling ProcessRedoRecord() has the potential to create more redo records in certian situations.
+Calling ProcessRedoRecord() has the potential to create more redo records in certain situations.
 
 Input
   - ctx: A context to control lifecycle.
@@ -1904,7 +1904,7 @@ func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, er
 
 /*
 The ProcessRedoRecordWithInfo method processes the next redo record and returns it and affected entities.
-Calling ProcessRedoRecordWithInfo() has the potential to create more redo records in certian situations.
+Calling ProcessRedoRecordWithInfo() has the potential to create more redo records in certain situations.
 
 Input
   - ctx: A context to control lifecycle.

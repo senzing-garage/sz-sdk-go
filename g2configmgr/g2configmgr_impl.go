@@ -55,8 +55,8 @@ func (g2configmgr *G2configmgrImpl) getByteArray(size int) []byte {
 
 // Create a new error.
 func (g2configmgr *G2configmgrImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
-	lastException, err := g2configmgr.GetLastException(ctx)
-	defer g2configmgr.ClearLastException(ctx)
+	lastException, err := g2configmgr.getLastException(ctx)
+	defer g2configmgr.clearLastException(ctx)
 	message := lastException
 	if err != nil {
 		message = err.Error()
@@ -89,6 +89,77 @@ func (g2configmgr *G2configmgrImpl) traceEntry(errorNumber int, details ...inter
 // Trace method exit.
 func (g2configmgr *G2configmgrImpl) traceExit(errorNumber int, details ...interface{}) {
 	g2configmgr.getLogger().Log(errorNumber, details...)
+}
+
+/*
+The clearLastException method erases the last exception message held by the Senzing G2ConfigMgr object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
+func (g2configmgr *G2configmgrImpl) clearLastException(ctx context.Context) error {
+	// _DLEXPORT void G2Config_clearLastException()
+	if g2configmgr.isTrace {
+		g2configmgr.traceEntry(3)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	C.G2ConfigMgr_clearLastException()
+	if g2configmgr.isTrace {
+		defer g2configmgr.traceExit(4, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The getLastException method retrieves the last exception thrown in Senzing's G2ConfigMgr.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2ConfigMgr.
+*/
+func (g2configmgr *G2configmgrImpl) getLastException(ctx context.Context) (string, error) {
+	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
+	if g2configmgr.isTrace {
+		g2configmgr.traceEntry(13)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
+	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2configmgr.getLogger().Error(4006, result, time.Since(entryTime))
+	// }
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	if g2configmgr.isTrace {
+		defer g2configmgr.traceExit(14, string(stringBuffer), err, time.Since(entryTime))
+	}
+	return string(stringBuffer), err
+}
+
+/*
+The getLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2ConfigMgr.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2ConfigMgr.
+*/
+func (g2configmgr *G2configmgrImpl) getLastExceptionCode(ctx context.Context) (int, error) {
+	//  _DLEXPORT int G2Config_getLastExceptionCode();
+	if g2configmgr.isTrace {
+		g2configmgr.traceEntry(15)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	result := int(C.G2ConfigMgr_getLastExceptionCode())
+	if g2configmgr.isTrace {
+		defer g2configmgr.traceExit(16, result, err, time.Since(entryTime))
+	}
+	return result, err
 }
 
 // ----------------------------------------------------------------------------
@@ -125,26 +196,6 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 		defer g2configmgr.traceExit(2, configStr, configComments, int64(C.longlong(result.configID)), err, time.Since(entryTime))
 	}
 	return int64(C.longlong(result.configID)), err
-}
-
-/*
-The ClearLastException method erases the last exception message held by the Senzing G2ConfigMgr object.
-
-Input
-  - ctx: A context to control lifecycle.
-*/
-func (g2configmgr *G2configmgrImpl) ClearLastException(ctx context.Context) error {
-	// _DLEXPORT void G2Config_clearLastException()
-	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(3)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	C.G2ConfigMgr_clearLastException()
-	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(4, err, time.Since(entryTime))
-	}
-	return err
 }
 
 /*
@@ -255,64 +306,13 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 }
 
 /*
-The GetLastException method retrieves the last exception thrown in Senzing's G2ConfigMgr.
-
-Input
-  - ctx: A context to control lifecycle.
-
-Output
-  - A string containing the error received from Senzing's G2ConfigMgr.
-*/
-func (g2configmgr *G2configmgrImpl) GetLastException(ctx context.Context) (string, error) {
-	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
-	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(13)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	stringBuffer := g2configmgr.getByteArray(initialByteArraySize)
-	C.G2ConfigMgr_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	// if result == 0 { // "result" is length of exception message.
-	// 	err = g2configmgr.getLogger().Error(4006, result, time.Since(entryTime))
-	// }
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(14, string(stringBuffer), err, time.Since(entryTime))
-	}
-	return string(stringBuffer), err
-}
-
-/*
-The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2ConfigMgr.
-
-Input:
-  - ctx: A context to control lifecycle.
-
-Output:
-  - An int containing the error received from Senzing's G2ConfigMgr.
-*/
-func (g2configmgr *G2configmgrImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
-	//  _DLEXPORT int G2Config_getLastExceptionCode();
-	if g2configmgr.isTrace {
-		g2configmgr.traceEntry(15)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	result := int(C.G2ConfigMgr_getLastExceptionCode())
-	if g2configmgr.isTrace {
-		defer g2configmgr.traceExit(16, result, err, time.Since(entryTime))
-	}
-	return result, err
-}
-
-/*
 The Init method initializes the Senzing G2ConfigMgr object.
 It must be called prior to any other calls.
 
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {

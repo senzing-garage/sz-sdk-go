@@ -54,8 +54,8 @@ func (g2diagnostic *G2diagnosticImpl) getByteArray(size int) []byte {
 
 // Create a new error.
 func (g2diagnostic *G2diagnosticImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
-	lastException, err := g2diagnostic.GetLastException(ctx)
-	defer g2diagnostic.ClearLastException(ctx)
+	lastException, err := g2diagnostic.getLastException(ctx)
+	defer g2diagnostic.clearLastException(ctx)
 	message := lastException
 	if err != nil {
 		message = err.Error()
@@ -90,6 +90,77 @@ func (g2diagnostic *G2diagnosticImpl) traceExit(errorNumber int, details ...inte
 	g2diagnostic.getLogger().Log(errorNumber, details...)
 }
 
+/*
+The clearLastException method erases the last exception message held by the Senzing G2Config object.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
+func (g2diagnostic *G2diagnosticImpl) clearLastException(ctx context.Context) error {
+	// _DLEXPORT void G2Diagnostic_clearLastException();
+	if g2diagnostic.isTrace {
+		g2diagnostic.traceEntry(3)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	C.G2Diagnostic_clearLastException()
+	if g2diagnostic.isTrace {
+		defer g2diagnostic.traceExit(4, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The getLastException method retrieves the last exception thrown in Senzing's G2Diagnostic.
+
+Input
+  - ctx: A context to control lifecycle.
+
+Output
+  - A string containing the error received from Senzing's G2Config.
+*/
+func (g2diagnostic *G2diagnosticImpl) getLastException(ctx context.Context) (string, error) {
+	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
+	if g2diagnostic.isTrace {
+		g2diagnostic.traceEntry(31)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
+	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
+	// if result == 0 { // "result" is length of exception message.
+	// 	err = g2diagnostic.getLogger().Error(4014, result, time.Since(entryTime))
+	// }
+	stringBuffer = bytes.Trim(stringBuffer, "\x00")
+	if g2diagnostic.isTrace {
+		defer g2diagnostic.traceExit(32, string(stringBuffer), err, time.Since(entryTime))
+	}
+	return string(stringBuffer), err
+}
+
+/*
+The getLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Diagnostic.
+
+Input:
+  - ctx: A context to control lifecycle.
+
+Output:
+  - An int containing the error received from Senzing's G2Config.
+*/
+func (g2diagnostic *G2diagnosticImpl) getLastExceptionCode(ctx context.Context) (int, error) {
+	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
+	if g2diagnostic.isTrace {
+		g2diagnostic.traceEntry(33)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	result := int(C.G2Diagnostic_getLastExceptionCode())
+	if g2diagnostic.isTrace {
+		defer g2diagnostic.traceExit(34, result, err, time.Since(entryTime))
+	}
+	return result, err
+}
+
 // ----------------------------------------------------------------------------
 // Interface methods
 // ----------------------------------------------------------------------------
@@ -122,26 +193,6 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	}
 	return C.GoString(result.response), err
 
-}
-
-/*
-The ClearLastException method erases the last exception message held by the Senzing G2Config object.
-
-Input
-  - ctx: A context to control lifecycle.
-*/
-func (g2diagnostic *G2diagnosticImpl) ClearLastException(ctx context.Context) error {
-	// _DLEXPORT void G2Diagnostic_clearLastException();
-	if g2diagnostic.isTrace {
-		g2diagnostic.traceEntry(3)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	C.G2Diagnostic_clearLastException()
-	if g2diagnostic.isTrace {
-		defer g2diagnostic.traceExit(4, err, time.Since(entryTime))
-	}
-	return err
 }
 
 /*
@@ -513,57 +564,6 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 }
 
 /*
-The GetLastException method retrieves the last exception thrown in Senzing's G2Diagnostic.
-
-Input
-  - ctx: A context to control lifecycle.
-
-Output
-  - A string containing the error received from Senzing's G2Config.
-*/
-func (g2diagnostic *G2diagnosticImpl) GetLastException(ctx context.Context) (string, error) {
-	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
-	if g2diagnostic.isTrace {
-		g2diagnostic.traceEntry(31)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
-	C.G2Diagnostic_getLastException((*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	// if result == 0 { // "result" is length of exception message.
-	// 	err = g2diagnostic.getLogger().Error(4014, result, time.Since(entryTime))
-	// }
-	stringBuffer = bytes.Trim(stringBuffer, "\x00")
-	if g2diagnostic.isTrace {
-		defer g2diagnostic.traceExit(32, string(stringBuffer), err, time.Since(entryTime))
-	}
-	return string(stringBuffer), err
-}
-
-/*
-The GetLastExceptionCode method retrieves the code of the last exception thrown in Senzing's G2Diagnostic.
-
-Input:
-  - ctx: A context to control lifecycle.
-
-Output:
-  - An int containing the error received from Senzing's G2Config.
-*/
-func (g2diagnostic *G2diagnosticImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
-	//  _DLEXPORT int G2Diagnostic_getLastExceptionCode();
-	if g2diagnostic.isTrace {
-		g2diagnostic.traceEntry(33)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	result := int(C.G2Diagnostic_getLastExceptionCode())
-	if g2diagnostic.isTrace {
-		defer g2diagnostic.traceExit(34, result, err, time.Since(entryTime))
-	}
-	return result, err
-}
-
-/*
 The GetLogicalCores method returns the number of logical cores on the host system.
 
 Input
@@ -724,7 +724,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
@@ -755,7 +755,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - initConfigID: The configuration ID used for the initialization.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */

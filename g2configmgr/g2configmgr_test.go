@@ -101,16 +101,14 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
 	if err != nil {
-		lastException, _ := g2configmgr.GetLastException(ctx)
 		test.Log("Error:", err.Error())
-		assert.FailNow(test, lastException)
+		assert.FailNow(test, err.Error())
 	}
 }
 
 func testErrorNoFail(test *testing.T, ctx context.Context, g2configmgr G2configmgr, err error) {
 	if err != nil {
-		lastException, _ := g2configmgr.GetLastException(ctx)
-		test.Log("Error:", err.Error(), "LastException:", lastException)
+		test.Log("Error:", err.Error())
 	}
 }
 
@@ -286,13 +284,6 @@ func TestG2configmgrImpl_AddConfig(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestG2configmgrImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2configmgr := getTestObject(ctx, test)
-	err := g2configmgr.ClearLastException(ctx)
-	testError(test, ctx, g2configmgr, err)
-}
-
 func TestG2configmgrImpl_GetConfig(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
@@ -322,22 +313,6 @@ func TestG2configmgrImpl_GetDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
 	actual, err := g2configmgr.GetDefaultConfigID(ctx)
-	testError(test, ctx, g2configmgr, err)
-	printActual(test, actual)
-}
-
-func TestG2configmgrImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2configmgr := getTestObject(ctx, test)
-	actual, err := g2configmgr.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2configmgr, err)
-	printActual(test, actual)
-}
-
-func TestG2configmgrImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2configmgr := getTestObject(ctx, test)
-	actual, err := g2configmgr.GetLastExceptionCode(ctx)
 	testError(test, ctx, g2configmgr, err)
 	printActual(test, actual)
 }
@@ -425,17 +400,6 @@ func ExampleG2configmgrImpl_AddConfig() {
 	// Output: true
 }
 
-func ExampleG2configmgrImpl_ClearLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
-	ctx := context.TODO()
-	g2configmgr := getG2Configmgr(ctx)
-	err := g2configmgr.ClearLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2configmgrImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
 	ctx := context.TODO()
@@ -485,30 +449,6 @@ func ExampleG2configmgrImpl_GetDefaultConfigID() {
 	}
 	fmt.Println(configID > 0) // Dummy output.
 	// Output: true
-}
-
-func ExampleG2configmgrImpl_GetLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
-	ctx := context.TODO()
-	g2configmgr := getG2Configmgr(ctx)
-	result, err := g2configmgr.GetLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output:
-}
-
-func ExampleG2configmgrImpl_GetLastExceptionCode() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
-	ctx := context.TODO()
-	g2configmgr := getG2Configmgr(ctx)
-	result, err := g2configmgr.GetLastExceptionCode(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: 0
 }
 
 func ExampleG2configmgrImpl_Init() {
