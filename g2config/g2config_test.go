@@ -61,16 +61,14 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2config G2config, err error) {
 	if err != nil {
-		lastException, _ := g2config.GetLastException(ctx)
 		test.Log("Error:", err.Error())
-		assert.FailNow(test, lastException)
+		assert.FailNow(test, err.Error())
 	}
 }
 
 func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, err error) {
 	if err != nil {
-		lastException, _ := g2config.GetLastException(ctx)
-		test.Log("Error:", err.Error(), "LastException:", lastException)
+		test.Log("Error:", err.Error())
 	}
 }
 
@@ -101,13 +99,6 @@ func TestG2configImpl_AddDataSource(test *testing.T) {
 	testError(test, ctx, g2config, err)
 	printActual(test, actual)
 	err = g2config.Close(ctx, configHandle)
-	testError(test, ctx, g2config, err)
-}
-
-func TestG2configImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx, test)
-	err := g2config.ClearLastException(ctx)
 	testError(test, ctx, g2config, err)
 }
 
@@ -156,22 +147,6 @@ func TestG2configImpl_DeleteDataSource(test *testing.T) {
 
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
-}
-
-func TestG2configImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx, test)
-	actual, err := g2config.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2config, err)
-	printActual(test, actual)
-}
-
-func TestG2configImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx, test)
-	actual, err := g2config.GetLastExceptionCode(ctx)
-	testError(test, ctx, g2config, err)
-	printActual(test, actual)
 }
 
 func TestG2configImpl_Init(test *testing.T) {
@@ -246,17 +221,6 @@ func ExampleG2configImpl_AddDataSource() {
 	// Output: {"DSRC_ID":1001}
 }
 
-func ExampleG2configImpl_ClearLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	err := g2config.ClearLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2configImpl_Close() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
 	g2config := &G2configImpl{}
@@ -309,30 +273,6 @@ func ExampleG2configImpl_Destroy() {
 		fmt.Println(err)
 	}
 	// Output:
-}
-
-func ExampleG2configImpl_GetLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	result, err := g2config.GetLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output:
-}
-
-func ExampleG2configImpl_GetLastExceptionCode() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	result, err := g2config.GetLastExceptionCode(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: 0
 }
 
 func ExampleG2configImpl_Init() {

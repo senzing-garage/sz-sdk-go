@@ -80,16 +80,14 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
 	if err != nil {
-		lastException, _ := g2diagnostic.GetLastException(ctx)
 		test.Log("Error:", err.Error())
-		assert.FailNow(test, lastException)
+		assert.FailNow(test, err.Error())
 	}
 }
 
 func testErrorNoFail(test *testing.T, ctx context.Context, g2diagnostic G2diagnostic, err error) {
 	if err != nil {
-		lastException, _ := g2diagnostic.GetLastException(ctx)
-		test.Log("Error:", err.Error(), "LastException:", lastException)
+		test.Log("Error:", err.Error())
 	}
 }
 
@@ -283,12 +281,6 @@ func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestG2diagnosticImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	g2diagnostic.ClearLastException(ctx)
-}
-
 func TestG2diagnosticImpl_EntityListBySize(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
@@ -380,22 +372,6 @@ func TestG2diagnosticImpl_GetGenericFeatures(test *testing.T) {
 	featureType := "PHONE"
 	maximumEstimatedCount := 10
 	actual, err := g2diagnostic.GetGenericFeatures(ctx, featureType, maximumEstimatedCount)
-	testError(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-	printActual(test, actual)
-}
-
-func TestG2diagnosticImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := getTestObject(ctx, test)
-	actual, err := g2diagnostic.GetLastExceptionCode(ctx)
 	testError(test, ctx, g2diagnostic, err)
 	printActual(test, actual)
 }
@@ -507,17 +483,6 @@ func ExampleG2diagnosticImpl_CheckDBPerf() {
 	}
 	fmt.Println(truncate(result, 25))
 	// Output: {"numRecordsInserted":...
-}
-
-func ExampleG2diagnosticImpl_ClearLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	ctx := context.TODO()
-	g2diagnostic := getG2Diagnostic(ctx)
-	err := g2diagnostic.ClearLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
 }
 
 func ExampleG2diagnosticImpl_CloseEntityListBySize() {
@@ -690,30 +655,6 @@ func ExampleG2diagnosticImpl_GetGenericFeatures() {
 	}
 	fmt.Println(result)
 	// Output: []
-}
-
-func ExampleG2diagnosticImpl_GetLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	ctx := context.TODO()
-	g2diagnostic := getG2Diagnostic(ctx)
-	result, err := g2diagnostic.GetLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output:
-}
-
-func ExampleG2diagnosticImpl_GetLastExceptionCode() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	ctx := context.TODO()
-	g2diagnostic := getG2Diagnostic(ctx)
-	result, err := g2diagnostic.GetLastExceptionCode(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: 0
 }
 
 func ExampleG2diagnosticImpl_GetLogicalCores() {

@@ -20,7 +20,6 @@ type G2engine interface {
 	AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error)
 	AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error)
 	CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error)
-	ClearLastException(ctx context.Context) error
 	CloseExport(ctx context.Context, responseHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error
@@ -54,8 +53,6 @@ type G2engine interface {
 	GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
 	GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	GetLastException(ctx context.Context) (string, error)
-	GetLastExceptionCode(ctx context.Context) (int, error)
 	GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)

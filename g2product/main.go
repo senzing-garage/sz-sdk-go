@@ -12,10 +12,7 @@ import (
 
 // The G2product interface is a Golang representation of Senzing's libg2product.h
 type G2product interface {
-	ClearLastException(ctx context.Context) error
 	Destroy(ctx context.Context) error
-	GetLastException(ctx context.Context) (string, error)
-	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error

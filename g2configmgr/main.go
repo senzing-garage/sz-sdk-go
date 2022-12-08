@@ -15,13 +15,10 @@ The G2configmgr interface is a Golang representation of Senzing's libg2configmgr
 */
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
-	ClearLastException(ctx context.Context) error
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
-	GetLastException(ctx context.Context) (string, error)
-	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error

@@ -52,8 +52,8 @@ func (g2product *G2productImpl) getByteArray(size int) []byte {
 
 // Create a new error.
 func (g2product *G2productImpl) newError(ctx context.Context, errorNumber int, details ...interface{}) error {
-	lastException, err := g2product.GetLastException(ctx)
-	defer g2product.ClearLastException(ctx)
+	lastException, err := g2product.getLastException(ctx)
+	defer g2product.clearLastException(ctx)
 	message := lastException
 	if err != nil {
 		message = err.Error()
@@ -88,17 +88,13 @@ func (g2product *G2productImpl) traceExit(errorNumber int, details ...interface{
 	g2product.getLogger().Log(errorNumber, details...)
 }
 
-// ----------------------------------------------------------------------------
-// Interface methods
-// ----------------------------------------------------------------------------
-
 /*
-The ClearLastException method erases the last exception message held by the Senzing G2Config object.
+The clearLastException method erases the last exception message held by the Senzing G2Config object.
 
 Input
   - ctx: A context to control lifecycle.
 */
-func (g2product *G2productImpl) ClearLastException(ctx context.Context) error {
+func (g2product *G2productImpl) clearLastException(ctx context.Context) error {
 	// _DLEXPORT void G2Config_clearLastException();
 	if g2product.isTrace {
 		g2product.traceEntry(1)
@@ -113,31 +109,7 @@ func (g2product *G2productImpl) ClearLastException(ctx context.Context) error {
 }
 
 /*
-The Destroy method will destroy and perform cleanup for the Senzing G2Product object.
-It should be called after all other calls are complete.
-
-Input
-  - ctx: A context to control lifecycle.
-*/
-func (g2product *G2productImpl) Destroy(ctx context.Context) error {
-	// _DLEXPORT int G2Config_destroy();
-	if g2product.isTrace {
-		g2product.traceEntry(3)
-	}
-	entryTime := time.Now()
-	var err error = nil
-	result := C.G2Product_destroy()
-	if result != 0 {
-		err = g2product.newError(ctx, 4001, result, time.Since(entryTime))
-	}
-	if g2product.isTrace {
-		defer g2product.traceExit(4, err, time.Since(entryTime))
-	}
-	return err
-}
-
-/*
-The GetLastException method retrieves the last exception thrown in Senzing's G2Product.
+The getLastException method retrieves the last exception thrown in Senzing's G2Product.
 
 Input
   - ctx: A context to control lifecycle.
@@ -145,7 +117,7 @@ Input
 Output
   - A string containing the error received from Senzing's G2Product.
 */
-func (g2product *G2productImpl) GetLastException(ctx context.Context) (string, error) {
+func (g2product *G2productImpl) getLastException(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Config_getLastException(char *buffer, const size_t bufSize);
 	if g2product.isTrace {
 		g2product.traceEntry(5)
@@ -173,7 +145,7 @@ Input:
 Output:
   - An int containing the error received from Senzing's G2Product.
 */
-func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, error) {
+func (g2product *G2productImpl) getLastExceptionCode(ctx context.Context) (int, error) {
 	//  _DLEXPORT int G2Config_getLastExceptionCode();
 	if g2product.isTrace {
 		g2product.traceEntry(7)
@@ -187,6 +159,34 @@ func (g2product *G2productImpl) GetLastExceptionCode(ctx context.Context) (int, 
 	return result, err
 }
 
+// ----------------------------------------------------------------------------
+// Interface methods
+// ----------------------------------------------------------------------------
+
+/*
+The Destroy method will destroy and perform cleanup for the Senzing G2Product object.
+It should be called after all other calls are complete.
+
+Input
+  - ctx: A context to control lifecycle.
+*/
+func (g2product *G2productImpl) Destroy(ctx context.Context) error {
+	// _DLEXPORT int G2Config_destroy();
+	if g2product.isTrace {
+		g2product.traceEntry(3)
+	}
+	entryTime := time.Now()
+	var err error = nil
+	result := C.G2Product_destroy()
+	if result != 0 {
+		err = g2product.newError(ctx, 4001, result, time.Since(entryTime))
+	}
+	if g2product.isTrace {
+		defer g2product.traceExit(4, err, time.Since(entryTime))
+	}
+	return err
+}
+
 /*
 The Init method initializes the Senzing G2Product object.
 It must be called prior to any other calls.
@@ -194,7 +194,7 @@ It must be called prior to any other calls.
 Input
   - ctx: A context to control lifecycle.
   - moduleName: A name for the auditing node, to help identify it within system logs.
-  - iniParams: A JSON string containing configuration paramters.
+  - iniParams: A JSON string containing configuration parameters.
   - verboseLogging: A flag to enable deeper logging of the G2 processing. 0 for no Senzing logging; 1 for logging.
 */
 func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {

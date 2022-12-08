@@ -79,16 +79,14 @@ func printActual(test *testing.T, actual interface{}) {
 
 func testError(test *testing.T, ctx context.Context, g2engine G2engine, err error) {
 	if err != nil {
-		lastException, _ := g2engine.GetLastException(ctx)
 		test.Log("Error:", err.Error())
-		assert.FailNow(test, lastException)
+		assert.FailNow(test, err.Error())
 	}
 }
 
 func testErrorNoFail(test *testing.T, ctx context.Context, g2engine G2engine, err error) {
 	if err != nil {
-		lastException, _ := g2engine.GetLastException(ctx)
-		test.Log("Error:", err.Error(), "LastException:", lastException)
+		test.Log("Error:", err.Error())
 	}
 }
 
@@ -314,13 +312,6 @@ func TestG2engineImpl_CheckRecord(test *testing.T) {
 	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
-}
-
-func TestG2engineImpl_ClearLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.ClearLastException(ctx)
-	testError(test, ctx, g2engine, err)
 }
 
 // FAIL:
@@ -649,22 +640,6 @@ func TestG2engineImpl_GetEntityByRecordID_V2(test *testing.T) {
 	recordID := "111"
 	var flags int64 = 0
 	actual, err := g2engine.GetEntityByRecordID_V2(ctx, dataSourceCode, recordID, flags)
-	testError(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetLastException(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetLastException(ctx)
-	testErrorNoFail(test, ctx, g2engine, err)
-	printActual(test, actual)
-}
-
-func TestG2engineImpl_GetLastExceptionCode(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	actual, err := g2engine.GetLastExceptionCode(ctx)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -1134,8 +1109,8 @@ func ExampleG2engineImpl_AddRecordWithReturnedRecordID() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("Length of record identifier is %d hexidecimal characters.\n", len(result))
-	// Output: Length of record identifier is 40 hexidecimal characters.
+	fmt.Printf("Length of record identifier is %d hexadecimal characters.\n", len(result))
+	// Output: Length of record identifier is 40 hexadecimal characters.
 }
 
 func ExampleG2engineImpl_CheckRecord() {
@@ -1150,17 +1125,6 @@ func ExampleG2engineImpl_CheckRecord() {
 	}
 	fmt.Println(result)
 	// Output: {"CHECK_RECORD_RESPONSE":[{"DSRC_CODE":"TEST","RECORD_ID":"111","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","MATCH_KEY":"","ERRULE_CODE":"","ERRULE_ID":0,"CANDIDATE_MATCH":"N","NON_GENERIC_CANDIDATE_MATCH":"N"}]}
-}
-
-func ExampleG2engineImpl_ClearLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	ctx := context.TODO()
-	g2engine := getG2Engine(ctx)
-	err := g2engine.ClearLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
 }
 
 func ExampleG2engineImpl_CloseExport() {
@@ -1654,30 +1618,6 @@ func ExampleG2engineImpl_GetEntityByRecordID_V2() {
 	}
 	fmt.Println(result)
 	// Output: {"RESOLVED_ENTITY":{"ENTITY_ID":1}}
-}
-
-func ExampleG2engineImpl_GetLastException() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	ctx := context.TODO()
-	g2engine := getG2Engine(ctx)
-	result, err := g2engine.GetLastException(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output:
-}
-
-func ExampleG2engineImpl_GetLastExceptionCode() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	ctx := context.TODO()
-	g2engine := getG2Engine(ctx)
-	result, err := g2engine.GetLastExceptionCode(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: 0
 }
 
 func ExampleG2engineImpl_GetRecord() {

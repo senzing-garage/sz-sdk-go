@@ -13,13 +13,10 @@ import (
 // The G2config interface is a Golang representation of Senzing's libg2config.h
 type G2config interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
-	ClearLastException(ctx context.Context) error
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
 	Destroy(ctx context.Context) error
-	GetLastException(ctx context.Context) (string, error)
-	GetLastExceptionCode(ctx context.Context) (int, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
