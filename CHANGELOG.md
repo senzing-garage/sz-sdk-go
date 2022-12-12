@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.4] - 2022-12-12
+
+### Changed in 0.2.4
+
+- Make getLastException(), getLastExceptionCode(), and clearLastException() private
+- Added code to support *goroutines*
+
 ## [0.2.3] - 2022-12-08
 
 ### Changed in 0.2.3

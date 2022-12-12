@@ -12,6 +12,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -172,6 +173,8 @@ Input
 */
 func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(3)
 	}
@@ -199,6 +202,8 @@ Input
 */
 func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(9, moduleName, iniParams, verboseLogging)
 	}
@@ -230,6 +235,8 @@ Output
 */
 func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(11)
 	}
@@ -250,6 +257,8 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(13, logLevel)
 	}
@@ -277,6 +286,8 @@ Output
 */
 func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseFile(const char* licenseFilePath, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(15, licenseFilePath)
 	}
@@ -309,6 +320,8 @@ Output
 */
 func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error) {
 	// _DLEXPORT int G2Product_validateLicenseStringBase64(const char* licenseString, char **errorBuf, size_t *errorBufSize, void *(*resizeFunc)(void *ptr,size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(17, licenseString)
 	}
@@ -338,6 +351,8 @@ Output
 */
 func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
 	// _DLEXPORT char* G2Product_license();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2product.isTrace {
 		g2product.traceEntry(19)
 	}

@@ -131,7 +131,6 @@ func TestMain(m *testing.M) {
 }
 
 func setup() error {
-	var err error = nil
 	ctx := context.TODO()
 	now := time.Now()
 	moduleName := "Test module name"

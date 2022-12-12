@@ -12,6 +12,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -178,6 +179,8 @@ Output
 */
 func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error) {
 	// _DLEXPORT int G2Config_addDataSource(ConfigHandle configHandle, const char *inputJson, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(1, configHandle, inputJson)
 	}
@@ -205,6 +208,8 @@ Input
 */
 func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(5, configHandle)
 	}
@@ -233,6 +238,8 @@ Output
 */
 func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	// _DLEXPORT int G2Config_create(ConfigHandle* configHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(7)
 	}
@@ -259,6 +266,8 @@ Input
 */
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
 	// _DLEXPORT int G2Config_deleteDataSource(ConfigHandle configHandle, const char *inputJson);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(9, configHandle, inputJson)
 	}
@@ -285,6 +294,8 @@ Input
 */
 func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(11)
 	}
@@ -312,6 +323,8 @@ Input
 */
 func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(17, moduleName, iniParams, verboseLogging)
 	}
@@ -345,6 +358,8 @@ Output
 */
 func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_listDataSources(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(19, configHandle)
 	}
@@ -371,6 +386,8 @@ Input
 */
 func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
 	// _DLEXPORT int G2Config_load(const char *jsonConfig,ConfigHandle* configHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(21, configHandle, jsonConfig)
 	}
@@ -402,6 +419,8 @@ Output
 */
 func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (string, error) {
 	// _DLEXPORT int G2Config_save(ConfigHandle configHandle, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(23, configHandle)
 	}
@@ -425,6 +444,8 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (g2config *G2configImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2config.isTrace {
 		g2config.traceEntry(25, logLevel)
 	}

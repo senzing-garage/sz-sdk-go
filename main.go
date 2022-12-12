@@ -50,7 +50,6 @@ var buildIteration string = "0"
 // ----------------------------------------------------------------------------
 
 func getG2config(ctx context.Context) (g2config.G2config, error) {
-	var err error = nil
 	result := g2config.G2configImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -63,7 +62,6 @@ func getG2config(ctx context.Context) (g2config.G2config, error) {
 }
 
 func getG2configmgr(ctx context.Context) (g2configmgr.G2configmgr, error) {
-	var err error = nil
 	result := g2configmgr.G2configmgrImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -76,7 +74,6 @@ func getG2configmgr(ctx context.Context) (g2configmgr.G2configmgr, error) {
 }
 
 func getG2diagnostic(ctx context.Context) (g2diagnostic.G2diagnostic, error) {
-	var err error = nil
 	result := g2diagnostic.G2diagnosticImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -89,7 +86,6 @@ func getG2diagnostic(ctx context.Context) (g2diagnostic.G2diagnostic, error) {
 }
 
 func getG2engine(ctx context.Context) (g2engine.G2engine, error) {
-	var err error = nil
 	result := g2engine.G2engineImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -102,7 +98,6 @@ func getG2engine(ctx context.Context) (g2engine.G2engine, error) {
 }
 
 func getG2product(ctx context.Context) (g2product.G2product, error) {
-	var err error = nil
 	result := g2product.G2productImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
@@ -121,8 +116,6 @@ func getG2product(ctx context.Context) (g2product.G2product, error) {
 func main() {
 	ctx := context.TODO()
 	now := time.Now()
-
-	return
 
 	// Randomize random number generator.
 

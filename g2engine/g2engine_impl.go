@@ -14,6 +14,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -177,6 +178,8 @@ Input
 */
 func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_addRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(1, dataSourceCode, recordID, jsonData, loadID)
 	}
@@ -217,6 +220,8 @@ Output
 */
 func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(3, dataSourceCode, recordID, jsonData, loadID, flags)
 	}
@@ -258,6 +263,8 @@ Output
 */
 func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_addRecordWithInfoWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, const long long flags, char *recordIDBuf, const size_t recordIDBufSize, char **responseBuf, size_t *responseBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(5, dataSourceCode, jsonData, loadID, flags)
 	}
@@ -294,6 +301,8 @@ Output
 */
 func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error) {
 	//  _DLEXPORT int G2_addRecordWithReturnedRecordID(const char* dataSourceCode, const char* jsonData, const char *loadID, char *recordIDBuf, const size_t bufSize);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(7, dataSourceCode, jsonData, loadID)
 	}
@@ -332,6 +341,8 @@ Output
 */
 func (g2engine *G2engineImpl) CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error) {
 	//  _DLEXPORT int G2_checkRecord(const char *record, const char* recordQueryList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(9, record, recordQueryList)
 	}
@@ -362,6 +373,8 @@ Input
 */
 func (g2engine *G2engineImpl) CloseExport(ctx context.Context, responseHandle uintptr) error {
 	//  _DLEXPORT int G2_closeExport(ExportHandle responseHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(13, responseHandle)
 	}
@@ -388,6 +401,8 @@ Output
 */
 func (g2engine *G2engineImpl) CountRedoRecords(ctx context.Context) (int64, error) {
 	//  _DLEXPORT long long G2_countRedoRecords();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(15)
 	}
@@ -412,6 +427,8 @@ Input
 */
 func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error {
 	//  _DLEXPORT int G2_deleteRecord(const char* dataSourceCode, const char* recordID, const char* loadID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(17, dataSourceCode, recordID, loadID)
 	}
@@ -450,6 +467,8 @@ Output
 */
 func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_deleteRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(19, dataSourceCode, recordID, loadID, flags)
 	}
@@ -480,6 +499,8 @@ Input
 */
 func (g2engine *G2engineImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2_destroy();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(21)
 	}
@@ -506,6 +527,8 @@ Output
 */
 func (g2engine *G2engineImpl) ExportConfig(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_exportConfig(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(25)
 	}
@@ -533,6 +556,8 @@ Output
 */
 func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (string, int64, error) {
 	//  _DLEXPORT int G2_exportConfigAndConfigID(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize), long long* configID );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(23)
 	}
@@ -563,6 +588,8 @@ Output
 */
 func (g2engine *G2engineImpl) ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportCSVEntityReport(const char* csvColumnList, const long long flags, ExportHandle* responseHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(27, csvColumnList, flags)
 	}
@@ -594,6 +621,8 @@ Output
 */
 func (g2engine *G2engineImpl) ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error) {
 	//  _DLEXPORT int G2_exportJSONEntityReport(const long long flags, ExportHandle* responseHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(29, flags)
 	}
@@ -623,6 +652,8 @@ Output
 */
 func (g2engine *G2engineImpl) FetchNext(ctx context.Context, responseHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2_fetchNext(ExportHandle responseHandle, char *responseBuf, const size_t bufSize);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(31, responseHandle)
 	}
@@ -652,6 +683,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByEntityID(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(33, entityID, flags)
 	}
@@ -682,6 +715,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findInterestingEntitiesByRecordID(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(35, dataSourceCode, recordID, flags)
 	}
@@ -720,6 +755,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(37, entityList, maxDegree, buildOutDegree, maxDegree)
 	}
@@ -757,6 +794,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByEntityID_V2(const char* entityList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(39, entityList, maxDegree, buildOutDegree, maxDegree, flags)
 	}
@@ -793,6 +832,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(41, recordList, maxDegree, buildOutDegree, maxDegree)
 	}
@@ -830,6 +871,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findNetworkByRecordID_V2(const char* recordList, const int maxDegree, const int buildOutDegree, const int maxEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(43, recordList, maxDegree, buildOutDegree, maxDegree, flags)
 	}
@@ -864,6 +907,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(45, entityID1, entityID2, maxDegree)
 	}
@@ -897,6 +942,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(47, entityID1, entityID2, maxDegree, flags)
 	}
@@ -933,6 +980,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(49, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree)
 	}
@@ -977,6 +1026,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(51, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, flags)
 	}
@@ -1019,6 +1070,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(53, entityID1, entityID2, maxDegree, excludedEntities)
 	}
@@ -1061,6 +1114,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(55, entityID1, entityID2, maxDegree, excludedEntities, flags)
 	}
@@ -1099,6 +1154,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(57, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
 	}
@@ -1151,6 +1208,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathExcludingByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathExcludingByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(59, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
 	}
@@ -1197,6 +1256,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByEntityID(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(61, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
 	}
@@ -1238,6 +1299,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByEntityID_V2(const long long entityID1, const long long entityID2, const int maxDegree, const char* excludedEntities, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(63, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
 	}
@@ -1280,6 +1343,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(65, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs)
 	}
@@ -1331,6 +1396,8 @@ Output
 */
 func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_findPathIncludingSourceByRecordID_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const int maxDegree, const char* excludedRecords, const char* requiredDsrcs, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(67, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, requiredDsrcs, flags)
 	}
@@ -1369,6 +1436,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetActiveConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getActiveConfigID(long long* configID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(69)
 	}
@@ -1399,6 +1468,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(71, entityID)
 	}
@@ -1429,6 +1500,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(73, entityID, flags)
 	}
@@ -1459,6 +1532,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(75, dataSourceCode, recordID)
 	}
@@ -1494,6 +1569,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(77, dataSourceCode, recordID, flags)
 	}
@@ -1528,6 +1605,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_getRecord(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(83, dataSourceCode, recordID)
 	}
@@ -1563,6 +1642,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getRecord_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(85, dataSourceCode, recordID, flags)
 	}
@@ -1595,6 +1676,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_getRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(87)
 	}
@@ -1623,6 +1706,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetRepositoryLastModifiedTime(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2_getRepositoryLastModifiedTime(long long* lastModifiedTime);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(89)
 	}
@@ -1652,6 +1737,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID(const char* recordList, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(91, recordList)
 	}
@@ -1685,6 +1772,8 @@ Output
 */
 func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_getVirtualEntityByRecordID_V2(const char* recordList, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(93, recordList, flags)
 	}
@@ -1716,6 +1805,8 @@ Output
 */
 func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	entryTime := time.Now()
 	if g2engine.isTrace {
 		g2engine.traceEntry(95, entityID)
@@ -1746,6 +1837,8 @@ Output
 */
 func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_howEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	entryTime := time.Now()
 	if g2engine.isTrace {
 		g2engine.traceEntry(97, entityID, flags)
@@ -1773,6 +1866,8 @@ Input
 */
 func (g2engine *G2engineImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(99, moduleName, iniParams, verboseLogging)
 	}
@@ -1805,6 +1900,8 @@ Input
 */
 func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(101, moduleName, iniParams, initConfigID, verboseLogging)
 	}
@@ -1834,6 +1931,8 @@ Input
 */
 func (g2engine *G2engineImpl) PrimeEngine(ctx context.Context) error {
 	//  _DLEXPORT int G2_primeEngine();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(103)
 	}
@@ -1858,6 +1957,8 @@ Input
 */
 func (g2engine *G2engineImpl) Process(ctx context.Context, record string) error {
 	//  _DLEXPORT int G2_process(const char *record);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(105, record)
 	}
@@ -1887,6 +1988,8 @@ Output
 */
 func (g2engine *G2engineImpl) ProcessRedoRecord(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_processRedoRecord(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(107)
 	}
@@ -1916,6 +2019,8 @@ Output
 */
 func (g2engine *G2engineImpl) ProcessRedoRecordWithInfo(ctx context.Context, flags int64) (string, string, error) {
 	//  _DLEXPORT int G2_processRedoRecordWithInfo(const long long flags, char **responseBuf, size_t *bufSize, char **infoBuf, size_t *infoBufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(109, flags)
 	}
@@ -1945,6 +2050,8 @@ Output
 */
 func (g2engine *G2engineImpl) ProcessWithInfo(ctx context.Context, record string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_processWithInfo(const char *record, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(111, record, flags)
 	}
@@ -1975,6 +2082,8 @@ Output
 */
 func (g2engine *G2engineImpl) ProcessWithResponse(ctx context.Context, record string) (string, error) {
 	//  _DLEXPORT int G2_processWithResponse(const char *record, char *responseBuf, const size_t bufSize);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(113, record)
 	}
@@ -2005,6 +2114,8 @@ Output
 */
 func (g2engine *G2engineImpl) ProcessWithResponseResize(ctx context.Context, record string) (string, error) {
 	//  _DLEXPORT int G2_processWithResponseResize(const char *record, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(115, record)
 	}
@@ -2034,6 +2145,8 @@ Input
 */
 func (g2engine *G2engineImpl) PurgeRepository(ctx context.Context) error {
 	//  _DLEXPORT int G2_purgeRepository();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(117)
 	}
@@ -2059,6 +2172,8 @@ Input
 */
 func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int64, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateEntity(const long long entityID, const long long flags);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(119, entityID, flags)
 	}
@@ -2089,6 +2204,8 @@ Output
 */
 func (g2engine *G2engineImpl) ReevaluateEntityWithInfo(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_reevaluateEntityWithInfo(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(121, entityID, flags)
 	}
@@ -2115,6 +2232,8 @@ Input
 */
 func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) error {
 	//  _DLEXPORT int G2_reevaluateRecord(const char* dataSourceCode, const char* recordID, const long long flags);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(123, dataSourceCode, recordID, flags)
 	}
@@ -2150,6 +2269,8 @@ Output
 */
 func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_reevaluateRecordWithInfo(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(125, dataSourceCode, recordID, flags)
 	}
@@ -2178,6 +2299,8 @@ Input
 */
 func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2_reinit(const long long initConfigID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(127, initConfigID)
 	}
@@ -2206,6 +2329,8 @@ Input
 */
 func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error {
 	//  _DLEXPORT int G2_replaceRecord(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(129, dataSourceCode, recordID, jsonData, loadID)
 	}
@@ -2247,6 +2372,8 @@ Output
 */
 func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_replaceRecordWithInfo(const char* dataSourceCode, const char* recordID, const char* jsonData, const char *loadID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(131, dataSourceCode, recordID, jsonData, loadID, flags)
 	}
@@ -2284,6 +2411,8 @@ Output
 */
 func (g2engine *G2engineImpl) SearchByAttributes(ctx context.Context, jsonData string) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes(const char* jsonData, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(133, jsonData)
 	}
@@ -2316,6 +2445,8 @@ Output
 */
 func (g2engine *G2engineImpl) SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_searchByAttributes_V2(const char* jsonData, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(135, jsonData, flags)
 	}
@@ -2341,6 +2472,8 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (g2engine *G2engineImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(137, logLevel)
 	}
@@ -2367,6 +2500,8 @@ Output
 */
 func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2_stats(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(139)
 	}
@@ -2400,6 +2535,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities(const long long entityID1, const long long entityID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(141, entityID1, entityID2)
 	}
@@ -2434,6 +2571,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntities_V2(const long long entityID1, const long long entityID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(143, entityID1, entityID2, flags)
 	}
@@ -2464,6 +2603,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(145, entityID)
 	}
@@ -2494,6 +2635,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(147, entityID, flags)
 	}
@@ -2524,6 +2667,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID(const char* dataSourceCode, const char* recordID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(149, dataSourceCode, recordID)
 	}
@@ -2559,6 +2704,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyEntityByRecordID_V2(const char* dataSourceCode, const char* recordID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(151, dataSourceCode, recordID, flags)
 	}
@@ -2596,6 +2743,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string) (string, error) {
 	//  _DLEXPORT int G2_whyRecords(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(153, dataSourceCode1, recordID1, dataSourceCode2, recordID2)
 	}
@@ -2637,6 +2786,8 @@ Output
 */
 func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, flags int64) (string, error) {
 	//  _DLEXPORT int G2_whyRecords_V2(const char* dataSourceCode1, const char* recordID1, const char* dataSourceCode2, const char* recordID2, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2engine.isTrace {
 		g2engine.traceEntry(155, dataSourceCode1, recordID1, dataSourceCode2, recordID2, flags)
 	}
