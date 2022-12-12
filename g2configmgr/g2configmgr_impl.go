@@ -179,6 +179,8 @@ Output
 */
 func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr string, configComments string) (int64, error) {
 	// _DLEXPORT int G2ConfigMgr_addConfig(const char* configStr, const char* configComments, long long* configID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(1, configStr, configComments)
 	}
@@ -209,6 +211,8 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(5)
 	}
@@ -237,6 +241,8 @@ Output
 */
 func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int64) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfig(const long long configID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(7, configID)
 	}
@@ -264,6 +270,8 @@ Output
 */
 func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2ConfigMgr_getConfigList(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(9)
 	}
@@ -290,6 +298,8 @@ Output
 */
 func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int64, error) {
 	//  _DLEXPORT int G2ConfigMgr_getDefaultConfigID(long long* configID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(11)
 	}
@@ -317,6 +327,8 @@ Input
 */
 func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Config_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(17, moduleName, iniParams, verboseLogging)
 	}
@@ -349,6 +361,8 @@ Input
 */
 func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error {
 	// _DLEXPORT int G2ConfigMgr_replaceDefaultConfigID(const long long oldConfigID, const long long newConfigID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(19, oldConfigID, newConfigID)
 	}
@@ -374,6 +388,8 @@ Input
 */
 func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, configID int64) error {
 	// _DLEXPORT int G2ConfigMgr_setDefaultConfigID(const long long configID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(21, configID)
 	}
@@ -397,6 +413,8 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(23, logLevel)
 	}

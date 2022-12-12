@@ -14,6 +14,7 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"runtime"
 	"time"
 	"unsafe"
 
@@ -179,6 +180,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsToRun int) (string, error) {
 	// _DLEXPORT int G2Diagnostic_checkDBPerf(int secondsToRun, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(1, secondsToRun)
 	}
@@ -207,6 +210,8 @@ Input
 */
 func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error {
 	//  _DLEXPORT int G2Diagnostic_closeEntityListBySize(EntityListBySizeHandle entityListBySizeHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(5)
 	}
@@ -231,6 +236,8 @@ Input
 */
 func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	//  _DLEXPORT int G2Diagnostic_destroy();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(7)
 	}
@@ -262,6 +269,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_fetchNextEntityBySize(EntityListBySizeHandle entityListBySizeHandle, char *responseBuf, const size_t bufSize);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(9)
 	}
@@ -294,6 +303,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_findEntitiesByFeatureIDs(const char *features, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(11, features)
 	}
@@ -322,6 +333,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getAvailableMemory();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(13)
 	}
@@ -346,6 +359,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getDataSourceCounts(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(15)
 	}
@@ -373,6 +388,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, error) {
 	// _DLEXPORT int G2Diagnostic_getDBInfo(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(17)
 	}
@@ -402,6 +419,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityDetails(const long long entityID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(19, entityID, includeInternalFeatures)
 	}
@@ -432,6 +451,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityListBySize(const size_t entitySize, EntityListBySizeHandle* entityListBySizeHandle);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(21, entitySize)
 	}
@@ -460,6 +481,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entityID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntityResume(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(23, entityID)
 	}
@@ -489,6 +512,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getEntitySizeBreakdown(const size_t minimumEntitySize, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(25, minimumEntitySize, includeInternalFeatures)
 	}
@@ -517,6 +542,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID int64) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getFeature(const long long libFeatID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(27, libFeatID)
 	}
@@ -546,6 +573,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getGenericFeatures(const char* featureType, const size_t maximumEstimatedCount, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(29, featureType, maximumEstimatedCount)
 	}
@@ -574,6 +603,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getLogicalCores();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(35)
 	}
@@ -599,6 +630,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getMappingStatistics(const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(37, includeInternalFeatures)
 	}
@@ -625,6 +658,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int, error) {
 	// _DLEXPORT int G2Diagnostic_getPhysicalCores();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	var result int
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(39)
@@ -652,6 +687,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getRelationshipDetails(const long long relationshipID, const int includeInternalFeatures, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(41, relationshipID, includeInternalFeatures)
 	}
@@ -679,6 +716,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Context) (string, error) {
 	//  _DLEXPORT int G2Diagnostic_getResolutionStatistics(char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize) );
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(43)
 	}
@@ -705,6 +744,8 @@ Output
 */
 func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) (int64, error) {
 	// _DLEXPORT long long G2Diagnostic_getTotalSystemMemory();
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(57)
 	}
@@ -729,6 +770,8 @@ Input
 */
 func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
 	// _DLEXPORT int G2Diagnostic_init(const char *moduleName, const char *iniParams, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(47, moduleName, iniParams, verboseLogging)
 	}
@@ -761,6 +804,8 @@ Input
 */
 func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error {
 	//  _DLEXPORT int G2Diagnostic_initWithConfigID(const char *moduleName, const char *iniParams, const long long initConfigID, const int verboseLogging);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(49, moduleName, iniParams, initConfigID, verboseLogging)
 	}
@@ -796,6 +841,8 @@ Input
 */
 func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID int64) error {
 	//  _DLEXPORT int G2Diagnostic_reinit(const long long initConfigID);
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(51, initConfigID)
 	}
@@ -819,6 +866,8 @@ Input
   - logLevel: The desired log level. TRACE, DEBUG, INFO, WARN, ERROR, FATAL or PANIC.
 */
 func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel logger.Level) error {
+	runtime.LockOSThread()
+	defer runtime.UnlockOSThread()
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(53, logLevel)
 	}
