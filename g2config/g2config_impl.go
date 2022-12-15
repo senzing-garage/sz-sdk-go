@@ -170,7 +170,7 @@ The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
   - inputJson: A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`.
 
 Output
@@ -204,7 +204,7 @@ The handle was created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
 */
 func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) error {
 	// _DLEXPORT int G2Config_close(ConfigHandle configHandle);
@@ -226,7 +226,9 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 }
 
 /*
-The Create method creates a stock G2 JSON config from the template config.
+The Create method creates an in-memory Senzing configuration from the g2config.json
+template configuration file located in the PIPELINE.RESOURCEPATH path.
+A handle is returned to identify the in-memory configuration.
 The handle is used by the AddDataSource(), ListDataSources(), DeleteDataSource(), Load(), and Save() methods.
 The handle is terminated by the Close() method.
 
@@ -261,7 +263,7 @@ The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
   - inputJson: A JSON document in the format `{"DSRC_CODE": "NAME_OF_DATASOURCE"}`.
 */
 func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error {
@@ -350,7 +352,7 @@ The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
 
 Output
   - A string containing a JSON document listing all of the data sources.
@@ -381,7 +383,7 @@ The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
   - jsonConfig: A JSON document containing the Senzing configuration.
 */
 func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, jsonConfig string) error {
@@ -411,7 +413,7 @@ The configHandle is created by the Create() method.
 
 Input
   - ctx: A context to control lifecycle.
-  - configHandle: A pointer to a configuration.
+  - configHandle: An identifier of an in-memory configuration.
 
 Output
   - A string containing a JSON Document representation of the Senzing G2Config object.
