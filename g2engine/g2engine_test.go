@@ -238,7 +238,7 @@ func TestG2engineImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions
 // ----------------------------------------------------------------------------
 
 // PurgeRepository() is first to start with a clean database.
@@ -2129,13 +2129,13 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 }
 
 // PurgeRepository() is first to start with a clean database.
-func ExampleG2engineImpl_PurgeRepository_FinalCleanup() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	err := g2engine.PurgeRepository(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
+//func ExampleG2engineImpl_PurgeRepository_FinalCleanup() {
+//	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+//	g2engine := &G2engineImpl{}
+//	ctx := context.TODO()
+//	err := g2engine.PurgeRepository(ctx)
+//	if err != nil {
+//		fmt.Println(err)
+//	}
+//	// Output:
+//}
