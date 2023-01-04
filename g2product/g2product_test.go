@@ -192,7 +192,7 @@ func ExampleG2productImpl_Init() {
 		fmt.Println(err)
 	}
 	verboseLogging := 0
-	err = g2product.Init(ctx, moduleName, iniParams, verboseLogging)
+	g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 	// Output:
 }
 

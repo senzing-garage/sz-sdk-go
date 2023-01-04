@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.5] - 2023-01-04
+
+### Changed in 0.2.5
+
+- Refactor code to reduce cyclomatic complexities and ineffectual assignments
+
 ## [0.2.4] - 2022-12-12
 
 ### Changed in 0.2.4
