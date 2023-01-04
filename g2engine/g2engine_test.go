@@ -1135,7 +1135,7 @@ func ExampleG2engineImpl_CloseExport() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	err = g2engine.CloseExport(ctx, responseHandle)
+	g2engine.CloseExport(ctx, responseHandle)
 	// Output:
 }
 
@@ -1241,7 +1241,7 @@ func ExampleG2engineImpl_FetchNext() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	anEntity, err := g2engine.FetchNext(ctx, responseHandle)
+	anEntity, _ := g2engine.FetchNext(ctx, responseHandle)
 	fmt.Println(len(anEntity) >= 0) // Dummy output.
 	// Output: true
 }
@@ -1909,8 +1909,8 @@ func ExampleG2engineImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
-	initConfigID, err := g2engine.GetActiveConfigID(ctx) // Example initConfigID.
-	err = g2engine.Reinit(ctx, initConfigID)
+	initConfigID, _ := g2engine.GetActiveConfigID(ctx) // Example initConfigID.
+	err := g2engine.Reinit(ctx, initConfigID)
 	if err != nil {
 		fmt.Println(err)
 	}

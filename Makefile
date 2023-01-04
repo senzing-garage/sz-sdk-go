@@ -63,12 +63,12 @@ test:
 	@rm -rf /tmp/sqlite
 	@mkdir  /tmp/sqlite
 	@cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
-#	@go test -v -p 1 ./...
+	@go test -v -p 1 ./...
 #	@go test -v ./.
 #	@go test -v ./g2config
 #	@go test -v ./g2configmgr
 #	@go test -v ./g2diagnostic
-	@go test -v ./g2engine
+#	@go test -v ./g2engine
 #	@go test -v ./g2product
 
 
