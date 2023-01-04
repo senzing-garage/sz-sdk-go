@@ -132,11 +132,10 @@ func TestMain(m *testing.M) {
 }
 
 func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
-	var err error = nil
 	now := time.Now()
 
 	aG2config := &g2config.G2configImpl{}
-	err = aG2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	err := aG2config.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5906, err)
 	}
@@ -195,10 +194,8 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 }
 
 func setupPurgeRepository(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
-	var err error = nil
-
 	aG2engine := &g2engine.G2engineImpl{}
-	err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	err := aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5903, err)
 	}
@@ -217,7 +214,6 @@ func setupPurgeRepository(ctx context.Context, moduleName string, iniParams stri
 
 func setup() error {
 	ctx := context.TODO()
-	var err error = nil
 
 	moduleName := "Test module name"
 	verboseLogging := 0

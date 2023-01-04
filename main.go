@@ -130,13 +130,13 @@ func getLogger(ctx context.Context) (messagelogger.MessageLoggerInterface, error
 func getConfigString(ctx context.Context, g2Config g2config.G2config) (string, error) {
 	configHandle, err := g2Config.Create(ctx)
 	if err != nil {
-		return "", logger.Error(5003, err)
+		return "", logger.Error(5100, err)
 	}
 
 	for _, testDataSource := range testhelpers.TestDataSources {
 		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
-			logger.Error(5004, err)
+			logger.Error(5102, err)
 		}
 	}
 
@@ -144,16 +144,15 @@ func getConfigString(ctx context.Context, g2Config g2config.G2config) (string, e
 }
 
 func persistConfig(ctx context.Context, g2Configmgr g2configmgr.G2configmgr, configStr string, configComments string) error {
-	var err error = nil
 
 	configID, err := g2Configmgr.AddConfig(ctx, configStr, configComments)
 	if err != nil {
-		return logger.Error(5006, err)
+		return logger.Error(5200, err)
 	}
 
 	err = g2Configmgr.SetDefaultConfigID(ctx, configID)
 	if err != nil {
-		return logger.Error(5007, err)
+		return logger.Error(5201, err)
 	}
 
 	return err
@@ -171,6 +170,43 @@ func demonstrateAddRecord(ctx context.Context, g2Engine g2engine.G2engine) (stri
 	var flags int64 = 0
 
 	return g2Engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+}
+
+func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnostic.G2diagnostic, g2Engine g2engine.G2engine, g2Product g2product.G2product) error {
+	var err error = nil
+
+	// Using G2Diagnostic: Check physical cores.
+
+	actual, err := g2Diagnostic.GetPhysicalCores(ctx)
+	if err != nil {
+		logger.Log(5300, err)
+	}
+	logger.Log(2300, "Physical cores", actual)
+
+	// Using G2Engine: Purge repository.
+
+	err = g2Engine.PurgeRepository(ctx)
+	if err != nil {
+		logger.Log(5301, err)
+	}
+
+	// Using G2Engine: Add records with information returned.
+
+	withInfo, err := demonstrateAddRecord(ctx, g2Engine)
+	if err != nil {
+		logger.Log(5302, err)
+	}
+	logger.Log(2301, "WithInfo", withInfo)
+
+	// Using G2Product: Show license metadata.
+
+	license, err := g2Product.License(ctx)
+	if err != nil {
+		logger.Log(5303, err)
+	}
+	logger.Log(2302, "License", license)
+
+	return err
 }
 
 // ----------------------------------------------------------------------------
@@ -216,7 +252,7 @@ func main() {
 
 	configStr, err := getConfigString(ctx, g2Config)
 	if err != nil {
-		logger.Log(5005, err)
+		logger.Log(5003, err)
 	}
 
 	// Using G2Configmgr: Persist the Senzing configuration to the Senzing repository.
@@ -224,77 +260,53 @@ func main() {
 	configComments := fmt.Sprintf("Created by g2diagnostic_test at %s", now.UTC())
 	err = persistConfig(ctx, g2Configmgr, configStr, configComments)
 	if err != nil {
-		logger.Log(5020, err)
+		logger.Log(5004, err)
 	}
 
 	// Now that a Senzing configuration is installed, get the remainder of the Senzing objects.
 
 	g2Diagnostic, err := getG2diagnostic(ctx)
 	if err != nil {
-		logger.Log(5009, err)
+		logger.Log(5005, err)
 	}
 
 	g2Engine, err := getG2engine(ctx)
 	if err != nil {
-		logger.Log(5010, err)
+		logger.Log(5006, err)
 	}
 
 	g2Product, err := getG2product(ctx)
 	if err != nil {
-		logger.Log(5011, err)
+		logger.Log(5007, err)
 	}
 
-	// Using G2Diagnostic: Check physical cores.
+	// Demonstrate tests.
 
-	actual, err := g2Diagnostic.GetPhysicalCores(ctx)
+	err = demonstrateAdditionalFunctions(ctx, g2Diagnostic, g2Engine, g2Product)
 	if err != nil {
-		logger.Log(5012, err)
+		logger.Log(5008, err)
 	}
-	logger.Log(2002, "Physical cores", actual)
-
-	// Using G2Engine: Purge repository.
-
-	err = g2Engine.PurgeRepository(ctx)
-	if err != nil {
-		logger.Log(5013, err)
-	}
-
-	// Using G2Engine: Add records with information returned.
-
-	withInfo, err := demonstrateAddRecord(ctx, g2Engine)
-	if err != nil {
-		logger.Log(5014, err)
-	}
-	logger.Log(2003, "WithInfo", withInfo)
-
-	// Using G2Product: Show license metadata.
-
-	license, err := g2Product.License(ctx)
-	if err != nil {
-		logger.Log(5015, err)
-	}
-	logger.Log(2004, "License", license)
 
 	// Destroy Senzing objects.
 
 	err = g2Config.Destroy(ctx)
 	if err != nil {
-		logger.Log(5016, err)
+		logger.Log(5009, err)
 	}
 
 	err = g2Configmgr.Destroy(ctx)
 	if err != nil {
-		logger.Log(5017, err)
+		logger.Log(5010, err)
 	}
 
 	err = g2Diagnostic.Destroy(ctx)
 	if err != nil {
-		logger.Log(5018, err)
+		logger.Log(5011, err)
 	}
 
 	err = g2Engine.Destroy(ctx)
 	if err != nil {
-		logger.Log(5019, err)
+		logger.Log(5012, err)
 	}
 
 }
