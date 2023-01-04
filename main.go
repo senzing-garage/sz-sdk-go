@@ -214,6 +214,7 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 // ----------------------------------------------------------------------------
 
 func main() {
+	var err error = nil
 	ctx := context.TODO()
 	now := time.Now()
 
@@ -224,7 +225,7 @@ func main() {
 	// Configure the "log" standard library.
 
 	log.SetFlags(0)
-	logger, err := getLogger(ctx)
+	logger, err = getLogger(ctx)
 	if err != nil {
 		logger.Log(5000, err)
 	}
