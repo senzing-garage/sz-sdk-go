@@ -284,47 +284,12 @@ func main() {
 		logger.Log(5007, err)
 	}
 
-	// Using G2Diagnostic: Check physical cores.
-
-	actual, err := g2Diagnostic.GetPhysicalCores(ctx)
-	if err != nil {
-		logger.Log(5012, err)
-	}
-	logger.Log(2002, "Physical cores", actual)
-
-	// Using G2Engine: Purge repository.
-
-	err = g2Engine.PurgeRepository(ctx)
-	if err != nil {
-		logger.Log(5013, err)
-	}
-
-	// Using G2Engine: Add records with information returned.
-
-	withInfo, err := demonstrateAddRecord(ctx, g2Engine)
-	if err != nil {
-		logger.Log(5014, err)
-	}
-	logger.Log(2003, "WithInfo", withInfo)
-
-	// Using G2Product: Show license metadata.
-
-	license, err := g2Product.License(ctx)
-	if err != nil {
-		logger.Log(5015, err)
-	}
-	logger.Log(2004, "License", license)
-
 	// Demonstrate tests.
-
-	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BOB")
 
 	err = demonstrateAdditionalFunctions(ctx, g2Diagnostic, g2Engine, g2Product)
 	if err != nil {
 		logger.Log(5008, err)
 	}
-
-	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MARY")
 
 	// Destroy Senzing objects.
 
