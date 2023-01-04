@@ -44,7 +44,7 @@ var Messages = map[int]string{
 var programName string = "unknown"
 var buildVersion string = "0.0.0"
 var buildIteration string = "0"
-var logger messagelogger.MessageLoggerInterface
+var logger messagelogger.MessageLoggerInterface = nil
 
 // ----------------------------------------------------------------------------
 // Internal methods - names begin with lower case
@@ -224,7 +224,10 @@ func main() {
 	// Configure the "log" standard library.
 
 	log.SetFlags(0)
-	logger, _ := getLogger(ctx)
+	logger, err := getLogger(ctx)
+	if err != nil {
+		logger.Log(5000, err)
+	}
 
 	// Test logger.
 
@@ -313,10 +316,14 @@ func main() {
 
 	// Demonstrate tests.
 
-	// err = demonstrateAdditionalFunctions(ctx, g2Diagnostic, g2Engine, g2Product)
-	// if err != nil {
-	// 	logger.Log(5008, err)
-	// }
+	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> BOB")
+
+	err = demonstrateAdditionalFunctions(ctx, g2Diagnostic, g2Engine, g2Product)
+	if err != nil {
+		logger.Log(5008, err)
+	}
+
+	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MARY")
 
 	// Destroy Senzing objects.
 
