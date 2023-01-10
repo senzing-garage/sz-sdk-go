@@ -6,12 +6,8 @@
 
 void *G2ConfigMgr_resizeStringBuffer(void *ptr, size_t size)
 {
-    // deallocate old buffer
-    if (ptr != 0)
-        free(ptr);
     // allocate new buffer
-    void *buffer = malloc(size);
-    return buffer;
+    return realloc(ptr, size);
 }
 
 struct G2ConfigMgr_addConfig_result G2ConfigMgr_addConfig_helper(const char *configStr, const char *configComments)

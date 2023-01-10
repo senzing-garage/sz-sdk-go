@@ -6,12 +6,8 @@
 
 void *G2Product_resizeStringBuffer(void *ptr, size_t size)
 {
-    // deallocate old buffer
-    if (ptr != 0)
-        free(ptr);
     // allocate new buffer
-    void *buffer = malloc(size);
-    return buffer;
+    return realloc(ptr, size);
 }
 
 struct G2Product_validateLicenseFile_result G2Product_validateLicenseFile_helper(const char *licenseFilePath)
