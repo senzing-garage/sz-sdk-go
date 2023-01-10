@@ -6,12 +6,8 @@
 
 void *G2config_resizeStringBuffer(void *ptr, size_t size)
 {
-    // deallocate old buffer
-    if (ptr != 0)
-        free(ptr);
     // allocate new buffer
-    void *buffer = malloc(size);
-    return buffer;
+    return realloc(ptr, size);
 }
 
 struct G2Config_addDataSource_result G2Config_addDataSource_helper(uintptr_t configHandle, const char *inputJson)

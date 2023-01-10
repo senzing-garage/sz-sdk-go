@@ -5,12 +5,8 @@
 
 void *G2_resizeStringBuffer(void *ptr, size_t size)
 {
-    // deallocate old buffer
-    if (ptr != 0)
-        free(ptr);
     // allocate new buffer
-    void *buffer = malloc(size);
-    return buffer;
+    return realloc(ptr, size);
 }
 
 struct G2_addRecordWithInfo_result G2_addRecordWithInfo_helper(const char *dataSourceCode, const char *recordID, const char *jsonData, const char *loadID, const long long flags)

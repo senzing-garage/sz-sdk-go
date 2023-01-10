@@ -173,7 +173,6 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 }
 
 func setupPurgeRepository(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
-
 	aG2engine := &g2engine.G2engineImpl{}
 	err := aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
@@ -298,7 +297,7 @@ func TestG2diagnosticImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 }
 
 // ----------------------------------------------------------------------------
-// Test interface functions - names begin with "Test"
+// Test interface functions
 // ----------------------------------------------------------------------------
 
 func TestG2diagnosticImpl_CheckDBPerf(test *testing.T) {

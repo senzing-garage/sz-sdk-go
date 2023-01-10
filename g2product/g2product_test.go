@@ -38,7 +38,6 @@ func getTestObject(ctx context.Context, test *testing.T) G2product {
 		if jsonErr != nil {
 			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
 		}
-
 		initErr := g2productSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 		if initErr != nil {
 			test.Logf("Cannot Init. Error: %v", initErr)

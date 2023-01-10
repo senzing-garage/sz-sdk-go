@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
@@ -76,6 +77,30 @@ func testErrorNoFail(test *testing.T, ctx context.Context, g2config G2config, er
 // Test harness
 // ----------------------------------------------------------------------------
 
+func TestMain(m *testing.M) {
+	err := setup()
+	if err != nil {
+		fmt.Print(err)
+		os.Exit(1)
+	}
+	code := m.Run()
+	err = teardown()
+	if err != nil {
+		fmt.Print(err)
+	}
+	os.Exit(code)
+}
+
+func setup() error {
+	var err error = nil
+	return err
+}
+
+func teardown() error {
+	var err error = nil
+	return err
+}
+
 func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -120,31 +145,24 @@ func TestG2configImpl_Create(test *testing.T) {
 }
 
 func TestG2configImpl_DeleteDataSource(test *testing.T) {
-
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
 	configHandle, err := g2config.Create(ctx)
 	testError(test, ctx, g2config, err)
-
 	actual, err := g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "Original", actual)
-
 	inputJson := `{"DSRC_CODE": "GO_TEST"}`
 	_, err = g2config.AddDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
-
 	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "     Add", actual)
-
 	err = g2config.DeleteDataSource(ctx, configHandle, inputJson)
 	testError(test, ctx, g2config, err)
-
 	actual, err = g2config.ListDataSources(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 	printResult(test, "  Delete", actual)
-
 	err = g2config.Close(ctx, configHandle)
 	testError(test, ctx, g2config, err)
 }
