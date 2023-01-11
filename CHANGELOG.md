@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.2.6] - 2023-01-11
+
+### Changed in 0.2.6
+
+- Support `LD_LIBRARY_PATH` environment variable in `Makefile`
+- Improve C string buffer resizing
+- Improve `#cgo LDFLAGS:` parameters
+- Minor bug fixes
+
 ## [0.2.5] - 2023-01-04
 
 ### Changed in 0.2.5
