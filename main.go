@@ -287,6 +287,7 @@ func main() {
 		"BuildIteration": buildIteration,
 	}
 
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 	logger.Log(2001, "Just a test of logging", programmMetadataMap)
 
 	// Get Senzing objects for installing a Senzing Engine configuration.
@@ -338,4 +339,6 @@ func main() {
 	if err != nil {
 		logger.Log(5008, err)
 	}
+
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 }
