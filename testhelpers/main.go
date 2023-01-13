@@ -14,7 +14,7 @@ var TestDataSources = []struct {
 }
 
 // Must match value in sys_cfg.config_data_id.
-var TestConfigDataId = 4175236977
+var TestConfigDataId = 3239924254
 
 // A list of test records.
 var TestRecords = []struct {
