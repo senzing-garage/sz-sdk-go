@@ -36,6 +36,10 @@ const MessageIdTemplate = "senzing-9999%04d"
 var Messages = map[int]string{
 	1:    "%s",
 	2:    "WithInfo: %s",
+	2001: "Testing %s.",
+	2002: "Physical cores: %d.",
+	2003: "withInfo",
+	2004: "License",
 	2999: "Cannot retrieve last error message.",
 }
 
@@ -127,32 +131,45 @@ func getLogger(ctx context.Context) (messagelogger.MessageLoggerInterface, error
 	return messagelogger.New(messageFormat, messageIdTemplate, messageLevel, messageStatus, messageText, messagelogger.LevelInfo)
 }
 
-func getConfigString(ctx context.Context, g2Config g2config.G2config) (string, error) {
+func demonstrateConfigFunctions(ctx context.Context, g2Config g2config.G2config, g2Configmgr g2configmgr.G2configmgr) error {
+	now := time.Now()
+
+	// Using G2Config: Create a default configuration in memory
+
 	configHandle, err := g2Config.Create(ctx)
 	if err != nil {
-		return "", logger.Error(5100, err)
+		return logger.Error(5100, err)
 	}
+
+	// Using G2Config: Add data source to in-memory configuration.
 
 	for _, testDataSource := range testhelpers.TestDataSources {
 		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
-			logger.Error(5102, err)
+			return logger.Error(5101, err)
 		}
 	}
 
-	return g2Config.Save(ctx, configHandle)
-}
+	// Using G2Config: Persist configuration to a string.
 
-func persistConfig(ctx context.Context, g2Configmgr g2configmgr.G2configmgr, configStr string, configComments string) error {
+	configStr, err := g2Config.Save(ctx, configHandle)
+	if err != nil {
+		return logger.Error(5102, err)
+	}
 
+	// Using G2Configmgr: Persist configuration string to database.
+
+	configComments := fmt.Sprintf("Created by g2diagnostic_test at %s", now.UTC())
 	configID, err := g2Configmgr.AddConfig(ctx, configStr, configComments)
 	if err != nil {
-		return logger.Error(5200, err)
+		return logger.Error(5103, err)
 	}
+
+	// Using G2Configmgr: Set new configuration as the default.
 
 	err = g2Configmgr.SetDefaultConfigID(ctx, configID)
 	if err != nil {
-		return logger.Error(5201, err)
+		return logger.Error(5104, err)
 	}
 
 	return err
@@ -169,6 +186,8 @@ func demonstrateAddRecord(ctx context.Context, g2Engine g2engine.G2engine) (stri
 	loadID := dataSourceCode
 	var flags int64 = 0
 
+	// Using G2Engine: Add record and return "withInfo".
+
 	return g2Engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
 }
 
@@ -181,7 +200,7 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 	if err != nil {
 		logger.Log(5300, err)
 	}
-	logger.Log(2300, "Physical cores", actual)
+	logger.Log(2002, actual)
 
 	// Using G2Engine: Purge repository.
 
@@ -196,7 +215,7 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 	if err != nil {
 		logger.Log(5302, err)
 	}
-	logger.Log(2301, "WithInfo", withInfo)
+	logger.Log(2003, withInfo)
 
 	// Using G2Product: Show license metadata.
 
@@ -204,7 +223,38 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 	if err != nil {
 		logger.Log(5303, err)
 	}
-	logger.Log(2302, "License", license)
+	logger.Log(2004, license)
+
+	return err
+}
+
+func destroyObjects(ctx context.Context, g2Config g2config.G2config, g2Configmgr g2configmgr.G2configmgr, g2Diagnostic g2diagnostic.G2diagnostic, g2Engine g2engine.G2engine, g2Product g2product.G2product) error {
+	var err error = nil
+
+	err = g2Config.Destroy(ctx)
+	if err != nil {
+		logger.Log(5401, err)
+	}
+
+	err = g2Configmgr.Destroy(ctx)
+	if err != nil {
+		logger.Log(5402, err)
+	}
+
+	err = g2Diagnostic.Destroy(ctx)
+	if err != nil {
+		logger.Log(5403, err)
+	}
+
+	err = g2Engine.Destroy(ctx)
+	if err != nil {
+		logger.Log(5404, err)
+	}
+
+	err = g2Product.Destroy(ctx)
+	if err != nil {
+		logger.Log(5405, err)
+	}
 
 	return err
 }
@@ -216,7 +266,6 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 func main() {
 	var err error = nil
 	ctx := context.TODO()
-	now := time.Now()
 
 	// Randomize random number generator.
 
@@ -238,6 +287,7 @@ func main() {
 		"BuildIteration": buildIteration,
 	}
 
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 	logger.Log(2001, "Just a test of logging", programmMetadataMap)
 
 	// Get Senzing objects for installing a Senzing Engine configuration.
@@ -252,65 +302,43 @@ func main() {
 		logger.Log(5002, err)
 	}
 
-	// Using G2Config: Create a default Senzing Engine Configuration in memory.
+	// Persist the Senzing configuration to the Senzing repository.
 
-	configStr, err := getConfigString(ctx, g2Config)
+	err = demonstrateConfigFunctions(ctx, g2Config, g2Configmgr)
 	if err != nil {
 		logger.Log(5003, err)
-	}
-
-	// Using G2Configmgr: Persist the Senzing configuration to the Senzing repository.
-
-	configComments := fmt.Sprintf("Created by g2diagnostic_test at %s", now.UTC())
-	err = persistConfig(ctx, g2Configmgr, configStr, configComments)
-	if err != nil {
-		logger.Log(5004, err)
 	}
 
 	// Now that a Senzing configuration is installed, get the remainder of the Senzing objects.
 
 	g2Diagnostic, err := getG2diagnostic(ctx)
 	if err != nil {
-		logger.Log(5005, err)
+		logger.Log(5004, err)
 	}
 
 	g2Engine, err := getG2engine(ctx)
 	if err != nil {
-		logger.Log(5006, err)
+		logger.Log(5005, err)
 	}
 
 	g2Product, err := getG2product(ctx)
 	if err != nil {
-		logger.Log(5007, err)
+		logger.Log(5006, err)
 	}
 
 	// Demonstrate tests.
 
 	err = demonstrateAdditionalFunctions(ctx, g2Diagnostic, g2Engine, g2Product)
 	if err != nil {
-		logger.Log(5008, err)
+		logger.Log(5007, err)
 	}
 
 	// Destroy Senzing objects.
 
-	err = g2Config.Destroy(ctx)
+	err = destroyObjects(ctx, g2Config, g2Configmgr, g2Diagnostic, g2Engine, g2Product)
 	if err != nil {
-		logger.Log(5009, err)
+		logger.Log(5008, err)
 	}
 
-	err = g2Configmgr.Destroy(ctx)
-	if err != nil {
-		logger.Log(5010, err)
-	}
-
-	err = g2Diagnostic.Destroy(ctx)
-	if err != nil {
-		logger.Log(5011, err)
-	}
-
-	err = g2Engine.Destroy(ctx)
-	if err != nil {
-		logger.Log(5012, err)
-	}
-
+	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 }

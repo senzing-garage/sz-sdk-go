@@ -37,3 +37,5 @@ func teardown() error {
 // ----------------------------------------------------------------------------
 // Test interface functions - names begin with "Test"
 // ----------------------------------------------------------------------------
+
+func TestTesthelpers_Null(test *testing.T) {}
