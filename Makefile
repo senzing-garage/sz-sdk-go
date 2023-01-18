@@ -1,4 +1,4 @@
-# Makefile that builds go-hello-world, a "go" program.
+# Makefile that builds g2-sdk-go, a "go" program.
 
 # "Simple expanded" variables (':=')
 
