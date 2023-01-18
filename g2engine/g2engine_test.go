@@ -20,6 +20,7 @@ import (
 
 const (
 	defaultTruncation = 76
+	printResults      = false
 )
 
 var (
@@ -69,7 +70,7 @@ func truncate(aString string, length int) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
+	if printResults {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
@@ -171,56 +172,16 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 	return err
 }
 
-func setupPurgeRepository(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
-	aG2engine := &G2engineImpl{}
-	err := aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5903, err)
-	}
-
-	err = aG2engine.PurgeRepository(ctx)
-	if err != nil {
-		return localLogger.Error(5904, err)
-	}
-
-	err = aG2engine.Destroy(ctx)
-	if err != nil {
-		return localLogger.Error(5905, err)
-	}
-	return err
-}
-
-func setupAddRecords(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
-	aG2engine := &G2engineImpl{}
-	err := aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5916, err)
-	}
-
-	for _, testRecord := range testhelpers.TestRecords {
-		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
-		if err != nil {
-			return localLogger.Error(5917, err)
-		}
-	}
-
-	err = aG2engine.Destroy(ctx)
-	if err != nil {
-		return localLogger.Error(5918, err)
-	}
-	return err
-}
-
 func setup() error {
 	ctx := context.TODO()
+	var err error = nil
 
 	moduleName := "Test module name"
 	verboseLogging := 0
-
-	localLogger, _ := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
-	// if err != nil {
-	// 	return logger.Error(5901, err)
-	// }
+	localLogger, err = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+	if err != nil {
+		return localLogger.Error(5901, err)
+	}
 
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -232,20 +193,6 @@ func setup() error {
 	err = setupSenzingConfig(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5920, err)
-	}
-
-	// Purge repository.
-
-	err = setupPurgeRepository(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5921, err)
-	}
-
-	// Add records.
-
-	err = setupAddRecords(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5922, err)
 	}
 
 	return err
@@ -269,13 +216,6 @@ func TestG2engineImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-// PurgeRepository() is first to start with a clean database.
-func TestG2engineImpl_PurgeRepository(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	err := g2engine.PurgeRepository(ctx)
-	testError(test, ctx, g2engine, err)
-}
 
 func TestG2engineImpl_AddRecord(test *testing.T) {
 	ctx := context.TODO()
@@ -1039,28 +979,24 @@ func TestG2engineImpl_DeleteRecordWithInfo(test *testing.T) {
 	printActual(test, actual)
 }
 
+func TestG2engineImpl_PurgeRepository(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	err := g2engine.PurgeRepository(ctx)
+	testError(test, ctx, g2engine, err)
+}
+
 func TestG2engineImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	err := g2engine.Destroy(ctx)
 	testError(test, ctx, g2engine, err)
+	g2engineSingleton = nil
 }
 
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
-
-// PurgeRepository() is first to start with a clean database.
-func ExampleG2engineImpl_PurgeRepository() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	err := g2engine.PurgeRepository(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
 
 func ExampleG2engineImpl_AddRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
@@ -1930,7 +1866,6 @@ func ExampleG2engineImpl_ReevaluateRecordWithInfo() {
 	}
 	fmt.Println(result)
 	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
-
 }
 
 func ExampleG2engineImpl_Reinit() {
@@ -1977,16 +1912,7 @@ func ExampleG2engineImpl_ReplaceRecordWithInfo() {
 	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
 
-func ExampleG2engineImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	err := g2engine.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
+
 
 func ExampleG2engineImpl_SearchByAttributes() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
@@ -2156,14 +2082,24 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"TEST","RECORD_ID":"111"}],"INTERNAL_ID_2":2,"ENTITY_ID_2":2,"FOCUS_RECORDS_2":[{"DATA_SOURCE":"TEST","RECORD_ID":"222"}],"MATCH_INFO":{"WHY_KEY":"+PHONE+ACCT_NUM-DOB-SSN","WHY_ERRULE_CODE":"SF1","MATCH_LEVEL_CODE":"POSSIBLY_RELATED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":2}}]}
 }
 
-// PurgeRepository() is first to start with a clean database.
-//func ExampleG2engineImpl_PurgeRepository_FinalCleanup() {
-//	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-//	g2engine := &G2engineImpl{}
-//	ctx := context.TODO()
-//	err := g2engine.PurgeRepository(ctx)
-//	if err != nil {
-//		fmt.Println(err)
-//	}
-//	// Output:
-//}
+func ExampleG2engineImpl_PurgeRepository() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	err := g2engine.PurgeRepository(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2engineImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	err := g2engine.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}

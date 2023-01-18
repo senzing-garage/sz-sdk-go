@@ -378,7 +378,6 @@ func TestG2configmgrImpl_Destroy(test *testing.T) {
 
 func ExampleG2configmgrImpl_AddConfig() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
-
 	ctx := context.TODO()
 	g2config := &g2config.G2configImpl{}
 	configHandle, err := g2config.Create(ctx)
@@ -397,17 +396,6 @@ func ExampleG2configmgrImpl_AddConfig() {
 	}
 	fmt.Println(configID > 0) // Dummy output.
 	// Output: true
-}
-
-func ExampleG2configmgrImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
-	ctx := context.TODO()
-	g2configmgr := getG2Configmgr(ctx)
-	err := g2configmgr.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
 }
 
 func ExampleG2configmgrImpl_GetConfig() {
@@ -516,6 +504,17 @@ func ExampleG2configmgrImpl_SetLogLevel() {
 	ctx := context.TODO()
 	g2configmgr := getG2Configmgr(ctx)
 	err := g2configmgr.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configmgrImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2configmgr/g2configmgr_test.go
+	ctx := context.TODO()
+	g2configmgr := getG2Configmgr(ctx)
+	err := g2configmgr.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}

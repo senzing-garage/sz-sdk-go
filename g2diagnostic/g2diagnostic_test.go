@@ -255,35 +255,6 @@ func setup() error {
 
 func teardown() error {
 	var err error = nil
-	// ctx := context.TODO()
-	// moduleName := "Test module name2"
-	// iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// verboseLogging := 0
-	// logger, err := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-
-	// // Purge repository.
-
-	// aG2engine := &g2engine.G2engineImpl{}
-	// err = aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	// if err != nil {
-	// 	return logger.Error(5931, err)
-	// }
-
-	// err = aG2engine.PurgeRepository(ctx)
-	// if err != nil {
-	// 	return logger.Error(5932, err)
-	// }
-
-	// err = aG2engine.Destroy(ctx)
-	// if err != nil {
-	// 	return logger.Error(5933, err)
-	// }
 	return err
 }
 
@@ -523,17 +494,6 @@ func ExampleG2diagnosticImpl_CloseEntityListBySize() {
 		fmt.Println(err)
 	}
 	err = g2diagnostic.CloseEntityListBySize(ctx, entityListBySizeHandle)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
-func ExampleG2diagnosticImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	ctx := context.TODO()
-	g2diagnostic := getG2Diagnostic(ctx)
-	err := g2diagnostic.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -797,8 +757,8 @@ func ExampleG2diagnosticImpl_InitWithConfigID() {
 
 func ExampleG2diagnosticImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
 	initConfigID := int64(testhelpers.TestConfigDataId)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
 	if err != nil {
@@ -812,6 +772,17 @@ func ExampleG2diagnosticImpl_SetLogLevel() {
 	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
 	err := g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2diagnosticImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	ctx := context.TODO()
+	g2diagnostic := getG2Diagnostic(ctx)
+	err := g2diagnostic.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}

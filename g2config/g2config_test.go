@@ -282,16 +282,7 @@ func ExampleG2configImpl_DeleteDataSource() {
 	// Output:
 }
 
-func ExampleG2configImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	err := g2config.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
+
 
 func ExampleG2configImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
@@ -366,6 +357,17 @@ func ExampleG2configImpl_SetLogLevel() {
 	g2config := &G2configImpl{}
 	ctx := context.TODO()
 	err := g2config.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	g2config := &G2configImpl{}
+	ctx := context.TODO()
+	err := g2config.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}
