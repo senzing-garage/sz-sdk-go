@@ -51,7 +51,7 @@ var buildIteration string = "0"
 var logger messagelogger.MessageLoggerInterface = nil
 
 // ----------------------------------------------------------------------------
-// Internal methods - names begin with lower case
+// Internal methods
 // ----------------------------------------------------------------------------
 
 func getG2config(ctx context.Context) (g2config.G2config, error) {
