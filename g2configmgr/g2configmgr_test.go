@@ -12,7 +12,7 @@ import (
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/g2-sdk-go/g2engine"
-	"github.com/senzing/g2-sdk-go/testhelpers"
+	"github.com/senzing/go-common/testrecords01"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
@@ -145,7 +145,7 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 		return localLogger.Error(5907, err)
 	}
 
-	for _, testDataSource := range testhelpers.TestDataSources {
+	for _, testDataSource := range testrecords01.TestDataSources {
 		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return localLogger.Error(5908, err)
@@ -319,19 +319,6 @@ func TestG2configmgrImpl_GetDefaultConfigID(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestG2configmgrImpl_Init(test *testing.T) {
-	ctx := context.TODO()
-	g2configmgr := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	verboseLogging := 0
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if jsonErr != nil {
-		test.Fatalf("Cannot construct system configuration: %v", jsonErr)
-	}
-	err := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2configmgr, err)
-}
-
 func TestG2configmgrImpl_ReplaceDefaultConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2configmgr := getTestObject(ctx, test)
@@ -362,6 +349,19 @@ func TestG2configmgrImpl_SetDefaultConfigID(test *testing.T) {
 		assert.FailNow(test, "g2configmgr.GetDefaultConfigID()")
 	}
 	err := g2configmgr.SetDefaultConfigID(ctx, configID)
+	testError(test, ctx, g2configmgr, err)
+}
+
+func TestG2configmgrImpl_Init(test *testing.T) {
+	ctx := context.TODO()
+	g2configmgr := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	verboseLogging := 0
+	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if jsonErr != nil {
+		test.Fatalf("Cannot construct system configuration: %v", jsonErr)
+	}
+	err := g2configmgr.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2configmgr, err)
 }
 

@@ -11,7 +11,7 @@ import (
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/g2-sdk-go/g2configmgr"
-	"github.com/senzing/g2-sdk-go/testhelpers"
+	"github.com/senzing/go-common/testrecords01"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
@@ -35,34 +35,36 @@ var (
 func getTestObject(ctx context.Context, test *testing.T) G2engine {
 	if g2engineSingleton == nil {
 		g2engineSingleton = &G2engineImpl{}
-
 		// g2engineSingleton.SetLogLevel(ctx, logger.LevelTrace)
 		log.SetFlags(0)
-
 		moduleName := "Test module name"
 		verboseLogging := 0
-		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-		if jsonErr != nil {
-			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			test.Logf("Cannot construct system configuration. Error: %v", err)
 		}
-		initErr := g2engineSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
-		if initErr != nil {
-			test.Logf("Cannot Init. Error: %v", initErr)
+		err = g2engineSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			test.Logf("Cannot Init. Error: %v", err)
 		}
 	}
 	return g2engineSingleton
 }
 
 func getG2Engine(ctx context.Context) G2engine {
-	g2engine := &G2engineImpl{}
-	moduleName := "Test module name"
-	verboseLogging := 0
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		fmt.Println(err)
+	if g2engineSingleton == nil {
+		g2engineSingleton = &G2engineImpl{}
+		// g2engineSingleton.SetLogLevel(ctx, logger.LevelTrace)
+		log.SetFlags(0)
+		moduleName := "Test module name"
+		verboseLogging := 0
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			fmt.Println(err)
+		}
+		g2engineSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
 	}
-	g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	return g2engine
+	return g2engineSingleton
 }
 
 func truncate(aString string, length int) string {
@@ -124,7 +126,7 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 		return localLogger.Error(5907, err)
 	}
 
-	for _, testDataSource := range testhelpers.TestDataSources {
+	for _, testDataSource := range testrecords01.TestDataSources {
 		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return localLogger.Error(5908, err)
@@ -216,33 +218,23 @@ func TestG2engineImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-
 func TestG2engineImpl_AddRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "111"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "111", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	record := testrecords01.TestRecords[0]
+	err := g2engine.AddRecord(ctx, record.DataSource, record.Id, record.Data, record.LoadId)
 	testError(test, ctx, g2engine, err)
-	dataSourceCode2 := "TEST"
-	recordID2 := "222"
-	jsonData2 := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "222", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID2 := "TEST"
-	err2 := g2engine.AddRecord(ctx, dataSourceCode2, recordID2, jsonData2, loadID2)
-	testError(test, ctx, g2engine, err2)
+	record = testrecords01.TestRecords[1]
+	err = g2engine.AddRecord(ctx, record.DataSource, record.Id, record.Data, record.LoadId)
+	testError(test, ctx, g2engine, err)
 }
 
 func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	recordID := "333"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "333", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
+	record := testrecords01.TestRecords[2]
 	var flags int64 = 0
-	actual, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	actual, err := g2engine.AddRecordWithInfo(ctx, record.DataSource, record.Id, record.Data, record.LoadId, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -250,11 +242,9 @@ func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
 func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1983", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
+	record := testrecords01.TestRecordsWithoutRecordId[0]
 	var flags int64 = 0
-	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID, flags)
+	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, record.DataSource, record.Data, record.LoadId, flags)
 	testError(test, ctx, g2engine, err)
 	printResult(test, "Actual RecordID", actualRecordID)
 	printActual(test, actual)
@@ -263,10 +253,8 @@ func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	dataSourceCode := "TEST"
-	jsonData := `{"SOCIAL_HANDLE": "bobby", "DATE_OF_BIRTH": "1/2/1983", "ADDR_STATE": "WI", "ADDR_POSTAL_CODE": "54434", "SSN_NUMBER": "987-65-4321", "ENTITY_TYPE": "TEST", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "Smith", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "TEST"
-	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID)
+	record := testrecords01.TestRecordsWithoutRecordId[1]
+	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, record.DataSource, record.Data, record.LoadId)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -1911,8 +1899,6 @@ func ExampleG2engineImpl_ReplaceRecordWithInfo() {
 	fmt.Println(result)
 	// Output: {"DATA_SOURCE":"TEST","RECORD_ID":"111","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
-
-
 
 func ExampleG2engineImpl_SearchByAttributes() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go

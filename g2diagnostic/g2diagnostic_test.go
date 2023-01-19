@@ -12,7 +12,7 @@ import (
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/g2-sdk-go/g2configmgr"
 	"github.com/senzing/g2-sdk-go/g2engine"
-	"github.com/senzing/g2-sdk-go/testhelpers"
+	"github.com/senzing/go-common/testrecords01"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
@@ -35,34 +35,39 @@ var (
 func getTestObject(ctx context.Context, test *testing.T) G2diagnostic {
 	if g2diagnosticSingleton == nil {
 		g2diagnosticSingleton = &G2diagnosticImpl{}
-
 		// g2diagnosticSingleton.SetLogLevel(ctx, logger.LevelTrace)
 		log.SetFlags(0)
-
 		moduleName := "Test module name"
 		verboseLogging := 0
-		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-		if jsonErr != nil {
-			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			test.Logf("Cannot construct system configuration. Error: %v", err)
 		}
-		initErr := g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
-		if initErr != nil {
-			test.Logf("Cannot Init. Error: %v", initErr)
+		err = g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			test.Logf("Cannot Init. Error: %v", err)
 		}
 	}
 	return g2diagnosticSingleton
 }
 
 func getG2Diagnostic(ctx context.Context) G2diagnostic {
-	g2diagnostic := &G2diagnosticImpl{}
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		fmt.Println(err)
+	if g2diagnosticSingleton == nil {
+		g2diagnosticSingleton = &G2diagnosticImpl{}
+		// g2diagnosticSingleton.SetLogLevel(ctx, logger.LevelTrace)
+		log.SetFlags(0)
+		moduleName := "Test module name"
+		verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = g2diagnosticSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
-	g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
-	return g2diagnostic
+	return g2diagnosticSingleton
 }
 
 func truncate(aString string, length int) string {
@@ -124,7 +129,7 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 		return localLogger.Error(5907, err)
 	}
 
-	for _, testDataSource := range testhelpers.TestDataSources {
+	for _, testDataSource := range testrecords01.TestDataSources {
 		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return localLogger.Error(5908, err)
@@ -199,7 +204,7 @@ func setupAddRecords(ctx context.Context, moduleName string, iniParams string, v
 		return localLogger.Error(5916, err)
 	}
 
-	for _, testRecord := range testhelpers.TestRecords {
+	for _, testRecord := range testrecords01.TestRecords {
 		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
 		if err != nil {
 			return localLogger.Error(5917, err)
@@ -440,6 +445,14 @@ func TestG2diagnosticImpl_Init(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
+func TestG2diagnosticImpl_Reinit(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
+	initConfigID := int64(testrecords01.TestConfigDataId)
+	err := g2diagnostic.Reinit(ctx, initConfigID)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
+}
+
 func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
@@ -452,19 +465,12 @@ func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestG2diagnosticImpl_Reinit(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(testhelpers.TestConfigDataId)
-	err := g2diagnostic.Reinit(ctx, initConfigID)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-}
-
 func TestG2diagnosticImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := getTestObject(ctx, test)
 	err := g2diagnostic.Destroy(ctx)
 	testError(test, ctx, g2diagnostic, err)
+	g2diagnosticSingleton = nil
 }
 
 // ----------------------------------------------------------------------------
@@ -720,6 +726,17 @@ func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
 	// Output: true
 }
 
+func ExampleG2diagnosticImpl_SetLogLevel() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
+	g2diagnostic := &G2diagnosticImpl{}
+	ctx := context.TODO()
+	err := g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
 func ExampleG2diagnosticImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	g2diagnostic := &G2diagnosticImpl{}
@@ -759,25 +776,13 @@ func ExampleG2diagnosticImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(testhelpers.TestConfigDataId)
+	initConfigID := int64(testrecords01.TestConfigDataId)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
 	if err != nil {
 		fmt.Println(err)
 	}
 	// Output:
 }
-
-func ExampleG2diagnosticImpl_SetLogLevel() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	g2diagnostic := &G2diagnosticImpl{}
-	ctx := context.TODO()
-	err := g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2diagnosticImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()

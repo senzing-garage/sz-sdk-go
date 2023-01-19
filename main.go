@@ -13,7 +13,7 @@ import (
 	"github.com/senzing/g2-sdk-go/g2diagnostic"
 	"github.com/senzing/g2-sdk-go/g2engine"
 	"github.com/senzing/g2-sdk-go/g2product"
-	"github.com/senzing/g2-sdk-go/testhelpers"
+	"github.com/senzing/go-common/testrecords01"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
@@ -143,7 +143,7 @@ func demonstrateConfigFunctions(ctx context.Context, g2Config g2config.G2config,
 
 	// Using G2Config: Add data source to in-memory configuration.
 
-	for _, testDataSource := range testhelpers.TestDataSources {
+	for _, testDataSource := range testrecords01.TestDataSources {
 		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return logger.Error(5101, err)
