@@ -278,7 +278,7 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 	var err error = nil
 	stringBuffer := g2diagnostic.getByteArray(initialByteArraySize)
 	result := C.G2Diagnostic_fetchNextEntityBySize_helper(C.uintptr_t(entityListBySizeHandle), (*C.char)(unsafe.Pointer(&stringBuffer[0])), C.ulong(len(stringBuffer)))
-	if result != 0 {
+	if result < 0 {
 		err = g2diagnostic.newError(ctx, 4004, result, time.Since(entryTime))
 	}
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
