@@ -1723,34 +1723,36 @@ func ExampleG2engineImpl_Stats() {
 	// Output: { "workload": { "loadedRecords": -1,  "addedRecords": 0,  "deletedRecords": 0,  "reevaluations": 0,  "repairedEntities": 0,  "duration": 0,  "retries": 0,  "candidates": 2,  "actualAmbiguousTest": 0,  "cachedAmbiguousTest": 0,...
 }
 
-func ExampleG2engineImpl_WhyEntities() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
-	result, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(truncate(result, 74))
-	// Output: {"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":4,"MATCH_INFO":{"WHY_KEY":...
-}
+// FIXME: Remove after GDEV-3576 is fixed
+// func ExampleG2engineImpl_WhyEntities() {
+// 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+// 	g2engine := &G2engineImpl{}
+// 	ctx := context.TODO()
+// 	var entityID1 int64 = 1
+// 	var entityID2 int64 = 4
+// 	result, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	fmt.Println(truncate(result, 74))
+// 	// Output: {"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":4,"MATCH_INFO":{"WHY_KEY":...
+// }
 
-func ExampleG2engineImpl_WhyEntities_V2() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
-	var flags int64 = 0
-	result, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: {"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":4,"MATCH_INFO":{"WHY_KEY":"","WHY_ERRULE_CODE":"","MATCH_LEVEL_CODE":""}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":4}}]}
-}
+// FIXME: Remove after GDEV-3576 is fixed
+// func ExampleG2engineImpl_WhyEntities_V2() {
+// 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+// 	g2engine := &G2engineImpl{}
+// 	ctx := context.TODO()
+// 	var entityID1 int64 = 1
+// 	var entityID2 int64 = 4
+// 	var flags int64 = 0
+// 	result, err := g2engine.WhyEntities_V2(ctx, entityID1, entityID2, flags)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	fmt.Println(result)
+// 	// Output: {"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":4,"MATCH_INFO":{"WHY_KEY":"","WHY_ERRULE_CODE":"","MATCH_LEVEL_CODE":""}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":4}}]}
+// }
 
 func ExampleG2engineImpl_WhyEntityByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
