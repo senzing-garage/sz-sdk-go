@@ -203,6 +203,25 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 	return err
 }
 
+func setupPurgeRepository(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error {
+	aG2engine := &G2engineImpl{}
+	err := aG2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return localLogger.Error(5903, err)
+	}
+
+	err = aG2engine.PurgeRepository(ctx)
+	if err != nil {
+		return localLogger.Error(5904, err)
+	}
+
+	err = aG2engine.Destroy(ctx)
+	if err != nil {
+		return localLogger.Error(5905, err)
+	}
+	return err
+}
+
 func setup() error {
 	ctx := context.TODO()
 	var err error = nil
@@ -224,6 +243,13 @@ func setup() error {
 	err = setupSenzingConfig(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5920, err)
+	}
+
+	// Purge repository.
+
+	err = setupPurgeRepository(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return localLogger.Error(5921, err)
 	}
 
 	return err

@@ -226,7 +226,6 @@ func setup() error {
 
 	moduleName := "Test module name"
 	verboseLogging := 0
-
 	localLogger, _ := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	// if err != nil {
 	// 	return logger.Error(5901, err)
