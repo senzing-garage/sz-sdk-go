@@ -25,6 +25,7 @@ const (
 
 var (
 	g2diagnosticSingleton G2diagnostic
+	g2configmgrSingleton  g2configmgr.G2configmgr
 	localLogger           messagelogger.MessageLoggerInterface
 )
 
@@ -68,6 +69,23 @@ func getG2Diagnostic(ctx context.Context) G2diagnostic {
 		}
 	}
 	return g2diagnosticSingleton
+}
+
+func getG2Configmgr(ctx context.Context) g2configmgr.G2configmgr {
+	if g2configmgrSingleton == nil {
+		g2configmgrSingleton = &g2configmgr.G2configmgrImpl{}
+		moduleName := "Test module name"
+		verboseLogging := 0
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = g2configmgrSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	return g2configmgrSingleton
 }
 
 func truncate(aString string, length int) string {
@@ -450,8 +468,10 @@ func TestG2diagnosticImpl_Init(test *testing.T) {
 func TestG2diagnosticImpl_Reinit(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(truthset.TestConfigDataId)
-	err := g2diagnostic.Reinit(ctx, initConfigID)
+	g2Configmgr := getG2Configmgr(ctx)
+	initConfigID, err := g2Configmgr.GetDefaultConfigID(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	err = g2diagnostic.Reinit(ctx, initConfigID)
 	testErrorNoFail(test, ctx, g2diagnostic, err)
 }
 
@@ -778,7 +798,8 @@ func ExampleG2diagnosticImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
-	initConfigID := int64(truthset.TestConfigDataId)
+	g2Configmgr := getG2Configmgr(ctx)
+	initConfigID, _ := g2Configmgr.GetDefaultConfigID(ctx)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
 	if err != nil {
 		fmt.Println(err)
