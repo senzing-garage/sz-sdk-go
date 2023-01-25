@@ -155,11 +155,14 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 		return localLogger.Error(5907, err)
 	}
 
-	for _, truthsetSource := range truthset.TruthsetDataSources {
-		_, err := aG2config.AddDataSource(ctx, configHandle, truthsetSource.Data)
+	datasourceNames := []string{"CUSTOMERS", "REFERENCE", "WATCHLIST"}
+	for _, datasourceName := range datasourceNames {
+		datasource := truthset.TruthsetDataSources[datasourceName]
+		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Data)
 		if err != nil {
 			return localLogger.Error(5908, err)
 		}
+		fmt.Printf(">>>>>>>>>>>>>>> %s\n", datasource.Data)
 	}
 
 	configStr, err := aG2config.Save(ctx, configHandle)
@@ -225,7 +228,6 @@ func setupPurgeRepository(ctx context.Context, moduleName string, iniParams stri
 func setup() error {
 	ctx := context.TODO()
 	var err error = nil
-
 	moduleName := "Test module name"
 	verboseLogging := 0
 	localLogger, err = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
@@ -238,18 +240,18 @@ func setup() error {
 		return localLogger.Error(5902, err)
 	}
 
-	// Add Data Sources to Senzing configuration.
-
-	err = setupSenzingConfig(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5920, err)
-	}
-
 	// Purge repository.
 
 	err = setupPurgeRepository(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5921, err)
+	}
+
+	// Add Data Sources to Senzing configuration.
+
+	err = setupSenzingConfig(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return localLogger.Error(5920, err)
 	}
 
 	return err
@@ -260,7 +262,7 @@ func teardown() error {
 	return err
 }
 
-func TestG2engineImpl_BuildSimpleSystemConfigurationJson(test *testing.T) {
+func TestBuildSimpleSystemConfigurationJson(test *testing.T) {
 	actual, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
 		test.Log("Error:", err.Error())
@@ -725,9 +727,9 @@ func TestG2engineImpl_Init(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	moduleName := "Test module name"
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, jsonErr)
-	err := g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, err)
+	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2engine, err)
 }
 
@@ -737,9 +739,9 @@ func TestG2engineImpl_InitWithConfigID(test *testing.T) {
 	moduleName := "Test module name"
 	var initConfigID int64 = 1
 	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, jsonErr)
-	err := g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, err)
+	err = g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2engine, err)
 }
 
