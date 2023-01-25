@@ -12,7 +12,7 @@ import (
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/g2-sdk-go/g2engine"
-	"github.com/senzing/go-common/testrecords01"
+	"github.com/senzing/go-common/truthset"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
@@ -145,7 +145,7 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 		return localLogger.Error(5907, err)
 	}
 
-	for _, testDataSource := range testrecords01.TestDataSources {
+	for _, testDataSource := range truthset.TruthsetDataSources {
 		_, err := aG2config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return localLogger.Error(5908, err)
