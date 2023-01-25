@@ -13,7 +13,7 @@ import (
 	"github.com/senzing/g2-sdk-go/g2diagnostic"
 	"github.com/senzing/g2-sdk-go/g2engine"
 	"github.com/senzing/g2-sdk-go/g2product"
-	"github.com/senzing/go-common/testrecords01"
+	"github.com/senzing/go-common/truthset"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/messageformat"
 	"github.com/senzing/go-logging/messageid"
@@ -143,7 +143,7 @@ func demonstrateConfigFunctions(ctx context.Context, g2Config g2config.G2config,
 
 	// Using G2Config: Add data source to in-memory configuration.
 
-	for _, testDataSource := range testrecords01.TestDataSources {
+	for _, testDataSource := range truthset.TruthsetDataSources {
 		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Data)
 		if err != nil {
 			return logger.Error(5101, err)
@@ -224,6 +224,13 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 		logger.Log(5303, err)
 	}
 	logger.Log(2004, license)
+
+	// Using G2Engine: Purge repository again.
+
+	err = g2Engine.PurgeRepository(ctx)
+	if err != nil {
+		logger.Log(5304, err)
+	}
 
 	return err
 }
