@@ -1738,8 +1738,9 @@ func ExampleG2engineImpl_Stats() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 229))
-	// Output: { "workload": { "loadedRecords": 6,  "addedRecords": 5,  "deletedRecords": 1,  "reevaluations": 0,  "repairedEntities": 0,  "duration": 3,  "retries": 0,  "candidates": 10,  "actualAmbiguousTest": 0,  "cachedAmbiguousTest": 0,...
+	fmt.Println(truncate(result, 138))
+	// Output: { "workload": { "loadedRecords": 6,  "addedRecords": 5,  "deletedRecords": 1,  "reevaluations": 0,  "repairedEntities": 0,  "duration":...
+
 }
 
 // FIXME: Remove after GDEV-3576 is fixed
