@@ -281,9 +281,9 @@ func TestG2engineImpl_AddRecord(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record1 := truthset.CustomerRecords["1001"]
 	record2 := truthset.CustomerRecords["1002"]
-	err := g2engine.AddRecord(ctx, record1.DataSource, record1.Id, record1.Json, "G2Engine_test")
+	err := g2engine.AddRecord(ctx, record1.DataSource, record1.Id, record1.Json, loadId)
 	testError(test, ctx, g2engine, err)
-	err = g2engine.AddRecord(ctx, record2.DataSource, record2.Id, record2.Json, "G2Engine_test")
+	err = g2engine.AddRecord(ctx, record2.DataSource, record2.Id, record2.Json, loadId)
 	testError(test, ctx, g2engine, err)
 }
 
@@ -292,7 +292,7 @@ func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1003"]
 	var flags int64 = 0
-	actual, err := g2engine.AddRecordWithInfo(ctx, record.DataSource, record.Id, record.Json, "G2Engine_test", flags)
+	actual, err := g2engine.AddRecordWithInfo(ctx, record.DataSource, record.Id, record.Json, loadId, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -302,7 +302,7 @@ func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.TestRecordsWithoutRecordId[0]
 	var flags int64 = 0
-	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, record.DataSource, record.Json, "G2Diagnostic_test", flags)
+	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, record.DataSource, record.Json, loadId, flags)
 	testError(test, ctx, g2engine, err)
 	printResult(test, "Actual RecordID", actualRecordID)
 	printActual(test, actual)
@@ -312,7 +312,7 @@ func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.TestRecordsWithoutRecordId[1]
-	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, record.DataSource, record.Json, "G2Diagnostic_test")
+	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, record.DataSource, record.Json, loadId)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -320,9 +320,9 @@ func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
 func TestG2engineImpl_CheckRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	record := `{"DATA_SOURCE": "CUSTOMERS", "NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith", "NAME_MIDDLE": "M" }], "PASSPORT_NUMBER": "PP11111", "PASSPORT_COUNTRY": "US", "DRIVERS_LICENSE_NUMBER": "DL11111", "SSN_NUMBER": "111-11-1111"}`
-	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1001"},{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "123456789"}]}`
-	actual, err := g2engine.CheckRecord(ctx, record, recordQueryList)
+	record := truthset.CustomerRecords["1001"]
+	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "` + record.DataSource + `","RECORD_ID": "` + record.Id + `"},{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "123456789"}]}`
+	actual, err := g2engine.CheckRecord(ctx, record.Json, recordQueryList)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -428,7 +428,10 @@ func TestG2engineImpl_FindNetworkByEntityID_V2(test *testing.T) {
 func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}, {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"}, {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}]}`
+	record1 := truthset.CustomerRecords["1001"]
+	record2 := truthset.CustomerRecords["1002"]
+	record3 := truthset.CustomerRecords["1003"]
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}, {"DATA_SOURCE": "` + record2.DataSource + `", "RECORD_ID": "` + record2.Id + `"}, {"DATA_SOURCE": "` + record3.DataSource + `", "RECORD_ID": "` + record3.Id + `"}]}`
 	maxDegree := 1
 	buildOutDegree := 2
 	maxEntities := 10
@@ -440,7 +443,10 @@ func TestG2engineImpl_FindNetworkByRecordID(test *testing.T) {
 func TestG2engineImpl_FindNetworkByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}, {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002"}, {"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}]}`
+	record1 := truthset.CustomerRecords["1001"]
+	record2 := truthset.CustomerRecords["1002"]
+	record3 := truthset.CustomerRecords["1003"]
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}, {"DATA_SOURCE": "` + record2.DataSource + `", "RECORD_ID": "` + record2.Id + `"}, {"DATA_SOURCE": "` + record3.DataSource + `", "RECORD_ID": "` + record3.Id + `"}]}`
 	maxDegree := 1
 	buildOutDegree := 2
 	maxEntities := 10
@@ -529,7 +535,7 @@ func TestG2engineImpl_FindPathExcludingByRecordID(test *testing.T) {
 	record1 := truthset.CustomerRecords["1001"]
 	record2 := truthset.CustomerRecords["1002"]
 	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}]}`
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}]}`
 	actual, err := g2engine.FindPathExcludingByRecordID(ctx, record1.DataSource, record1.Id, record2.DataSource, record2.Id, maxDegree, excludedRecords)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
@@ -541,7 +547,7 @@ func TestG2engineImpl_FindPathExcludingByRecordID_V2(test *testing.T) {
 	record1 := truthset.CustomerRecords["1001"]
 	record2 := truthset.CustomerRecords["1002"]
 	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}]}`
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}]}`
 	var flags int64 = 0
 	actual, err := g2engine.FindPathExcludingByRecordID_V2(ctx, record1.DataSource, record1.Id, record2.DataSource, record2.Id, maxDegree, excludedRecords, flags)
 	testError(test, ctx, g2engine, err)
@@ -556,7 +562,7 @@ func TestG2engineImpl_FindPathIncludingSourceByEntityID(test *testing.T) {
 	entityID2 := getEntityId(truthset.CustomerRecords["1002"])
 	maxDegree := 1
 	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdString(record1) + `}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["` + record1.DataSource + `"]}`
 	actual, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
@@ -570,7 +576,7 @@ func TestG2engineImpl_FindPathIncludingSourceByEntityID_V2(test *testing.T) {
 	entityID2 := getEntityId(truthset.CustomerRecords["1002"])
 	maxDegree := 1
 	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdString(record1) + `}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["` + record1.DataSource + `"]}`
 	var flags int64 = 0
 	actual, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
 	testError(test, ctx, g2engine, err)
@@ -584,7 +590,7 @@ func TestG2engineImpl_FindPathIncludingSourceByRecordID(test *testing.T) {
 	record2 := truthset.CustomerRecords["1002"]
 	maxDegree := 1
 	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdString(record1) + `}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["` + record1.DataSource + `"]}`
 	actual, err := g2engine.FindPathIncludingSourceByRecordID(ctx, record1.DataSource, record1.Id, record2.DataSource, record2.Id, maxDegree, excludedEntities, requiredDsrcs)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
@@ -597,7 +603,7 @@ func TestG2engineImpl_FindPathIncludingSourceByRecordID_V2(test *testing.T) {
 	record2 := truthset.CustomerRecords["1002"]
 	maxDegree := 1
 	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdString(record1) + `}]}`
-	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
+	requiredDsrcs := `{"DATA_SOURCES": ["` + record1.DataSource + `"]}`
 	var flags int64 = 0
 	actual, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, record1.DataSource, record1.Id, record2.DataSource, record2.Id, maxDegree, excludedEntities, requiredDsrcs, flags)
 	testError(test, ctx, g2engine, err)
@@ -688,7 +694,9 @@ func TestG2engineImpl_GetRepositoryLastModifiedTime(test *testing.T) {
 func TestG2engineImpl_GetVirtualEntityByRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1001"},{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1002"}]}`
+	record1 := truthset.CustomerRecords["1001"]
+	record2 := truthset.CustomerRecords["1002"]
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}, {"DATA_SOURCE": "` + record2.DataSource + `", "RECORD_ID": "` + record2.Id + `"}]}`
 	actual, err := g2engine.GetVirtualEntityByRecordID(ctx, recordList)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
@@ -697,7 +705,9 @@ func TestG2engineImpl_GetVirtualEntityByRecordID(test *testing.T) {
 func TestG2engineImpl_GetVirtualEntityByRecordID_V2(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
-	recordList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1001"},{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1002"}]}`
+	record1 := truthset.CustomerRecords["1001"]
+	record2 := truthset.CustomerRecords["1002"]
+	recordList := `{"RECORDS": [{"DATA_SOURCE": "` + record1.DataSource + `", "RECORD_ID": "` + record1.Id + `"}, {"DATA_SOURCE": "` + record2.DataSource + `", "RECORD_ID": "` + record2.Id + `"}]}`
 	var flags int64 = 0
 	actual, err := g2engine.GetVirtualEntityByRecordID_V2(ctx, recordList, flags)
 	testError(test, ctx, g2engine, err)
@@ -992,7 +1002,7 @@ func TestG2engineImpl_DeleteRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
-	err := g2engine.DeleteRecord(ctx, record.DataSource, record.Id, "G2Engine_test")
+	err := g2engine.DeleteRecord(ctx, record.DataSource, record.Id, loadId)
 	testError(test, ctx, g2engine, err)
 }
 
@@ -1739,7 +1749,7 @@ func ExampleG2engineImpl_Stats() {
 		fmt.Println(err)
 	}
 	fmt.Println(truncate(result, 138))
-	// Output: { "workload": { "loadedRecords": 6,  "addedRecords": 5,  "deletedRecords": 1,  "reevaluations": 0,  "repairedEntities": 0,  "duration":...
+	// Output: { "workload": { "loadedRecords": 5,  "addedRecords": 5,  "deletedRecords": 1,  "reevaluations": 0,  "repairedEntities": 0,  "duration":...
 
 }
 
