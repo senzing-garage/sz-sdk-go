@@ -467,16 +467,6 @@ func TestG2diagnosticImpl_Init(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 }
 
-func TestG2diagnosticImpl_Reinit(test *testing.T) {
-	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
-	g2Configmgr := getG2Configmgr(ctx)
-	initConfigID, err := g2Configmgr.GetDefaultConfigID(ctx)
-	testError(test, ctx, g2diagnostic, err)
-	err = g2diagnostic.Reinit(ctx, initConfigID)
-	testErrorNoFail(test, ctx, g2diagnostic, err)
-}
-
 func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	ctx := context.TODO()
 	g2diagnostic := &G2diagnosticImpl{}
@@ -487,6 +477,16 @@ func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 	testError(test, ctx, g2diagnostic, err)
 	err = g2diagnostic.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
 	testError(test, ctx, g2diagnostic, err)
+}
+
+func TestG2diagnosticImpl_Reinit(test *testing.T) {
+	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
+	g2Configmgr := getG2Configmgr(ctx)
+	initConfigID, err := g2Configmgr.GetDefaultConfigID(ctx)
+	testError(test, ctx, g2diagnostic, err)
+	err = g2diagnostic.Reinit(ctx, initConfigID)
+	testErrorNoFail(test, ctx, g2diagnostic, err)
 }
 
 func TestG2diagnosticImpl_Destroy(test *testing.T) {

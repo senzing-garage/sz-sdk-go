@@ -23,6 +23,7 @@ import (
 
 const (
 	defaultTruncation = 76
+	loadId            = "G2Engine_test"
 	printResults      = false
 )
 
@@ -722,29 +723,6 @@ func TestG2engineImpl_HowEntityByEntityID_V2(test *testing.T) {
 	printActual(test, actual)
 }
 
-func TestG2engineImpl_Init(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, err)
-	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
-func TestG2engineImpl_InitWithConfigID(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	var initConfigID int64 = 1
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2engine, err)
-	err = g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-	testError(test, ctx, g2engine, err)
-}
-
 func TestG2engineImpl_PrimeEngine(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
@@ -842,16 +820,6 @@ func TestG2engineImpl_ReevaluateRecordWithInfo(test *testing.T) {
 	actual, err := g2engine.ReevaluateRecordWithInfo(ctx, record.DataSource, record.Id, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
-}
-
-func TestG2engineImpl_Reinit(test *testing.T) {
-	ctx := context.TODO()
-	g2engine := getTestObject(ctx, test)
-	initConfigID, err := g2engine.GetActiveConfigID(ctx)
-	testError(test, ctx, g2engine, err)
-	err = g2engine.Reinit(ctx, initConfigID)
-	testError(test, ctx, g2engine, err)
-	printActual(test, initConfigID)
 }
 
 // FIXME: Remove after GDEV-3576 is fixed
@@ -985,6 +953,39 @@ func TestG2engineImpl_WhyRecords_V2(test *testing.T) {
 	actual, err := g2engine.WhyRecords_V2(ctx, record1.DataSource, record1.Id, record2.DataSource, record2.Id, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
+}
+
+func TestG2engineImpl_Init(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, err)
+	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_InitWithConfigID(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	var initConfigID int64 = 1
+	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2engine, err)
+	err = g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	testError(test, ctx, g2engine, err)
+}
+
+func TestG2engineImpl_Reinit(test *testing.T) {
+	ctx := context.TODO()
+	g2engine := getTestObject(ctx, test)
+	initConfigID, err := g2engine.GetActiveConfigID(ctx)
+	testError(test, ctx, g2engine, err)
+	err = g2engine.Reinit(ctx, initConfigID)
+	testError(test, ctx, g2engine, err)
+	printActual(test, initConfigID)
 }
 
 func TestG2engineImpl_DeleteRecord(test *testing.T) {
@@ -1680,58 +1681,11 @@ func ExampleG2engineImpl_HowEntityByEntityID_V2() {
 	// Output: {"HOW_RESULTS":{"RESOLUTION_STEPS":[{"STEP":1,"VIRTUAL_ENTITY_1":{"VIRTUAL_ENTITY_ID":"V2","MEMBER_RECORDS":[{"INTERNAL_ID":2,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1002"}]}]},"VIRTUAL_ENTITY_2":{"VIRTUAL_ENTITY_ID":"V100001","MEMBER_RECORDS":[{"INTERNAL_ID":100001,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001"}]}]},"INBOUND_VIRTUAL_ENTITY_ID":"V2","RESULT_VIRTUAL_ENTITY_ID":"V2-S1","MATCH_INFO":{"MATCH_KEY":"+NAME+DOB+PHONE","ERRULE_CODE":"CNAME_CFF_CEXCL"}},{"STEP":2,"VIRTUAL_ENTITY_1":{"VIRTUAL_ENTITY_ID":"V2-S1","MEMBER_RECORDS":[{"INTERNAL_ID":2,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1002"}]},{"INTERNAL_ID":100001,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001"}]}]},"VIRTUAL_ENTITY_2":{"VIRTUAL_ENTITY_ID":"V3","MEMBER_RECORDS":[{"INTERNAL_ID":3,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1003"}]}]},"INBOUND_VIRTUAL_ENTITY_ID":"V2-S1","RESULT_VIRTUAL_ENTITY_ID":"V2-S2","MATCH_INFO":{"MATCH_KEY":"+NAME+DOB+EMAIL","ERRULE_CODE":"SF1_PNAME_CSTAB"}}],"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"VIRTUAL_ENTITY_ID":"V2-S2","MEMBER_RECORDS":[{"INTERNAL_ID":2,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1002"}]},{"INTERNAL_ID":3,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1003"}]},{"INTERNAL_ID":100001,"RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001"}]}]}]}}}
 }
 
-func ExampleG2engineImpl_Init() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	moduleName := "Test module name"
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		fmt.Println(err)
-	}
-	verboseLogging := 0
-	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
-func ExampleG2engineImpl_InitWithConfigID() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	moduleName := "Test module name"
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		fmt.Println(err)
-	}
-	initConfigID := int64(1)
-	verboseLogging := 0
-	err = g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2engineImpl_PrimeEngine() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
 	err := g2engine.PrimeEngine(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
-func ExampleG2engineImpl_Reinit() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	initConfigID, _ := g2engine.GetActiveConfigID(ctx) // Example initConfigID.
-	err := g2engine.Reinit(ctx, initConfigID)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -1785,7 +1739,7 @@ func ExampleG2engineImpl_Stats() {
 		fmt.Println(err)
 	}
 	fmt.Println(truncate(result, 229))
-	// Output: { "workload": { "loadedRecords": -1,  "addedRecords": 0,  "deletedRecords": 0,  "reevaluations": 0,  "repairedEntities": 0,  "duration": 0,  "retries": 0,  "candidates": 2,  "actualAmbiguousTest": 0,  "cachedAmbiguousTest": 0,...
+	// Output: { "workload": { "loadedRecords": 6,  "addedRecords": 5,  "deletedRecords": 1,  "reevaluations": 0,  "repairedEntities": 0,  "duration": 3,  "retries": 0,  "candidates": 10,  "actualAmbiguousTest": 0,  "cachedAmbiguousTest": 0,...
 }
 
 // FIXME: Remove after GDEV-3576 is fixed
@@ -1908,38 +1862,6 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":100001,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001"}],"INTERNAL_ID_2":2,"ENTITY_ID_2":1,"FOCUS_RECORDS_2":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1002"}],"MATCH_INFO":{"WHY_KEY":"+NAME+DOB+PHONE","WHY_ERRULE_CODE":"CNAME_CFF_CEXCL","MATCH_LEVEL_CODE":"RESOLVED"}}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}]}
 }
 
-func ExampleG2engineImpl_ReplaceRecord() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	dataSourceCode := "CUSTOMERS"
-	recordID := "1001"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "CUSTOMERS"
-	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
-func ExampleG2engineImpl_ReplaceRecordWithInfo() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
-	ctx := context.TODO()
-	dataSourceCode := "CUSTOMERS"
-	recordID := "1001"
-	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "CUSTOMERS"
-	var flags int64 = 0
-	result, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(result)
-	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
-}
-
 func ExampleG2engineImpl_Process() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
@@ -1961,7 +1883,7 @@ func ExampleG2engineImpl_ProcessRedoRecord() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"REASON":"deferred delete","DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1002","ENTITY_TYPE":"GENERIC","DSRC_ACTION":"X"}
+	// Output:
 }
 
 func ExampleG2engineImpl_ProcessRedoRecordWithInfo() {
@@ -1988,7 +1910,7 @@ func ExampleG2engineImpl_ProcessWithInfo() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"555","AFFECTED_ENTITIES":[{"ENTITY_ID":200001}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
+	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"555","AFFECTED_ENTITIES":[{"ENTITY_ID":100003}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
 
 func ExampleG2engineImpl_ProcessWithResponse() {
@@ -2069,8 +1991,41 @@ func ExampleG2engineImpl_ReevaluateRecordWithInfo() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001","AFFECTED_ENTITIES":[{"ENTITY_ID":200001}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
+	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001","AFFECTED_ENTITIES":[{"ENTITY_ID":2}],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
+
+func ExampleG2engineImpl_ReplaceRecord() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	dataSourceCode := "CUSTOMERS"
+	recordID := "1001"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "CUSTOMERS"
+	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2engineImpl_ReplaceRecordWithInfo() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	dataSourceCode := "CUSTOMERS"
+	recordID := "1001"
+	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
+	loadID := "CUSTOMERS"
+	var flags int64 = 0
+	result, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
+}
+
 func ExampleG2engineImpl_DeleteRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
@@ -2101,16 +2056,63 @@ func ExampleG2engineImpl_DeleteRecordWithInfo() {
 	// Output: {"DATA_SOURCE":"CUSTOMERS","RECORD_ID":"1001","AFFECTED_ENTITIES":[],"INTERESTING_ENTITIES":{"ENTITIES":[]}}
 }
 
-// func ExampleG2engineImpl_PurgeRepository() {
-// 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-// 	g2engine := &G2engineImpl{}
-// 	ctx := context.TODO()
-// 	err := g2engine.PurgeRepository(ctx)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	// Output:
-// }
+func ExampleG2engineImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	verboseLogging := 0
+	err = g2engine.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2engineImpl_InitWithConfigID() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	initConfigID := int64(1)
+	verboseLogging := 0
+	err = g2engine.InitWithConfigID(ctx, moduleName, iniParams, initConfigID, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2engineImpl_Reinit() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	initConfigID, _ := g2engine.GetActiveConfigID(ctx) // Example initConfigID.
+	err := g2engine.Reinit(ctx, initConfigID)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2engineImpl_PurgeRepository() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
+	g2engine := &G2engineImpl{}
+	ctx := context.TODO()
+	err := g2engine.PurgeRepository(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
 
 func ExampleG2engineImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go

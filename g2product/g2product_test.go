@@ -169,17 +169,6 @@ func TestG2productImpl_Destroy(test *testing.T) {
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleG2productImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
-	ctx := context.TODO()
-	err := g2product.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2productImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
 	g2product := &G2productImpl{}
@@ -255,4 +244,15 @@ func ExampleG2productImpl_Version() {
 	}
 	fmt.Println(result)
 	// Output: {"PRODUCT_NAME":"Senzing API","VERSION":"3.4.1","BUILD_VERSION":"3.4.1.23023","BUILD_DATE":"2023-01-22","BUILD_NUMBER":"2023_01_22__23_01","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.4","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+}
+
+func ExampleG2productImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	g2product := &G2productImpl{}
+	ctx := context.TODO()
+	err := g2product.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
 }
