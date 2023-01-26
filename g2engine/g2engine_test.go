@@ -13,6 +13,7 @@ import (
 	truncator "github.com/aquilax/truncate"
 	"github.com/senzing/g2-sdk-go/g2config"
 	"github.com/senzing/g2-sdk-go/g2configmgr"
+	"github.com/senzing/go-common/record"
 	"github.com/senzing/go-common/truthset"
 	"github.com/senzing/go-helpers/g2engineconfigurationjson"
 	"github.com/senzing/go-logging/logger"
@@ -75,7 +76,7 @@ func getG2Engine(ctx context.Context) G2engine {
 	return g2engineSingleton
 }
 
-func getEntityId(record truthset.Record) int64 {
+func getEntityId(record record.Record) int64 {
 	ctx := context.TODO()
 	var result int64 = 0
 	g2engine := getG2Engine(ctx)
@@ -91,7 +92,7 @@ func getEntityId(record truthset.Record) int64 {
 	return getEntityByRecordIDResponse.ResolvedEntity.EntityId
 }
 
-func getEntityIdString(record truthset.Record) string {
+func getEntityIdString(record record.Record) string {
 	entityId := getEntityId(record)
 	return strconv.FormatInt(entityId, 10)
 }
@@ -158,11 +159,10 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 	datasourceNames := []string{"CUSTOMERS", "REFERENCE", "WATCHLIST"}
 	for _, datasourceName := range datasourceNames {
 		datasource := truthset.TruthsetDataSources[datasourceName]
-		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Data)
+		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Json)
 		if err != nil {
 			return localLogger.Error(5908, err)
 		}
-		fmt.Printf(">>>>>>>>>>>>>>> %s\n", datasource.Data)
 	}
 
 	configStr, err := aG2config.Save(ctx, configHandle)
@@ -280,9 +280,9 @@ func TestG2engineImpl_AddRecord(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record1 := truthset.CustomerRecords["1001"]
 	record2 := truthset.CustomerRecords["1002"]
-	err := g2engine.AddRecord(ctx, record1.DataSource, record1.Id, record1.Data, record1.LoadId)
+	err := g2engine.AddRecord(ctx, record1.DataSource, record1.Id, record1.Json, "G2Engine_test")
 	testError(test, ctx, g2engine, err)
-	err = g2engine.AddRecord(ctx, record2.DataSource, record2.Id, record2.Data, record2.LoadId)
+	err = g2engine.AddRecord(ctx, record2.DataSource, record2.Id, record2.Json, "G2Engine_test")
 	testError(test, ctx, g2engine, err)
 }
 
@@ -291,7 +291,7 @@ func TestG2engineImpl_AddRecordWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1003"]
 	var flags int64 = 0
-	actual, err := g2engine.AddRecordWithInfo(ctx, record.DataSource, record.Id, record.Data, record.LoadId, flags)
+	actual, err := g2engine.AddRecordWithInfo(ctx, record.DataSource, record.Id, record.Json, "G2Engine_test", flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -301,7 +301,7 @@ func TestG2engineImpl_AddRecordWithInfoWithReturnedRecordID(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.TestRecordsWithoutRecordId[0]
 	var flags int64 = 0
-	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, record.DataSource, record.Data, record.LoadId, flags)
+	actual, actualRecordID, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, record.DataSource, record.Json, "G2Diagnostic_test", flags)
 	testError(test, ctx, g2engine, err)
 	printResult(test, "Actual RecordID", actualRecordID)
 	printActual(test, actual)
@@ -311,7 +311,7 @@ func TestG2engineImpl_AddRecordWithReturnedRecordID(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.TestRecordsWithoutRecordId[1]
-	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, record.DataSource, record.Data, record.LoadId)
+	actual, err := g2engine.AddRecordWithReturnedRecordID(ctx, record.DataSource, record.Json, "G2Diagnostic_test")
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -756,7 +756,7 @@ func TestG2engineImpl_Process(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
-	err := g2engine.Process(ctx, record.Data)
+	err := g2engine.Process(ctx, record.Json)
 	testError(test, ctx, g2engine, err)
 }
 
@@ -783,7 +783,7 @@ func TestG2engineImpl_ProcessWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
 	var flags int64 = 0
-	actual, err := g2engine.ProcessWithInfo(ctx, record.Data, flags)
+	actual, err := g2engine.ProcessWithInfo(ctx, record.Json, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -792,7 +792,7 @@ func TestG2engineImpl_ProcessWithResponse(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
-	actual, err := g2engine.ProcessWithResponse(ctx, record.Data)
+	actual, err := g2engine.ProcessWithResponse(ctx, record.Json)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -801,7 +801,7 @@ func TestG2engineImpl_ProcessWithResponseResize(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
-	actual, err := g2engine.ProcessWithResponseResize(ctx, record.Data)
+	actual, err := g2engine.ProcessWithResponseResize(ctx, record.Json)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }
@@ -991,7 +991,7 @@ func TestG2engineImpl_DeleteRecord(test *testing.T) {
 	ctx := context.TODO()
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
-	err := g2engine.DeleteRecord(ctx, record.DataSource, record.Id, record.LoadId)
+	err := g2engine.DeleteRecord(ctx, record.DataSource, record.Id, "G2Engine_test")
 	testError(test, ctx, g2engine, err)
 }
 
@@ -1000,7 +1000,7 @@ func TestG2engineImpl_DeleteRecordWithInfo(test *testing.T) {
 	g2engine := getTestObject(ctx, test)
 	record := truthset.CustomerRecords["1001"]
 	var flags int64 = 0
-	actual, err := g2engine.DeleteRecordWithInfo(ctx, record.DataSource, record.Id, record.LoadId, flags)
+	actual, err := g2engine.DeleteRecordWithInfo(ctx, record.DataSource, record.Id, record.Json, flags)
 	testError(test, ctx, g2engine, err)
 	printActual(test, actual)
 }

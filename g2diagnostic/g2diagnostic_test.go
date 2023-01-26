@@ -151,11 +151,10 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 	datasourceNames := []string{"CUSTOMERS", "REFERENCE", "WATCHLIST"}
 	for _, datasourceName := range datasourceNames {
 		datasource := truthset.TruthsetDataSources[datasourceName]
-		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Data)
+		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Json)
 		if err != nil {
 			return localLogger.Error(5908, err)
 		}
-		fmt.Printf(">>>>>>>>>>>>>>> %s\n", datasource.Data)
 	}
 
 	configStr, err := aG2config.Save(ctx, configHandle)
@@ -229,7 +228,7 @@ func setupAddRecords(ctx context.Context, moduleName string, iniParams string, v
 	testRecordIds := []string{"1001", "1002", "1003", "1004", "1005", "1039", "1040"}
 	for _, testRecordId := range testRecordIds {
 		testRecord := truthset.CustomerRecords[testRecordId]
-		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Data, testRecord.LoadId)
+		err := aG2engine.AddRecord(ctx, testRecord.DataSource, testRecord.Id, testRecord.Json, "G2Diagnostic_test")
 		if err != nil {
 			return localLogger.Error(5917, err)
 		}

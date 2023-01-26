@@ -144,7 +144,7 @@ func demonstrateConfigFunctions(ctx context.Context, g2Config g2config.G2config,
 	// Using G2Config: Add data source to in-memory configuration.
 
 	for _, testDataSource := range truthset.TruthsetDataSources {
-		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Data)
+		_, err := g2Config.AddDataSource(ctx, configHandle, testDataSource.Json)
 		if err != nil {
 			return logger.Error(5101, err)
 		}

@@ -141,11 +141,10 @@ func setupSenzingConfig(ctx context.Context, moduleName string, iniParams string
 	datasourceNames := []string{"CUSTOMERS", "REFERENCE", "WATCHLIST"}
 	for _, datasourceName := range datasourceNames {
 		datasource := truthset.TruthsetDataSources[datasourceName]
-		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Data)
+		_, err := aG2config.AddDataSource(ctx, configHandle, datasource.Json)
 		if err != nil {
 			return localLogger.Error(5908, err)
 		}
-		fmt.Printf(">>>>>>>>>>>>>>> %s\n", datasource.Data)
 	}
 
 	configStr, err := aG2config.Save(ctx, configHandle)

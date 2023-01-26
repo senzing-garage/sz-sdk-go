@@ -15,3 +15,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace (
+	github.com/senzing/go-common v0.0.0-20230125153827-f782b6dbcfe6 => /home/senzing/senzing.git/go-common
+)
