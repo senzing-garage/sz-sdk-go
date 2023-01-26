@@ -254,7 +254,6 @@ func setup() error {
 	if err != nil {
 		return localLogger.Error(5921, err)
 	}
-
 	return err
 }
 
