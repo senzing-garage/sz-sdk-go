@@ -256,18 +256,18 @@ func setup() error {
 		return localLogger.Error(5902, err)
 	}
 
-	// Purge repository.
-
-	err = setupPurgeRepository(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		return localLogger.Error(5921, err)
-	}
-
 	// Add Data Sources to Senzing configuration.
 
 	err = setupSenzingConfig(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		return localLogger.Error(5920, err)
+	}
+
+	// Purge repository.
+
+	err = setupPurgeRepository(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		return localLogger.Error(5921, err)
 	}
 
 	// Add records.
