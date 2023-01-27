@@ -816,6 +816,5 @@ func ExampleG2diagnosticImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	g2diagnosticSingleton = nil
 	// Output:
 }

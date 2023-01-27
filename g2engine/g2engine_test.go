@@ -2139,6 +2139,5 @@ func ExampleG2engineImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	g2engineSingleton = nil
 	// Output:
 }

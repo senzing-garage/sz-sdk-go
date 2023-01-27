@@ -255,6 +255,5 @@ func ExampleG2productImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	g2productSingleton = nil
 	// Output:
 }

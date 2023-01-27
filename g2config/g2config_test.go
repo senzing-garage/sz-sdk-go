@@ -369,6 +369,5 @@ func ExampleG2configImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	g2configSingleton = nil
 	// Output:
 }

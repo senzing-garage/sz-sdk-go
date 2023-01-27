@@ -511,6 +511,5 @@ func ExampleG2configmgrImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	g2configmgrSingleton = nil
 	// Output:
 }
