@@ -481,7 +481,7 @@ func TestG2diagnosticImpl_InitWithConfigID(test *testing.T) {
 
 func TestG2diagnosticImpl_Reinit(test *testing.T) {
 	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
+	g2diagnostic := getTestObject(ctx, test)
 	g2Configmgr := getG2Configmgr(ctx)
 	initConfigID, err := g2Configmgr.GetDefaultConfigID(ctx)
 	testError(test, ctx, g2diagnostic, err)
