@@ -770,7 +770,7 @@ func ExampleG2diagnosticImpl_Init() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	verboseLogging := 0 // 0 for no Senzing logging; 1 for logging
+	verboseLogging := 0
 	err = g2diagnostic.Init(ctx, moduleName, iniParams, verboseLogging)
 	if err != nil {
 		fmt.Println(err)
