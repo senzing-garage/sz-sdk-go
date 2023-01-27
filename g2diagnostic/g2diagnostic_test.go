@@ -799,7 +799,7 @@ func ExampleG2diagnosticImpl_InitWithConfigID() {
 func ExampleG2diagnosticImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
-	g2diagnostic := &G2diagnosticImpl{}
+	g2diagnostic := getG2Diagnostic(ctx)
 	g2Configmgr := getG2Configmgr(ctx)
 	initConfigID, _ := g2Configmgr.GetDefaultConfigID(ctx)
 	err := g2diagnostic.Reinit(ctx, initConfigID)
@@ -808,6 +808,7 @@ func ExampleG2diagnosticImpl_Reinit() {
 	}
 	// Output:
 }
+
 func ExampleG2diagnosticImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
 	ctx := context.TODO()
