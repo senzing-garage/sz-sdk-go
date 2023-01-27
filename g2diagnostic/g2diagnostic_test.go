@@ -752,8 +752,8 @@ func ExampleG2diagnosticImpl_GetTotalSystemMemory() {
 
 func ExampleG2diagnosticImpl_SetLogLevel() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
 	err := g2diagnostic.SetLogLevel(ctx, logger.LevelInfo)
 	if err != nil {
 		fmt.Println(err)
@@ -763,8 +763,8 @@ func ExampleG2diagnosticImpl_SetLogLevel() {
 
 func ExampleG2diagnosticImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("") // See https://pkg.go.dev/github.com/senzing/go-helpers
 	if err != nil {
@@ -780,8 +780,8 @@ func ExampleG2diagnosticImpl_Init() {
 
 func ExampleG2diagnosticImpl_InitWithConfigID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2diagnostic/g2diagnostic_test.go
-	g2diagnostic := &G2diagnosticImpl{}
 	ctx := context.TODO()
+	g2diagnostic := &G2diagnosticImpl{}
 	moduleName := "Test module name"
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {

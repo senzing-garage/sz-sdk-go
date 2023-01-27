@@ -1834,7 +1834,7 @@ func ExampleG2engineImpl_WhyEntityByRecordID() {
 func ExampleG2engineImpl_WhyEntityByRecordID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
-	g2engine := &G2engineImpl{}
+	g2engine := getG2Engine(ctx)
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	var flags int64 = 0
