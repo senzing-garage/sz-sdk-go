@@ -1700,8 +1700,8 @@ func ExampleG2engineImpl_HowEntityByEntityID_V2() {
 
 func ExampleG2engineImpl_PrimeEngine() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	err := g2engine.PrimeEngine(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -1711,8 +1711,8 @@ func ExampleG2engineImpl_PrimeEngine() {
 
 func ExampleG2engineImpl_SearchByAttributes() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith"}], "EMAIL_ADDRESS": "bsmith@work.com"}`
 	result, err := g2engine.SearchByAttributes(ctx, jsonData)
 	if err != nil {
@@ -1724,8 +1724,8 @@ func ExampleG2engineImpl_SearchByAttributes() {
 
 func ExampleG2engineImpl_SearchByAttributes_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	jsonData := `{"NAMES": [{"NAME_TYPE": "PRIMARY", "NAME_LAST": "Smith"}], "EMAIL_ADDRESS": "bsmith@work.com"}`
 	var flags int64 = 0
 	result, err := g2engine.SearchByAttributes_V2(ctx, jsonData, flags)
@@ -1738,8 +1738,8 @@ func ExampleG2engineImpl_SearchByAttributes_V2() {
 
 func ExampleG2engineImpl_SetLogLevel() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	err := g2engine.SetLogLevel(ctx, logger.LevelInfo)
 	if err != nil {
 		fmt.Println(err)
@@ -1749,8 +1749,8 @@ func ExampleG2engineImpl_SetLogLevel() {
 
 func ExampleG2engineImpl_Stats() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	result, err := g2engine.Stats(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -1763,8 +1763,8 @@ func ExampleG2engineImpl_Stats() {
 // FIXME: Remove after GDEV-3576 is fixed
 // func ExampleG2engineImpl_WhyEntities() {
 // 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-// 	g2engine := &G2engineImpl{}
 // 	ctx := context.TODO()
+// 	g2engine := &G2engineImpl{}
 // 	var entityID1 int64 = 1
 // 	var entityID2 int64 = 4
 // 	result, err := g2engine.WhyEntities(ctx, entityID1, entityID2)
@@ -1778,8 +1778,8 @@ func ExampleG2engineImpl_Stats() {
 // FIXME: Remove after GDEV-3576 is fixed
 // func ExampleG2engineImpl_WhyEntities_V2() {
 // 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-// 	g2engine := &G2engineImpl{}
 // 	ctx := context.TODO()
+// 	g2engine := &G2engineImpl{}
 // 	var entityID1 int64 = 1
 // 	var entityID2 int64 = 4
 // 	var flags int64 = 0
@@ -1793,8 +1793,8 @@ func ExampleG2engineImpl_Stats() {
 
 func ExampleG2engineImpl_WhyEntityByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	result, err := g2engine.WhyEntityByEntityID(ctx, entityID)
 	if err != nil {
@@ -1806,8 +1806,8 @@ func ExampleG2engineImpl_WhyEntityByEntityID() {
 
 func ExampleG2engineImpl_WhyEntityByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
@@ -1820,8 +1820,8 @@ func ExampleG2engineImpl_WhyEntityByEntityID_V2() {
 
 func ExampleG2engineImpl_WhyEntityByRecordID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	result, err := g2engine.WhyEntityByRecordID(ctx, dataSourceCode, recordID)
@@ -1834,8 +1834,8 @@ func ExampleG2engineImpl_WhyEntityByRecordID() {
 
 func ExampleG2engineImpl_WhyEntityByRecordID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	var flags int64 = 0
@@ -1849,8 +1849,8 @@ func ExampleG2engineImpl_WhyEntityByRecordID_V2() {
 
 func ExampleG2engineImpl_WhyRecords() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode1 := "CUSTOMERS"
 	recordID1 := "1001"
 	dataSourceCode2 := "CUSTOMERS"
@@ -1865,8 +1865,8 @@ func ExampleG2engineImpl_WhyRecords() {
 
 func ExampleG2engineImpl_WhyRecords_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode1 := "CUSTOMERS"
 	recordID1 := "1001"
 	dataSourceCode2 := "CUSTOMERS"
@@ -1882,8 +1882,8 @@ func ExampleG2engineImpl_WhyRecords_V2() {
 
 func ExampleG2engineImpl_Process() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	record := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
 	err := g2engine.Process(ctx, record)
 	if err != nil {
@@ -1894,8 +1894,8 @@ func ExampleG2engineImpl_Process() {
 
 func ExampleG2engineImpl_ProcessRedoRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	result, err := g2engine.ProcessRedoRecord(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -1906,8 +1906,8 @@ func ExampleG2engineImpl_ProcessRedoRecord() {
 
 func ExampleG2engineImpl_ProcessRedoRecordWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	var flags int64 = 0
 	_, result, err := g2engine.ProcessRedoRecordWithInfo(ctx, flags)
 	if err != nil {
@@ -1919,8 +1919,8 @@ func ExampleG2engineImpl_ProcessRedoRecordWithInfo() {
 
 func ExampleG2engineImpl_ProcessWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	record := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
 	var flags int64 = 0
 	result, err := g2engine.ProcessWithInfo(ctx, record, flags)
@@ -1933,8 +1933,8 @@ func ExampleG2engineImpl_ProcessWithInfo() {
 
 func ExampleG2engineImpl_ProcessWithResponse() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	record := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
 	result, err := g2engine.ProcessWithResponse(ctx, record)
 	if err != nil {
@@ -1946,8 +1946,8 @@ func ExampleG2engineImpl_ProcessWithResponse() {
 
 func ExampleG2engineImpl_ProcessWithResponseResize() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	record := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
 	result, err := g2engine.ProcessWithResponseResize(ctx, record)
 	if err != nil {
@@ -1959,8 +1959,8 @@ func ExampleG2engineImpl_ProcessWithResponseResize() {
 
 func ExampleG2engineImpl_ReevaluateEntity() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
@@ -1971,8 +1971,8 @@ func ExampleG2engineImpl_ReevaluateEntity() {
 }
 func ExampleG2engineImpl_ReevaluateEntityWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
@@ -1985,8 +1985,8 @@ func ExampleG2engineImpl_ReevaluateEntityWithInfo() {
 
 func ExampleG2engineImpl_ReevaluateRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	var flags int64 = 0
@@ -1999,8 +1999,8 @@ func ExampleG2engineImpl_ReevaluateRecord() {
 
 func ExampleG2engineImpl_ReevaluateRecordWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	var flags int64 = 0
@@ -2014,8 +2014,8 @@ func ExampleG2engineImpl_ReevaluateRecordWithInfo() {
 
 func ExampleG2engineImpl_ReplaceRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
@@ -2029,8 +2029,8 @@ func ExampleG2engineImpl_ReplaceRecord() {
 
 func ExampleG2engineImpl_ReplaceRecordWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
@@ -2076,8 +2076,8 @@ func ExampleG2engineImpl_DeleteRecordWithInfo() {
 
 func ExampleG2engineImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	moduleName := "Test module name"
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -2093,8 +2093,8 @@ func ExampleG2engineImpl_Init() {
 
 func ExampleG2engineImpl_InitWithConfigID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	moduleName := "Test module name"
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -2111,8 +2111,8 @@ func ExampleG2engineImpl_InitWithConfigID() {
 
 func ExampleG2engineImpl_Reinit() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	initConfigID, _ := g2engine.GetActiveConfigID(ctx) // Example initConfigID.
 	err := g2engine.Reinit(ctx, initConfigID)
 	if err != nil {
@@ -2123,8 +2123,8 @@ func ExampleG2engineImpl_Reinit() {
 
 func ExampleG2engineImpl_PurgeRepository() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	err := g2engine.PurgeRepository(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -2134,8 +2134,8 @@ func ExampleG2engineImpl_PurgeRepository() {
 
 func ExampleG2engineImpl_Destroy() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
-	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
+	g2engine := &G2engineImpl{}
 	err := g2engine.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
