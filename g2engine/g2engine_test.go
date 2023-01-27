@@ -77,11 +77,11 @@ func getG2Engine(ctx context.Context) G2engine {
 	return g2engineSingleton
 }
 
-func getEntityId(record record.Record) int64 {
+func getEntityIdForRecord(datasource string, id string) int64 {
 	ctx := context.TODO()
 	var result int64 = 0
 	g2engine := getG2Engine(ctx)
-	response, err := g2engine.GetEntityByRecordID(ctx, record.DataSource, record.Id)
+	response, err := g2engine.GetEntityByRecordID(ctx, datasource, id)
 	if err != nil {
 		return result
 	}
@@ -91,6 +91,15 @@ func getEntityId(record record.Record) int64 {
 		return result
 	}
 	return getEntityByRecordIDResponse.ResolvedEntity.EntityId
+}
+
+func getEntityIdStringForRecord(datasource string, id string) string {
+	entityId := getEntityIdForRecord(datasource, id)
+	return strconv.FormatInt(entityId, 10)
+}
+
+func getEntityId(record record.Record) int64 {
+	return getEntityIdForRecord(record.DataSource, record.Id)
 }
 
 func getEntityIdString(record record.Record) string {
@@ -1034,7 +1043,7 @@ func ExampleG2engineImpl_AddRecord() {
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
-	loadID := "TRUTHSET_CUSTOMER_LOAD"
+	loadID := "G2Engine_test"
 	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	if err != nil {
 		fmt.Println(err)
@@ -1049,7 +1058,7 @@ func ExampleG2engineImpl_AddRecord_secondRecord() {
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1002"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1002", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Bob", "DATE_OF_BIRTH": "11/12/1978", "ADDR_TYPE": "HOME", "ADDR_LINE1": "1515 Adela Lane", "ADDR_CITY": "Las Vegas", "ADDR_STATE": "NV", "ADDR_POSTAL_CODE": "89111", "PHONE_TYPE": "MOBILE", "PHONE_NUMBER": "702-919-1300", "DATE": "3/10/17", "STATUS": "Inactive", "AMOUNT": "200"}`
-	loadID := "TRUTHSET_CUSTOMER_LOAD"
+	loadID := "G2Engine_test"
 	err := g2engine.AddRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	if err != nil {
 		fmt.Println(err)
@@ -1064,7 +1073,7 @@ func ExampleG2engineImpl_AddRecordWithInfo() {
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1003"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Bob", "PRIMARY_NAME_MIDDLE": "J", "DATE_OF_BIRTH": "12/11/1978", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "4/9/16", "STATUS": "Inactive", "AMOUNT": "300"}`
-	loadID := "TRUTHSET_CUSTOMER_LOAD"
+	loadID := "G2Engine_test"
 	var flags int64 = 0
 	result, err := g2engine.AddRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
 	if err != nil {
@@ -1080,7 +1089,7 @@ func ExampleG2engineImpl_AddRecordWithInfoWithReturnedRecordID() {
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "CUSTOMERS"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Kellar", "PRIMARY_NAME_FIRST": "Candace", "ADDR_LINE1": "1824 AspenOak Way", "ADDR_CITY": "Elmwood Park", "ADDR_STATE": "CA", "ADDR_POSTAL_CODE": "95865", "EMAIL_ADDRESS": "info@ca-state.gov"}`
-	loadID := "TRUTHSET_CUSTOMER_LOAD_WITHOUT_ID"
+	loadID := "G2Engine_test"
 	var flags int64 = 0
 	result, _, err := g2engine.AddRecordWithInfoWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID, flags)
 	if err != nil {
@@ -1096,7 +1105,7 @@ func ExampleG2engineImpl_AddRecordWithReturnedRecordID() {
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "CUSTOMERS"
 	jsonData := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Sanders", "PRIMARY_NAME_FIRST": "Sandy", "ADDR_LINE1": "1376 BlueBell Rd", "ADDR_CITY": "Sacramento", "ADDR_STATE": "CA", "ADDR_POSTAL_CODE": "95823", "EMAIL_ADDRESS": "info@ca-state.gov"}`
-	loadID := "TRUTHSET_CUSTOMER_LOAD_WITHOUT_ID"
+	loadID := "G2Engine_test"
 	result, err := g2engine.AddRecordWithReturnedRecordID(ctx, dataSourceCode, jsonData, loadID)
 	if err != nil {
 		fmt.Println(err)
@@ -1109,7 +1118,6 @@ func ExampleG2engineImpl_CheckRecord() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-
 	record := `{"DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001", "RECORD_TYPE": "PERSON", "PRIMARY_NAME_LAST": "Smith", "PRIMARY_NAME_FIRST": "Robert", "DATE_OF_BIRTH": "12/11/1978", "ADDR_TYPE": "MAILING", "ADDR_LINE1": "123 Main Street, Las Vegas NV 89132", "PHONE_TYPE": "HOME", "PHONE_NUMBER": "702-919-1300", "EMAIL_ADDRESS": "bsmith@work.com", "DATE": "1/2/18", "STATUS": "Active", "AMOUNT": "100"}`
 	recordQueryList := `{"RECORDS": [{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "1001"},{"DATA_SOURCE": "CUSTOMERS","RECORD_ID": "123456789"}]}`
 	result, err := g2engine.CheckRecord(ctx, record, recordQueryList)
@@ -1214,7 +1222,7 @@ func ExampleG2engineImpl_FindInterestingEntitiesByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.FindInterestingEntitiesByEntityID(ctx, entityID, flags)
 	if err != nil {
@@ -1243,7 +1251,7 @@ func ExampleG2engineImpl_FindNetworkByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 4}]}`
+	entityList := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1001") + `}, {"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1002") + `}]}`
 	maxDegree := 2
 	buildOutDegree := 1
 	maxEntities := 10
@@ -1251,15 +1259,15 @@ func ExampleG2engineImpl_FindNetworkByEntityID() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 228))
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","RECORD_COUNT":3,"FIRST_SEEN_DT":...
+	fmt.Println(truncate(result, 175))
+	// Output: {"ENTITY_PATHS":[],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","RECORD_COUNT":3,"FIRST_SEEN_DT":...
 }
 
 func ExampleG2engineImpl_FindNetworkByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	entityList := `{"ENTITIES": [{"ENTITY_ID": 1}, {"ENTITY_ID": 4}]}`
+	entityList := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1001") + `}, {"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1002") + `}]}`
 	maxDegree := 2
 	buildOutDegree := 1
 	maxEntities := 10
@@ -1269,7 +1277,7 @@ func ExampleG2engineImpl_FindNetworkByEntityID_V2() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":4}},{"RESOLVED_ENTITY":{"ENTITY_ID":5}}]}
+	// Output: {"ENTITY_PATHS":[],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}]}
 }
 
 func ExampleG2engineImpl_FindNetworkByRecordID() {
@@ -1309,23 +1317,23 @@ func ExampleG2engineImpl_FindPathByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
 	result, err := g2engine.FindPathByEntityID(ctx, entityID1, entityID2, maxDegree)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 106))
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+	fmt.Println(truncate(result, 107))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[1]}],"ENTITIES":[{"RESOLVED_ENTITY":...
 }
 
 func ExampleG2engineImpl_FindPathByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
 	var flags int64 = 0
 	result, err := g2engine.FindPathByEntityID_V2(ctx, entityID1, entityID2, maxDegree, flags)
@@ -1333,7 +1341,7 @@ func ExampleG2engineImpl_FindPathByEntityID_V2() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":4}}]}
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[1]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}]}
 }
 
 func ExampleG2engineImpl_FindPathByRecordID() {
@@ -1375,33 +1383,33 @@ func ExampleG2engineImpl_FindPathExcludingByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	result, err := g2engine.FindPathExcludingByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(truncate(result, 106))
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+	fmt.Println(truncate(result, 107))
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[1]}],"ENTITIES":[{"RESOLVED_ENTITY":...
 }
 
 func ExampleG2engineImpl_FindPathExcludingByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	var flags int64 = 0
 	result, err := g2engine.FindPathExcludingByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, flags)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":4}}]}
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[1]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}]}
 }
 
 func ExampleG2engineImpl_FindPathExcludingByRecordID() {
@@ -1413,7 +1421,7 @@ func ExampleG2engineImpl_FindPathExcludingByRecordID() {
 	dataSourceCode2 := "CUSTOMERS"
 	recordID2 := "1002"
 	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}]}`
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}]}`
 	result, err := g2engine.FindPathExcludingByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords)
 	if err != nil {
 		fmt.Println(err)
@@ -1431,7 +1439,7 @@ func ExampleG2engineImpl_FindPathExcludingByRecordID_V2() {
 	dataSourceCode2 := "CUSTOMERS"
 	recordID2 := "1002"
 	maxDegree := 1
-	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1001"}]}`
+	excludedRecords := `{"RECORDS": [{ "DATA_SOURCE": "CUSTOMERS", "RECORD_ID": "1003"}]}`
 	var flags int64 = 0
 	result, err := g2engine.FindPathExcludingByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedRecords, flags)
 	if err != nil {
@@ -1445,27 +1453,27 @@ func ExampleG2engineImpl_FindPathIncludingSourceByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
 	result, err := g2engine.FindPathIncludingSourceByEntityID(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(truncate(result, 106))
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":...
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":...
 }
 
 func ExampleG2engineImpl_FindPathIncludingSourceByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID1 int64 = 1
-	var entityID2 int64 = 4
+	entityID1 := getEntityIdForRecord("CUSTOMERS", "1001")
+	entityID2 := getEntityIdForRecord("CUSTOMERS", "1002")
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
 	var flags int64 = 0
 	result, err := g2engine.FindPathIncludingSourceByEntityID_V2(ctx, entityID1, entityID2, maxDegree, excludedEntities, requiredDsrcs, flags)
@@ -1473,7 +1481,7 @@ func ExampleG2engineImpl_FindPathIncludingSourceByEntityID_V2() {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":4,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":4}}]}
+	// Output: {"ENTITY_PATHS":[{"START_ENTITY_ID":1,"END_ENTITY_ID":1,"ENTITIES":[]}],"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}]}
 }
 
 func ExampleG2engineImpl_FindPathIncludingSourceByRecordID() {
@@ -1485,7 +1493,7 @@ func ExampleG2engineImpl_FindPathIncludingSourceByRecordID() {
 	dataSourceCode2 := "CUSTOMERS"
 	recordID2 := "1002"
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
 	result, err := g2engine.FindPathIncludingSourceByRecordID(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs)
 	if err != nil {
@@ -1504,7 +1512,7 @@ func ExampleG2engineImpl_FindPathIncludingSourceByRecordID_V2() {
 	dataSourceCode2 := "CUSTOMERS"
 	recordID2 := "1002"
 	maxDegree := 1
-	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": 1}]}`
+	excludedEntities := `{"ENTITIES": [{"ENTITY_ID": ` + getEntityIdStringForRecord("CUSTOMERS", "1003") + `}]}`
 	requiredDsrcs := `{"DATA_SOURCES": ["CUSTOMERS"]}`
 	var flags int64 = 0
 	result, err := g2engine.FindPathIncludingSourceByRecordID_V2(ctx, dataSourceCode1, recordID1, dataSourceCode2, recordID2, maxDegree, excludedEntities, requiredDsrcs, flags)
@@ -1531,7 +1539,7 @@ func ExampleG2engineImpl_GetEntityByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	result, err := g2engine.GetEntityByEntityID(ctx, entityID)
 	if err != nil {
 		fmt.Println(err)
@@ -1544,7 +1552,7 @@ func ExampleG2engineImpl_GetEntityByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.GetEntityByEntityID_V2(ctx, entityID, flags)
 	if err != nil {
@@ -1667,7 +1675,7 @@ func ExampleG2engineImpl_HowEntityByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	result, err := g2engine.HowEntityByEntityID(ctx, entityID)
 	if err != nil {
 		fmt.Println(err)
@@ -1680,7 +1688,7 @@ func ExampleG2engineImpl_HowEntityByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	ctx := context.TODO()
 	g2engine := getG2Engine(ctx)
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.HowEntityByEntityID_V2(ctx, entityID, flags)
 	if err != nil {
@@ -1787,20 +1795,20 @@ func ExampleG2engineImpl_WhyEntityByEntityID() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
-	var entityID int64 = 4
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	result, err := g2engine.WhyEntityByEntityID(ctx, entityID)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(truncate(result, 106))
-	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":4,"ENTITY_ID":4,"FOCUS_RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":...
+	// Output: {"WHY_RESULTS":[{"INTERNAL_ID":2,"ENTITY_ID":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"CUSTOMERS","RECORD_ID":...
 }
 
 func ExampleG2engineImpl_WhyEntityByEntityID_V2() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
-	var entityID int64 = 1
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.WhyEntityByEntityID_V2(ctx, entityID, flags)
 	if err != nil {
@@ -1953,7 +1961,7 @@ func ExampleG2engineImpl_ReevaluateEntity() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
-	var entityID int64 = 4
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	err := g2engine.ReevaluateEntity(ctx, entityID, flags)
 	if err != nil {
@@ -1965,7 +1973,7 @@ func ExampleG2engineImpl_ReevaluateEntityWithInfo() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2engine/g2engine_test.go
 	g2engine := &G2engineImpl{}
 	ctx := context.TODO()
-	var entityID int64 = 4
+	entityID := getEntityIdForRecord("CUSTOMERS", "1001")
 	var flags int64 = 0
 	result, err := g2engine.ReevaluateEntityWithInfo(ctx, entityID, flags)
 	if err != nil {
@@ -2011,7 +2019,7 @@ func ExampleG2engineImpl_ReplaceRecord() {
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "CUSTOMERS"
+	loadID := "G2Engine_test"
 	err := g2engine.ReplaceRecord(ctx, dataSourceCode, recordID, jsonData, loadID)
 	if err != nil {
 		fmt.Println(err)
@@ -2026,7 +2034,7 @@ func ExampleG2engineImpl_ReplaceRecordWithInfo() {
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
 	jsonData := `{"SOCIAL_HANDLE": "flavorh", "DATE_OF_BIRTH": "4/8/1985", "ADDR_STATE": "LA", "ADDR_POSTAL_CODE": "71232", "SSN_NUMBER": "053-39-3251", "ENTITY_TYPE": "CUSTOMERS", "GENDER": "F", "srccode": "MDMPER", "CC_ACCOUNT_NUMBER": "5534202208773608", "RECORD_ID": "1001", "DSRC_ACTION": "A", "ADDR_CITY": "Delhi", "DRIVERS_LICENSE_STATE": "DE", "PHONE_NUMBER": "225-671-0796", "NAME_LAST": "JOHNSON", "entityid": "284430058", "ADDR_LINE1": "772 Armstrong RD"}`
-	loadID := "CUSTOMERS"
+	loadID := "G2Engine_test"
 	var flags int64 = 0
 	result, err := g2engine.ReplaceRecordWithInfo(ctx, dataSourceCode, recordID, jsonData, loadID, flags)
 	if err != nil {
@@ -2042,7 +2050,7 @@ func ExampleG2engineImpl_DeleteRecord() {
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
-	loadID := "TRUTHSET_CUSTOMER_LOAD"
+	loadID := "G2Engine_test"
 	err := g2engine.DeleteRecord(ctx, dataSourceCode, recordID, loadID)
 	if err != nil {
 		fmt.Println(err)
@@ -2056,7 +2064,7 @@ func ExampleG2engineImpl_DeleteRecordWithInfo() {
 	g2engine := getG2Engine(ctx)
 	dataSourceCode := "CUSTOMERS"
 	recordID := "1001"
-	loadID := "TRUTHSET_CUSTOMER_LOAD"
+	loadID := "G2Engine_test"
 	var flags int64 = 0
 	result, err := g2engine.DeleteRecordWithInfo(ctx, dataSourceCode, recordID, loadID, flags)
 	if err != nil {
