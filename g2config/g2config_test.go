@@ -215,6 +215,7 @@ func TestG2configImpl_Destroy(test *testing.T) {
 	g2config := getTestObject(ctx, test)
 	err := g2config.Destroy(ctx)
 	testError(test, ctx, g2config, err)
+	g2configSingleton = nil
 }
 
 // ----------------------------------------------------------------------------
@@ -368,5 +369,6 @@ func ExampleG2configImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	g2configSingleton = nil
 	// Output:
 }

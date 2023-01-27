@@ -68,7 +68,6 @@ func getG2Configmgr(ctx context.Context) G2configmgr {
 }
 
 func getG2Config(ctx context.Context, test *testing.T) g2config.G2config {
-
 	if g2configSingleton == nil {
 		g2configSingleton = &g2config.G2configImpl{}
 		moduleName := "Test module name"
@@ -512,5 +511,6 @@ func ExampleG2configmgrImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	g2configmgrSingleton = nil
 	// Output:
 }

@@ -163,6 +163,7 @@ func TestG2productImpl_Destroy(test *testing.T) {
 	g2product := getTestObject(ctx, test)
 	err := g2product.Destroy(ctx)
 	testError(test, ctx, g2product, err)
+	g2productSingleton = nil
 }
 
 // ----------------------------------------------------------------------------
@@ -254,5 +255,6 @@ func ExampleG2productImpl_Destroy() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	g2productSingleton = nil
 	// Output:
 }
