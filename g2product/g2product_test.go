@@ -15,6 +15,7 @@ import (
 
 const (
 	defaultTruncation = 76
+	printResults      = false
 )
 
 var (
@@ -28,19 +29,34 @@ var (
 func getTestObject(ctx context.Context, test *testing.T) G2product {
 	if g2productSingleton == nil {
 		g2productSingleton = &G2productImpl{}
-
 		// g2productSingleton.SetLogLevel(ctx, logger.LevelTrace)
 		log.SetFlags(0)
-
 		moduleName := "Test module name"
 		verboseLogging := 0
-		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-		if jsonErr != nil {
-			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			test.Logf("Cannot construct system configuration. Error: %v", err)
 		}
-		initErr := g2productSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
-		if initErr != nil {
-			test.Logf("Cannot Init. Error: %v", initErr)
+		err = g2productSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			test.Logf("Cannot Init. Error: %v", err)
+		}
+	}
+	return g2productSingleton
+}
+
+func getG2Product(ctx context.Context) G2product {
+	if g2productSingleton == nil {
+		g2productSingleton = &G2productImpl{}
+		moduleName := "Test module name"
+		verboseLogging := 0
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = g2productSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 	return g2productSingleton
@@ -51,7 +67,7 @@ func truncate(aString string, length int) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
+	if printResults {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
@@ -119,9 +135,9 @@ func TestG2productImpl_Init(test *testing.T) {
 	g2product := &G2productImpl{}
 	moduleName := "Test module name"
 	verboseLogging := 0
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2product, jsonErr)
-	err := g2product.Init(ctx, moduleName, iniParams, verboseLogging)
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2product, err)
+	err = g2product.Init(ctx, moduleName, iniParams, verboseLogging)
 	testError(test, ctx, g2product, err)
 }
 
@@ -164,27 +180,17 @@ func TestG2productImpl_Destroy(test *testing.T) {
 	g2product := getTestObject(ctx, test)
 	err := g2product.Destroy(ctx)
 	testError(test, ctx, g2product, err)
+	g2productSingleton = nil
 }
 
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleG2productImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
-	ctx := context.TODO()
-	err := g2product.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2productImpl_Init() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	moduleName := "Test module name"
 	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
 	if err != nil {
@@ -197,8 +203,8 @@ func ExampleG2productImpl_Init() {
 
 func ExampleG2productImpl_License() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	result, err := g2product.License(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -209,8 +215,8 @@ func ExampleG2productImpl_License() {
 
 func ExampleG2productImpl_SetLogLevel() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	err := g2product.SetLogLevel(ctx, logger.LevelInfo)
 	if err != nil {
 		fmt.Println(err)
@@ -220,8 +226,8 @@ func ExampleG2productImpl_SetLogLevel() {
 
 func ExampleG2productImpl_ValidateLicenseFile() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	licenseFilePath := "/etc/opt/senzing/g2.lic"
 	result, err := g2product.ValidateLicenseFile(ctx, licenseFilePath)
 	if err != nil {
@@ -234,8 +240,8 @@ func ExampleG2productImpl_ValidateLicenseFile() {
 
 func ExampleG2productImpl_ValidateLicenseStringBase64() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	licenseString := "AQAAADgCAAAAAAAAU2VuemluZyBQdWJsaWMgVGVzdCBMaWNlbnNlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARVZBTFVBVElPTiAtIHN1cHBvcnRAc2VuemluZy5jb20AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADIwMjItMTEtMjkAAAAAAAAAAAAARVZBTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNUQU5EQVJEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFDDAAAAAAAAMjAyMy0xMS0yOQAAAAAAAAAAAABNT05USExZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQfw5e19QAHetkvd+vk0cYHtLaQCLmgx2WUfLorDfLQq15UXmOawNIXc1XguPd8zJtnOaeI6CB2smxVaj10mJE2ndGPZ1JjGk9likrdAj3rw+h6+C/Lyzx/52U8AuaN1kWgErDKdNE9qL6AnnN5LLi7Xs87opP7wbVMOdzsfXx2Xi3H7dSDIam7FitF6brSFoBFtIJac/V/Zc3b8jL/a1o5b1eImQldaYcT4jFrRZkdiVO/SiuLslEb8or3alzT0XsoUJnfQWmh0BjehBK9W74jGw859v/L1SGn1zBYKQ4m8JBiUOytmc9ekLbUKjIg/sCdmGMIYLywKqxb9mZo2TLZBNOpYWVwfaD/6O57jSixfJEHcLx30RPd9PKRO0Nm+4nPdOMMLmd4aAcGPtGMpI6ldTiK9hQyUfrvc9z4gYE3dWhz2Qu3mZFpaAEuZLlKtxaqEtVLWIfKGxwxPargPEfcLsv+30fdjSy8QaHeU638tj67I0uCEgnn5aB8pqZYxLxJx67hvVKOVsnbXQRTSZ00QGX1yTA+fNygqZ5W65wZShhICq5Fz8wPUeSbF7oCcE5VhFfDnSyi5v0YTNlYbF8LOAqXPTi+0KP11Wo24PjLsqYCBVvmOg9ohZ89iOoINwUB32G8VucRfgKKhpXhom47jObq4kSnihxRbTwJRx4o"
 	result, err := g2product.ValidateLicenseStringBase64(ctx, licenseString)
 	if err != nil {
@@ -248,12 +254,23 @@ func ExampleG2productImpl_ValidateLicenseStringBase64() {
 
 func ExampleG2productImpl_Version() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
-	g2product := &G2productImpl{}
 	ctx := context.TODO()
+	g2product := getG2Product(ctx)
 	result, err := g2product.Version(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(result)
-	// Output: {"PRODUCT_NAME":"Senzing API","VERSION":"3.4.0","BUILD_VERSION":"3.4.0.23005","BUILD_DATE":"2023-01-04","BUILD_NUMBER":"2023_01_04__23_02","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.4","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+	// Output: {"PRODUCT_NAME":"Senzing API","VERSION":"3.4.1","BUILD_VERSION":"3.4.1.23023","BUILD_DATE":"2023-01-22","BUILD_NUMBER":"2023_01_22__23_01","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"10"},"SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.4","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99"}}
+}
+
+func ExampleG2productImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2product/g2product_test.go
+	ctx := context.TODO()
+	g2product := getG2Product(ctx)
+	err := g2product.Destroy(ctx)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
 }

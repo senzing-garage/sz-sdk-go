@@ -15,6 +15,7 @@ import (
 
 const (
 	defaultTruncation = 76
+	printResults      = false
 )
 
 var (
@@ -28,19 +29,34 @@ var (
 func getTestObject(ctx context.Context, test *testing.T) G2config {
 	if g2configSingleton == nil {
 		g2configSingleton = &G2configImpl{}
-
 		// g2configSingleton.SetLogLevel(ctx, logger.LevelTrace)
 		log.SetFlags(0)
-
 		moduleName := "Test module name"
 		verboseLogging := 0
-		iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-		if jsonErr != nil {
-			test.Logf("Cannot construct system configuration. Error: %v", jsonErr)
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			test.Logf("Cannot construct system configuration. Error: %v", err)
 		}
-		initErr := g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
-		if initErr != nil {
-			test.Logf("Cannot Init. Error: %v", initErr)
+		err = g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			test.Logf("Cannot Init. Error: %v", err)
+		}
+	}
+	return g2configSingleton
+}
+
+func getG2Config(ctx context.Context) G2config {
+	if g2configSingleton == nil {
+		g2configSingleton := &G2configImpl{}
+		moduleName := "Test module name"
+		verboseLogging := 0
+		iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = g2configSingleton.Init(ctx, moduleName, iniParams, verboseLogging)
+		if err != nil {
+			fmt.Println(err)
 		}
 	}
 	return g2configSingleton
@@ -51,7 +67,7 @@ func truncate(aString string, length int) string {
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-	if 1 == 0 {
+	if printResults {
 		test.Logf("%s: %v", title, truncate(fmt.Sprintf("%v", result), defaultTruncation))
 	}
 }
@@ -167,17 +183,6 @@ func TestG2configImpl_DeleteDataSource(test *testing.T) {
 	testError(test, ctx, g2config, err)
 }
 
-func TestG2configImpl_Init(test *testing.T) {
-	ctx := context.TODO()
-	g2config := getTestObject(ctx, test)
-	moduleName := "Test module name"
-	verboseLogging := 0
-	iniParams, jsonErr := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	testError(test, ctx, g2config, jsonErr)
-	err := g2config.Init(ctx, moduleName, iniParams, verboseLogging)
-	testError(test, ctx, g2config, err)
-}
-
 func TestG2configImpl_ListDataSources(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
@@ -211,6 +216,17 @@ func TestG2configImpl_Save(test *testing.T) {
 	printActual(test, actual)
 }
 
+func TestG2configImpl_Init(test *testing.T) {
+	ctx := context.TODO()
+	g2config := getTestObject(ctx, test)
+	moduleName := "Test module name"
+	verboseLogging := 0
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	testError(test, ctx, g2config, err)
+	err = g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	testError(test, ctx, g2config, err)
+}
+
 func TestG2configImpl_Destroy(test *testing.T) {
 	ctx := context.TODO()
 	g2config := getTestObject(ctx, test)
@@ -224,8 +240,8 @@ func TestG2configImpl_Destroy(test *testing.T) {
 
 func ExampleG2configImpl_AddDataSource() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -241,8 +257,8 @@ func ExampleG2configImpl_AddDataSource() {
 
 func ExampleG2configImpl_Close() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -256,8 +272,8 @@ func ExampleG2configImpl_Close() {
 
 func ExampleG2configImpl_Create() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -268,8 +284,8 @@ func ExampleG2configImpl_Create() {
 
 func ExampleG2configImpl_DeleteDataSource() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -282,38 +298,10 @@ func ExampleG2configImpl_DeleteDataSource() {
 	// Output:
 }
 
-func ExampleG2configImpl_Destroy() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	err := g2config.Destroy(ctx)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
-func ExampleG2configImpl_Init() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
-	ctx := context.TODO()
-	moduleName := "Test module name"
-	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
-	if err != nil {
-		fmt.Println(err)
-	}
-	verboseLogging := 0
-	err = g2config.Init(ctx, moduleName, iniParams, verboseLogging)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-}
-
 func ExampleG2configImpl_ListDataSources() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -328,8 +316,8 @@ func ExampleG2configImpl_ListDataSources() {
 
 func ExampleG2configImpl_Load() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -347,8 +335,8 @@ func ExampleG2configImpl_Load() {
 
 func ExampleG2configImpl_Save() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	configHandle, err := g2config.Create(ctx)
 	if err != nil {
 		fmt.Println(err)
@@ -363,9 +351,37 @@ func ExampleG2configImpl_Save() {
 
 func ExampleG2configImpl_SetLogLevel() {
 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
-	g2config := &G2configImpl{}
 	ctx := context.TODO()
+	g2config := getG2Config(ctx)
 	err := g2config.SetLogLevel(ctx, logger.LevelInfo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Init() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	ctx := context.TODO()
+	g2config := getG2Config(ctx)
+	moduleName := "Test module name"
+	iniParams, err := g2engineconfigurationjson.BuildSimpleSystemConfigurationJson("")
+	if err != nil {
+		fmt.Println(err)
+	}
+	verboseLogging := 0
+	err = g2config.Init(ctx, moduleName, iniParams, verboseLogging)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+}
+
+func ExampleG2configImpl_Destroy() {
+	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2config/g2config_test.go
+	ctx := context.TODO()
+	g2config := getG2Config(ctx)
+	err := g2config.Destroy(ctx)
 	if err != nil {
 		fmt.Println(err)
 	}
