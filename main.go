@@ -320,6 +320,7 @@ func main() {
 	if err != nil {
 		logger.Log(5002, err)
 	}
+	g2Configmgr.RegisterObserver(ctx, observer1)
 
 	// Persist the Senzing configuration to the Senzing repository.
 
@@ -334,16 +335,19 @@ func main() {
 	if err != nil {
 		logger.Log(5004, err)
 	}
+	g2Diagnostic.RegisterObserver(ctx, observer1)
 
 	g2Engine, err := getG2engine(ctx)
 	if err != nil {
 		logger.Log(5005, err)
 	}
+	g2Engine.RegisterObserver(ctx, observer1)
 
 	g2Product, err := getG2product(ctx)
 	if err != nil {
 		logger.Log(5006, err)
 	}
+	g2Product.RegisterObserver(ctx, observer1)
 
 	// Demonstrate tests.
 

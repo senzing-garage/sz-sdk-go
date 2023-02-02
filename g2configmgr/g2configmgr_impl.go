@@ -13,8 +13,11 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"runtime"
+	"strconv"
 	"time"
 	"unsafe"
 
@@ -82,6 +85,19 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 		g2configmgr.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	}
 	return g2configmgr.logger
+}
+
+func (g2configmgr *G2configmgrImpl) notify(ctx context.Context, messageId int, details map[string]string) {
+	now := time.Now()
+	details["subjectId"] = strconv.Itoa(ProductId)
+	details["messageId"] = strconv.Itoa(messageId)
+	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
+	message, err := json.Marshal(details)
+	if err != nil {
+		fmt.Printf("Error: %s", err.Error())
+	} else {
+		g2configmgr.observers.NotifyObservers(ctx, string(message))
+	}
 }
 
 // Trace method entry.
@@ -197,6 +213,15 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4001, configStr, configComments, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 1, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(2, configStr, configComments, int64(C.longlong(result.configID)), err, time.Since(entryTime))
 	}
@@ -224,6 +249,15 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	result := C.G2ConfigMgr_destroy()
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4002, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 2, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(6, err, time.Since(entryTime))
@@ -255,6 +289,15 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4003, configID, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 3, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(8, configID, C.GoString(result.config), err, time.Since(entryTime))
 	}
@@ -284,6 +327,15 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4004, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 4, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(10, C.GoString(result.configList), err, time.Since(entryTime))
 	}
@@ -311,6 +363,15 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4005, result.returnCode, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 5, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(12, int64(C.longlong(result.configID)), err, time.Since(entryTime))
@@ -344,6 +405,19 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	result := C.G2ConfigMgr_init(moduleNameForC, iniParamsForC, C.int(verboseLogging))
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4007, moduleName, iniParams, verboseLogging, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 6, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(18, moduleName, iniParams, verboseLogging, err, time.Since(entryTime))
@@ -389,6 +463,15 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4008, oldConfigID, newConfigID, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 7, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(20, oldConfigID, newConfigID, err, time.Since(entryTime))
 	}
@@ -415,6 +498,15 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	result := C.G2ConfigMgr_setDefaultConfigID(C.longlong(configID))
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4009, configID, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2configmgr.notify(ctx, 8, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(22, configID, err, time.Since(entryTime))
