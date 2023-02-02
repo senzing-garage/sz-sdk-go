@@ -21,6 +21,7 @@ import (
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -297,12 +298,23 @@ func main() {
 	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 	logger.Log(2001, "Just a test of logging", programmMetadataMap)
 
+	// Create 2 observers.
+
+	observer1 := &observer.ObserverNull{
+		Id: "Observer 1",
+	}
+	observer2 := &observer.ObserverNull{
+		Id: "Observer 2",
+	}
+
 	// Get Senzing objects for installing a Senzing Engine configuration.
 
 	g2Config, err := getG2config(ctx)
 	if err != nil {
 		logger.Log(5001, err)
 	}
+	g2Config.RegisterObserver(ctx, observer1)
+	g2Config.RegisterObserver(ctx, observer2)
 
 	g2Configmgr, err := getG2configmgr(ctx)
 	if err != nil {

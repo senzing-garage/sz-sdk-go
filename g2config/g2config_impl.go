@@ -214,7 +214,9 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	if g2config.observers != nil {
 		details := map[string]string{
 			"result": string(C.GoString(result.response)),
-			"error":  err.Error(),
+		}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 1, details)
 	}
@@ -246,8 +248,9 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 		err = g2config.newError(ctx, 4002, configHandle, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 2, details)
 	}
@@ -284,8 +287,9 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 		err = g2config.newError(ctx, 4003, result.returnCode, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 3, details)
 	}
@@ -322,7 +326,9 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 	if g2config.observers != nil {
 		details := map[string]string{
 			"inputJson": inputJson,
-			"error":     err.Error(),
+		}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 4, details)
 	}
@@ -353,8 +359,9 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 		err = g2config.newError(ctx, 4005, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 5, details)
 	}
@@ -393,10 +400,12 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 	}
 	if g2config.observers != nil {
 		details := map[string]string{
-			"error":          err.Error(),
 			"iniParams":      iniParams,
 			"moduleName":     moduleName,
 			"verboseLogging": strconv.Itoa(verboseLogging),
+		}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 6, details)
 	}
@@ -432,8 +441,9 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 		err = g2config.newError(ctx, 4008, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 7, details)
 	}
@@ -468,8 +478,9 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 		err = g2config.newError(ctx, 4009, configHandle, jsonConfig, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 8, details)
 	}
@@ -519,8 +530,9 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 		err = g2config.newError(ctx, 4010, configHandle, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"error": err.Error(),
+		details := map[string]string{}
+		if err != nil {
+			details["error"] = err.Error()
 		}
 		g2config.notify(ctx, 9, details)
 	}
