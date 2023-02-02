@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -20,8 +21,10 @@ type G2config interface {
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
 // ----------------------------------------------------------------------------
