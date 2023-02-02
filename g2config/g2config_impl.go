@@ -85,11 +85,14 @@ func (g2config *G2configImpl) getLogger() messagelogger.MessageLoggerInterface {
 	return g2config.logger
 }
 
-func (g2config *G2configImpl) notify(ctx context.Context, messageId int, details map[string]string) {
+func (g2config *G2configImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
 	now := time.Now()
 	details["subjectId"] = strconv.Itoa(ProductId)
 	details["messageId"] = strconv.Itoa(messageId)
 	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
+	if err != nil {
+		details["error"] = err.Error()
+	}
 	message, err := json.Marshal(details)
 	if err != nil {
 		fmt.Printf("Error: %s", err.Error())
@@ -216,10 +219,7 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 			details := map[string]string{
 				"result": string(C.GoString(result.response)),
 			}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 1, details)
+			g2config.notify(ctx, 8001, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -252,10 +252,7 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 2, details)
+			g2config.notify(ctx, 8002, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -293,10 +290,7 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 3, details)
+			g2config.notify(ctx, 8003, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -334,10 +328,7 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 			details := map[string]string{
 				"inputJson": inputJson,
 			}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 4, details)
+			g2config.notify(ctx, 8004, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -369,10 +360,7 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 5, details)
+			g2config.notify(ctx, 8005, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -415,10 +403,7 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 				"moduleName":     moduleName,
 				"verboseLogging": strconv.Itoa(verboseLogging),
 			}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 6, details)
+			g2config.notify(ctx, 8006, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -455,10 +440,7 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 7, details)
+			g2config.notify(ctx, 8007, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -494,10 +476,7 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 8, details)
+			g2config.notify(ctx, 8008, err, details)
 		}()
 	}
 	if g2config.isTrace {
@@ -548,10 +527,7 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2config.notify(ctx, 9, details)
+			g2config.notify(ctx, 8009, err, details)
 		}()
 	}
 	if g2config.isTrace {

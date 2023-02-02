@@ -87,11 +87,14 @@ func (g2diagnostic *G2diagnosticImpl) getLogger() messagelogger.MessageLoggerInt
 	return g2diagnostic.logger
 }
 
-func (g2diagnostic *G2diagnosticImpl) notify(ctx context.Context, messageId int, details map[string]string) {
+func (g2diagnostic *G2diagnosticImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
 	now := time.Now()
 	details["subjectId"] = strconv.Itoa(ProductId)
 	details["messageId"] = strconv.Itoa(messageId)
 	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
+	if err != nil {
+		details["error"] = err.Error()
+	}
 	message, err := json.Marshal(details)
 	if err != nil {
 		fmt.Printf("Error: %s", err.Error())
