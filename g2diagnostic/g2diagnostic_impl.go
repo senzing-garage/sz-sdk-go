@@ -20,6 +20,8 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -28,8 +30,9 @@ import (
 
 // G2diagnosticImpl is the default implementation of the G2diagnostic interface.
 type G2diagnosticImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -833,6 +836,20 @@ func (g2diagnostic *G2diagnosticImpl) Null(ctx context.Context) (int64, error) {
 }
 
 /*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2diagnostic *G2diagnosticImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2diagnostic.observers == nil {
+		g2diagnostic.observers = &subject.SubjectImpl{}
+	}
+	return g2diagnostic.observers.RegisterObserver(ctx, observer)
+}
+
+/*
 The Reinit method re-initializes the Senzing G2Diagnosis object.
 
 Input
@@ -877,6 +894,24 @@ func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel 
 	g2diagnostic.isTrace = (g2diagnostic.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2diagnostic.isTrace {
 		defer g2diagnostic.traceExit(54, logLevel, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2diagnostic *G2diagnosticImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2diagnostic.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2diagnostic.observers.HasObservers(ctx) {
+		g2diagnostic.observers = nil
 	}
 	return err
 }

@@ -18,6 +18,8 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -26,8 +28,9 @@ import (
 
 // G2productImpl is the default implementation of the G2product interface.
 type G2productImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -250,6 +253,20 @@ func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 }
 
 /*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2product *G2productImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2product.observers == nil {
+		g2product.observers = &subject.SubjectImpl{}
+	}
+	return g2product.observers.RegisterObserver(ctx, observer)
+}
+
+/*
 The SetLogLevel method sets the level of logging.
 
 Input
@@ -268,6 +285,24 @@ func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger
 	g2product.isTrace = (g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2product.isTrace {
 		defer g2product.traceExit(14, logLevel, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2product *G2productImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2product.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2product.observers.HasObservers(ctx) {
+		g2product.observers = nil
 	}
 	return err
 }

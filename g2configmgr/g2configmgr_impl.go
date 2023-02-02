@@ -20,6 +20,8 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -28,8 +30,9 @@ import (
 
 // G2configmgrImpl is the default implementation of the G2configmgr interface.
 type G2configmgrImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -349,6 +352,20 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 }
 
 /*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2configmgr *G2configmgrImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2configmgr.observers == nil {
+		g2configmgr.observers = &subject.SubjectImpl{}
+	}
+	return g2configmgr.observers.RegisterObserver(ctx, observer)
+}
+
+/*
 The ReplaceDefaultConfigID method replaces the old configuration identifier with a new configuration identifier in the Senzing database.
 It is like a "compare-and-swap" instruction to serialize concurrent editing of configuration.
 If oldConfigID is no longer the "old configuration identifier", the operation will fail.
@@ -424,6 +441,24 @@ func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel lo
 	g2configmgr.isTrace = (g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(24, logLevel, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2configmgr *G2configmgrImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2configmgr.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2configmgr.observers.HasObservers(ctx) {
+		g2configmgr.observers = nil
 	}
 	return err
 }

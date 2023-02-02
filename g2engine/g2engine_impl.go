@@ -20,6 +20,8 @@ import (
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -28,8 +30,9 @@ import (
 
 // G2engineImpl is the default implementation of the G2engine interface.
 type G2engineImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -2291,6 +2294,20 @@ func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, data
 }
 
 /*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2engine *G2engineImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2engine.observers == nil {
+		g2engine.observers = &subject.SubjectImpl{}
+	}
+	return g2engine.observers.RegisterObserver(ctx, observer)
+}
+
+/*
 The Reinit method re-initializes the Senzing G2Engine object using a specified configuration identifier.
 
 Input
@@ -2550,6 +2567,25 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 		defer g2engine.traceExit(142, entityID1, entityID2, C.GoString(result.response), err, time.Since(entryTime))
 	}
 	return C.GoString(result.response), err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.g2config
++
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2engine *G2engineImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2engine.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2engine.observers.HasObservers(ctx) {
+		g2engine.observers = nil
+	}
+	return err
 }
 
 /*
