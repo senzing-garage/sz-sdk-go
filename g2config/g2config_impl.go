@@ -212,13 +212,15 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 		err = g2config.newError(ctx, 4001, configHandle, inputJson, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"result": string(C.GoString(result.response)),
-		}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 1, details)
+		go func() {
+			details := map[string]string{
+				"result": string(C.GoString(result.response)),
+			}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 1, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(2, configHandle, inputJson, C.GoString(result.response), err, time.Since(entryTime))
@@ -248,11 +250,13 @@ func (g2config *G2configImpl) Close(ctx context.Context, configHandle uintptr) e
 		err = g2config.newError(ctx, 4002, configHandle, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 2, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 2, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(6, configHandle, err, time.Since(entryTime))
@@ -287,11 +291,13 @@ func (g2config *G2configImpl) Create(ctx context.Context) (uintptr, error) {
 		err = g2config.newError(ctx, 4003, result.returnCode, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 3, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 3, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(8, (uintptr)(result.response), err, time.Since(entryTime))
@@ -324,13 +330,15 @@ func (g2config *G2configImpl) DeleteDataSource(ctx context.Context, configHandle
 		err = g2config.newError(ctx, 4004, configHandle, inputJson, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"inputJson": inputJson,
-		}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 4, details)
+		go func() {
+			details := map[string]string{
+				"inputJson": inputJson,
+			}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 4, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(10, configHandle, inputJson, err, time.Since(entryTime))
@@ -359,11 +367,13 @@ func (g2config *G2configImpl) Destroy(ctx context.Context) error {
 		err = g2config.newError(ctx, 4005, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 5, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 5, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(12, err, time.Since(entryTime))
@@ -399,15 +409,17 @@ func (g2config *G2configImpl) Init(ctx context.Context, moduleName string, iniPa
 		err = g2config.newError(ctx, 4007, moduleName, iniParams, verboseLogging, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{
-			"iniParams":      iniParams,
-			"moduleName":     moduleName,
-			"verboseLogging": strconv.Itoa(verboseLogging),
-		}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 6, details)
+		go func() {
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 6, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(18, moduleName, iniParams, verboseLogging, err, time.Since(entryTime))
@@ -441,11 +453,13 @@ func (g2config *G2configImpl) ListDataSources(ctx context.Context, configHandle 
 		err = g2config.newError(ctx, 4008, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 7, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 7, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(20, configHandle, C.GoString(result.response), err, time.Since(entryTime))
@@ -478,11 +492,13 @@ func (g2config *G2configImpl) Load(ctx context.Context, configHandle uintptr, js
 		err = g2config.newError(ctx, 4009, configHandle, jsonConfig, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 8, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 8, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(22, configHandle, jsonConfig, err, time.Since(entryTime))
@@ -530,11 +546,13 @@ func (g2config *G2configImpl) Save(ctx context.Context, configHandle uintptr) (s
 		err = g2config.newError(ctx, 4010, configHandle, result.returnCode, result, time.Since(entryTime))
 	}
 	if g2config.observers != nil {
-		details := map[string]string{}
-		if err != nil {
-			details["error"] = err.Error()
-		}
-		g2config.notify(ctx, 9, details)
+		go func() {
+			details := map[string]string{}
+			if err != nil {
+				details["error"] = err.Error()
+			}
+			g2config.notify(ctx, 9, details)
+		}()
 	}
 	if g2config.isTrace {
 		defer g2config.traceExit(24, configHandle, C.GoString(result.response), err, time.Since(entryTime))
