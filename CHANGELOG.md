@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 0.3.0
 
-- Added Observer
+- Added Observer support
 
 ## [0.2.6] - 2023-01-11
 
