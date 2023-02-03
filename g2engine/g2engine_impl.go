@@ -3090,6 +3090,24 @@ func (g2engine *G2engineImpl) Stats(ctx context.Context) (string, error) {
 }
 
 /*
+The UnregisterObserver method removes the observer to the list of observers notified.g2config
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2engine *G2engineImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2engine.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2engine.observers.HasObservers(ctx) {
+		g2engine.observers = nil
+	}
+	return err
+}
+
+/*
 The WhyEntities method explains why records belong to their resolved entities.
 WhyEntities() will compare the record data within an entity
 against the rest of the entity data and show why they are connected.
@@ -3131,25 +3149,6 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 		defer g2engine.traceExit(142, entityID1, entityID2, C.GoString(result.response), err, time.Since(entryTime))
 	}
 	return C.GoString(result.response), err
-}
-
-/*
-The UnregisterObserver method removes the observer to the list of observers notified.g2config
-+
-
-Input
-  - ctx: A context to control lifecycle.
-  - observer: The observer to be added.
-*/
-func (g2engine *G2engineImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
-	err := g2engine.observers.UnregisterObserver(ctx, observer)
-	if err != nil {
-		return err
-	}
-	if !g2engine.observers.HasObservers(ctx) {
-		g2engine.observers = nil
-	}
-	return err
 }
 
 /*

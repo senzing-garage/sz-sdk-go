@@ -98,14 +98,14 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
-	8001: "Observer",
-	8002: "Observer",
-	8003: "Observer",
-	8004: "Observer",
-	8005: "Observer",
-	8006: "Observer",
-	8007: "Observer",
-	8008: "Observer",
+	8001: "AddConfig",
+	8002: "Destroy",
+	8003: "GetConfig",
+	8004: "GetConfigList",
+	8005: "GetDefaultConfigID",
+	8006: "Init",
+	8007: "ReplaceDefaultConfigID",
+	8008: "SetDefaultConfigID",
 }
 
 // Status strings for specific g2configmgr messages.
