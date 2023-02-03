@@ -219,10 +219,7 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 1, details)
+			g2configmgr.notify(ctx, 8001, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -256,10 +253,7 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 2, details)
+			g2configmgr.notify(ctx, 8002, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -295,10 +289,7 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 3, details)
+			g2configmgr.notify(ctx, 8003, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -333,10 +324,7 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 4, details)
+			g2configmgr.notify(ctx, 8004, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -370,10 +358,7 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 5, details)
+			g2configmgr.notify(ctx, 8005, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -416,10 +401,7 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 				"moduleName":     moduleName,
 				"verboseLogging": strconv.Itoa(verboseLogging),
 			}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 6, details)
+			g2configmgr.notify(ctx, 8006, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -469,10 +451,7 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 7, details)
+			g2configmgr.notify(ctx, 8007, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {
@@ -505,10 +484,7 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	if g2configmgr.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2configmgr.notify(ctx, 8, details)
+			g2configmgr.notify(ctx, 8008, err, details)
 		}()
 	}
 	if g2configmgr.isTrace {

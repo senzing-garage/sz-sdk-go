@@ -216,10 +216,7 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 1, details)
+			g2diagnostic.notify(ctx, 8001, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -255,10 +252,7 @@ func (g2diagnostic *G2diagnosticImpl) CloseEntityListBySize(ctx context.Context,
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 2, details)
+			g2diagnostic.notify(ctx, 8002, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -290,10 +284,7 @@ func (g2diagnostic *G2diagnosticImpl) Destroy(ctx context.Context) error {
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 3, details)
+			g2diagnostic.notify(ctx, 8003, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -334,10 +325,7 @@ func (g2diagnostic *G2diagnosticImpl) FetchNextEntityBySize(ctx context.Context,
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 4, details)
+			g2diagnostic.notify(ctx, 8004, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -377,10 +365,7 @@ func (g2diagnostic *G2diagnosticImpl) FindEntitiesByFeatureIDs(ctx context.Conte
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 5, details)
+			g2diagnostic.notify(ctx, 8005, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -411,10 +396,7 @@ func (g2diagnostic *G2diagnosticImpl) GetAvailableMemory(ctx context.Context) (i
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 6, details)
+			g2diagnostic.notify(ctx, 8006, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -449,10 +431,7 @@ func (g2diagnostic *G2diagnosticImpl) GetDataSourceCounts(ctx context.Context) (
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 7, details)
+			g2diagnostic.notify(ctx, 8007, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -487,10 +466,7 @@ func (g2diagnostic *G2diagnosticImpl) GetDBInfo(ctx context.Context) (string, er
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 8, details)
+			g2diagnostic.notify(ctx, 8008, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -527,10 +503,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityDetails(ctx context.Context, enti
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 9, details)
+			g2diagnostic.notify(ctx, 8009, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -568,10 +541,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityListBySize(ctx context.Context, e
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 10, details)
+			g2diagnostic.notify(ctx, 8010, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -607,10 +577,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntityResume(ctx context.Context, entit
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 11, details)
+			g2diagnostic.notify(ctx, 8011, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -647,10 +614,7 @@ func (g2diagnostic *G2diagnosticImpl) GetEntitySizeBreakdown(ctx context.Context
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 12, details)
+			g2diagnostic.notify(ctx, 8012, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -686,10 +650,7 @@ func (g2diagnostic *G2diagnosticImpl) GetFeature(ctx context.Context, libFeatID 
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 13, details)
+			g2diagnostic.notify(ctx, 8013, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -728,10 +689,7 @@ func (g2diagnostic *G2diagnosticImpl) GetGenericFeatures(ctx context.Context, fe
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 14, details)
+			g2diagnostic.notify(ctx, 8014, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -762,10 +720,7 @@ func (g2diagnostic *G2diagnosticImpl) GetLogicalCores(ctx context.Context) (int,
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 15, details)
+			g2diagnostic.notify(ctx, 8015, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -801,10 +756,7 @@ func (g2diagnostic *G2diagnosticImpl) GetMappingStatistics(ctx context.Context, 
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 16, details)
+			g2diagnostic.notify(ctx, 8016, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -836,10 +788,7 @@ func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 17, details)
+			g2diagnostic.notify(ctx, 8017, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -876,10 +825,7 @@ func (g2diagnostic *G2diagnosticImpl) GetRelationshipDetails(ctx context.Context
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 18, details)
+			g2diagnostic.notify(ctx, 8018, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -914,10 +860,7 @@ func (g2diagnostic *G2diagnosticImpl) GetResolutionStatistics(ctx context.Contex
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 19, details)
+			g2diagnostic.notify(ctx, 8019, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -948,10 +891,7 @@ func (g2diagnostic *G2diagnosticImpl) GetTotalSystemMemory(ctx context.Context) 
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 20, details)
+			g2diagnostic.notify(ctx, 8020, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -994,10 +934,7 @@ func (g2diagnostic *G2diagnosticImpl) Init(ctx context.Context, moduleName strin
 				"moduleName":     moduleName,
 				"verboseLogging": strconv.Itoa(verboseLogging),
 			}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 21, details)
+			g2diagnostic.notify(ctx, 8021, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -1037,10 +974,7 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 22, details)
+			g2diagnostic.notify(ctx, 8022, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -1093,10 +1027,7 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 23, details)
+			g2diagnostic.notify(ctx, 8023, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
@@ -1125,10 +1056,7 @@ func (g2diagnostic *G2diagnosticImpl) SetLogLevel(ctx context.Context, logLevel 
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}
-			if err != nil {
-				details["error"] = err.Error()
-			}
-			g2diagnostic.notify(ctx, 1, details)
+			g2diagnostic.notify(ctx, 8024, err, details)
 		}()
 	}
 	if g2diagnostic.isTrace {
