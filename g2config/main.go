@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -20,8 +21,10 @@ type G2config interface {
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
 // ----------------------------------------------------------------------------
@@ -94,6 +97,15 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
+	8001: "AddDataSource",
+	8002: "Close",
+	8003: "Create",
+	8004: "DeleteDataSource",
+	8005: "Destroy",
+	8006: "Init",
+	8007: "ListDataSources",
+	8008: "Load",
+	8009: "Save",
 }
 
 // Status strings for specific g2config messages.

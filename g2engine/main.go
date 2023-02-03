@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -32,35 +33,35 @@ type G2engine interface {
 	FetchNext(ctx context.Context, responseHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
 	FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error)
-	FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
+	FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
 	FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error)
-	FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error)
+	FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
 	FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, flags int64) (string, error)
-	FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error)
+	FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error)
 	FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, flags int64) (string, error)
-	FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error)
+	FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error)
 	FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, flags int64) (string, error)
-	FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string) (string, error)
+	FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error)
 	FindPathExcludingByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, flags int64) (string, error)
-	FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string) (string, error)
+	FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string) (string, error)
 	FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string, flags int64) (string, error)
-	FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error)
+	FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string) (string, error)
 	FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string, flags int64) (string, error)
+	FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error)
 	GetActiveConfigID(ctx context.Context) (int64, error)
-	GetEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
-	GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
+	GetEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error)
+	GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetRepositoryLastModifiedTime(ctx context.Context) (int64, error)
-	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
 	GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error)
-	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
+	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
 	HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
+	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
 	PrimeEngine(ctx context.Context) error
@@ -75,21 +76,23 @@ type G2engine interface {
 	ReevaluateEntityWithInfo(ctx context.Context, entityID int64, flags int64) (string, error)
 	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) error
 	ReevaluateRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	ReplaceRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	ReplaceRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
-	SearchByAttributes(ctx context.Context, jsonData string) (string, error)
 	SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error)
+	SearchByAttributes(ctx context.Context, jsonData string) (string, error)
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
 	Stats(ctx context.Context) (string, error)
-	WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64) (string, error)
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error)
-	WhyEntityByEntityID(ctx context.Context, entityID int64) (string, error)
+	WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64) (string, error)
 	WhyEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
-	WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
+	WhyEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	WhyEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string) (string, error)
+	WhyEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	WhyRecords_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, flags int64) (string, error)
+	WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string) (string, error)
 }
 
 // ----------------------------------------------------------------------------
@@ -438,6 +441,80 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
+	8001: "AddRecord",
+	8002: "AddRecordWithInfo",
+	8003: "AddRecordWithInfoWithReturnedRecordID",
+	8004: "AddRecordWithReturnedRecordID",
+	8005: "CheckRecord",
+	8006: "CloseExport",
+	8007: "CountRedoRecords",
+	8008: "DeleteRecord",
+	8009: "DeleteRecordWithInfo",
+	8010: "Destroy",
+	8011: "ExportConfig",
+	8012: "ExportConfigAndConfigID",
+	8013: "ExportCSVEntityReport",
+	8014: "ExportJSONEntityReport",
+	8015: "FetchNext",
+	8016: "FindInterestingEntitiesByEntityID",
+	8017: "FindInterestingEntitiesByRecordID",
+	8018: "FindNetworkByEntityID",
+	8019: "FindNetworkByEntityID_V2",
+	8020: "FindNetworkByRecordID",
+	8021: "FindNetworkByRecordID_V2",
+	8022: "FindPathByEntityID",
+	8023: "FindPathByEntityID_V2",
+	8024: "FindPathByRecordID",
+	8025: "FindPathByRecordID_V2",
+	8026: "FindPathExcludingByEntityID",
+	8027: "FindPathExcludingByEntityID_V2",
+	8028: "FindPathExcludingByRecordID",
+	8029: "FindPathExcludingByRecordID_V2",
+	8030: "FindPathIncludingSourceByEntityID",
+	8031: "FindPathIncludingSourceByEntityID_V2",
+	8032: "FindPathIncludingSourceByRecordID",
+	8033: "FindPathIncludingSourceByRecordID_V2",
+	8034: "GetActiveConfigID",
+	8035: "GetEntityByEntityID",
+	8036: "GetEntityByEntityID_V2",
+	8037: "GetEntityByRecordID",
+	8038: "GetEntityByRecordID_V2",
+	8039: "GetRecord",
+	8040: "GetRecord_V2",
+	8041: "GetRedoRecord",
+	8042: "GetRepositoryLastModifiedTime",
+	8043: "GetVirtualEntityByRecordID",
+	8044: "GetVirtualEntityByRecordID_V2",
+	8045: "HowEntityByEntityID",
+	8046: "HowEntityByEntityID_V2",
+	8047: "Init",
+	8048: "InitWithConfigID",
+	8049: "PrimeEngine",
+	8050: "Process",
+	8051: "ProcessRedoRecord",
+	8052: "ProcessRedoRecordWithInfo",
+	8053: "ProcessWithInfo",
+	8054: "ProcessWithResponse",
+	8055: "ProcessWithResponseResize",
+	8056: "PurgeRepository",
+	8057: "ReevaluateEntity",
+	8058: "ReevaluateEntityWithInfo",
+	8059: "ReevaluateRecord",
+	8060: "ReevaluateRecordWithInfo",
+	8061: "Reinit",
+	8062: "ReplaceRecord",
+	8063: "ReplaceRecordWithInfo",
+	8064: "SearchByAttributes",
+	8065: "SearchByAttributes_V2",
+	8066: "Stats",
+	8067: "WhyEntities",
+	8068: "WhyEntities_V2",
+	8069: "WhyEntityByEntityID",
+	8070: "WhyEntityByEntityID_V2",
+	8071: "WhyEntityByRecordID",
+	8072: "WhyEntityByRecordID_V2",
+	8073: "WhyRecords",
+	8074: "WhyRecords_V2",
 }
 
 // Status strings for specific g2engine messages.

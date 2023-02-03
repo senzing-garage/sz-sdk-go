@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -34,8 +35,10 @@ type G2diagnostic interface {
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
 // ----------------------------------------------------------------------------
@@ -149,6 +152,29 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
+	8001: "CheckDBPerf",
+	8002: "CloseEntityListBySize",
+	8003: "Destroy",
+	8004: "FetchNextEntityBySize",
+	8005: "FindEntitiesByFeatureIDs",
+	8006: "GetAvailableMemory",
+	8007: "GetDataSourceCounts",
+	8008: "GetDBInfo",
+	8009: "GetEntityDetails",
+	8010: "GetEntityListBySize",
+	8011: "GetEntityResume",
+	8012: "GetEntitySizeBreakdown",
+	8013: "GetFeature",
+	8014: "GetGenericFeatures",
+	8015: "GetLogicalCores",
+	8016: "GetMappingStatistics",
+	8017: "GetPhysicalCores",
+	8018: "GetRelationshipDetails",
+	8019: "GetResolutionStatistics",
+	8020: "GetTotalSystemMemory",
+	8021: "Init",
+	8022: "InitWithConfigID",
+	8023: "Reinit",
 }
 
 // Status strings for specific g2diagnostic messages.

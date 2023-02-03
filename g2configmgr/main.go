@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -20,9 +21,11 @@ type G2configmgr interface {
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
 // ----------------------------------------------------------------------------
@@ -95,6 +98,14 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
+	8001: "AddConfig",
+	8002: "Destroy",
+	8003: "GetConfig",
+	8004: "GetConfigList",
+	8005: "GetDefaultConfigID",
+	8006: "Init",
+	8007: "ReplaceDefaultConfigID",
+	8008: "SetDefaultConfigID",
 }
 
 // Status strings for specific g2configmgr messages.

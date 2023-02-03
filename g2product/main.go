@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/senzing/go-logging/logger"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -15,7 +16,9 @@ type G2product interface {
 	Destroy(ctx context.Context) error
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
+	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
 	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)
 	Version(ctx context.Context) (string, error)
@@ -80,6 +83,12 @@ var IdMessages = map[int]string{
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
+	8001: "Destroy",
+	8002: "Init",
+	8003: "License",
+	8004: "ValidateLicenseFile",
+	8005: "ValidateLicenseStringBase64",
+	8006: "Version",
 }
 
 // Status strings for specific g2product messages.

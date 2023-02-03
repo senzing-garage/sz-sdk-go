@@ -21,6 +21,7 @@ import (
 	"github.com/senzing/go-logging/messagelogger"
 	"github.com/senzing/go-logging/messagestatus"
 	"github.com/senzing/go-logging/messagetext"
+	"github.com/senzing/go-observing/observer"
 )
 
 // ----------------------------------------------------------------------------
@@ -297,17 +298,29 @@ func main() {
 	fmt.Printf("\n-------------------------------------------------------------------------------\n\n")
 	logger.Log(2001, "Just a test of logging", programmMetadataMap)
 
+	// Create 2 observers.
+
+	observer1 := &observer.ObserverNull{
+		Id: "Observer 1",
+	}
+	observer2 := &observer.ObserverNull{
+		Id: "Observer 2",
+	}
+
 	// Get Senzing objects for installing a Senzing Engine configuration.
 
 	g2Config, err := getG2config(ctx)
 	if err != nil {
 		logger.Log(5001, err)
 	}
+	g2Config.RegisterObserver(ctx, observer1)
+	g2Config.RegisterObserver(ctx, observer2)
 
 	g2Configmgr, err := getG2configmgr(ctx)
 	if err != nil {
 		logger.Log(5002, err)
 	}
+	g2Configmgr.RegisterObserver(ctx, observer1)
 
 	// Persist the Senzing configuration to the Senzing repository.
 
@@ -322,16 +335,19 @@ func main() {
 	if err != nil {
 		logger.Log(5004, err)
 	}
+	g2Diagnostic.RegisterObserver(ctx, observer1)
 
 	g2Engine, err := getG2engine(ctx)
 	if err != nil {
 		logger.Log(5005, err)
 	}
+	g2Engine.RegisterObserver(ctx, observer1)
 
 	g2Product, err := getG2product(ctx)
 	if err != nil {
 		logger.Log(5006, err)
 	}
+	g2Product.RegisterObserver(ctx, observer1)
 
 	// Demonstrate tests.
 

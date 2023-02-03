@@ -11,13 +11,18 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"runtime"
+	"strconv"
 	"time"
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -26,8 +31,9 @@ import (
 
 // G2productImpl is the default implementation of the G2product interface.
 type G2productImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -77,6 +83,22 @@ func (g2product *G2productImpl) getLogger() messagelogger.MessageLoggerInterface
 		g2product.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	}
 	return g2product.logger
+}
+
+func (g2product *G2productImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
+	now := time.Now()
+	details["subjectId"] = strconv.Itoa(ProductId)
+	details["messageId"] = strconv.Itoa(messageId)
+	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
+	if err != nil {
+		details["error"] = err.Error()
+	}
+	message, err := json.Marshal(details)
+	if err != nil {
+		fmt.Printf("Error: %s", err.Error())
+	} else {
+		g2product.observers.NotifyObservers(ctx, string(message))
+	}
 }
 
 // Trace method entry.
@@ -184,6 +206,12 @@ func (g2product *G2productImpl) Destroy(ctx context.Context) error {
 	if result != 0 {
 		err = g2product.newError(ctx, 4001, result, time.Since(entryTime))
 	}
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2product.notify(ctx, 8001, err, details)
+		}()
+	}
 	if g2product.isTrace {
 		defer g2product.traceExit(4, err, time.Since(entryTime))
 	}
@@ -217,6 +245,16 @@ func (g2product *G2productImpl) Init(ctx context.Context, moduleName string, ini
 	if result != 0 {
 		err = g2product.newError(ctx, 4003, moduleName, iniParams, verboseLogging, result, time.Since(entryTime))
 	}
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
+			g2product.notify(ctx, 8002, err, details)
+		}()
+	}
 	if g2product.isTrace {
 		defer g2product.traceExit(10, moduleName, iniParams, verboseLogging, err, time.Since(entryTime))
 	}
@@ -243,10 +281,30 @@ func (g2product *G2productImpl) License(ctx context.Context) (string, error) {
 	entryTime := time.Now()
 	var err error = nil
 	result := C.G2Product_license()
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2product.notify(ctx, 8003, err, details)
+		}()
+	}
 	if g2product.isTrace {
 		defer g2product.traceExit(12, C.GoString(result), err, time.Since(entryTime))
 	}
 	return C.GoString(result), err
+}
+
+/*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2product *G2productImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2product.observers == nil {
+		g2product.observers = &subject.SubjectImpl{}
+	}
+	return g2product.observers.RegisterObserver(ctx, observer)
 }
 
 /*
@@ -268,6 +326,24 @@ func (g2product *G2productImpl) SetLogLevel(ctx context.Context, logLevel logger
 	g2product.isTrace = (g2product.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2product.isTrace {
 		defer g2product.traceExit(14, logLevel, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2product *G2productImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2product.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2product.observers.HasObservers(ctx) {
+		g2product.observers = nil
 	}
 	return err
 }
@@ -298,6 +374,12 @@ func (g2product *G2productImpl) ValidateLicenseFile(ctx context.Context, license
 	result := C.G2Product_validateLicenseFile_helper(licenseFilePathForC)
 	if result.returnCode != 0 {
 		err = g2product.newError(ctx, 4004, licenseFilePath, result.returnCode, result, time.Since(entryTime))
+	}
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2product.notify(ctx, 8004, err, details)
+		}()
 	}
 	if g2product.isTrace {
 		defer g2product.traceExit(16, licenseFilePath, C.GoString(result.response), err, time.Since(entryTime))
@@ -333,6 +415,12 @@ func (g2product *G2productImpl) ValidateLicenseStringBase64(ctx context.Context,
 	if result.returnCode != 0 {
 		err = g2product.newError(ctx, 4005, licenseString, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2product.notify(ctx, 8005, err, details)
+		}()
+	}
 	if g2product.isTrace {
 		defer g2product.traceExit(18, licenseString, C.GoString(result.response), err, time.Since(entryTime))
 	}
@@ -359,6 +447,12 @@ func (g2product *G2productImpl) Version(ctx context.Context) (string, error) {
 	entryTime := time.Now()
 	var err error = nil
 	result := C.G2Product_version()
+	if g2product.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2product.notify(ctx, 8006, err, details)
+		}()
+	}
 	if g2product.isTrace {
 		defer g2product.traceExit(20, C.GoString(result), err, time.Since(entryTime))
 	}

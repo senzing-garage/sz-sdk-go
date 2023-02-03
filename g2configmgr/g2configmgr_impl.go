@@ -13,13 +13,18 @@ import "C"
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"runtime"
+	"strconv"
 	"time"
 	"unsafe"
 
 	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-logging/messagelogger"
+	"github.com/senzing/go-observing/observer"
+	"github.com/senzing/go-observing/subject"
 )
 
 // ----------------------------------------------------------------------------
@@ -28,8 +33,9 @@ import (
 
 // G2configmgrImpl is the default implementation of the G2configmgr interface.
 type G2configmgrImpl struct {
-	isTrace bool
-	logger  messagelogger.MessageLoggerInterface
+	isTrace   bool
+	logger    messagelogger.MessageLoggerInterface
+	observers subject.Subject
 }
 
 // ----------------------------------------------------------------------------
@@ -79,6 +85,22 @@ func (g2configmgr *G2configmgrImpl) getLogger() messagelogger.MessageLoggerInter
 		g2configmgr.logger, _ = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	}
 	return g2configmgr.logger
+}
+
+func (g2configmgr *G2configmgrImpl) notify(ctx context.Context, messageId int, err error, details map[string]string) {
+	now := time.Now()
+	details["subjectId"] = strconv.Itoa(ProductId)
+	details["messageId"] = strconv.Itoa(messageId)
+	details["messageTime"] = strconv.FormatInt(now.UnixNano(), 10)
+	if err != nil {
+		details["error"] = err.Error()
+	}
+	message, err := json.Marshal(details)
+	if err != nil {
+		fmt.Printf("Error: %s", err.Error())
+	} else {
+		g2configmgr.observers.NotifyObservers(ctx, string(message))
+	}
 }
 
 // Trace method entry.
@@ -194,6 +216,14 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4001, configStr, configComments, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{
+				"configComments": configComments,
+			}
+			g2configmgr.notify(ctx, 8001, err, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(2, configStr, configComments, int64(C.longlong(result.configID)), err, time.Since(entryTime))
 	}
@@ -211,8 +241,6 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(5)
 	}
@@ -221,6 +249,12 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	result := C.G2ConfigMgr_destroy()
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4002, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2configmgr.notify(ctx, 8002, err, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(6, err, time.Since(entryTime))
@@ -252,6 +286,12 @@ func (g2configmgr *G2configmgrImpl) GetConfig(ctx context.Context, configID int6
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4003, configID, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2configmgr.notify(ctx, 8003, err, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(8, configID, C.GoString(result.config), err, time.Since(entryTime))
 	}
@@ -281,6 +321,12 @@ func (g2configmgr *G2configmgrImpl) GetConfigList(ctx context.Context) (string, 
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4004, result.returnCode, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2configmgr.notify(ctx, 8004, err, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(10, C.GoString(result.configList), err, time.Since(entryTime))
 	}
@@ -308,6 +354,12 @@ func (g2configmgr *G2configmgrImpl) GetDefaultConfigID(ctx context.Context) (int
 	result := C.G2ConfigMgr_getDefaultConfigID_helper()
 	if result.returnCode != 0 {
 		err = g2configmgr.newError(ctx, 4005, result.returnCode, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{}
+			g2configmgr.notify(ctx, 8005, err, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(12, int64(C.longlong(result.configID)), err, time.Since(entryTime))
@@ -342,10 +394,34 @@ func (g2configmgr *G2configmgrImpl) Init(ctx context.Context, moduleName string,
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4007, moduleName, iniParams, verboseLogging, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
+			g2configmgr.notify(ctx, 8006, err, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(18, moduleName, iniParams, verboseLogging, err, time.Since(entryTime))
 	}
 	return err
+}
+
+/*
+The RegisterObserver method adds the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2configmgr *G2configmgrImpl) RegisterObserver(ctx context.Context, observer observer.Observer) error {
+	if g2configmgr.observers == nil {
+		g2configmgr.observers = &subject.SubjectImpl{}
+	}
+	return g2configmgr.observers.RegisterObserver(ctx, observer)
 }
 
 /*
@@ -371,6 +447,14 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	result := C.G2ConfigMgr_replaceDefaultConfigID(C.longlong(oldConfigID), C.longlong(newConfigID))
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4008, oldConfigID, newConfigID, result, time.Since(entryTime))
+	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{
+				"newConfigID": strconv.FormatInt(newConfigID, 10),
+			}
+			g2configmgr.notify(ctx, 8007, err, details)
+		}()
 	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(20, oldConfigID, newConfigID, err, time.Since(entryTime))
@@ -399,6 +483,14 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	if result != 0 {
 		err = g2configmgr.newError(ctx, 4009, configID, result, time.Since(entryTime))
 	}
+	if g2configmgr.observers != nil {
+		go func() {
+			details := map[string]string{
+				"configID": strconv.FormatInt(configID, 10),
+			}
+			g2configmgr.notify(ctx, 8008, err, details)
+		}()
+	}
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(22, configID, err, time.Since(entryTime))
 	}
@@ -424,6 +516,24 @@ func (g2configmgr *G2configmgrImpl) SetLogLevel(ctx context.Context, logLevel lo
 	g2configmgr.isTrace = (g2configmgr.getLogger().GetLogLevel() == messagelogger.LevelTrace)
 	if g2configmgr.isTrace {
 		defer g2configmgr.traceExit(24, logLevel, err, time.Since(entryTime))
+	}
+	return err
+}
+
+/*
+The UnregisterObserver method removes the observer to the list of observers notified.
+
+Input
+  - ctx: A context to control lifecycle.
+  - observer: The observer to be added.
+*/
+func (g2configmgr *G2configmgrImpl) UnregisterObserver(ctx context.Context, observer observer.Observer) error {
+	err := g2configmgr.observers.UnregisterObserver(ctx, observer)
+	if err != nil {
+		return err
+	}
+	if !g2configmgr.observers.HasObservers(ctx) {
+		g2configmgr.observers = nil
 	}
 	return err
 }
