@@ -2093,10 +2093,10 @@ func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID 
 	//  _DLEXPORT int G2_howEntityByEntityID(const long long entityID, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	entryTime := time.Now()
 	if g2engine.isTrace {
 		g2engine.traceEntry(95, entityID)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2_howEntityByEntityID_helper(C.longlong(entityID))
 	if result.returnCode != 0 {
@@ -2131,10 +2131,10 @@ func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entity
 	//  _DLEXPORT int G2_howEntityByEntityID_V2(const long long entityID, const long long flags, char **responseBuf, size_t *bufSize, void *(*resizeFunc)(void *ptr, size_t newSize));
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	entryTime := time.Now()
 	if g2engine.isTrace {
 		g2engine.traceEntry(97, entityID, flags)
 	}
+	entryTime := time.Now()
 	var err error = nil
 	result := C.G2_howEntityByEntityID_V2_helper(C.longlong(entityID), C.longlong(flags))
 	if result.returnCode != 0 {

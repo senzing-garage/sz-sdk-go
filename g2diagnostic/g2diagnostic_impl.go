@@ -778,13 +778,12 @@ func (g2diagnostic *G2diagnosticImpl) GetPhysicalCores(ctx context.Context) (int
 	// _DLEXPORT int G2Diagnostic_getPhysicalCores();
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	var result int
 	if g2diagnostic.isTrace {
 		g2diagnostic.traceEntry(39)
 	}
 	entryTime := time.Now()
 	var err error = nil
-	result = int(C.G2Diagnostic_getPhysicalCores())
+	result := int(C.G2Diagnostic_getPhysicalCores())
 	if g2diagnostic.observers != nil {
 		go func() {
 			details := map[string]string{}

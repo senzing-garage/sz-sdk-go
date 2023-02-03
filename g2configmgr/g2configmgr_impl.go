@@ -239,8 +239,6 @@ func (g2configmgr *G2configmgrImpl) Destroy(ctx context.Context) error {
 	// _DLEXPORT int G2Config_destroy();
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
-	runtime.LockOSThread()
-	defer runtime.UnlockOSThread()
 	if g2configmgr.isTrace {
 		g2configmgr.traceEntry(5)
 	}
