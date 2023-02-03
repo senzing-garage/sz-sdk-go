@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.3.0] - 2023-02-03
+
+### Changed in 0.3.0
+
+- Added Observer
+
 ## [0.2.6] - 2023-01-11
 
 ### Changed in 0.2.6
