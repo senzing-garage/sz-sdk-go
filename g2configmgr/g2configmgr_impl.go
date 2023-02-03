@@ -218,7 +218,9 @@ func (g2configmgr *G2configmgrImpl) AddConfig(ctx context.Context, configStr str
 	}
 	if g2configmgr.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"configComments": configComments,
+			}
 			g2configmgr.notify(ctx, 8001, err, details)
 		}()
 	}
@@ -448,7 +450,9 @@ func (g2configmgr *G2configmgrImpl) ReplaceDefaultConfigID(ctx context.Context, 
 	}
 	if g2configmgr.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"newConfigID": strconv.FormatInt(newConfigID, 10),
+			}
 			g2configmgr.notify(ctx, 8007, err, details)
 		}()
 	}
@@ -481,7 +485,9 @@ func (g2configmgr *G2configmgrImpl) SetDefaultConfigID(ctx context.Context, conf
 	}
 	if g2configmgr.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"configID": strconv.FormatInt(configID, 10),
+			}
 			g2configmgr.notify(ctx, 8008, err, details)
 		}()
 	}

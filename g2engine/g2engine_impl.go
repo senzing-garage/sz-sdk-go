@@ -221,7 +221,11 @@ func (g2engine *G2engineImpl) AddRecord(ctx context.Context, dataSourceCode stri
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8001, err, details)
 		}()
 	}
@@ -269,7 +273,11 @@ func (g2engine *G2engineImpl) AddRecordWithInfo(ctx context.Context, dataSourceC
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8002, err, details)
 		}()
 	}
@@ -316,7 +324,11 @@ func (g2engine *G2engineImpl) AddRecordWithInfoWithReturnedRecordID(ctx context.
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       C.GoString(result.recordID),
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8003, err, details)
 		}()
 	}
@@ -362,7 +374,11 @@ func (g2engine *G2engineImpl) AddRecordWithReturnedRecordID(ctx context.Context,
 	stringBuffer = bytes.Trim(stringBuffer, "\x00")
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       string(stringBuffer),
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8004, err, details)
 		}()
 	}
@@ -510,7 +526,11 @@ func (g2engine *G2engineImpl) DeleteRecord(ctx context.Context, dataSourceCode s
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8008, err, details)
 		}()
 	}
@@ -556,7 +576,11 @@ func (g2engine *G2engineImpl) DeleteRecordWithInfo(ctx context.Context, dataSour
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8009, err, details)
 		}()
 	}
@@ -657,7 +681,9 @@ func (g2engine *G2engineImpl) ExportConfigAndConfigID(ctx context.Context) (stri
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"configID": strconv.FormatInt(int64(C.longlong(result.configID)), 10),
+			}
 			g2engine.notify(ctx, 8012, err, details)
 		}()
 	}
@@ -808,7 +834,9 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByEntityID(ctx context.Cont
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8016, err, details)
 		}()
 	}
@@ -850,7 +878,10 @@ func (g2engine *G2engineImpl) FindInterestingEntitiesByRecordID(ctx context.Cont
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8017, err, details)
 		}()
 	}
@@ -894,7 +925,9 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID(ctx context.Context, entityL
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityList": entityList,
+			}
 			g2engine.notify(ctx, 8018, err, details)
 		}()
 	}
@@ -939,7 +972,9 @@ func (g2engine *G2engineImpl) FindNetworkByEntityID_V2(ctx context.Context, enti
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityList": entityList,
+			}
 			g2engine.notify(ctx, 8019, err, details)
 		}()
 	}
@@ -983,7 +1018,9 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID(ctx context.Context, recordL
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"recordList": recordList,
+			}
 			g2engine.notify(ctx, 8020, err, details)
 		}()
 	}
@@ -1028,7 +1065,9 @@ func (g2engine *G2engineImpl) FindNetworkByRecordID_V2(ctx context.Context, reco
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"recordList": recordList,
+			}
 			g2engine.notify(ctx, 8021, err, details)
 		}()
 	}
@@ -1068,7 +1107,10 @@ func (g2engine *G2engineImpl) FindPathByEntityID(ctx context.Context, entityID1 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8022, err, details)
 		}()
 	}
@@ -1109,7 +1151,10 @@ func (g2engine *G2engineImpl) FindPathByEntityID_V2(ctx context.Context, entityI
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8023, err, details)
 		}()
 	}
@@ -1161,7 +1206,12 @@ func (g2engine *G2engineImpl) FindPathByRecordID(ctx context.Context, dataSource
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8024, err, details)
 		}()
 	}
@@ -1213,7 +1263,12 @@ func (g2engine *G2engineImpl) FindPathByRecordID_V2(ctx context.Context, dataSou
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8025, err, details)
 		}()
 	}
@@ -1257,7 +1312,10 @@ func (g2engine *G2engineImpl) FindPathExcludingByEntityID(ctx context.Context, e
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8026, err, details)
 		}()
 	}
@@ -1307,7 +1365,10 @@ func (g2engine *G2engineImpl) FindPathExcludingByEntityID_V2(ctx context.Context
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8027, err, details)
 		}()
 	}
@@ -1361,7 +1422,12 @@ func (g2engine *G2engineImpl) FindPathExcludingByRecordID(ctx context.Context, d
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8028, err, details)
 		}()
 	}
@@ -1421,7 +1487,12 @@ func (g2engine *G2engineImpl) FindPathExcludingByRecordID_V2(ctx context.Context
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8029, err, details)
 		}()
 	}
@@ -1469,7 +1540,10 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID(ctx context.Cont
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8030, err, details)
 		}()
 	}
@@ -1518,7 +1592,10 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByEntityID_V2(ctx context.C
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8031, err, details)
 		}()
 	}
@@ -1576,7 +1653,12 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID(ctx context.Cont
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8032, err, details)
 		}()
 	}
@@ -1635,7 +1717,12 @@ func (g2engine *G2engineImpl) FindPathIncludingSourceByRecordID_V2(ctx context.C
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8033, err, details)
 		}()
 	}
@@ -1707,7 +1794,9 @@ func (g2engine *G2engineImpl) GetEntityByEntityID(ctx context.Context, entityID 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8035, err, details)
 		}()
 	}
@@ -1745,7 +1834,9 @@ func (g2engine *G2engineImpl) GetEntityByEntityID_V2(ctx context.Context, entity
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8036, err, details)
 		}()
 	}
@@ -1787,7 +1878,10 @@ func (g2engine *G2engineImpl) GetEntityByRecordID(ctx context.Context, dataSourc
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8037, err, details)
 		}()
 	}
@@ -1830,7 +1924,10 @@ func (g2engine *G2engineImpl) GetEntityByRecordID_V2(ctx context.Context, dataSo
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8038, err, details)
 		}()
 	}
@@ -1872,7 +1969,10 @@ func (g2engine *G2engineImpl) GetRecord(ctx context.Context, dataSourceCode stri
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8039, err, details)
 		}()
 	}
@@ -1915,7 +2015,10 @@ func (g2engine *G2engineImpl) GetRecord_V2(ctx context.Context, dataSourceCode s
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8040, err, details)
 		}()
 	}
@@ -2026,7 +2129,9 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID(ctx context.Context, re
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"recordList": recordList,
+			}
 			g2engine.notify(ctx, 8043, err, details)
 		}()
 	}
@@ -2067,7 +2172,9 @@ func (g2engine *G2engineImpl) GetVirtualEntityByRecordID_V2(ctx context.Context,
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"recordList": recordList,
+			}
 			g2engine.notify(ctx, 8044, err, details)
 		}()
 	}
@@ -2104,7 +2211,9 @@ func (g2engine *G2engineImpl) HowEntityByEntityID(ctx context.Context, entityID 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8045, err, details)
 		}()
 	}
@@ -2142,7 +2251,9 @@ func (g2engine *G2engineImpl) HowEntityByEntityID_V2(ctx context.Context, entity
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8046, err, details)
 		}()
 	}
@@ -2225,7 +2336,12 @@ func (g2engine *G2engineImpl) InitWithConfigID(ctx context.Context, moduleName s
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"initConfigID":   strconv.FormatInt(initConfigID, 10),
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
 			g2engine.notify(ctx, 8048, err, details)
 		}()
 	}
@@ -2547,7 +2663,9 @@ func (g2engine *G2engineImpl) ReevaluateEntity(ctx context.Context, entityID int
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8057, err, details)
 		}()
 	}
@@ -2585,7 +2703,9 @@ func (g2engine *G2engineImpl) ReevaluateEntityWithInfo(ctx context.Context, enti
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8058, err, details)
 		}()
 	}
@@ -2623,7 +2743,10 @@ func (g2engine *G2engineImpl) ReevaluateRecord(ctx context.Context, dataSourceCo
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8059, err, details)
 		}()
 	}
@@ -2666,7 +2789,10 @@ func (g2engine *G2engineImpl) ReevaluateRecordWithInfo(ctx context.Context, data
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8060, err, details)
 		}()
 	}
@@ -2712,7 +2838,9 @@ func (g2engine *G2engineImpl) Reinit(ctx context.Context, initConfigID int64) er
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"initConfigID": strconv.FormatInt(initConfigID, 10),
+			}
 			g2engine.notify(ctx, 8061, err, details)
 		}()
 	}
@@ -2756,7 +2884,11 @@ func (g2engine *G2engineImpl) ReplaceRecord(ctx context.Context, dataSourceCode 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8062, err, details)
 		}()
 	}
@@ -2805,7 +2937,11 @@ func (g2engine *G2engineImpl) ReplaceRecordWithInfo(ctx context.Context, dataSou
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+				"loadID":         loadID,
+			}
 			g2engine.notify(ctx, 8063, err, details)
 		}()
 	}
@@ -2984,7 +3120,10 @@ func (g2engine *G2engineImpl) WhyEntities(ctx context.Context, entityID1 int64, 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8067, err, details)
 		}()
 	}
@@ -3045,7 +3184,10 @@ func (g2engine *G2engineImpl) WhyEntities_V2(ctx context.Context, entityID1 int6
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID1": strconv.FormatInt(entityID1, 10),
+				"entityID2": strconv.FormatInt(entityID2, 10),
+			}
 			g2engine.notify(ctx, 8068, err, details)
 		}()
 	}
@@ -3083,7 +3225,9 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID(ctx context.Context, entityID 
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8069, err, details)
 		}()
 	}
@@ -3121,7 +3265,9 @@ func (g2engine *G2engineImpl) WhyEntityByEntityID_V2(ctx context.Context, entity
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"entityID": strconv.FormatInt(entityID, 10),
+			}
 			g2engine.notify(ctx, 8070, err, details)
 		}()
 	}
@@ -3163,7 +3309,10 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID(ctx context.Context, dataSourc
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8071, err, details)
 		}()
 	}
@@ -3206,7 +3355,10 @@ func (g2engine *G2engineImpl) WhyEntityByRecordID_V2(ctx context.Context, dataSo
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode": dataSourceCode,
+				"recordID":       recordID,
+			}
 			g2engine.notify(ctx, 8072, err, details)
 		}()
 	}
@@ -3255,7 +3407,12 @@ func (g2engine *G2engineImpl) WhyRecords(ctx context.Context, dataSourceCode1 st
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8073, err, details)
 		}()
 	}
@@ -3304,7 +3461,12 @@ func (g2engine *G2engineImpl) WhyRecords_V2(ctx context.Context, dataSourceCode1
 	}
 	if g2engine.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"dataSourceCode1": dataSourceCode1,
+				"recordID1":       recordID1,
+				"dataSourceCode2": dataSourceCode2,
+				"recordID2":       recordID2,
+			}
 			g2engine.notify(ctx, 8074, err, details)
 		}()
 	}

@@ -972,7 +972,12 @@ func (g2diagnostic *G2diagnosticImpl) InitWithConfigID(ctx context.Context, modu
 	}
 	if g2diagnostic.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"iniParams":      iniParams,
+				"initConfigID":   strconv.FormatInt(initConfigID, 10),
+				"moduleName":     moduleName,
+				"verboseLogging": strconv.Itoa(verboseLogging),
+			}
 			g2diagnostic.notify(ctx, 8022, err, details)
 		}()
 	}
@@ -1025,7 +1030,9 @@ func (g2diagnostic *G2diagnosticImpl) Reinit(ctx context.Context, initConfigID i
 	}
 	if g2diagnostic.observers != nil {
 		go func() {
-			details := map[string]string{}
+			details := map[string]string{
+				"initConfigID": strconv.FormatInt(initConfigID, 10),
+			}
 			g2diagnostic.notify(ctx, 8023, err, details)
 		}()
 	}

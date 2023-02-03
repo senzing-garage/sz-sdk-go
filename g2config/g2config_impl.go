@@ -217,7 +217,8 @@ func (g2config *G2configImpl) AddDataSource(ctx context.Context, configHandle ui
 	if g2config.observers != nil {
 		go func() {
 			details := map[string]string{
-				"result": string(C.GoString(result.response)),
+				"inputJson": inputJson,
+				"return":    string(C.GoString(result.response)),
 			}
 			g2config.notify(ctx, 8001, err, details)
 		}()
