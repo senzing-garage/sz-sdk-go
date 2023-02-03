@@ -99,7 +99,7 @@ type G2engine interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Identfier of the g2engine component found messages having the format "senzing-6004xxxx".
+// Identfier of the g2engine package found messages having the format "senzing-6004xxxx".
 const ProductId = 6004
 
 // Flags used by the Senzing G2Engine.
