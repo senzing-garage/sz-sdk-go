@@ -268,6 +268,7 @@ func destroyObjects(ctx context.Context, g2Config g2config.G2config, g2Configmgr
 // ----------------------------------------------------------------------------
 
 func main() {
+	var err error = nil
 	ctx := context.TODO()
 
 	// Randomize random number generator.
@@ -277,7 +278,7 @@ func main() {
 	// Configure the "log" standard library.
 
 	log.SetFlags(0)
-	logger, err := getLogger(ctx)
+	logger, err = getLogger(ctx)
 	if err != nil {
 		logger.Log(5000, err)
 	}
