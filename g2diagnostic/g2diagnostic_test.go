@@ -243,10 +243,9 @@ func setupAddRecords(ctx context.Context, moduleName string, iniParams string, v
 
 func setup() error {
 	ctx := context.TODO()
-	var err error = nil
 	moduleName := "Test module name"
 	verboseLogging := 0
-	localLogger, err = messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
+	localLogger, err := messagelogger.NewSenzingApiLogger(ProductId, IdMessages, IdStatuses, messagelogger.LevelInfo)
 	if err != nil {
 		return localLogger.Error(5901, err)
 	}

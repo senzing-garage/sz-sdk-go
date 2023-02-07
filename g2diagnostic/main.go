@@ -45,7 +45,7 @@ type G2diagnostic interface {
 // Constants
 // ----------------------------------------------------------------------------
 
-// Identfier of the g2diagnostic component found messages having the format "senzing-6003xxxx".
+// Identfier of the g2diagnostic package found messages having the format "senzing-6003xxxx".
 const ProductId = 6003
 
 // ----------------------------------------------------------------------------

@@ -14,7 +14,7 @@ BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty)
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0)
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l | sed 's/^ *//')
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
-GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||')
+GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|github.com/|' -e 's|\.git$$||' -e 's|Senzing|senzing|')
 
 # Recursive assignment ('=')
 
@@ -87,7 +87,7 @@ run:
 
 .PHONY: update-pkg-cache
 update-pkg-cache:
-	@GOPROXY=https://proxy.golang.org GO111MODULE=on \
+	GOPROXY=https://proxy.golang.org GO111MODULE=on \
 	go get $(GO_PACKAGE_NAME)@$(BUILD_TAG)
 
 .PHONY: clean

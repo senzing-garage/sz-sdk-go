@@ -193,8 +193,6 @@ func demonstrateAddRecord(ctx context.Context, g2Engine g2engine.G2engine) (stri
 }
 
 func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnostic.G2diagnostic, g2Engine g2engine.G2engine, g2Product g2product.G2product) error {
-	var err error = nil
-
 	// Using G2Diagnostic: Check physical cores.
 
 	actual, err := g2Diagnostic.GetPhysicalCores(ctx)
@@ -237,9 +235,7 @@ func demonstrateAdditionalFunctions(ctx context.Context, g2Diagnostic g2diagnost
 }
 
 func destroyObjects(ctx context.Context, g2Config g2config.G2config, g2Configmgr g2configmgr.G2configmgr, g2Diagnostic g2diagnostic.G2diagnostic, g2Engine g2engine.G2engine, g2Product g2product.G2product) error {
-	var err error = nil
-
-	err = g2Config.Destroy(ctx)
+	err := g2Config.Destroy(ctx)
 	if err != nil {
 		logger.Log(5401, err)
 	}
