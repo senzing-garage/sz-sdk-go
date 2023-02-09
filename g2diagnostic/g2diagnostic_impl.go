@@ -223,7 +223,6 @@ func (g2diagnostic *G2diagnosticImpl) CheckDBPerf(ctx context.Context, secondsTo
 		defer g2diagnostic.traceExit(2, secondsToRun, C.GoString(result.response), err, time.Since(entryTime))
 	}
 	return C.GoString(result.response), err
-
 }
 
 /*
