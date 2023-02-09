@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.4.0] - 2023-02-10
+
+### Changed in 0.4.0
+
+- Major refactor.  Now g2-sdk-go only contains interface information, no implementation
+- See g2-sdk-go-base for an implementation
+
 ## [0.3.1] - 2023-02-09
 
 ### Changed in 0.3.1
