@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.3.1] - 2023-02-09
+
+### Changed in 0.3.1
+
+- Update GitActions
+- Fix inaccurate assignments
+
 ## [0.3.0] - 2023-02-03
 
 ### Changed in 0.3.0
