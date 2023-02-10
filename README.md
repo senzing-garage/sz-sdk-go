@@ -25,14 +25,21 @@ The Senzing Go SDK API interfaces are documented at:
 - [G2Engine](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2engine#G2engine)
 - [G2Product](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2product#G2product)
 
-The Senzing g2-sdk-go packages provide interface definitions for the following implementations:
+The Senzing g2-sdk-go packages provide interface definitions for the following implementations.
+For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in package directories.
 
 - [Senzing/g2-sdk-go-base](https://github.com/Senzing/g2-sdk-go-base) - an SDK for calling the Senzing C library locally.
-- [Senzing/g2-sdk-go-grpc](https://github.com/Senzing/g2-sdk-go-grpc) - an SDK for calling the Senzing C library via [gRPC](https://grpc.io/) network requests.
-- [Senzing/g2-sdk-go-mock](https://github.com/Senzing/g2-sdk-go-mock) - [mock objects](https://en.wikipedia.org/wiki/Mock_object) for developing and testing without the Senzing C library.
+- [Senzing/g2-sdk-go-grpc](https://github.com/Senzing/g2-sdk-go-grpc) - an SDK for calling the Senzing C library via
+  [gRPC](https://grpc.io/) network requests.
+- [Senzing/g2-sdk-go-mock](https://github.com/Senzing/g2-sdk-go-mock) - [mock objects](https://en.wikipedia.org/wiki/Mock_object)
+  for developing and testing without the Senzing C library.
+- [Senzing/go-sdk-abstract-factory](https://github.com/Senzing/go-sdk-abstract-factory) - An
+  [abstract factory pattern](https://en.wikipedia.org/wiki/Abstract_factory_pattern)
+  for switching among implementations.
 
 Documentation and examples for the implementations are at:
 
 - [g2-sdk-go-base](https://pkg.go.dev/github.com/senzing/g2-sdk-go-base)
 - [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
 - [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
+- [go-sdk-abstract-factory](https://pkg.go.dev/github.com/senzing/go-sdk-abstract-factory)
