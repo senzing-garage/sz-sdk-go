@@ -162,6 +162,12 @@ var IdMessages = map[int]string{
 	154:  "Exit  WhyRecords(%s, %s, %s, %s) returned (%s, %v).",
 	155:  "Enter WhyRecords_V2(%s, %s, %s, %s, %d).",
 	156:  "Exit  WhyRecords_V2(%s, %s, %s, %s, %d) returned (%s, %v).",
+	157:  "Enter RegisterObserver(%s).",
+	158:  "Exit  RegisterObserver(%s) returned (%v).",
+	159:  "Enter UnregisterObserver(%s).",
+	160:  "Exit  UnregisterObserver(%s) returned (%v).",
+	161:  "Enter GetSdkId().",
+	162:  "Exit  GetSdkId(%s) returned (#s, %v).",
 	4001: "Call to G2_addRecord(%s, %s, %s, %s) failed. Return code: %d",
 	4002: "Call to G2_addRecordWithInfo(%s, %s, %s, %s, %d) failed. Return code: %d",
 	4003: "Call to G2_addRecordWithInfoWithReturnedRecordID(%s, %s, %s, %d) failed. Return code: %d",
@@ -334,6 +340,10 @@ var IdMessages = map[int]string{
 	8072: "WhyEntityByRecordID_V2",
 	8073: "WhyRecords",
 	8074: "WhyRecords_V2",
+	8075: "GetSdkId",
+	8076: "RegisterObserver",
+	8077: "SetLogLevel",
+	8078: "UnregisterObserver",
 }
 
 // Status strings for specific g2engine messages.

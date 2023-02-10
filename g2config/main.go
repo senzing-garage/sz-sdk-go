@@ -32,6 +32,12 @@ var IdMessages = map[int]string{
 	24:   "Exit  Save(%v) returned (%s, %v).",
 	25:   "Enter SetLogLevel(%v).",
 	26:   "Exit  SetLogLevel(%v) returned (%v).",
+	27:   "Enter RegisterObserver(%s).",
+	28:   "Exit  RegisterObserver(%s) returned (%v).",
+	29:   "Enter UnregisterObserver(%s).",
+	30:   "Exit  UnregisterObserver(%s) returned (%v).",
+	31:   "Enter GetSdkId().",
+	32:   "Exit  GetSdkId(%s) returned (#s, %v).",
 	4001: "Call to G2Config_addDataSource(%v, %s) failed. Return code: %d",
 	4002: "Call to G2Config_close(%v) failed. Return code: %d",
 	4003: "Call to G2Config_create() failed. Return code: %d",
@@ -75,6 +81,10 @@ var IdMessages = map[int]string{
 	8007: "ListDataSources",
 	8008: "Load",
 	8009: "Save",
+	8010: "GetSdkId",
+	8011: "RegisterObserver",
+	8012: "SetLogLevel",
+	8013: "UnregisterObserver",
 }
 
 // Status strings for specific g2config messages.

@@ -30,6 +30,12 @@ var IdMessages = map[int]string{
 	22:   "Exit  SetDefaultConfigID(%d) returned (%v).",
 	23:   "Enter SetLogLevel(%v).",
 	24:   "Exit  SetLogLevel(%v) returned (%v).",
+	25:   "Enter RegisterObserver(%s).",
+	26:   "Exit  RegisterObserver(%s) returned (%v).",
+	27:   "Enter UnregisterObserver(%s).",
+	28:   "Exit  UnregisterObserver(%s) returned (%v).",
+	29:   "Enter GetSdkId().",
+	30:   "Exit  GetSdkId(%s) returned (#s, %v).",
 	4001: "Call to G2ConfigMgr_addConfig(%s, %s) failed. Return code: %d",
 	4002: "Call to G2ConfigMgr_destroy() failed. Return code: %d",
 	4003: "Call to G2ConfigMgr_getConfig(%d) failed. Return code: %d",
@@ -71,6 +77,10 @@ var IdMessages = map[int]string{
 	8006: "Init",
 	8007: "ReplaceDefaultConfigID",
 	8008: "SetDefaultConfigID",
+	8009: "GetSdkId",
+	8010: "RegisterObserver",
+	8011: "SetLogLevel",
+	8013: "UnregisterObserver",
 }
 
 // Status strings for specific g2configmgr messages.

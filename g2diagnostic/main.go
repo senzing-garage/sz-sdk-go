@@ -60,6 +60,12 @@ var IdMessages = map[int]string{
 	52:   "Exit  Reinit(%d) returned (%v).",
 	53:   "Enter SetLogLevel(%v).",
 	54:   "Exit  SetLogLevel(%v) returned (%v).",
+	55:   "Enter RegisterObserver(%s).",
+	56:   "Exit  RegisterObserver(%s) returned (%v).",
+	57:   "Enter UnregisterObserver(%s).",
+	58:   "Exit  UnregisterObserver(%s) returned (%v).",
+	59:   "Enter GetSdkId().",
+	60:   "Exit  GetSdkId(%s) returned (#s, %v).",
 	4001: "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
 	4002: "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
 	4003: "Call to G2Diagnostic_destroy() failed.  Return code: %d",
@@ -127,6 +133,10 @@ var IdMessages = map[int]string{
 	8021: "Init",
 	8022: "InitWithConfigID",
 	8023: "Reinit",
+	8024: "GetSdkId",
+	8025: "RegisterObserver",
+	8026: "SetLogLevel",
+	8027: "UnregisterObserver",
 }
 
 // Status strings for specific g2diagnostic messages.

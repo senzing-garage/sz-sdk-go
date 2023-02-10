@@ -26,6 +26,12 @@ var IdMessages = map[int]string{
 	18:   "Exit  ValidateLicenseStringBase64(%s) returned (%s, %v).",
 	19:   "Enter Version().",
 	20:   "Exit  Version() returned (%s, %v).",
+	21:   "Enter RegisterObserver(%s).",
+	22:   "Exit  RegisterObserver(%s) returned (%v).",
+	23:   "Enter UnregisterObserver(%s).",
+	24:   "Exit  UnregisterObserver(%s) returned (%v).",
+	25:   "Enter GetSdkId().",
+	26:   "Exit  GetSdkId(%s) returned (#s, %v).",
 	4001: "Call to G2Product_destroy() failed. Return code: %d",
 	4002: "Call to G2Product_getLastException() failed. Return code: %d",
 	4003: "Call to G2Product_init(%s, %s, %s) failed. Return code: %d",
@@ -61,6 +67,10 @@ var IdMessages = map[int]string{
 	8004: "ValidateLicenseFile",
 	8005: "ValidateLicenseStringBase64",
 	8006: "Version",
+	8007: "GetSdkId",
+	8008: "RegisterObserver",
+	8009: "SetLogLevel",
+	8010: "UnregisterObserver",
 }
 
 // Status strings for specific g2product messages.
