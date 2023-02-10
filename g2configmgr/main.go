@@ -1,31 +1,5 @@
 package g2configmgr
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-// The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-type G2configmgr interface {
-	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
-	Destroy(ctx context.Context) error
-	GetConfig(ctx context.Context, configID int64) (string, error)
-	GetConfigList(ctx context.Context) (string, error)
-	GetDefaultConfigID(ctx context.Context) (int64, error)
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
-	SetDefaultConfigID(ctx context.Context, configID int64) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-}
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------

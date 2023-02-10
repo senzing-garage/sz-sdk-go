@@ -1,32 +1,5 @@
 package g2config
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-// The G2config interface is a Golang representation of Senzing's libg2config.h
-type G2config interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
-	Close(ctx context.Context, configHandle uintptr) error
-	Create(ctx context.Context) (uintptr, error)
-	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
-	Destroy(ctx context.Context) error
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	Save(ctx context.Context, configHandle uintptr) (string, error)
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-}
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------

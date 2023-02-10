@@ -1,29 +1,5 @@
 package g2product
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-// The G2product interface is a Golang representation of Senzing's libg2product.h
-type G2product interface {
-	Destroy(ctx context.Context) error
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	License(ctx context.Context) (string, error)
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
-	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)
-	Version(ctx context.Context) (string, error)
-}
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
