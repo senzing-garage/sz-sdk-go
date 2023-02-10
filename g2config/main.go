@@ -31,7 +31,7 @@ type G2config interface {
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2config package.
+// Message templates for g2config implementations.
 var IdMessages = map[int]string{
 	1:    "Enter AddDataSource(%v, %s).",
 	2:    "Exit  AddDataSource(%v, %s) returned (%s, %v).",
@@ -87,6 +87,9 @@ var IdMessages = map[int]string{
 	5916: "During setup, call to g2engine.Init() failed.",
 	5917: "During setup, call to g2engine.AddRecord() failed.",
 	5918: "During setup, call to g2engine.Destroy() failed.",
+	5920: "During setup, call to setupSenzingConfig() failed.",
+	5921: "During setup, call to setupPurgeRepository() failed.",
+	5922: "During setup, call to setupAddRecords() failed.",
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",

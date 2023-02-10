@@ -11,9 +11,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-/*
-The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-*/
+// The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
 type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
@@ -32,7 +30,7 @@ type G2configmgr interface {
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2configmgr package.
+// Message templates for g2configmgr implementations.
 var IdMessages = map[int]string{
 	1:    "Enter AddConfig(%s, %s).",
 	2:    "Exit  AddConfig(%s, %s) returned (%d, %v).",

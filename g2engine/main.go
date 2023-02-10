@@ -182,7 +182,7 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2engine package.
+// Message templates for g2engine implementations.
 var IdMessages = map[int]string{
 	1:    "Enter AddRecord(%s, %s, %s, %s).",
 	2:    "Exit  AddRecord(%s, %s, %s, %s) returned (%v).",

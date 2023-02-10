@@ -28,7 +28,7 @@ type G2product interface {
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2product package.
+// Message templates for g2product implementations.
 var IdMessages = map[int]string{
 	1:    "Enter ClearLastException().",
 	2:    "Exit  ClearLastException() returned (%v).",
@@ -73,6 +73,9 @@ var IdMessages = map[int]string{
 	5916: "During setup, call to g2engine.Init() failed.",
 	5917: "During setup, call to g2engine.AddRecord() failed.",
 	5918: "During setup, call to g2engine.Destroy() failed.",
+	5920: "During setup, call to setupSenzingConfig() failed.",
+	5921: "During setup, call to setupPurgeRepository() failed.",
+	5922: "During setup, call to setupAddRecords() failed.",
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",

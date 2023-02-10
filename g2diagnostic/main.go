@@ -45,7 +45,7 @@ type G2diagnostic interface {
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2diagnostic package.
+// Message templates for g2diagnostic implementations.
 var IdMessages = map[int]string{
 	1:    "Enter CheckDBPerf(%d).",
 	2:    "Exit  CheckDBPerf(%d) returned (%s, %v).",
