@@ -28,11 +28,11 @@ The Senzing Go SDK API interfaces are documented at:
 The Senzing g2-sdk-go packages provide interface definitions for the following implementations:
 
 - [Senzing/g2-sdk-go-base](https://github.com/Senzing/g2-sdk-go-base) - an SDK for calling the Senzing C library locally.
-- [Senzing/g2-sdk-go-grpc](https://github.com/Senzing/g2-sdk-go-grpc) - an SDK for calling the Senzing C library via gRPC network requests.
-- [Senzing/g2-sdk-go-mock](https://github.com/Senzing/g2-sdk-go-mock) - [mock objects](https://en.wikipedia.org/wiki/Mock_object) for developing without the Senzing C library.
+- [Senzing/g2-sdk-go-grpc](https://github.com/Senzing/g2-sdk-go-grpc) - an SDK for calling the Senzing C library via [gRPC](https://grpc.io/) network requests.
+- [Senzing/g2-sdk-go-mock](https://github.com/Senzing/g2-sdk-go-mock) - [mock objects](https://en.wikipedia.org/wiki/Mock_object) for developing and testing without the Senzing C library.
 
 Documentation and examples for the implementations are at:
 
-- [Senzing/g2-sdk-go-base](https://pkg.go.dev/github.com/senzing/g2-sdk-go-base)
-- [Senzing/g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
-- [Senzing/g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
+- [g2-sdk-go-base](https://pkg.go.dev/github.com/senzing/g2-sdk-go-base)
+- [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
+- [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
