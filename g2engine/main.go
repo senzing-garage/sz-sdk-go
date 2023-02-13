@@ -167,7 +167,7 @@ var IdMessages = map[int]string{
 	159:  "Enter UnregisterObserver(%s).",
 	160:  "Exit  UnregisterObserver(%s) returned (%v).",
 	161:  "Enter GetSdkId().",
-	162:  "Exit  GetSdkId(%s) returned (#s, %v).",
+	162:  "Exit  GetSdkId() returned (#s, %v).",
 	4001: "Call to G2_addRecord(%s, %s, %s, %s) failed. Return code: %d",
 	4002: "Call to G2_addRecordWithInfo(%s, %s, %s, %s, %d) failed. Return code: %d",
 	4003: "Call to G2_addRecordWithInfoWithReturnedRecordID(%s, %s, %s, %d) failed. Return code: %d",
