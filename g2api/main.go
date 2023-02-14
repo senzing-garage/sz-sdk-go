@@ -12,7 +12,7 @@ import (
 // ----------------------------------------------------------------------------
 
 // The G2config interface is a Golang representation of Senzing's libg2config.h
-type G2configInterface interface {
+type G2config interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
@@ -29,7 +29,7 @@ type G2configInterface interface {
 }
 
 // The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-type G2configmgrInterface interface {
+type G2configmgr interface {
 	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configID int64) (string, error)
@@ -45,7 +45,7 @@ type G2configmgrInterface interface {
 }
 
 // The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
-type G2diagnosticInterface interface {
+type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
 	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error
 	Destroy(ctx context.Context) error
@@ -76,7 +76,7 @@ type G2diagnosticInterface interface {
 }
 
 // The G2engine interface is a Golang representation of Senzing's libg2.h
-type G2engineInterface interface {
+type G2engine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
 	AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error)
@@ -158,7 +158,7 @@ type G2engineInterface interface {
 }
 
 // The G2product interface is a Golang representation of Senzing's libg2product.h
-type G2productInterface interface {
+type G2product interface {
 	Destroy(ctx context.Context) error
 	GetSdkId(ctx context.Context) (string, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
