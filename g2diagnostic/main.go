@@ -1,58 +1,10 @@
 package g2diagnostic
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-// The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
-type G2diagnostic interface {
-	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
-	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error
-	Destroy(ctx context.Context) error
-	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error)
-	FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error)
-	GetAvailableMemory(ctx context.Context) (int64, error)
-	GetDataSourceCounts(ctx context.Context) (string, error)
-	GetDBInfo(ctx context.Context) (string, error)
-	GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error)
-	GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error)
-	GetEntityResume(ctx context.Context, entityID int64) (string, error)
-	GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error)
-	GetFeature(ctx context.Context, libFeatID int64) (string, error)
-	GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
-	GetLogicalCores(ctx context.Context) (int, error)
-	GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
-	GetPhysicalCores(ctx context.Context) (int, error)
-	GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
-	GetResolutionStatistics(ctx context.Context) (string, error)
-	GetTotalSystemMemory(ctx context.Context) (int64, error)
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	Reinit(ctx context.Context, initConfigID int64) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-}
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-// Identfier of the g2diagnostic package found messages having the format "senzing-6003xxxx".
-const ProductId = 6003
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2diagnostic package.
+// Message templates for g2diagnostic implementations.
 var IdMessages = map[int]string{
 	1:    "Enter CheckDBPerf(%d).",
 	2:    "Exit  CheckDBPerf(%d) returned (%s, %v).",
@@ -108,6 +60,12 @@ var IdMessages = map[int]string{
 	52:   "Exit  Reinit(%d) returned (%v).",
 	53:   "Enter SetLogLevel(%v).",
 	54:   "Exit  SetLogLevel(%v) returned (%v).",
+	55:   "Enter RegisterObserver(%s).",
+	56:   "Exit  RegisterObserver(%s) returned (%v).",
+	57:   "Enter UnregisterObserver(%s).",
+	58:   "Exit  UnregisterObserver(%s) returned (%v).",
+	59:   "Enter GetSdkId().",
+	60:   "Exit  GetSdkId() returned (#s, %v).",
 	4001: "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
 	4002: "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
 	4003: "Call to G2Diagnostic_destroy() failed.  Return code: %d",
@@ -175,6 +133,10 @@ var IdMessages = map[int]string{
 	8021: "Init",
 	8022: "InitWithConfigID",
 	8023: "Reinit",
+	8024: "GetSdkId",
+	8025: "RegisterObserver",
+	8026: "SetLogLevel",
+	8027: "UnregisterObserver",
 }
 
 // Status strings for specific g2diagnostic messages.

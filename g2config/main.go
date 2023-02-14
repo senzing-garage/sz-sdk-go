@@ -1,44 +1,10 @@
 package g2config
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-// The G2config interface is a Golang representation of Senzing's libg2config.h
-type G2config interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, inputJson string) (string, error)
-	Close(ctx context.Context, configHandle uintptr) error
-	Create(ctx context.Context) (uintptr, error)
-	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
-	Destroy(ctx context.Context) error
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	Save(ctx context.Context, configHandle uintptr) (string, error)
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-}
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-// Identfier of the g2config package found messages having the format "senzing-6001xxxx".
-const ProductId = 6001
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2config package.
+// Message templates for g2config implementations.
 var IdMessages = map[int]string{
 	1:    "Enter AddDataSource(%v, %s).",
 	2:    "Exit  AddDataSource(%v, %s) returned (%s, %v).",
@@ -66,6 +32,12 @@ var IdMessages = map[int]string{
 	24:   "Exit  Save(%v) returned (%s, %v).",
 	25:   "Enter SetLogLevel(%v).",
 	26:   "Exit  SetLogLevel(%v) returned (%v).",
+	27:   "Enter RegisterObserver(%s).",
+	28:   "Exit  RegisterObserver(%s) returned (%v).",
+	29:   "Enter UnregisterObserver(%s).",
+	30:   "Exit  UnregisterObserver(%s) returned (%v).",
+	31:   "Enter GetSdkId().",
+	32:   "Exit  GetSdkId() returned (#s, %v).",
 	4001: "Call to G2Config_addDataSource(%v, %s) failed. Return code: %d",
 	4002: "Call to G2Config_close(%v) failed. Return code: %d",
 	4003: "Call to G2Config_create() failed. Return code: %d",
@@ -94,6 +66,9 @@ var IdMessages = map[int]string{
 	5916: "During setup, call to g2engine.Init() failed.",
 	5917: "During setup, call to g2engine.AddRecord() failed.",
 	5918: "During setup, call to g2engine.Destroy() failed.",
+	5920: "During setup, call to setupSenzingConfig() failed.",
+	5921: "During setup, call to setupPurgeRepository() failed.",
+	5922: "During setup, call to setupAddRecords() failed.",
 	5931: "During setup, call to g2engine.Init() failed.",
 	5932: "During setup, call to g2engine.PurgeRepository() failed.",
 	5933: "During setup, call to g2engine.Destroy() failed.",
@@ -106,6 +81,10 @@ var IdMessages = map[int]string{
 	8007: "ListDataSources",
 	8008: "Load",
 	8009: "Save",
+	8010: "GetSdkId",
+	8011: "RegisterObserver",
+	8012: "SetLogLevel",
+	8013: "UnregisterObserver",
 }
 
 // Status strings for specific g2config messages.

@@ -1,45 +1,10 @@
 package g2configmgr
 
-import (
-	"context"
-
-	"github.com/senzing/go-logging/logger"
-	"github.com/senzing/go-observing/observer"
-)
-
-// ----------------------------------------------------------------------------
-// Types
-// ----------------------------------------------------------------------------
-
-/*
-The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-*/
-type G2configmgr interface {
-	AddConfig(ctx context.Context, configStr string, configComments string) (int64, error)
-	Destroy(ctx context.Context) error
-	GetConfig(ctx context.Context, configID int64) (string, error)
-	GetConfigList(ctx context.Context) (string, error)
-	GetDefaultConfigID(ctx context.Context) (int64, error)
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
-	SetDefaultConfigID(ctx context.Context, configID int64) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
-	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-}
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-// Identfier of the g2configmgr package found messages having the format "senzing-6002xxxx".
-const ProductId = 6002
-
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for the g2configmgr package.
+// Message templates for g2configmgr implementations.
 var IdMessages = map[int]string{
 	1:    "Enter AddConfig(%s, %s).",
 	2:    "Exit  AddConfig(%s, %s) returned (%d, %v).",
@@ -65,6 +30,12 @@ var IdMessages = map[int]string{
 	22:   "Exit  SetDefaultConfigID(%d) returned (%v).",
 	23:   "Enter SetLogLevel(%v).",
 	24:   "Exit  SetLogLevel(%v) returned (%v).",
+	25:   "Enter RegisterObserver(%s).",
+	26:   "Exit  RegisterObserver(%s) returned (%v).",
+	27:   "Enter UnregisterObserver(%s).",
+	28:   "Exit  UnregisterObserver(%s) returned (%v).",
+	29:   "Enter GetSdkId().",
+	30:   "Exit  GetSdkId() returned (#s, %v).",
 	4001: "Call to G2ConfigMgr_addConfig(%s, %s) failed. Return code: %d",
 	4002: "Call to G2ConfigMgr_destroy() failed. Return code: %d",
 	4003: "Call to G2ConfigMgr_getConfig(%d) failed. Return code: %d",
@@ -106,6 +77,10 @@ var IdMessages = map[int]string{
 	8006: "Init",
 	8007: "ReplaceDefaultConfigID",
 	8008: "SetDefaultConfigID",
+	8009: "GetSdkId",
+	8010: "RegisterObserver",
+	8011: "SetLogLevel",
+	8012: "UnregisterObserver",
 }
 
 // Status strings for specific g2configmgr messages.
