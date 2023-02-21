@@ -65,7 +65,7 @@ var IdMessages = map[int]string{
 	57:   "Enter UnregisterObserver(%s).",
 	58:   "Exit  UnregisterObserver(%s) returned (%v).",
 	59:   "Enter GetSdkId().",
-	60:   "Exit  GetSdkId() returned (#s, %v).",
+	60:   "Exit  GetSdkId() returned (%s).",
 	4001: "Call to G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
 	4002: "Call to G2Diagnostic_closeEntityListBySize() failed. Return code: %d",
 	4003: "Call to G2Diagnostic_destroy() failed.  Return code: %d",

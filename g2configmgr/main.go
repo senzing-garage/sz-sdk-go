@@ -35,7 +35,7 @@ var IdMessages = map[int]string{
 	27:   "Enter UnregisterObserver(%s).",
 	28:   "Exit  UnregisterObserver(%s) returned (%v).",
 	29:   "Enter GetSdkId().",
-	30:   "Exit  GetSdkId() returned (#s, %v).",
+	30:   "Exit  GetSdkId() returned (%s).",
 	4001: "Call to G2ConfigMgr_addConfig(%s, %s) failed. Return code: %d",
 	4002: "Call to G2ConfigMgr_destroy() failed. Return code: %d",
 	4003: "Call to G2ConfigMgr_getConfig(%d) failed. Return code: %d",
