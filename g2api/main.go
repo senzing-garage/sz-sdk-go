@@ -18,7 +18,7 @@ type G2config interface {
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
 	Destroy(ctx context.Context) error
-	GetSdkId(ctx context.Context) (string, error)
+	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
@@ -35,7 +35,7 @@ type G2configmgr interface {
 	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
-	GetSdkId(ctx context.Context) (string, error)
+	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
@@ -65,7 +65,7 @@ type G2diagnostic interface {
 	GetPhysicalCores(ctx context.Context) (int, error)
 	GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
 	GetResolutionStatistics(ctx context.Context) (string, error)
-	GetSdkId(ctx context.Context) (string, error)
+	GetSdkId(ctx context.Context) string
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
@@ -119,7 +119,7 @@ type G2engine interface {
 	GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetRepositoryLastModifiedTime(ctx context.Context) (int64, error)
-	GetSdkId(ctx context.Context) (string, error)
+	GetSdkId(ctx context.Context) string
 	GetVirtualEntityByRecordID_V2(ctx context.Context, recordList string, flags int64) (string, error)
 	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
 	HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
@@ -160,7 +160,7 @@ type G2engine interface {
 // The G2product interface is a Golang representation of Senzing's libg2product.h
 type G2product interface {
 	Destroy(ctx context.Context) error
-	GetSdkId(ctx context.Context) (string, error)
+	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error

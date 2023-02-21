@@ -31,7 +31,7 @@ var IdMessages = map[int]string{
 	23:   "Enter UnregisterObserver(%s).",
 	24:   "Exit  UnregisterObserver(%s) returned (%v).",
 	25:   "Enter GetSdkId().",
-	26:   "Exit  GetSdkId() returned (#s, %v).",
+	26:   "Exit  GetSdkId() returned (%s).",
 	4001: "Call to G2Product_destroy() failed. Return code: %d",
 	4002: "Call to G2Product_getLastException() failed. Return code: %d",
 	4003: "Call to G2Product_init(%s, %s, %s) failed. Return code: %d",
