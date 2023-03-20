@@ -35,6 +35,49 @@ func TestG2error_G2BadUserInputErrorRaw(test *testing.T) {
 
 }
 
+func TestG2error_G2BadUserInputErrorRaw2(test *testing.T) {
+	anError := G2ModuleEmptyMessageError{G2UnrecoverableError{G2BaseError{errors.New("Test message")}}}
+	testErrors := []error{
+		anError,
+		anError.G2UnrecoverableError,
+		anError.G2UnrecoverableError.G2BaseError,
+		anError.G2UnrecoverableError.G2BaseError.error,
+	}
+
+	for _, testError := range testErrors {
+		fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
+	}
+}
+
+func TestG2error_G2BadUserInputErrorRaw3(test *testing.T) {
+	anError := G2ModuleEmptyMessageError{G2UnrecoverableError{G2BaseError{errors.New("Test message")}}}
+
+	testErrors := []error{
+		anError,
+		anError.G2UnrecoverableError,
+		anError.G2UnrecoverableError.G2BaseError,
+		anError.G2UnrecoverableError.G2BaseError,
+	}
+
+	for _, testError := range testErrors {
+		fmt.Printf("1: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
+	}
+
+	// fmt.Println(typeOf, "has", typeOf.NumMethod(), "methods:")
+	// for i := 0; i < typeOf.NumMethod(); i++ {
+	// 	fmt.Print(" method#", i, ": ", typeOf.Method(i).Name, "\n")
+	// }
+
+	// fmt.Printf("ErrorType: %v; Message: %s\n", typeOf, anError.Error())
+	assert.True(test, errors.Is(anError, G2ModuleEmptyMessageError{}), "Not G2ModuleEmptyMessageError")
+	assert.True(test, errors.Is(anError, G2UnrecoverableError{}), "Not G2UnrecoverableError")
+	assert.True(test, errors.Is(anError, G2BaseError{}), "Not G2BaseError")
+	assert.IsType(test, G2ModuleEmptyMessageError{}, anError)
+	assert.IsType(test, G2UnrecoverableError{}, anError)
+	assert.IsType(test, G2BaseError{}, anError)
+
+}
+
 // func TestG2error_G2BaseError(test *testing.T) {
 // 	anError := G2Error(99900, "Test message")
 // 	fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
