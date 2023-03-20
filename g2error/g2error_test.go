@@ -1,70 +1,13 @@
 package g2error
 
 import (
-	"context"
 	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"testing"
 
-	"github.com/senzing/g2-sdk-go/g2api"
 	"github.com/stretchr/testify/assert"
 )
-
-const (
-	defaultTruncation = 76
-	printResults      = false
-)
-
-var (
-	test2configSingleton g2api.G2config
-)
-
-// ----------------------------------------------------------------------------
-// Internal functions
-// ----------------------------------------------------------------------------
-
-func testError(test *testing.T, ctx context.Context, g2config g2api.G2config, err error) {
-	if err != nil {
-		test.Log("Error:", err.Error())
-		assert.FailNow(test, err.Error())
-	}
-}
-
-func testErrorNoFail(test *testing.T, ctx context.Context, g2config g2api.G2config, err error) {
-	if err != nil {
-		test.Log("Error:", err.Error())
-	}
-}
-
-// ----------------------------------------------------------------------------
-// Test harness
-// ----------------------------------------------------------------------------
-
-func TestMain(m *testing.M) {
-	err := setup()
-	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
-	}
-	code := m.Run()
-	err = teardown()
-	if err != nil {
-		fmt.Print(err)
-	}
-	os.Exit(code)
-}
-
-func setup() error {
-	var err error = nil
-	return err
-}
-
-func teardown() error {
-	var err error = nil
-	return err
-}
 
 // ----------------------------------------------------------------------------
 // Test interface functions
@@ -106,8 +49,8 @@ func TestG2error_G2BadUserInputErrorRaw(test *testing.T) {
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
 
-func ExampleG2config_AddDataSource() {
-	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2error/g2error_test.go
-	fmt.Println("bob")
-	// Output: bob
-}
+// func ExampleG2config_AddDataSource() {
+// 	// For more information, visit https://github.com/Senzing/g2-sdk-go/blob/main/g2error/g2error_test.go
+// 	fmt.Println("bob")
+// 	// Output: bob
+// }
