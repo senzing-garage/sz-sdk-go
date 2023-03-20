@@ -1,29 +1,31 @@
 package g2error
 
+import "context"
+
 // ----------------------------------------------------------------------------
 // Base error
 // ----------------------------------------------------------------------------
 
-type G2Error struct {
+type G2BaseError struct {
 	error
 	ForExampleInt    int
 	ForExampleString string
 }
 
 // ----------------------------------------------------------------------------
-// "Category" errors - all based directly on G2Error
+// "Category" errors - all based directly on G2BaseError
 // ----------------------------------------------------------------------------
 
 type G2UnrecoverableInputError struct {
-	G2Error
+	G2BaseError
 }
 
 type G2RetryableError struct {
-	G2Error
+	G2BaseError
 }
 
 type G2BadUserInputError struct {
-	G2Error
+	G2BaseError
 }
 
 // ----------------------------------------------------------------------------
@@ -111,4 +113,44 @@ type G2ModuleResolveMissingResEntError struct {
 }
 type G2UnhandledError struct {
 	G2UnrecoverableInputError
+}
+
+// ----------------------------------------------------------------------------
+// Functions
+// ----------------------------------------------------------------------------
+
+/*
+The G2ErrorMessage function returns the string value from the Senzing error message.
+
+Input
+  - ctx: A context to control lifecycle.
+  - senzingErrorMessage: The message returned from the Senzing engine.
+*/
+func G2ErrorMessage(ctx context.Context, senzingErrorMessage string) string {
+	result := ""
+	return result
+}
+
+/*
+The G2ErrorCode function returns the integer error code value from the Senzing error message.
+
+Input
+  - ctx: A context to control lifecycle.
+  - senzingErrorMessage: The message returned from the Senzing engine.
+*/
+func G2ErrorCode(ctx context.Context, senzingErrorMessage string) int {
+	result := 0
+	return result
+}
+
+/*
+The G2Error function returns the integer error code value from the Senzing error message.
+
+Input
+  - ctx: A context to control lifecycle.
+  - senzingErrorMessage: The message returned from the Senzing engine.
+*/
+func G2Error(ctx context.Context, senzingErrorMessage string) error {
+	result := G2BaseError{}
+	return result
 }
