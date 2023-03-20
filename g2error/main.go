@@ -11,15 +11,17 @@ type G2ErrorTypeIds int
 // ----------------------------------------------------------------------------
 
 const (
-	G2BadUserInput G2ErrorTypeIds = iota
-	G2Retryable
-	G2Unrecoverable
-	G2BadInput
+	G2 G2ErrorTypeIds = iota
+	G2BadUserInput
 	G2Configuration
-	G2DatabaseConnectionLost
 	G2Database
+	G2DatabaseConnectionLost
+	G2IncompleteRecord
 	G2MalformedJson
 	G2MessageBuffer
+	G2MissingConfiguration
+	G2MissingDataSource
+	G2Module
 	G2ModuleEmptyMessage
 	G2ModuleGeneric
 	G2ModuleInvalidXML
@@ -28,9 +30,11 @@ const (
 	G2ModuleResolveMissingResEnt
 	G2NotFound
 	G2RepositoryPurged
+	G2Retryable
 	G2RetryTimeoutExceeded
 	G2UnacceptableJsonKeyValue
 	G2Unhandled
+	G2Unrecoverable
 )
 
 // ----------------------------------------------------------------------------
