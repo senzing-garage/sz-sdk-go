@@ -10,7 +10,7 @@ import (
 
 type G2BaseError struct {
 	error
-	// ForExampleInt    int
+	// ForExampleInt int
 	// ForExampleString string
 }
 

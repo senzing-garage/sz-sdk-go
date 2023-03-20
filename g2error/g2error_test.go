@@ -22,9 +22,17 @@ func TestG2error_G2BaseErrorRaw(test *testing.T) {
 
 func TestG2error_G2BadUserInputErrorRaw(test *testing.T) {
 	nativeError := errors.New("Test message")
-	anError := G2BadUserInputError{nativeError.(G2BaseError)}
+	baseError := G2BaseError{nativeError}
+	lowError := G2UnrecoverableError{baseError}
+	anError := G2ModuleEmptyMessageError{lowError}
 	fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
-	assert.IsType(test, G2BadUserInputError{}, anError)
+	assert.True(test, errors.Is(anError, G2ModuleEmptyMessageError{}), "Not G2ModuleEmptyMessageError")
+	assert.True(test, errors.Is(anError, G2UnrecoverableError{}), "Not G2UnrecoverableError")
+	assert.True(test, errors.Is(anError, G2BaseError{}), "Not G2BaseError")
+	assert.IsType(test, G2ModuleEmptyMessageError{}, anError)
+	assert.IsType(test, G2UnrecoverableError{}, anError)
+	assert.IsType(test, G2BaseError{}, anError)
+
 }
 
 // func TestG2error_G2BaseError(test *testing.T) {
