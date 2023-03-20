@@ -1,7 +1,6 @@
 package g2error
 
 import (
-	"context"
 	"errors"
 )
 
@@ -129,7 +128,7 @@ Input
   - ctx: A context to control lifecycle.
   - senzingErrorMessage: The message returned from the Senzing engine.
 */
-func G2ErrorMessage(ctx context.Context, senzingErrorMessage string) string {
+func G2ErrorMessage(senzingErrorMessage string) string {
 	result := ""
 	return result
 }
@@ -141,7 +140,7 @@ Input
   - ctx: A context to control lifecycle.
   - senzingErrorMessage: The message returned from the Senzing engine.
 */
-func G2ErrorCode(ctx context.Context, senzingErrorMessage string) int {
+func G2ErrorCode(senzingErrorMessage string) int {
 	result := 0
 	return result
 }
@@ -153,18 +152,24 @@ Input
   - ctx: A context to control lifecycle.
   - senzingErrorMessage: The message returned from the Senzing engine.
 */
-func G2Error(ctx context.Context, senzingErrorCode int, message string) error {
+func G2Error(senzingErrorCode int, message string) error {
 	var result error
 	if errorTypeId, ok := G2ErrorTypes[senzingErrorCode]; ok {
 		switch errorTypeId {
+
+		// Categories
+
 		case G2:
 			result = G2BaseError{errors.New(message)}
 		case G2BadUserInput:
-			result = G2BadUserInputError{errors.New(message).(G2BaseError)}
+			tmp := errors.New(message)
+			result = tmp.(G2BadUserInputError)
 		case G2Retryable:
 			result = G2RetryableError{errors.New(message).(G2BaseError)}
 		case G2Unrecoverable:
 			result = G2UnrecoverableError{errors.New(message).(G2BaseError)}
+
+		// G2BadUserInputError
 
 		case G2IncompleteRecord:
 			result = G2IncompleteRecordError{errors.New(message).(G2BadUserInputError)}
@@ -179,6 +184,8 @@ func G2Error(ctx context.Context, senzingErrorCode int, message string) error {
 		case G2UnacceptableJsonKeyValue:
 			result = G2UnacceptableJsonKeyValueError{errors.New(message).(G2BadUserInputError)}
 
+		// G2RetryableError
+
 		case G2Configuration:
 			result = G2ConfigurationError{errors.New(message).(G2RetryableError)}
 		case G2DatabaseConnectionLost:
@@ -189,6 +196,8 @@ func G2Error(ctx context.Context, senzingErrorCode int, message string) error {
 			result = G2RepositoryPurgedError{errors.New(message).(G2RetryableError)}
 		case G2RetryTimeoutExceeded:
 			result = G2RetryTimeoutExceededError{errors.New(message).(G2RetryableError)}
+
+		// G2UnrecoverableError
 
 		case G2Database:
 			result = G2DatabaseError{errors.New(message).(G2UnrecoverableError)}
@@ -208,6 +217,8 @@ func G2Error(ctx context.Context, senzingErrorCode int, message string) error {
 			result = G2ModuleResolveMissingResEntError{errors.New(message).(G2UnrecoverableError)}
 		case G2Unhandled:
 			result = G2UnhandledError{errors.New(message).(G2UnrecoverableError)}
+
+		// Default
 
 		default:
 			result = G2BaseError{errors.New(message)}

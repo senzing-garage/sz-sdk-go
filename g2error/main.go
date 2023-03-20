@@ -76,7 +76,7 @@ var G2ErrorTypes = map[int]G2ErrorTypeIds{
 	2134:  G2ModuleResolveMissingResEnt,
 	2208:  G2Configuration,
 	7221:  G2Configuration,
-	7426:  G2BadInput,
+	7426:  G2BadUserInput,
 	7344:  G2NotFound,
 	9000:  G2ModuleLicense,
 	30020: G2UnacceptableJsonKeyValue,
@@ -86,4 +86,9 @@ var G2ErrorTypes = map[int]G2ErrorTypeIds{
 	30121: G2MalformedJson,
 	30122: G2MalformedJson,
 	30123: G2MalformedJson,
+
+	// The 999nn series is for testing.
+
+	99900: G2,
+	99901: G2BadUserInput,
 }
