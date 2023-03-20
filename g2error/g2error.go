@@ -118,6 +118,22 @@ type G2UnhandledError struct {
 }
 
 // ----------------------------------------------------------------------------
+// Playground - just for spikes, not production.
+// ----------------------------------------------------------------------------
+
+type G3BaseError struct {
+	error
+}
+
+type G3BadUserInputError struct {
+	error
+}
+
+type G3IncompleteRecordError struct {
+	error
+}
+
+// ----------------------------------------------------------------------------
 // Functions
 // ----------------------------------------------------------------------------
 
