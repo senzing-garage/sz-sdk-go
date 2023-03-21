@@ -64,9 +64,17 @@ func TestG2error_G2BadUserInputErrorRaw3(test *testing.T) {
 func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {
 	var testError error = nil
 	testError = G3BadUserInputError{G3IncompleteRecordError{errors.New("Test message")}}
+	fmt.Printf("1: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
 
-	if myError, ok := testError.(G3BadUserInputError); ok {
-		fmt.Printf("Yahoo! ErrorType: %v; Message: %s\n", reflect.TypeOf(myError), myError.Error())
+	if testError2, ok2 := testError.(G3BadUserInputError); ok2 {
+		fmt.Printf("2: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError2), testError2.Error())
+		if testError3, ok2 := testError2.error.(G3IncompleteRecordError); ok2 {
+			fmt.Printf("3: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError3), testError3.Error())
+		}
+	}
+
+	if testError4, ok2 := testError.(G2RetryableError); ok2 {
+		fmt.Printf("4: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError4), testError4.Error())
 	}
 }
 
