@@ -3,7 +3,6 @@ package g2error
 import (
 	"errors"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -112,11 +111,14 @@ func TestG2error_IsInList(test *testing.T) {
 
 func TestG2error_Unwrap(test *testing.T) {
 	var anError error = nil
+	expectedWrapCount := 1
+	actualWrapCount := 0
 	anError = G2Error(99901, "Test message")
 	for anError != nil {
-		fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
+		actualWrapCount += 1
 		anError = errors.Unwrap(anError)
 	}
+	assert.Equal(test, expectedWrapCount, actualWrapCount)
 }
 
 // ----------------------------------------------------------------------------
