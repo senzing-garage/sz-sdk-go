@@ -110,13 +110,12 @@ func TestG2error_IsInList(test *testing.T) {
 }
 
 func TestG2error_Unwrap(test *testing.T) {
-	var anError error = nil
 	expectedWrapCount := 1
 	actualWrapCount := 0
-	anError = G2Error(99901, "Test message")
-	for anError != nil {
+	err := G2Error(99901, "Test message")
+	for err != nil {
 		actualWrapCount += 1
-		anError = errors.Unwrap(anError)
+		err = errors.Unwrap(err)
 	}
 	assert.Equal(test, expectedWrapCount, actualWrapCount)
 }
