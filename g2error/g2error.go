@@ -46,13 +46,25 @@ func G2Error(senzingErrorCode int, message string) error {
 			// Category errors.
 
 			case G2BadUserInput:
-				result = G2BadUserInputError{result}
+				result = G2BadUserInputError{
+					error:          result,
+					G2ErrorTypeIds: errorTypeIds,
+				}
 			case G2:
-				result = G2BaseError{result}
+				result = G2BaseError{
+					error:          result,
+					G2ErrorTypeIds: errorTypeIds,
+				}
 			case G2Retryable:
-				result = G2RetryableError{result}
+				result = G2RetryableError{
+					error:          result,
+					G2ErrorTypeIds: errorTypeIds,
+				}
 			case G2Unrecoverable:
-				result = G2UnrecoverableError{result}
+				result = G2UnrecoverableError{
+					error:          result,
+					G2ErrorTypeIds: errorTypeIds,
+				}
 
 			// Detail errors.
 
@@ -100,8 +112,70 @@ func G2Error(senzingErrorCode int, message string) error {
 			// Default error.
 
 			default:
-				result = G2BaseError{result}
+				result = G2BaseError{
+					error:          result,
+					G2ErrorTypeIds: errorTypeIds,
+				}
 			}
+		}
+	}
+	return result
+}
+
+/*
+The Is function determines if an error is of a certain type.
+
+Input
+  - err: The error to be tested.
+  - errorType: The error type desired.
+*/
+func Is(err error, errorType G2ErrorTypeIds) bool {
+	result := false
+
+	if errors.As(err, &G2BadUserInputError{}) {
+		for _, g2ErrorTypeId := range err.(G2BadUserInputError).G2ErrorTypeIds {
+			if errorType == g2ErrorTypeId {
+				return true
+			}
+		}
+	}
+	if errors.As(err, &G2BaseError{}) {
+		for _, g2ErrorTypeId := range err.(G2BaseError).G2ErrorTypeIds {
+			if errorType == g2ErrorTypeId {
+				return true
+			}
+		}
+	}
+	if errors.As(err, &G2RetryableError{}) {
+		for _, g2ErrorTypeId := range err.(G2RetryableError).G2ErrorTypeIds {
+			if errorType == g2ErrorTypeId {
+				return true
+			}
+		}
+	}
+	if errors.As(err, &G2UnrecoverableError{}) {
+		for _, g2ErrorTypeId := range err.(G2UnrecoverableError).G2ErrorTypeIds {
+			if errorType == g2ErrorTypeId {
+				return true
+			}
+		}
+	}
+	return result
+}
+
+/*
+The IsInList function determines if an error is of a certain type in a list.
+This is a convenience function to avoid calling Is() repeatedly.
+
+Input
+  - err: The error to be tested.
+  - errorType: A list of error types desired.
+*/
+func IsInList(err error, errorType []G2ErrorTypeIds) bool {
+	result := false
+	for _, g2ErrorTypeId := range errorType {
+		if Is(err, g2ErrorTypeId) {
+			return true
 		}
 	}
 	return result

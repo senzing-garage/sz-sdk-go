@@ -10,10 +10,22 @@ type G2ErrorTypeIds int
 // "Category" errors
 // ----------------------------------------------------------------------------
 
-type G2BadUserInputError struct{ error }
-type G2BaseError struct{ error }
-type G2RetryableError struct{ error }
-type G2UnrecoverableError struct{ error }
+type G2BadUserInputError struct {
+	error
+	G2ErrorTypeIds []G2ErrorTypeIds
+}
+type G2BaseError struct {
+	error
+	G2ErrorTypeIds []G2ErrorTypeIds
+}
+type G2RetryableError struct {
+	error
+	G2ErrorTypeIds []G2ErrorTypeIds
+}
+type G2UnrecoverableError struct {
+	error
+	G2ErrorTypeIds []G2ErrorTypeIds
+}
 
 // ----------------------------------------------------------------------------
 // Detail errors
