@@ -36,17 +36,17 @@ func TestG2error_G2BadUserInputErrorRaw(test *testing.T) {
 }
 
 func TestG2error_G2BadUserInputErrorRaw2(test *testing.T) {
-	anError := G2ModuleEmptyMessageError{G2UnrecoverableError{G2BaseError{errors.New("Test message")}}}
-	testErrors := []error{
-		anError,
-		anError.G2UnrecoverableError,
-		anError.G2UnrecoverableError.G2BaseError,
-		anError.G2UnrecoverableError.G2BaseError.error,
-	}
+	// anError := G2ModuleEmptyMessageError{G2UnrecoverableError{G2BaseError{errors.New("Test message")}}}
+	// testErrors := []error{
+	// 	anError,
+	// 	anError.G2UnrecoverableError,
+	// 	anError.G2UnrecoverableError.G2BaseError,
+	// 	anError.G2UnrecoverableError.G2BaseError.error,
+	// }
 
-	for _, testError := range testErrors {
-		fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
-	}
+	// for _, testError := range testErrors {
+	// 	fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
+	// }
 }
 
 func TestG2error_G2BadUserInputErrorRaw3(test *testing.T) {
@@ -63,12 +63,12 @@ func TestG2error_G2BadUserInputErrorRaw3(test *testing.T) {
 
 func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {
 	var testError error = nil
-	testError = G3BadUserInputError{G3IncompleteRecordError{errors.New("Test message")}}
+	testError = G2BadUserInputError{G2IncompleteRecordError{errors.New("Test message")}}
 	fmt.Printf("1: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError), testError.Error())
 
-	if testError2, ok2 := testError.(G3BadUserInputError); ok2 {
+	if testError2, ok2 := testError.(G2BadUserInputError); ok2 {
 		fmt.Printf("2: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError2), testError2.Error())
-		if testError3, ok2 := testError2.error.(G3IncompleteRecordError); ok2 {
+		if testError3, ok2 := testError2.error.(G2IncompleteRecordError); ok2 {
 			fmt.Printf("3: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError3), testError3.Error())
 		}
 	}
@@ -76,6 +76,25 @@ func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {
 	if testError4, ok2 := testError.(G2RetryableError); ok2 {
 		fmt.Printf("4: ErrorType: %v; Message: %s\n", reflect.TypeOf(testError4), testError4.Error())
 	}
+}
+
+func TestG2error_G2BadUserInputError(test *testing.T) {
+	anError := G2Error(99901, "Test message")
+	fmt.Printf("1: ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
+
+	if errors.As(anError, &G2BadUserInputError{}) {
+		fmt.Printf("Yes it is G2BadUserInputError\n")
+
+		if detailedError, ok := anError.(G2BadUserInputError); ok {
+			fmt.Printf("2: ErrorType: %v; Message: %s\n", reflect.TypeOf(detailedError), detailedError.Error())
+			assert.IsType(test, G2BadUserInputError{}, anError)
+		}
+
+	} else {
+		fmt.Printf("nope \n")
+	}
+	assert.IsType(test, G2BadUserInputError{}, anError)
+
 }
 
 // func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {
@@ -111,12 +130,6 @@ func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {
 // 	anError := G2Error(99900, "Test message")
 // 	fmt.Printf("ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
 // 	assert.IsType(test, G2BaseError{}, anError)
-// }
-
-// func TestG2error_G2BadUserInputError(test *testing.T) {
-// 	anError := G2Error(99901, "Test message")
-// 	fmt.Printf("Error: %v\n", reflect.TypeOf(anError))
-// 	assert.IsType(test, G2BadUserInputError{}, anError)
 // }
 
 // func TestG2error_T2(test *testing.T) {

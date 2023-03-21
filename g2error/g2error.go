@@ -2,136 +2,9 @@ package g2error
 
 import (
 	"errors"
+	"fmt"
+	"reflect"
 )
-
-// ----------------------------------------------------------------------------
-// Base error
-// ----------------------------------------------------------------------------
-
-type G2BaseError struct {
-	error
-	// ForExampleInt int
-	// ForExampleString string
-}
-
-// ----------------------------------------------------------------------------
-// "Category" errors - all based directly on G2BaseError
-// ----------------------------------------------------------------------------
-
-type G2BadUserInputError struct {
-	G2BaseError
-}
-
-type G2RetryableError struct {
-	G2BaseError
-}
-
-type G2UnrecoverableError struct {
-	G2BaseError
-}
-
-// ----------------------------------------------------------------------------
-// Errors based on G2BadUserInputError
-// ----------------------------------------------------------------------------
-
-type G2IncompleteRecordError struct {
-	G2BadUserInputError
-}
-
-type G2MalformedJsonError struct {
-	G2BadUserInputError
-}
-
-type G2MissingConfigurationError struct {
-	G2BadUserInputError
-}
-
-type G2MissingDataSourceError struct {
-	G2BadUserInputError
-}
-
-type G2NotFoundError struct {
-	G2BadUserInputError
-}
-
-type G2UnacceptableJsonKeyValueError struct {
-	G2BadUserInputError
-}
-
-// ----------------------------------------------------------------------------
-// Errors based on G2RetryableError
-// ----------------------------------------------------------------------------
-
-type G2ConfigurationError struct {
-	G2RetryableError
-}
-type G2DatabaseConnectionLostError struct {
-	G2RetryableError
-}
-type G2MessageBufferError struct {
-	G2RetryableError
-}
-type G2RepositoryPurgedError struct {
-	G2RetryableError
-}
-type G2RetryTimeoutExceededError struct {
-	G2RetryableError
-}
-
-// ----------------------------------------------------------------------------
-// Errors based on G2UnrecoverableInputError
-// ----------------------------------------------------------------------------
-
-type G2DatabaseError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleEmptyMessageError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleGenericError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleInvalidXMLError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleLicenseError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleNotInitializedError struct {
-	G2UnrecoverableError
-}
-
-type G2ModuleResolveMissingResEntError struct {
-	G2UnrecoverableError
-}
-type G2UnhandledError struct {
-	G2UnrecoverableError
-}
-
-// ----------------------------------------------------------------------------
-// Playground - just for spikes, not production.
-// ----------------------------------------------------------------------------
-
-type G3BaseError struct {
-	error
-}
-
-type G3BadUserInputError struct {
-	error
-}
-
-type G3IncompleteRecordError struct {
-	error
-}
 
 // ----------------------------------------------------------------------------
 // Functions
@@ -169,75 +42,81 @@ Input
   - senzingErrorMessage: The message returned from the Senzing engine.
 */
 func G2Error(senzingErrorCode int, message string) error {
-	var result error
-	if errorTypeId, ok := G2ErrorTypes[senzingErrorCode]; ok {
-		switch errorTypeId {
+	var result error = errors.New(message)
+	if errorTypeIds, ok := G2ErrorTypes[senzingErrorCode]; ok {
+		for _, errorTypeId := range errorTypeIds {
 
-		// Categories
+			fmt.Printf("Error: %d\n", errorTypeId)
+			switch errorTypeId {
 
-		case G2:
-			result = G2BaseError{errors.New(message)}
-		case G2BadUserInput:
-			tmp := errors.New(message)
-			result = tmp.(G2BadUserInputError)
-		case G2Retryable:
-			result = G2RetryableError{errors.New(message).(G2BaseError)}
-		case G2Unrecoverable:
-			result = G2UnrecoverableError{errors.New(message).(G2BaseError)}
+			// Categories
 
-		// G2BadUserInputError
+			case G2:
+				result = G2BaseError{result}
+			case G2BadUserInput:
+				result = G2BadUserInputError{result}
+			case G2Retryable:
+				result = G2RetryableError{result}
+			case G2Unrecoverable:
+				result = G2UnrecoverableError{result}
 
-		case G2IncompleteRecord:
-			result = G2IncompleteRecordError{errors.New(message).(G2BadUserInputError)}
-		case G2MalformedJson:
-			result = G2MalformedJsonError{errors.New(message).(G2BadUserInputError)}
-		case G2MissingConfiguration:
-			result = G2MissingConfigurationError{errors.New(message).(G2BadUserInputError)}
-		case G2MissingDataSource:
-			result = G2MissingDataSourceError{errors.New(message).(G2BadUserInputError)}
-		case G2NotFound:
-			result = G2NotFoundError{errors.New(message).(G2BadUserInputError)}
-		case G2UnacceptableJsonKeyValue:
-			result = G2UnacceptableJsonKeyValueError{errors.New(message).(G2BadUserInputError)}
+			// G2BadUserInputError
 
-		// G2RetryableError
+			case G2IncompleteRecord:
+				result = G2IncompleteRecordError{result}
+			case G2MalformedJson:
+				result = G2MalformedJsonError{result}
+			case G2MissingConfiguration:
+				result = G2MissingConfigurationError{result}
+			case G2MissingDataSource:
+				result = G2MissingDataSourceError{result}
+			case G2NotFound:
+				result = G2NotFoundError{result}
+			case G2UnacceptableJsonKeyValue:
+				result = G2UnacceptableJsonKeyValueError{result}
 
-		case G2Configuration:
-			result = G2ConfigurationError{errors.New(message).(G2RetryableError)}
-		case G2DatabaseConnectionLost:
-			result = G2DatabaseConnectionLostError{errors.New(message).(G2RetryableError)}
-		case G2MessageBuffer:
-			result = G2MessageBufferError{errors.New(message).(G2RetryableError)}
-		case G2RepositoryPurged:
-			result = G2RepositoryPurgedError{errors.New(message).(G2RetryableError)}
-		case G2RetryTimeoutExceeded:
-			result = G2RetryTimeoutExceededError{errors.New(message).(G2RetryableError)}
+			// G2RetryableError
 
-		// G2UnrecoverableError
+			case G2Configuration:
+				result = G2ConfigurationError{result}
+			case G2DatabaseConnectionLost:
+				result = G2DatabaseConnectionLostError{result}
+			case G2MessageBuffer:
+				result = G2MessageBufferError{result}
+			case G2RepositoryPurged:
+				result = G2RepositoryPurgedError{result}
+			case G2RetryTimeoutExceeded:
+				result = G2RetryTimeoutExceededError{result}
 
-		case G2Database:
-			result = G2DatabaseError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleEmptyMessage:
-			result = G2ModuleEmptyMessageError{errors.New(message).(G2UnrecoverableError)}
-		case G2Module:
-			result = G2ModuleError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleGeneric:
-			result = G2ModuleGenericError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleInvalidXML:
-			result = G2ModuleInvalidXMLError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleLicense:
-			result = G2ModuleLicenseError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleNotInitialized:
-			result = G2ModuleNotInitializedError{errors.New(message).(G2UnrecoverableError)}
-		case G2ModuleResolveMissingResEnt:
-			result = G2ModuleResolveMissingResEntError{errors.New(message).(G2UnrecoverableError)}
-		case G2Unhandled:
-			result = G2UnhandledError{errors.New(message).(G2UnrecoverableError)}
+			// G2UnrecoverableError
 
-		// Default
+			case G2Database:
+				result = G2DatabaseError{result}
+			case G2ModuleEmptyMessage:
+				result = G2ModuleEmptyMessageError{result}
+			case G2Module:
+				result = G2ModuleError{result}
+			case G2ModuleGeneric:
+				result = G2ModuleGenericError{result}
+			case G2ModuleInvalidXML:
+				result = G2ModuleInvalidXMLError{result}
+			case G2ModuleLicense:
+				result = G2ModuleLicenseError{result}
+			case G2ModuleNotInitialized:
+				result = G2ModuleNotInitializedError{result}
+			case G2ModuleResolveMissingResEnt:
+				result = G2ModuleResolveMissingResEntError{result}
+			case G2Unhandled:
+				result = G2UnhandledError{result}
 
-		default:
-			result = G2BaseError{errors.New(message)}
+			// Default
+
+			default:
+				result = G2BaseError{result}
+			}
+
+			fmt.Printf("ErrorType: %v\n", reflect.TypeOf(result))
+
 		}
 	}
 
