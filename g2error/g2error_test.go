@@ -101,9 +101,9 @@ func TestG2error_G2BadUserInputError2(test *testing.T) {
 	var anError error = nil
 	anError = G2Error(99901, "Test message")
 	if errors.As(anError, &G2BadUserInputError{}) {
-		fmt.Printf("Yes it is G2BadUserInputError\n")
+		fmt.Printf("Yes it is G2BadUserInputError.  So I have to correct my input.\n")
 		if errors.As(anError.(G2BadUserInputError).error, &G2ModuleInvalidXMLError{}) {
-			fmt.Printf("Yes it is G2ModuleInvalidXMLError\n")
+			fmt.Printf("Yes it is G2ModuleInvalidXMLError.  So it's the XML that's at issue.\n")
 		}
 	}
 	assert.IsType(test, G2BadUserInputError{}, anError)
