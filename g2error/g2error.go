@@ -2,10 +2,26 @@ package g2error
 
 import (
 	"errors"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 // ----------------------------------------------------------------------------
-// Functions
+// Private Functions
+// ----------------------------------------------------------------------------
+
+func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
+	for _, g2ErrorTypeId := range haystack {
+		if needle == g2ErrorTypeId {
+			return true
+		}
+	}
+	return false
+}
+
+// ----------------------------------------------------------------------------
+// Public Functions
 // ----------------------------------------------------------------------------
 
 /*
@@ -16,17 +32,37 @@ Input
 */
 func G2ErrorMessage(senzingErrorMessage string) string {
 	result := ""
+	splits := strings.Split(senzingErrorMessage, "|")
+	if len(splits) > 1 {
+		result = strings.TrimSpace(splits[1])
+	}
 	return result
 }
 
 /*
 The G2ErrorCode function returns the integer error code value from the Senzing error message.
+Example Senzing error message: "0037E|Unknown resolved entity value '-4'"
 
 Input
   - senzingErrorMessage: The message returned from Senzing's G2xxx_getLastException message.
 */
 func G2ErrorCode(senzingErrorMessage string) int {
 	result := 0
+	splits := strings.Split(senzingErrorMessage, "|")
+	if len(splits) > 0 {
+
+		// Make a Regex to say we only want numbers.
+
+		regularExpression, err := regexp.Compile("[^0-9]+")
+		if err != nil {
+			return result
+		}
+		numericOnlyString := regularExpression.ReplaceAllString(splits[0], "")
+		result, err := strconv.Atoi(numericOnlyString)
+		if err == nil {
+			return result
+		}
+	}
 	return result
 }
 
@@ -50,7 +86,7 @@ func G2Error(senzingErrorCode int, message string) error {
 					error:          result,
 					G2ErrorTypeIds: errorTypeIds,
 				}
-			case G2:
+			case G2Base:
 				result = G2BaseError{
 					error:          result,
 					G2ErrorTypeIds: errorTypeIds,
@@ -130,37 +166,19 @@ Input
   - errorType: The error type desired.
 */
 func Is(err error, errorType G2ErrorTypeIds) bool {
-	result := false
-
 	if errors.As(err, &G2BadUserInputError{}) {
-		for _, g2ErrorTypeId := range err.(G2BadUserInputError).G2ErrorTypeIds {
-			if errorType == g2ErrorTypeId {
-				return true
-			}
-		}
+		return isIn(errorType, err.(G2BadUserInputError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2BaseError{}) {
-		for _, g2ErrorTypeId := range err.(G2BaseError).G2ErrorTypeIds {
-			if errorType == g2ErrorTypeId {
-				return true
-			}
-		}
+		return isIn(errorType, err.(G2BaseError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2RetryableError{}) {
-		for _, g2ErrorTypeId := range err.(G2RetryableError).G2ErrorTypeIds {
-			if errorType == g2ErrorTypeId {
-				return true
-			}
-		}
+		return isIn(errorType, err.(G2RetryableError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2UnrecoverableError{}) {
-		for _, g2ErrorTypeId := range err.(G2UnrecoverableError).G2ErrorTypeIds {
-			if errorType == g2ErrorTypeId {
-				return true
-			}
-		}
+		return isIn(errorType, err.(G2UnrecoverableError).G2ErrorTypeIds)
 	}
-	return result
+	return false
 }
 
 /*

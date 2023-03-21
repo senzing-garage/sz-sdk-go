@@ -57,7 +57,7 @@ type G2UnhandledError struct{ error }
 // ----------------------------------------------------------------------------
 
 const (
-	G2 G2ErrorTypeIds = iota
+	G2Base G2ErrorTypeIds = iota
 	G2BadUserInput
 	G2Configuration
 	G2Database
@@ -89,7 +89,7 @@ const (
 
 // Message templates for g2engine implementations.
 // Note: The lists of G2ErrorTypeIds are from innermost error to outer most error.
-// Example:  #99901 is G2BadUserInputError{G2ModuleInvalidXMLError{errors.New(message)}}
+// Example:  #99904 is G2BadUserInputError{G2ModuleInvalidXMLError{errors.New(message)}}
 var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	1:     {G2ModuleInvalidXML, G2Unrecoverable},
 	2:     {G2Unhandled, G2Unrecoverable},
@@ -137,6 +137,11 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 
 	// The 999nn series is for testing.
 
-	99900: {G2},
-	99901: {G2ModuleInvalidXML, G2BadUserInput},
+	99900: {G2Base},
+	99901: {G2BadUserInput},
+	99902: {G2Retryable},
+	99903: {G2Unrecoverable},
+	99904: {G2ModuleInvalidXML, G2BadUserInput},
+	99905: {G2Configuration, G2Retryable},
+	99906: {G2ModuleLicense, G2Unrecoverable},
 }
