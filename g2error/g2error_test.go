@@ -82,19 +82,31 @@ func TestG2error_G2BadUserInputError(test *testing.T) {
 	anError := G2Error(99901, "Test message")
 	fmt.Printf("1: ErrorType: %v; Message: %s\n", reflect.TypeOf(anError), anError.Error())
 
+	// Find "category" error.
+
 	if errors.As(anError, &G2BadUserInputError{}) {
 		fmt.Printf("Yes it is G2BadUserInputError\n")
 
-		if detailedError, ok := anError.(G2BadUserInputError); ok {
-			fmt.Printf("2: ErrorType: %v; Message: %s\n", reflect.TypeOf(detailedError), detailedError.Error())
-			assert.IsType(test, G2BadUserInputError{}, anError)
-		}
+		// Optionally, find "detail" error.
 
-	} else {
-		fmt.Printf("nope \n")
+		if detailedError, ok := anError.(G2BadUserInputError).error.(G2ModuleInvalidXMLError); ok {
+			fmt.Printf("2: ErrorType: %v; Message: %s\n", reflect.TypeOf(detailedError), detailedError.Error())
+			assert.IsType(test, G2ModuleInvalidXMLError{}, detailedError)
+		}
 	}
 	assert.IsType(test, G2BadUserInputError{}, anError)
+}
 
+func TestG2error_G2BadUserInputError2(test *testing.T) {
+	var anError error = nil
+	anError = G2Error(99901, "Test message")
+	if errors.As(anError, &G2BadUserInputError{}) {
+		fmt.Printf("Yes it is G2BadUserInputError\n")
+		if errors.As(anError.(G2BadUserInputError).error, &G2ModuleInvalidXMLError{}) {
+			fmt.Printf("Yes it is G2ModuleInvalidXMLError\n")
+		}
+	}
+	assert.IsType(test, G2BadUserInputError{}, anError)
 }
 
 // func TestG2error_G2BadUserInputErrorRaw4(test *testing.T) {

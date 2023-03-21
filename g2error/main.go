@@ -76,6 +76,8 @@ const (
 // ----------------------------------------------------------------------------
 
 // Message templates for g2engine implementations.
+// Note: The lists of G2ErrorTypeIds are from innermost error to outer most error.
+// Example:  #99901 is G2BadUserInputError{G2ModuleInvalidXMLError{errors.New(message)}}
 var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	1:     {G2ModuleInvalidXML},
 	2:     {G2Unhandled},
