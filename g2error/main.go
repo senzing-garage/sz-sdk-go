@@ -94,7 +94,6 @@ const (
 // Note: The lists of G2ErrorTypeIds are from innermost error to outer most error.
 // Example:  #99904 is G2BadUserInputError{G2ModuleInvalidXMLError{errors.New(message)}}
 var G2ErrorTypes = map[int][]G2ErrorTypeIds{
-
 	2:     {G2ModuleInvalidXML, G2Unrecoverable},             // EAS_ERR_INVALID_XML                                                                    "Invalid XML"
 	5:     {G2Unrecoverable},                                 // EAS_ERR_EXCEEDED_MAX_RETRIES                                                           "Exceeded the Maximum Number of Retries Allowed"
 	7:     {G2ModuleEmptyMessage, G2Unrecoverable},           // EAS_ERR_EMPTY_XML_MESSAGE                                                              "Empty XML Message"
