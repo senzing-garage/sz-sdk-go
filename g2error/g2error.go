@@ -20,9 +20,129 @@ func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	return false
 }
 
+func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
+	result := originalError
+	for _, errorTypeId := range errorTypeIds {
+		switch errorTypeId {
+
+		// Category errors.
+
+		case G2BadUserInput:
+			result = G2BadUserInputError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		case G2Base:
+			result = G2BaseError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		case G2Retryable:
+			result = G2RetryableError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		case G2Unrecoverable:
+			result = G2UnrecoverableError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+
+		// Detail errors.
+
+		case G2Configuration:
+			result = G2ConfigurationError{result}
+		case G2DatabaseConnectionLost:
+			result = G2DatabaseConnectionLostError{result}
+		case G2Database:
+			result = G2DatabaseError{result}
+		case G2IncompleteRecord:
+			result = G2IncompleteRecordError{result}
+		case G2MalformedJson:
+			result = G2MalformedJsonError{result}
+		case G2MessageBuffer:
+			result = G2MessageBufferError{result}
+		case G2MissingConfiguration:
+			result = G2MissingConfigurationError{result}
+		case G2MissingDataSource:
+			result = G2MissingDataSourceError{result}
+		case G2ModuleEmptyMessage:
+			result = G2ModuleEmptyMessageError{result}
+		case G2Module:
+			result = G2ModuleError{result}
+		case G2ModuleGeneric:
+			result = G2ModuleGenericError{result}
+		case G2ModuleInvalidXML:
+			result = G2ModuleInvalidXMLError{result}
+		case G2ModuleLicense:
+			result = G2ModuleLicenseError{result}
+		case G2ModuleNotInitialized:
+			result = G2ModuleNotInitializedError{result}
+		case G2ModuleResolveMissingResEnt:
+			result = G2ModuleResolveMissingResEntError{result}
+		case G2NotFound:
+			result = G2NotFoundError{result}
+		case G2RepositoryPurged:
+			result = G2RepositoryPurgedError{result}
+		case G2RetryTimeoutExceeded:
+			result = G2RetryTimeoutExceededError{result}
+		case G2UnacceptableJsonKeyValue:
+			result = G2UnacceptableJsonKeyValueError{result}
+		case G2Unhandled:
+			result = G2UnhandledError{result}
+
+		// Default error.
+
+		default:
+			result = G2BaseError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		}
+	}
+	return result
+}
+
 // ----------------------------------------------------------------------------
 // Public Functions
 // ----------------------------------------------------------------------------
+
+/*
+The Cast function will cast an originalError into the nested types specified by the desiredTypeError.
+This essentially creates a new error having the message from the originalError and the type
+structure of the desiredTypeError.
+
+Input
+  - originalError: The error containing the message to be maintained (i.e. err.Error()).
+  - desiredTypeError: An error having the nested types desired in the resulting error.
+*/
+func Cast(originalError error, desiredTypeError error) error {
+	var errorTypeIds []G2ErrorTypeIds
+	result := originalError
+
+	// Get the desiredTypeError's G2ErrorTypeIds value.
+
+	switch {
+	case errors.As(desiredTypeError, &G2BadUserInputError{}):
+		errorTypeIds = desiredTypeError.(G2BadUserInputError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2BaseError{}):
+		errorTypeIds = desiredTypeError.(G2BaseError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2RetryableError{}):
+		errorTypeIds = desiredTypeError.(G2RetryableError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2UnrecoverableError{}):
+		errorTypeIds = desiredTypeError.(G2UnrecoverableError).G2ErrorTypeIds
+	}
+
+	// Cast.
+
+	if len(errorTypeIds) > 0 {
+		if IsInList(originalError, AllG2ErrorTypes) {
+			result = errors.New(result.Error())
+		}
+		result = wrapError(result, errorTypeIds)
+	}
+	return result
+}
 
 /*
 The G2ErrorMessage function returns the string value from the Senzing error message.
@@ -76,84 +196,7 @@ Input
 func G2Error(senzingErrorCode int, message string) error {
 	var result error = errors.New(message)
 	if errorTypeIds, ok := G2ErrorTypes[senzingErrorCode]; ok {
-		for _, errorTypeId := range errorTypeIds {
-			switch errorTypeId {
-
-			// Category errors.
-
-			case G2BadUserInput:
-				result = G2BadUserInputError{
-					error:          result,
-					G2ErrorTypeIds: errorTypeIds,
-				}
-			case G2Base:
-				result = G2BaseError{
-					error:          result,
-					G2ErrorTypeIds: errorTypeIds,
-				}
-			case G2Retryable:
-				result = G2RetryableError{
-					error:          result,
-					G2ErrorTypeIds: errorTypeIds,
-				}
-			case G2Unrecoverable:
-				result = G2UnrecoverableError{
-					error:          result,
-					G2ErrorTypeIds: errorTypeIds,
-				}
-
-			// Detail errors.
-
-			case G2Configuration:
-				result = G2ConfigurationError{result}
-			case G2DatabaseConnectionLost:
-				result = G2DatabaseConnectionLostError{result}
-			case G2Database:
-				result = G2DatabaseError{result}
-			case G2IncompleteRecord:
-				result = G2IncompleteRecordError{result}
-			case G2MalformedJson:
-				result = G2MalformedJsonError{result}
-			case G2MessageBuffer:
-				result = G2MessageBufferError{result}
-			case G2MissingConfiguration:
-				result = G2MissingConfigurationError{result}
-			case G2MissingDataSource:
-				result = G2MissingDataSourceError{result}
-			case G2ModuleEmptyMessage:
-				result = G2ModuleEmptyMessageError{result}
-			case G2Module:
-				result = G2ModuleError{result}
-			case G2ModuleGeneric:
-				result = G2ModuleGenericError{result}
-			case G2ModuleInvalidXML:
-				result = G2ModuleInvalidXMLError{result}
-			case G2ModuleLicense:
-				result = G2ModuleLicenseError{result}
-			case G2ModuleNotInitialized:
-				result = G2ModuleNotInitializedError{result}
-			case G2ModuleResolveMissingResEnt:
-				result = G2ModuleResolveMissingResEntError{result}
-			case G2NotFound:
-				result = G2NotFoundError{result}
-			case G2RepositoryPurged:
-				result = G2RepositoryPurgedError{result}
-			case G2RetryTimeoutExceeded:
-				result = G2RetryTimeoutExceededError{result}
-			case G2UnacceptableJsonKeyValue:
-				result = G2UnacceptableJsonKeyValueError{result}
-			case G2Unhandled:
-				result = G2UnhandledError{result}
-
-			// Default error.
-
-			default:
-				result = G2BaseError{
-					error:          result,
-					G2ErrorTypeIds: errorTypeIds,
-				}
-			}
-		}
+		result = wrapError(result, errorTypeIds)
 	}
 	return result
 }

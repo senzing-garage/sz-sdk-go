@@ -54,6 +54,25 @@ var testCases = []struct {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
+func TestG2error_Cast(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			originalError := errors.New(testCase.message)
+			desiredTypeError := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			actual := Cast(originalError, desiredTypeError)
+			assert.NotNil(test, actual)
+			assert.IsType(test, testCase.expectedType, actual)
+			assert.Equal(test, testCase.message, actual.Error())
+			for _, g2ErrorTypeId := range testCase.expectedTypes {
+				assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+			}
+			for _, g2ErrorTypeId := range testCase.falseTypes {
+				assert.False(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+			}
+		})
+	}
+}
+
 func TestG2error_G2ErrorMessage(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
@@ -123,6 +142,15 @@ func TestG2error_Unwrap(test *testing.T) {
 // ----------------------------------------------------------------------------
 // Examples for godoc documentation
 // ----------------------------------------------------------------------------
+
+func ExampleCast() {
+	originalError := errors.New("Original message")
+	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
+	desiredTypeError := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+	err := Cast(originalError, desiredTypeError)
+	fmt.Println(err)
+	// Output: Original message
+}
 
 func ExampleG2ErrorMessage() {
 	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.

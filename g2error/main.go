@@ -34,6 +34,7 @@ type G2UnrecoverableError struct {
 type G2ConfigurationError struct{ error }
 type G2DatabaseConnectionLostError struct{ error }
 type G2DatabaseError struct{ error }
+type G2DatabaseSchemaTablesNotFoundError struct{ error }
 type G2IncompleteRecordError struct{ error }
 type G2MalformedJsonError struct{ error }
 type G2MessageBufferError struct{ error }
@@ -62,6 +63,7 @@ const (
 	G2Configuration
 	G2Database
 	G2DatabaseConnectionLost
+	G2DatabaseSchemaTablesNotFound
 	G2IncompleteRecord
 	G2MalformedJson
 	G2MessageBuffer
@@ -120,6 +122,7 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	999:   {G2ModuleLicense, G2Unrecoverable},
 	1001:  {G2Database, G2Unrecoverable},
 	1007:  {G2DatabaseConnectionLost, G2Retryable},
+	1019:  {G2DatabaseSchemaTablesNotFound, G2Unrecoverable},
 	2089:  {G2NotFound, G2BadUserInput},
 	2134:  {G2ModuleResolveMissingResEnt, G2Unrecoverable},
 	2208:  {G2Configuration, G2Retryable},
@@ -144,4 +147,33 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	99904: {G2ModuleInvalidXML, G2BadUserInput},
 	99905: {G2Configuration, G2Retryable},
 	99906: {G2ModuleLicense, G2Unrecoverable},
+}
+
+// A list of all G2ErrorTypeIds.
+var AllG2ErrorTypes = []G2ErrorTypeIds{
+	G2Base,
+	G2BadUserInput,
+	G2Configuration,
+	G2Database,
+	G2DatabaseConnectionLost,
+	G2DatabaseSchemaTablesNotFound,
+	G2IncompleteRecord,
+	G2MalformedJson,
+	G2MessageBuffer,
+	G2MissingConfiguration,
+	G2MissingDataSource,
+	G2Module,
+	G2ModuleEmptyMessage,
+	G2ModuleGeneric,
+	G2ModuleInvalidXML,
+	G2ModuleLicense,
+	G2ModuleNotInitialized,
+	G2ModuleResolveMissingResEnt,
+	G2NotFound,
+	G2RepositoryPurged,
+	G2Retryable,
+	G2RetryTimeoutExceeded,
+	G2UnacceptableJsonKeyValue,
+	G2Unhandled,
+	G2Unrecoverable,
 }
