@@ -33,19 +33,12 @@ func extractErrorNumber(jsonMessage string) (int, error) {
 		return result, err
 	}
 
-	messageErrors := message.Errors.([]interface{})
-	fmt.Printf(">>>>> messageErrors: %#v \n", messageErrors)
+	// Parse MessageFormatSenzing.Error[n].["text"]
 
-	for _, messageError := range messageErrors {
-		fmt.Printf(">>>>> messageError: %#v \n", messageError)
-
-		t1 := messageError.(map[string]interface{})
-		messageText := t1["text"].(string)
-		fmt.Printf(">>>>> t2 %#v\n", messageText)
-
+	for _, messageError := range message.Errors.([]interface{}) {
+		messageText := messageError.(map[string]interface{})["text"].(string)
 		result = G2ErrorCode(messageText)
 		if result > 0 {
-			fmt.Printf(">>>>> extractErrorNumber Found: %d \n", result)
 			return result, err
 		}
 	}

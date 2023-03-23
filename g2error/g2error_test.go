@@ -25,7 +25,7 @@ var testCases = []struct {
 			"errors": [
 				{
 					"id": "senzing-60044001",
-					"text": "bob"
+					"text": "Not a Senzing message"
 				},
 				{
 					"id": "senzing-60044001",
@@ -44,7 +44,8 @@ var testCases = []struct {
 		senzingMessage: "99901W|Test message",
 		message: `{
 			"errors": [{
-				"text": "99901W|Test message"
+				"text": "99901W|Test message",
+				"status": "Warning"
 			}]
 		}`,
 		expectedCode:    99901,
@@ -123,30 +124,62 @@ var testCases = []struct {
 		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable, G2ModuleLicense},
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
-}
-
-var testCases2 = []struct {
-	expectedCode    int
-	expectedMessage string
-	expectedType    error
-	expectedTypes   []G2ErrorTypeIds
-	falseTypes      []G2ErrorTypeIds
-	message         string
-	name            string
-	senzingMessage  string
-}{
 	{
-		name:           "g2error-99900",
-		senzingMessage: "99900I|Test message",
-		message: `{
+		name:           "g2error-1019",
+		senzingMessage: "99906E|Test message",
+		message: `
+		{
+			"date": "2023-03-23",
+			"time": "22:24:53.180659263",
+			"level": "FATAL",
+			"id": "senzing-60025920",
+			"text": "During setup, call to setupSenzingConfig() failed.",
+			"location": "In setup() at g2configmgr_test.go:244",
 			"errors": [{
-				"text": "0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'"
+				"text": {
+					"date": "2023-03-23",
+					"time": "22:24:53.180615238",
+					"level": "FATAL",
+					"id": "senzing-60025912",
+					"text": "During setup, call to g2configmgr.Init() failed.",
+					"location": "In setupSenzingConfig() at g2configmgr_test.go:185",
+					"errors": [{
+						"text": {
+							"date": "2023-03-23",
+							"time": "22:24:53.180436236",
+							"level": "ERROR",
+							"id": "senzing-60024007",
+							"text": "Call to G2ConfigMgr_init(Test module name, {\"PIPELINE\":{\"CONFIGPATH\":\"/etc/opt/senzing\",\"RESOURCEPATH\":\"/opt/senzing/g2/resources\",\"SUPPORTPATH\":\"/opt/senzing/data\"},\"SQL\":{\"CONNECTION\":\"postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable\"}}, 0) failed. Return code: -2",
+							"duration": 490035005,
+							"location": "In setupSenzingConfig() at g2configmgr_test.go:183",
+							"errors": [{
+								"text": "1019E|Datastore schema tables not found. [Datastore schema tables not found. [(7:42P01ERROR:  relation \"sys_vars\" does not exist LINE 1: SELECT VAR_VALUE,SYS_LSTUPD_DT FROM SYS_VARS WHERE VAR_GROUP...                                             ^ )]]"
+							}],
+							"details": {
+								"1": "Test module name",
+								"2": {
+									"PIPELINE": {
+										"CONFIGPATH": "/etc/opt/senzing",
+										"RESOURCEPATH": "/opt/senzing/g2/resources",
+										"SUPPORTPATH": "/opt/senzing/data"
+									},
+									"SQL": {
+										"CONNECTION": "postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable"
+									}
+								},
+								"3": 0,
+								"4": -2,
+								"5": 490035005
+							}
+						}
+					}]
+				}
 			}]
 		}`,
-		expectedCode:    99900,
+		expectedCode:    1019,
 		expectedMessage: "Test message",
-		expectedType:    G2BaseError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Base},
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable, G2ModuleLicense},
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 }
