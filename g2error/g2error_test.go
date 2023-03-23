@@ -19,9 +19,20 @@ var testCases = []struct {
 	senzingMessage  string
 }{
 	{
-		name:            "g2error-99900",
-		senzingMessage:  "99900I|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99900",
+		senzingMessage: "99900I|Test message",
+		message: `{
+			"errors": [
+				{
+					"id": "senzing-60044001",
+					"text": "bob"
+				},
+				{
+					"id": "senzing-60044001",
+					"text": "99900I|Test message"
+				}
+			]
+		}`,
 		expectedCode:    99900,
 		expectedMessage: "Test message",
 		expectedType:    G2BaseError{},
@@ -29,9 +40,13 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99901",
-		senzingMessage:  "99901W|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99901",
+		senzingMessage: "99901W|Test message",
+		message: `{
+			"errors": [{
+				"text": "99901W|Test message"
+			}]
+		}`,
 		expectedCode:    99901,
 		expectedMessage: "Test message",
 		expectedType:    G2BadUserInputError{},
@@ -39,9 +54,13 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99902",
-		senzingMessage:  "99902W|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99902",
+		senzingMessage: "99902W|Test message",
+		message: `{
+			"errors": [{
+				"text": "99902W|Test message"
+			}]
+		}`,
 		expectedCode:    99902,
 		expectedMessage: "Test message",
 		expectedType:    G2RetryableError{},
@@ -49,9 +68,13 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99903",
-		senzingMessage:  "99903E|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99903",
+		senzingMessage: "99903E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99903E|Test message"
+			}]
+		}`,
 		expectedCode:    99903,
 		expectedMessage: "Test message",
 		expectedType:    G2UnrecoverableError{},
@@ -59,9 +82,13 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99904",
-		senzingMessage:  "99904E|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99904",
+		senzingMessage: "99904E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99904E|Test message"
+			}]
+		}`,
 		expectedCode:    99904,
 		expectedMessage: "Test message",
 		expectedType:    G2BadUserInputError{},
@@ -69,9 +96,13 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99905",
-		senzingMessage:  "99905E|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99905",
+		senzingMessage: "99905E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99905E|Test message"
+			}]
+		}`,
 		expectedCode:    99905,
 		expectedMessage: "Test message",
 		expectedType:    G2RetryableError{},
@@ -79,13 +110,43 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
-		name:            "g2error-99906",
-		senzingMessage:  "99906E|Test message",
-		message:         `{"MessageId: 1}`,
+		name:           "g2error-99906",
+		senzingMessage: "99906E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99906E|Test message"
+			}]
+		}`,
 		expectedCode:    99906,
 		expectedMessage: "Test message",
 		expectedType:    G2UnrecoverableError{},
 		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable, G2ModuleLicense},
+		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+	},
+}
+
+var testCases2 = []struct {
+	expectedCode    int
+	expectedMessage string
+	expectedType    error
+	expectedTypes   []G2ErrorTypeIds
+	falseTypes      []G2ErrorTypeIds
+	message         string
+	name            string
+	senzingMessage  string
+}{
+	{
+		name:           "g2error-99900",
+		senzingMessage: "99900I|Test message",
+		message: `{
+			"errors": [{
+				"text": "0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'"
+			}]
+		}`,
+		expectedCode:    99900,
+		expectedMessage: "Test message",
+		expectedType:    G2BaseError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Base},
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 }
@@ -100,6 +161,24 @@ func TestG2error_Cast(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			desiredTypeError := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(originalError, desiredTypeError)
+			assert.NotNil(test, actual)
+			assert.IsType(test, testCase.expectedType, actual)
+			assert.Equal(test, testCase.message, actual.Error())
+			for _, g2ErrorTypeId := range testCase.expectedTypes {
+				assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+			}
+			for _, g2ErrorTypeId := range testCase.falseTypes {
+				assert.False(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+			}
+		})
+	}
+}
+
+func TestG2error_Convert(test *testing.T) {
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			originalError := errors.New(testCase.message)
+			actual := Convert(originalError)
 			assert.NotNil(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())

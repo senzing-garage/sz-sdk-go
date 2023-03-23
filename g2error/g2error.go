@@ -1,15 +1,56 @@
 package g2error
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
 // ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+type MessageFormatSenzing struct {
+	Errors interface{} `json:"errors,omitempty"` // List of errors.
+}
+
+// ----------------------------------------------------------------------------
 // Private Functions
 // ----------------------------------------------------------------------------
+
+func extractErrorNumber(jsonMessage string) (int, error) {
+	result := 0
+	var err error = nil
+
+	// Parse JSON into a structure.
+
+	message := &MessageFormatSenzing{}
+	err = json.Unmarshal([]byte(jsonMessage), &message)
+	if err != nil {
+		fmt.Printf(">>>>> Error:  %s\n", err)
+		return result, err
+	}
+
+	messageErrors := message.Errors.([]interface{})
+	fmt.Printf(">>>>> messageErrors: %#v \n", messageErrors)
+
+	for _, messageError := range messageErrors {
+		fmt.Printf(">>>>> messageError: %#v \n", messageError)
+
+		t1 := messageError.(map[string]interface{})
+		messageText := t1["text"].(string)
+		fmt.Printf(">>>>> t2 %#v\n", messageText)
+
+		result = G2ErrorCode(messageText)
+		if result > 0 {
+			fmt.Printf(">>>>> extractErrorNumber Found: %d \n", result)
+			return result, err
+		}
+	}
+	return result, err
+}
 
 func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	for _, g2ErrorTypeId := range haystack {
@@ -142,6 +183,21 @@ func Cast(originalError error, desiredTypeError error) error {
 		result = wrapError(result, errorTypeIds)
 	}
 	return result
+}
+
+/*
+The Convert function uses the error message from the originalError to determine
+the appropriate g2error type hierarchy.
+
+Input
+  - originalError: The error containing the message to be analyzed.
+*/
+func Convert(originalError error) error {
+	extractedErrorNumber, err := extractErrorNumber(originalError.Error())
+	if err != nil {
+		return originalError
+	}
+	return G2Error(extractedErrorNumber, originalError.Error())
 }
 
 /*
