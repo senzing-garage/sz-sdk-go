@@ -38,7 +38,7 @@ type MessageFormatSenzing struct {
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
-	// All "text" values will be aggregated into errorTexts.
+	// All "text" string values will be aggregated into errorTexts.
 
 	newMessageTexts := []string{}
 	for _, messageError := range messageErrors {
