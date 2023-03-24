@@ -12,37 +12,135 @@ import (
 // ----------------------------------------------------------------------------
 // Types
 // ----------------------------------------------------------------------------
+
+// See https://github.com/Senzing/go-logging/blob/main/messageformat/messageformat_senzing.go
 type MessageFormatSenzing struct {
 	Errors interface{} `json:"errors,omitempty"` // List of errors.
+	Text   interface{} `json:"text,omitempty"`   // Message text.
 }
 
 // ----------------------------------------------------------------------------
 // Private Functions
 // ----------------------------------------------------------------------------
 
-func extractErrorNumber(jsonMessage string) (int, error) {
-	result := 0
+func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
-	// Parse JSON into a structure.
+	fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
 
-	message := &MessageFormatSenzing{}
-	err = json.Unmarshal([]byte(jsonMessage), &message)
-	if err != nil {
-		fmt.Printf(">>>>> Error:  %s\n", err)
-		return result, err
+	// All "text" values will be aggregated into errorTexts.
+
+	newMessageTexts := []string{}
+
+	for _, messageError := range messageErrors {
+
+		// Parse XXX into type-structure.
+
+		fmt.Printf(">>>>> messageError: %#v\n", messageError)
+
+		abc, ok := messageError.(map[string]interface{})
+		if !ok {
+			fmt.Printf(">>>>> abc failed.\n")
+			return append(newMessageTexts, messageTexts...), nil
+		}
+
+		def1, ok := abc["text"].(string)
+		if ok {
+			fmt.Printf(">>>>> def1 succeeded.\n")
+			newMessageTexts = append(newMessageTexts, def1)
+		}
+
+		def, ok := abc["text"].(map[string]interface{})
+		if !ok {
+			fmt.Printf(">>>>> def failed.\n")
+			return append(newMessageTexts, messageTexts...), nil
+		}
+
+		ghi, ok := def["text"].(string)
+		if ok {
+			fmt.Printf(">>>>> ghi succeeded.\n")
+			newMessageTexts = append(newMessageTexts, ghi)
+		}
+
+		jkl, ok := def["errors"].([]interface{})
+		if !ok {
+			return append(newMessageTexts, messageTexts...), nil
+		}
+
+		fmt.Printf(">>>>> jkl succeeded.\n")
+		moreMessageTexts, err := extractErrorTexts(jkl, messageTexts)
+		if err != nil {
+			fmt.Printf(">>>>> extractErrorTexts failed.\n")
+		}
+		newMessageTexts = append(newMessageTexts, moreMessageTexts...)
+
+		// fmt.Printf(">>>>> abc: %#v\n", abc)
+
+		// xyz, ok := abc.(MessageFormatSenzing)
+		// if !ok {
+		// 	fmt.Printf(">>>>> xyz failed.\n")
+		// 	return append(newMessageTexts, messageTexts...), nil
+		// }
+
+		// if xyz.Text != nil {
+		// 	newMessageTexts = append(newMessageTexts, xyz.Text.(string))
+		// }
+
+		// if xyz.Errors != nil {
+		// 	newMessageTexts, err = extractErrorTexts(xyz.Errors.([]interface{}), newMessageTexts)
+		// }
 	}
 
-	// Parse MessageFormatSenzing.Error[n].["text"]
+	return append(messageTexts, newMessageTexts...), err
+}
 
-	for _, messageError := range message.Errors.([]interface{}) {
-		messageText := messageError.(map[string]interface{})["text"].(string)
-		result = G2ErrorCode(messageText)
+func extractErrorNumber(message string) (int, error) {
+	result := 0
+	var err error = nil
+	fmt.Printf(">>> message:  %s\n", message)
+
+	if !isJson(message) {
+		return result, errors.New("not JSON format")
+	}
+
+	// All "text" values will be aggregated into errorTexts.
+
+	errorTexts := []string{}
+
+	// Parse JSON into type-structure.
+
+	messageFormatSenzing := &MessageFormatSenzing{}
+	err = json.Unmarshal([]byte(message), &messageFormatSenzing)
+	if err != nil {
+		fmt.Printf(">>>>> Error:  %s\n", err)
+		return -1, err
+	}
+
+	// If exist, add "text" to list.
+
+	if messageFormatSenzing.Text != nil {
+		messageText, ok := messageFormatSenzing.Text.(string)
+		if ok {
+			errorTexts = append(errorTexts, messageText)
+		}
+	}
+
+	// Recurse through "error" JSON stanzas to harvest "text".
+
+	if messageFormatSenzing.Errors != nil {
+		errorTexts, err = extractErrorTexts(messageFormatSenzing.Errors.([]interface{}), errorTexts)
+	}
+
+	for _, errorText := range errorTexts {
+		fmt.Printf(">>>>> errorText: %s\n", errorText)
+		result := G2ErrorCode(errorText)
 		if result > 0 {
+			fmt.Printf(">>>>> Success: %d\n", result)
 			return result, err
 		}
 	}
-	return result, err
+	fmt.Printf(">>>>> Dropped out bottom\n")
+	return -1, err
 }
 
 func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
@@ -52,6 +150,15 @@ func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 		}
 	}
 	return false
+}
+
+func isJson(unknownString string) bool {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
+	var jsonString json.RawMessage
+	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
 func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
@@ -188,6 +295,9 @@ Input
 func Convert(originalError error) error {
 	extractedErrorNumber, err := extractErrorNumber(originalError.Error())
 	if err != nil {
+		return originalError
+	}
+	if extractedErrorNumber < 1 {
 		return originalError
 	}
 	return G2Error(extractedErrorNumber, originalError.Error())
