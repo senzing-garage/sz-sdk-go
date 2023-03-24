@@ -212,12 +212,12 @@ func TestG2error_Convert(test *testing.T) {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			actual := Convert(originalError)
-			// assert.NotNil(test, actual)
-			// assert.IsType(test, testCase.expectedType, actual)
-			// assert.Equal(test, testCase.message, actual.Error())
-			// for _, g2ErrorTypeId := range testCase.expectedTypes {
-			// 	assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
-			// }
+			assert.NotNil(test, actual)
+			assert.IsType(test, testCase.expectedType, actual)
+			assert.Equal(test, testCase.message, actual.Error())
+			for _, g2ErrorTypeId := range testCase.expectedTypes {
+				assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+			}
 			for _, g2ErrorTypeId := range testCase.falseTypes {
 				assert.False(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
 			}

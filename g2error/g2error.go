@@ -26,7 +26,7 @@ type MessageFormatSenzing struct {
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
-	fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
+	// fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
 
 	// All "text" values will be aggregated into errorTexts.
 
@@ -38,69 +38,45 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 
 		fmt.Printf(">>>>> messageError: %#v\n", messageError)
 
-		abc, ok := messageError.(map[string]interface{})
+		errorMap, ok := messageError.(map[string]interface{})
 		if !ok {
-			fmt.Printf(">>>>> abc failed.\n")
 			return append(newMessageTexts, messageTexts...), nil
 		}
 
-		def1, ok := abc["text"].(string)
+		textString, ok := errorMap["text"].(string)
 		if ok {
-			fmt.Printf(">>>>> def1 succeeded.\n")
-			newMessageTexts = append(newMessageTexts, def1)
+			newMessageTexts = append(newMessageTexts, textString)
 		}
 
-		def, ok := abc["text"].(map[string]interface{})
+		textMap, ok := errorMap["text"].(map[string]interface{})
 		if !ok {
-			fmt.Printf(">>>>> def failed.\n")
 			return append(newMessageTexts, messageTexts...), nil
 		}
 
-		ghi, ok := def["text"].(string)
+		textString, ok = textMap["text"].(string)
 		if ok {
-			fmt.Printf(">>>>> ghi succeeded.\n")
-			newMessageTexts = append(newMessageTexts, ghi)
+			newMessageTexts = append(newMessageTexts, textString)
 		}
 
-		jkl, ok := def["errors"].([]interface{})
+		errorsInterface, ok := textMap["errors"].([]interface{})
 		if !ok {
 			return append(newMessageTexts, messageTexts...), nil
 		}
 
-		fmt.Printf(">>>>> jkl succeeded.\n")
-		moreMessageTexts, err := extractErrorTexts(jkl, messageTexts)
+		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
 		if err != nil {
-			fmt.Printf(">>>>> extractErrorTexts failed.\n")
+			return newMessageTexts, err
 		}
-		newMessageTexts = append(newMessageTexts, moreMessageTexts...)
-
-		// fmt.Printf(">>>>> abc: %#v\n", abc)
-
-		// xyz, ok := abc.(MessageFormatSenzing)
-		// if !ok {
-		// 	fmt.Printf(">>>>> xyz failed.\n")
-		// 	return append(newMessageTexts, messageTexts...), nil
-		// }
-
-		// if xyz.Text != nil {
-		// 	newMessageTexts = append(newMessageTexts, xyz.Text.(string))
-		// }
-
-		// if xyz.Errors != nil {
-		// 	newMessageTexts, err = extractErrorTexts(xyz.Errors.([]interface{}), newMessageTexts)
-		// }
 	}
-
 	return append(messageTexts, newMessageTexts...), err
 }
 
 func extractErrorNumber(message string) (int, error) {
-	result := 0
-	var err error = nil
-	fmt.Printf(">>> message:  %s\n", message)
+
+	// If non-JSON submitted, inspect the string and return.
 
 	if !isJson(message) {
-		return result, errors.New("not JSON format")
+		return G2ErrorCode(message), nil
 	}
 
 	// All "text" values will be aggregated into errorTexts.
@@ -110,13 +86,12 @@ func extractErrorNumber(message string) (int, error) {
 	// Parse JSON into type-structure.
 
 	messageFormatSenzing := &MessageFormatSenzing{}
-	err = json.Unmarshal([]byte(message), &messageFormatSenzing)
+	err := json.Unmarshal([]byte(message), &messageFormatSenzing)
 	if err != nil {
-		fmt.Printf(">>>>> Error:  %s\n", err)
 		return -1, err
 	}
 
-	// If exist, add "text" to list.
+	// If exists, add "text" to list.
 
 	if messageFormatSenzing.Text != nil {
 		messageText, ok := messageFormatSenzing.Text.(string)
@@ -125,21 +100,31 @@ func extractErrorNumber(message string) (int, error) {
 		}
 	}
 
-	// Recurse through "error" JSON stanzas to harvest "text".
+	// Recurse through nested "error" JSON stanzas to harvest "text".
 
 	if messageFormatSenzing.Errors != nil {
 		errorTexts, err = extractErrorTexts(messageFormatSenzing.Errors.([]interface{}), errorTexts)
+		if err != nil {
+			return -1, err
+		}
 	}
+
+	// Loop through harvested "texts" and return the first one that produces a G2ErrorCode.
 
 	for _, errorText := range errorTexts {
 		fmt.Printf(">>>>> errorText: %s\n", errorText)
+	}
+
+	for _, errorText := range errorTexts {
 		result := G2ErrorCode(errorText)
 		if result > 0 {
-			fmt.Printf(">>>>> Success: %d\n", result)
-			return result, err
+			fmt.Printf(">>>>> FOUND: %d with %s\n", result, errorText)
+			return result, nil
 		}
 	}
-	fmt.Printf(">>>>> Dropped out bottom\n")
+
+	// No G2ErrorCode found.
+
 	return -1, err
 }
 
@@ -326,9 +311,10 @@ Input
   - senzingErrorMessage: The message returned from Senzing's G2xxx_getLastException message.
 */
 func G2ErrorCode(senzingErrorMessage string) int {
+
 	result := 0
-	splits := strings.Split(senzingErrorMessage, "|")
-	if len(splits) > 0 {
+	if strings.Contains(senzingErrorMessage, "|") {
+		splits := strings.Split(senzingErrorMessage, "|")
 
 		// Make a Regex to say we only want numbers.
 
