@@ -26,7 +26,7 @@ type MessageFormatSenzing struct {
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
-	// fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
+	fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
 
 	// All "text" values will be aggregated into errorTexts.
 
@@ -40,17 +40,20 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 
 		errorMap, ok := messageError.(map[string]interface{})
 		if !ok {
-			return append(newMessageTexts, messageTexts...), nil
+			continue
+			// return append(newMessageTexts, messageTexts...), nil
 		}
 
 		textString, ok := errorMap["text"].(string)
 		if ok {
 			newMessageTexts = append(newMessageTexts, textString)
+			continue
 		}
 
 		textMap, ok := errorMap["text"].(map[string]interface{})
 		if !ok {
-			return append(newMessageTexts, messageTexts...), nil
+			continue
+			// return append(newMessageTexts, messageTexts...), nil
 		}
 
 		textString, ok = textMap["text"].(string)
@@ -60,12 +63,14 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 
 		errorsInterface, ok := textMap["errors"].([]interface{})
 		if !ok {
-			return append(newMessageTexts, messageTexts...), nil
+			continue
+			// return append(newMessageTexts, messageTexts...), nil
 		}
 
 		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
 		if err != nil {
-			return newMessageTexts, err
+			continue
+			// return newMessageTexts, err
 		}
 	}
 	return append(messageTexts, newMessageTexts...), err
@@ -118,7 +123,7 @@ func extractErrorNumber(message string) (int, error) {
 	for _, errorText := range errorTexts {
 		result := G2ErrorCode(errorText)
 		if result > 0 {
-			fmt.Printf(">>>>> FOUND: %d with %s\n", result, errorText)
+			fmt.Printf(">>>>> FOUND: %d for %s\n", result, errorText)
 			return result, nil
 		}
 	}
