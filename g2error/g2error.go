@@ -3,7 +3,6 @@ package g2error
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -23,54 +22,50 @@ type MessageFormatSenzing struct {
 // Private Functions
 // ----------------------------------------------------------------------------
 
+// With recursion, extractErrorTexts() parses JSON like:
+//
+//	"text": "x",
+//	"errors": [{
+//		"text": {
+//			"text": "y",
+//			"errors": [{
+//				"text": {
+//					"text": "z",
+//					"errors": [{
+//						"text": "1019E|Datastore schema..."
+//
+// and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
-
-	fmt.Printf(">>>>> messageErrors: %#v\n", messageErrors)
 
 	// All "text" values will be aggregated into errorTexts.
 
 	newMessageTexts := []string{}
-
 	for _, messageError := range messageErrors {
-
-		// Parse XXX into type-structure.
-
-		fmt.Printf(">>>>> messageError: %#v\n", messageError)
-
 		errorMap, ok := messageError.(map[string]interface{})
 		if !ok {
 			continue
-			// return append(newMessageTexts, messageTexts...), nil
 		}
-
-		textString, ok := errorMap["text"].(string)
+		textStringFromErrorMap, ok := errorMap["text"].(string)
 		if ok {
-			newMessageTexts = append(newMessageTexts, textString)
+			newMessageTexts = append(newMessageTexts, textStringFromErrorMap)
 			continue
 		}
-
 		textMap, ok := errorMap["text"].(map[string]interface{})
 		if !ok {
 			continue
-			// return append(newMessageTexts, messageTexts...), nil
 		}
-
-		textString, ok = textMap["text"].(string)
+		textString, ok := textMap["text"].(string)
 		if ok {
 			newMessageTexts = append(newMessageTexts, textString)
 		}
-
 		errorsInterface, ok := textMap["errors"].([]interface{})
 		if !ok {
 			continue
-			// return append(newMessageTexts, messageTexts...), nil
 		}
-
 		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
 		if err != nil {
 			continue
-			// return newMessageTexts, err
 		}
 	}
 	return append(messageTexts, newMessageTexts...), err
@@ -117,13 +112,8 @@ func extractErrorNumber(message string) (int, error) {
 	// Loop through harvested "texts" and return the first one that produces a G2ErrorCode.
 
 	for _, errorText := range errorTexts {
-		fmt.Printf(">>>>> errorText: %s\n", errorText)
-	}
-
-	for _, errorText := range errorTexts {
 		result := G2ErrorCode(errorText)
 		if result > 0 {
-			fmt.Printf(">>>>> FOUND: %d for %s\n", result, errorText)
 			return result, nil
 		}
 	}
