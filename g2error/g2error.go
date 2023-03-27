@@ -1,6 +1,7 @@
 package g2error
 
 import (
+	"encoding/json"
 	"errors"
 	"regexp"
 	"strconv"
@@ -8,8 +9,119 @@ import (
 )
 
 // ----------------------------------------------------------------------------
+// Types
+// ----------------------------------------------------------------------------
+
+// See https://github.com/Senzing/go-logging/blob/main/messageformat/messageformat_senzing.go
+type MessageFormatSenzing struct {
+	Errors interface{} `json:"errors,omitempty"` // List of errors.
+	Text   interface{} `json:"text,omitempty"`   // Message text.
+}
+
+// ----------------------------------------------------------------------------
 // Private Functions
 // ----------------------------------------------------------------------------
+
+// With recursion, extractErrorTexts() parses JSON like:
+//
+//	"text": "x",
+//	"errors": [{
+//		"text": {
+//			"text": "y",
+//			"errors": [{
+//				"text": {
+//					"text": "z",
+//					"errors": [{
+//						"text": "1019E|Datastore schema..."
+//
+// and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
+func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
+	var err error = nil
+
+	// All "text" string values will be aggregated into errorTexts.
+
+	newMessageTexts := []string{}
+	for _, messageError := range messageErrors {
+		errorMap, ok := messageError.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		textStringFromErrorMap, ok := errorMap["text"].(string)
+		if ok {
+			newMessageTexts = append(newMessageTexts, textStringFromErrorMap)
+			continue
+		}
+		textMap, ok := errorMap["text"].(map[string]interface{})
+		if !ok {
+			continue
+		}
+		textString, ok := textMap["text"].(string)
+		if ok {
+			newMessageTexts = append(newMessageTexts, textString)
+		}
+		errorsInterface, ok := textMap["errors"].([]interface{})
+		if !ok {
+			continue
+		}
+		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
+		if err != nil {
+			continue
+		}
+	}
+	return append(messageTexts, newMessageTexts...), err
+}
+
+func extractErrorNumber(message string) (int, error) {
+
+	// If non-JSON submitted, inspect the string and return.
+
+	if !isJson(message) {
+		return G2ErrorCode(message), nil
+	}
+
+	// All "text" values will be aggregated into errorTexts.
+
+	errorTexts := []string{}
+
+	// Parse JSON into type-structure.
+
+	messageFormatSenzing := &MessageFormatSenzing{}
+	err := json.Unmarshal([]byte(message), &messageFormatSenzing)
+	if err != nil {
+		return -1, err
+	}
+
+	// If exists, add "text" to list.
+
+	if messageFormatSenzing.Text != nil {
+		messageText, ok := messageFormatSenzing.Text.(string)
+		if ok {
+			errorTexts = append(errorTexts, messageText)
+		}
+	}
+
+	// Recurse through nested "error" JSON stanzas to harvest "text".
+
+	if messageFormatSenzing.Errors != nil {
+		errorTexts, err = extractErrorTexts(messageFormatSenzing.Errors.([]interface{}), errorTexts)
+		if err != nil {
+			return -1, err
+		}
+	}
+
+	// Loop through harvested "texts" and return the first one that produces a G2ErrorCode.
+
+	for _, errorText := range errorTexts {
+		result := G2ErrorCode(errorText)
+		if result > 0 {
+			return result, nil
+		}
+	}
+
+	// No G2ErrorCode found.
+
+	return -1, err
+}
 
 func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	for _, g2ErrorTypeId := range haystack {
@@ -18,6 +130,15 @@ func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 		}
 	}
 	return false
+}
+
+func isJson(unknownString string) bool {
+	unknownStringUnescaped, err := strconv.Unquote(unknownString)
+	if err != nil {
+		unknownStringUnescaped = unknownString
+	}
+	var jsonString json.RawMessage
+	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
 func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
@@ -118,6 +239,13 @@ Input
 */
 func Cast(originalError error, desiredTypeError error) error {
 	var errorTypeIds []G2ErrorTypeIds
+
+	// Handle case of nil.
+
+	if originalError == nil || desiredTypeError == nil {
+		return originalError
+	}
+
 	result := originalError
 
 	// Get the desiredTypeError's G2ErrorTypeIds value.
@@ -145,6 +273,28 @@ func Cast(originalError error, desiredTypeError error) error {
 }
 
 /*
+The Convert function uses the error message from the originalError to determine
+the appropriate g2error type hierarchy.
+
+Input
+  - originalError: The error containing the message to be analyzed.
+*/
+func Convert(originalError error) error {
+	result := originalError
+	if result != nil {
+		extractedErrorNumber, err := extractErrorNumber(originalError.Error())
+		if err != nil {
+			return originalError
+		}
+		if extractedErrorNumber < 1 {
+			return originalError
+		}
+		result = G2Error(extractedErrorNumber, originalError.Error())
+	}
+	return result
+}
+
+/*
 The G2ErrorMessage function returns the string value from the Senzing error message.
 
 Input
@@ -167,9 +317,10 @@ Input
   - senzingErrorMessage: The message returned from Senzing's G2xxx_getLastException message.
 */
 func G2ErrorCode(senzingErrorMessage string) int {
+
 	result := 0
-	splits := strings.Split(senzingErrorMessage, "|")
-	if len(splits) > 0 {
+	if strings.Contains(senzingErrorMessage, "|") {
+		splits := strings.Split(senzingErrorMessage, "|")
 
 		// Make a Regex to say we only want numbers.
 
