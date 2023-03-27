@@ -239,6 +239,13 @@ Input
 */
 func Cast(originalError error, desiredTypeError error) error {
 	var errorTypeIds []G2ErrorTypeIds
+
+	// Handle case of nil.
+
+	if originalError == nil || desiredTypeError == nil {
+		return originalError
+	}
+
 	result := originalError
 
 	// Get the desiredTypeError's G2ErrorTypeIds value.
@@ -273,14 +280,18 @@ Input
   - originalError: The error containing the message to be analyzed.
 */
 func Convert(originalError error) error {
-	extractedErrorNumber, err := extractErrorNumber(originalError.Error())
-	if err != nil {
-		return originalError
+	result := originalError
+	if result != nil {
+		extractedErrorNumber, err := extractErrorNumber(originalError.Error())
+		if err != nil {
+			return originalError
+		}
+		if extractedErrorNumber < 1 {
+			return originalError
+		}
+		result = G2Error(extractedErrorNumber, originalError.Error())
 	}
-	if extractedErrorNumber < 1 {
-		return originalError
-	}
-	return G2Error(extractedErrorNumber, originalError.Error())
+	return result
 }
 
 /*

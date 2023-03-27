@@ -207,6 +207,26 @@ func TestG2error_Cast(test *testing.T) {
 	}
 }
 
+func TestG2error_Cast_nil(test *testing.T) {
+	actual := Convert(nil)
+	assert.Nil(test, actual)
+
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			desiredTypeError := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			actual := Cast(nil, desiredTypeError)
+			assert.Nil(test, actual, "Nil actual")
+		})
+	}
+	for _, testCase := range testCases {
+		test.Run(testCase.name, func(test *testing.T) {
+			originalError := errors.New(testCase.message)
+			actual := Cast(originalError, nil)
+			assert.NotNil(test, actual, "Nil desired type")
+		})
+	}
+}
+
 func TestG2error_Convert(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
@@ -223,6 +243,11 @@ func TestG2error_Convert(test *testing.T) {
 			}
 		})
 	}
+}
+
+func TestG2error_Convert_nil(test *testing.T) {
+	actual := Convert(nil)
+	assert.Nil(test, actual)
 }
 
 func TestG2error_G2ErrorMessage(test *testing.T) {
