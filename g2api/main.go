@@ -3,7 +3,6 @@ package g2api
 import (
 	"context"
 
-	"github.com/senzing/go-logging/logger"
 	"github.com/senzing/go-observing/observer"
 )
 
@@ -24,7 +23,7 @@ type G2config interface {
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -40,7 +39,7 @@ type G2configmgr interface {
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -71,7 +70,7 @@ type G2diagnostic interface {
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -144,7 +143,7 @@ type G2engine interface {
 	ReplaceRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
 	SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, jsonData string) (string, error)
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	Stats(ctx context.Context) (string, error)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error)
@@ -164,7 +163,7 @@ type G2product interface {
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	SetLogLevel(ctx context.Context, logLevel logger.Level) error
+	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
 	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)

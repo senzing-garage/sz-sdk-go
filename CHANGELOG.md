@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.6.0] - 2023-04-19
+
+### Changed in 0.6.0
+
+- Changed `SetLogLevel(ctx context.Context, logLevel logger.Level)` to `SetLogLevel(ctx context.Context, logLevelName string)`
+
 ## [0.5.1] - 2023-03-27
 
 ### Added in 0.5.1
