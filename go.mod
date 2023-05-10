@@ -3,7 +3,7 @@ module github.com/senzing/g2-sdk-go
 go 1.20
 
 require (
-	github.com/senzing/go-observing v0.2.1
+	github.com/senzing/go-observing v0.2.2
 	github.com/stretchr/testify v1.8.2
 )
 
@@ -22,5 +22,3 @@ require (
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/senzing/go-observing v0.2.1 => /home/senzing/senzing.git/go-observing
