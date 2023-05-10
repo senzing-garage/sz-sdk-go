@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 0.6.2
 
-- Added
+- Added GetObserverOrigin() and SetObserverOrigin() to g2* packages
 
 ## [0.6.1] - 2023-04-21
 
