@@ -21,6 +21,7 @@ type G2config interface {
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
+	ObserverOrigin(ctx context.Context, origin string)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
@@ -36,6 +37,7 @@ type G2configmgr interface {
 	GetDefaultConfigID(ctx context.Context) (int64, error)
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	ObserverOrigin(ctx context.Context, origin string)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
@@ -68,6 +70,7 @@ type G2diagnostic interface {
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
+	ObserverOrigin(ctx context.Context, origin string)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
@@ -125,6 +128,7 @@ type G2engine interface {
 	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
+	ObserverOrigin(ctx context.Context, origin string)
 	PrimeEngine(ctx context.Context) error
 	Process(ctx context.Context, record string) error
 	ProcessRedoRecord(ctx context.Context) (string, error)
@@ -162,6 +166,7 @@ type G2product interface {
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
+	ObserverOrigin(ctx context.Context, origin string)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
