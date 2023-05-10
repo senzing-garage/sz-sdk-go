@@ -45,3 +45,10 @@ Documentation and examples for the implementations are at:
 - [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
 - [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
 - [go-sdk-abstract-factory](https://pkg.go.dev/github.com/senzing/go-sdk-abstract-factory)
+
+## References
+
+1. [API documentation](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
+1. [Development](docs/development.md)
+1. [Errors](docs/errors.md)
+1. [Examples](docs/examples.md)
