@@ -17,6 +17,7 @@ type G2config interface {
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, inputJson string) error
 	Destroy(ctx context.Context) error
+	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
@@ -24,6 +25,7 @@ type G2config interface {
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -34,12 +36,14 @@ type G2configmgr interface {
 	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
+	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -61,6 +65,7 @@ type G2diagnostic interface {
 	GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
 	GetLogicalCores(ctx context.Context) (int, error)
 	GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
+	GetObserverOrigin(ctx context.Context) string
 	GetPhysicalCores(ctx context.Context) (int, error)
 	GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
 	GetResolutionStatistics(ctx context.Context) (string, error)
@@ -71,6 +76,7 @@ type G2diagnostic interface {
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
@@ -114,6 +120,7 @@ type G2engine interface {
 	GetEntityByEntityID(ctx context.Context, entityID int64) (string, error)
 	GetEntityByRecordID_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string) (string, error)
+	GetObserverOrigin(ctx context.Context) string
 	GetRecord_V2(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRecord(ctx context.Context, dataSourceCode string, recordID string) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
@@ -144,6 +151,7 @@ type G2engine interface {
 	SearchByAttributes_V2(ctx context.Context, jsonData string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, jsonData string) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	Stats(ctx context.Context) (string, error)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	WhyEntities_V2(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error)
@@ -159,11 +167,13 @@ type G2engine interface {
 // The G2product interface is a Golang representation of Senzing's libg2product.h
 type G2product interface {
 	Destroy(ctx context.Context) error
+	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	License(ctx context.Context) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
+	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
 	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)

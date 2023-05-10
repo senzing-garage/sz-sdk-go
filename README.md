@@ -13,6 +13,8 @@ The Senzing g2-sdk-go packages provide interface definitions for implementations
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/senzing/g2-sdk-go.svg)](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
+[![go-test.yaml](https://github.com/Senzing/g2-sdk-go/actions/workflows/go-test.yaml/badge.svg)](https://github.com/Senzing/g2-sdk-go/actions/workflows/go-test.yaml)
+[![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/Senzing/g2-sdk-go/blob/main/LICENSE)
 
 ## Overview
 
@@ -43,3 +45,10 @@ Documentation and examples for the implementations are at:
 - [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
 - [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
 - [go-sdk-abstract-factory](https://pkg.go.dev/github.com/senzing/go-sdk-abstract-factory)
+
+## References
+
+1. [Development](docs/development.md)
+1. [Errors](docs/errors.md)
+1. [Examples](docs/examples.md)
+1. [Package reference](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
