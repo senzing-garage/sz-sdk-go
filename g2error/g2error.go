@@ -3,6 +3,7 @@ package g2error
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -40,33 +41,48 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 
 	// All "text" string values will be aggregated into errorTexts.
 
+	// FIXME: Start here.
+
 	newMessageTexts := []string{}
 	for _, messageError := range messageErrors {
-		errorMap, ok := messageError.(map[string]interface{})
-		if !ok {
-			continue
+		messageText := ""
+		switch typedMessageError := messageError.(type) {
+		case map[string]interface{}:
+			fmt.Printf(">>>>>> map[string]interface{}: %v\n\n", typedMessageError)
+			errorMap, ok := messageError.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			messageText, ok := errorMap["text"].(string)
+		case string:
+			messageText = typedMessageError
+
 		}
-		textStringFromErrorMap, ok := errorMap["text"].(string)
-		if ok {
-			newMessageTexts = append(newMessageTexts, textStringFromErrorMap)
-			continue
+
+		if len(messageText) > 0 {
+			newMessageTexts = append(newMessageTexts, messageText)
 		}
-		textMap, ok := errorMap["text"].(map[string]interface{})
-		if !ok {
-			continue
-		}
-		textString, ok := textMap["text"].(string)
-		if ok {
-			newMessageTexts = append(newMessageTexts, textString)
-		}
-		errorsInterface, ok := textMap["errors"].([]interface{})
-		if !ok {
-			continue
-		}
-		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
-		if err != nil {
-			continue
-		}
+
+		// if ok {
+		// 	newMessageTexts = append(newMessageTexts, textStringFromErrorMap)
+		// 	continue
+		// }
+		// textMap, ok := errorMap["text"].(map[string]interface{})
+		// if !ok {
+		// 	continue
+		// }
+		// textString, ok := textMap["text"].(string)
+		// if ok {
+		// 	newMessageTexts = append(newMessageTexts, textString)
+		// }
+		// errorsInterface, ok := textMap["errors"].([]interface{})
+		// if !ok {
+		// 	continue
+		// }
+		// newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
+		// if err != nil {
+		// 	continue
+		// }
 	}
 	return append(messageTexts, newMessageTexts...), err
 }
@@ -85,11 +101,19 @@ func extractErrorNumber(message string) (int, error) {
 
 	// Parse JSON into type-structure.
 
+	// FIXME: This isn't parsing the message correctly.
+
+	fmt.Printf(">>>>>> extractErrorNumber.message: %s\n\n", message)
+
 	messageFormatSenzing := &MessageFormatSenzing{}
 	err := json.Unmarshal([]byte(message), &messageFormatSenzing)
 	if err != nil {
 		return -1, err
 	}
+
+	fmt.Printf(">>>>>> extractErrorNumber.messageFormatSenzing: %v\n\n", messageFormatSenzing)
+	fmt.Printf(">>>>>> extractErrorNumber.messageFormatSenzing.Text: %v\n\n", messageFormatSenzing.Text)
+	fmt.Printf(">>>>>> extractErrorNumber.messageFormatSenzing.Errors: %v\n\n", messageFormatSenzing.Errors)
 
 	// If exists, add "text" to list.
 
@@ -110,6 +134,8 @@ func extractErrorNumber(message string) (int, error) {
 	}
 
 	// Loop through harvested "texts" and return the first one that produces a G2ErrorCode.
+
+	fmt.Printf(">>>>>> extractErrorNumber.errorTexts: %v\n\n", errorTexts)
 
 	for _, errorText := range errorTexts {
 		result := G2ErrorCode(errorText)
@@ -280,6 +306,7 @@ Input
   - originalError: The error containing the message to be analyzed.
 */
 func Convert(originalError error) error {
+
 	result := originalError
 	if result != nil {
 		extractedErrorNumber, err := extractErrorNumber(originalError.Error())
