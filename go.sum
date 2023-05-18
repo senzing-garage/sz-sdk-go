@@ -19,8 +19,8 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
-github.com/senzing/go-observing v0.2.3 h1:7a5jBujIT4E15Ix28KLQ2sL/qForHuPJBgmxqNDztW8=
-github.com/senzing/go-observing v0.2.3/go.mod h1:sLweF5OysRAD65NLNm63o1IpOqN6VyXfgRDozc+pQy8=
+github.com/senzing/go-observing v0.2.5 h1:QNcXOWIz4O9u/oEEqUiZ59L+oZPsyOA6kDzQAIYLbnA=
+github.com/senzing/go-observing v0.2.5/go.mod h1:sLweF5OysRAD65NLNm63o1IpOqN6VyXfgRDozc+pQy8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
