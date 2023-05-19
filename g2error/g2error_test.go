@@ -111,6 +111,18 @@ var testCases = []struct {
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
 	{
+		name:           "g2error-0023",
+		senzingMessage: "0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
+		message: `{
+			"errors": ["0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'"],
+		}`,
+		expectedCode:    23,
+		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable},
+		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+	},
+	{
 		name:           "g2error-99906",
 		senzingMessage: "99906E|Test message",
 		message: `{
