@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.6.3] - 2023-05-19
+
+### Changed in 0.6.3
+
+- Fixed error conversion
+- Added `gosec` security testing
+- Update dependencies
+  - github.com/senzing/go-observing v0.2.5
+  - github.com/stretchr/testify v1.8.3
+
 ## [0.6.2] - 2023-05-10
 
 ### Changed in 0.6.2

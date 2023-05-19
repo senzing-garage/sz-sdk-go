@@ -42,30 +42,27 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 
 	newMessageTexts := []string{}
 	for _, messageError := range messageErrors {
-		errorMap, ok := messageError.(map[string]interface{})
-		if !ok {
-			continue
+		messageText := ""
+		switch typedMessageError := messageError.(type) {
+		case map[string]interface{}:
+			switch typedMessageErrorText := typedMessageError["text"].(type) {
+			case map[string]interface{}:
+				errorValue, ok := typedMessageErrorText["errors"].([]interface{})
+				if ok {
+					newMessageTexts, err = extractErrorTexts(errorValue, newMessageTexts)
+					if err != nil {
+						return append(messageTexts, newMessageTexts...), err
+					}
+				}
+			case string:
+				messageText = typedMessageErrorText
+			}
+		case string:
+			messageText = typedMessageError
 		}
-		textStringFromErrorMap, ok := errorMap["text"].(string)
-		if ok {
-			newMessageTexts = append(newMessageTexts, textStringFromErrorMap)
-			continue
-		}
-		textMap, ok := errorMap["text"].(map[string]interface{})
-		if !ok {
-			continue
-		}
-		textString, ok := textMap["text"].(string)
-		if ok {
-			newMessageTexts = append(newMessageTexts, textString)
-		}
-		errorsInterface, ok := textMap["errors"].([]interface{})
-		if !ok {
-			continue
-		}
-		newMessageTexts, err = extractErrorTexts(errorsInterface, newMessageTexts)
-		if err != nil {
-			continue
+
+		if len(messageText) > 0 {
+			newMessageTexts = append(newMessageTexts, messageText)
 		}
 	}
 	return append(messageTexts, newMessageTexts...), err
@@ -280,6 +277,7 @@ Input
   - originalError: The error containing the message to be analyzed.
 */
 func Convert(originalError error) error {
+
 	result := originalError
 	if result != nil {
 		extractedErrorNumber, err := extractErrorNumber(originalError.Error())
