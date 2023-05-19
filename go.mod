@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/senzing/go-observing v0.2.5
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 )
 
 require (
