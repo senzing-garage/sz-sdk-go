@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.6.4] - 2023-05-26
+
+### Changed in 0.6.4
+
+- Fixed method signature for `g2config.Load()`
+
 ## [0.6.3] - 2023-05-19
 
 ### Changed in 0.6.3

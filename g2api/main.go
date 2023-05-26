@@ -21,7 +21,7 @@ type G2config interface {
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	Load(ctx context.Context, configHandle uintptr, jsonConfig string) error
+	Load(ctx context.Context, jsonConfig string) (uintptr, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Save(ctx context.Context, configHandle uintptr) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
