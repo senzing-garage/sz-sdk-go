@@ -24,7 +24,19 @@ type SchemaVersion struct {
 //     All names start with G2*
 // ----------------------------------------------------------------------------
 
-// The G2config interface is a Golang representation of Senzing's libg2config.h
+// The ProductVersionResponse...
+type ProductLicenseResponse struct {
+	Customer     string `json:"customer"`
+	Contract     string `json:"contract"`
+	IssueDate    string `json:"issueDate"`
+	LicenseType  string `json:"licenseType"`
+	LicenseLevel string `json:"licenseLevel"`
+	Billing      string `json:"billing"`
+	ExpireDate   string `json:"expireDate"`
+	RecordLimit  int64  `json:"recordLimit"`
+}
+
+// The ProductVersionResponse...
 type ProductVersionResponse struct {
 	ProductName          string               `json:"PRODUCT_NAME"`
 	Version              string               `json:"VERSION"`

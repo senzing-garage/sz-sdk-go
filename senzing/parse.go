@@ -11,9 +11,15 @@ import (
 
 /*
 ParseProductVersionResponse...
+*/
+func ParseProductLicenseResponse(ctx context.Context, jsonString string) (*ProductLicenseResponse, error) {
+	result := &ProductLicenseResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
 
-Input
-  - ctx: A context to control lifecycle.
+/*
+ParseProductVersionResponse...
 */
 func ParseProductVersionResponse(ctx context.Context, jsonString string) (*ProductVersionResponse, error) {
 	result := &ProductVersionResponse{}
