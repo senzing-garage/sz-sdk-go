@@ -1,4 +1,8 @@
-package g2struct
+package senzing
+
+// ----------------------------------------------------------------------------
+// Types - interface
+// ----------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------
 // Types - sub-structs
@@ -16,12 +20,12 @@ type SchemaVersion struct {
 }
 
 // ----------------------------------------------------------------------------
-// Types - structs
+// Types - structs - Product
 //     All names start with G2*
 // ----------------------------------------------------------------------------
 
 // The G2config interface is a Golang representation of Senzing's libg2config.h
-type G2ProductVersionResponse struct {
+type ProductVersionResponse struct {
 	ProductName          string               `json:"PRODUCT_NAME"`
 	Version              string               `json:"VERSION"`
 	BuildVersion         string               `json:"BUILD_VERSION"`
@@ -30,3 +34,25 @@ type G2ProductVersionResponse struct {
 	CompatibilityVersion CompatibilityVersion `json:"COMPATIBILITY_VERSION"`
 	SchemaVersion        SchemaVersion        `json:"SCHEMA_VERSION"`
 }
+
+// ----------------------------------------------------------------------------
+// Constants
+// ----------------------------------------------------------------------------
+
+// Log message prefix.
+const Prefix = "senzing."
+
+// ----------------------------------------------------------------------------
+// Variables
+// ----------------------------------------------------------------------------
+
+// Message templates for g2product implementations.
+var IdMessages = map[int]string{
+	1:    "Enter " + Prefix + "ClearLastException().",
+	2:    "Exit  " + Prefix + "ClearLastException() returned (%v).",
+	5901: "During test setup, call to messagelogger.NewSenzingApiLogger() failed.",
+	8001: Prefix + "Destroy",
+}
+
+// Status strings for specific g2product messages.
+var IdStatuses = map[int]string{}
