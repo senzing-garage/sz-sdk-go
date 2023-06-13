@@ -30,24 +30,162 @@ type CfgAttr struct {
 	Internal     string `json:"INTERNAL"`
 }
 
-type CfgCfbom struct{}
-type CfgCfcall struct{}
-type CfgCfrtn struct{}
-type CfgCfunc struct{}
-type CfgDfbom struct{}
-type CfgDfcall struct{}
-type CfgDfunc struct{}
-type CfgDsrc struct{}
+type CfgCfbom struct {
+	CfcallId  int64 `json:"CFCALL_ID"`
+	ExecOrder int64 `json:"EXEC_ORDER"`
+	FelemId   int64 `json:"FELEM_ID"`
+	FtypeId   int64 `json:"FTYPE_ID"`
+}
+
+type CfgCfcall struct {
+	CfcallId  int64 `json:"CFCALL_ID"`
+	CfuncId   int64 `json:"CFUNC_ID"`
+	ExecOrder int64 `json:"EXEC_ORDER"`
+	FtypeId   int64 `json:"FTYPE_ID"`
+}
+
+type CfgCfrtn struct {
+	CfrtnId        int64  `json:"CFRTN_ID"`
+	CfuncId        int64  `json:"CFUNC_ID"`
+	CfuncRtnval    string `json:"CFUNC_RTNVAL"`
+	CloseScore     int64  `json:"CLOSE_SCORE"`
+	ExecOrder      int64  `json:"EXEC_ORDER"`
+	FtypeId        int64  `json:"FTYPE_ID"`
+	LikelyScore    int64  `json:"LIKELY_SCORE"`
+	PlausibleScore int64  `json:"PLAUSIBLE_SCORE"`
+	SameScore      int64  `json:"SAME_SCORE"`
+	UnlikelyScore  int64  `json:"UN_LIKELY_SCORE"`
+}
+
+type CfgCfunc struct {
+	AnonSupport   string `json:"ANON_SUPPORT"`
+	CfuncCode     string `json:"CFUNC_CODE"`
+	CfuncDesc     string `json:"CFUNC_DESC"`
+	CfuncId       int64  `json:"CFUNC_ID"`
+	ConnectStr    string `json:"CONNECT_STR"`
+	FuncLib       string `json:"FUNC_LIB"`
+	FuncVer       string `json:"FUNC_VER"`
+	JavaClassName string `json:"JAVA_CLASS_NAME"`
+	Language      string `json:"LANGUAGE"`
+}
+
+type CfgDfbom struct {
+	DfcallId  int64 `json:"DFCALL_ID"`
+	ExecOrder int64 `json:"EXEC_ORDER"`
+	FelemId   int64 `json:"FELEM_ID"`
+	FtypeId   int64 `json:"FTYPE_ID"`
+}
+
+type CfgDfcall struct {
+	DfcallId  int64 `json:"DFCALL_ID"`
+	DfuncId   int64 `json:"DFUNC_ID"`
+	ExecOrder int64 `json:"EXEC_ORDER"`
+	FtypeId   int64 `json:"FTYPE_ID"`
+}
+
+type CfgDfunc struct {
+	AnonSupport   string `json:"ANON_SUPPORT"`
+	ConnectStr    string `json:"CONNECT_STR"`
+	DfuncCode     string `json:"DFUNC_CODE"`
+	DfuncDesc     string `json:"DFUNC_DESC"`
+	DfuncId       int64  `json:"DFUNC_ID"`
+	FuncLib       string `json:"FUNC_LIB"`
+	FuncVer       string `json:"FUNC_VER"`
+	JavaClassName string `json:"JAVA_CLASS_NAME"`
+	Language      string `json:"LANGUAGE"`
+}
+
+type CfgDsrc struct {
+	Conversational string `json:"CONVERSATIONAL"`
+	DsrcCode       string `json:"DSRC_CODE"`
+	DsrcDesc       string `json:"DSRC_DESC"`
+	DsrcId         int64  `json:"DSRC_ID"`
+	DsrcRely       int64  `json:"DSRC_RELY"`
+	RetentionLevel string `json:"RETENTION_LEVEL"`
+}
+
 type CfgDsrcInterest struct{}
-type CfgEbom struct{}
-type CfgEclass struct{}
-type CfgEfbom struct{}
-type CfgEfcall struct{}
-type CfgEfunc struct{}
-type CfgErfrag struct{}
-type CfgErrule struct{}
-type CfgEtype struct{}
-type CfgFbom struct{}
+
+type CfgEbom struct {
+	EtypeId   int64  `json:"ETYPE_ID"`
+	ExecOrder int64  `json:"EXEC_ORDER"`
+	FtypeId   int64  `json:"FTYPE_ID"`
+	UtypeCode string `json:"UTYPE_CODE"`
+}
+
+type CfgEclass struct {
+	EclassCode string `json:"ECLASS_CODE"`
+	EclassDesc string `json:"ECLASS_DESC"`
+	EclassId   int64  `json:"ECLASS_ID"`
+	Resolve    string `json:"RESOLVE"`
+}
+
+type CfgEfbom struct {
+	EfcallId  int64  `json:"EFCALL_ID"`
+	ExecOrder int64  `json:"EXEC_ORDER"`
+	FelemId   int64  `json:"FELEM_ID"`
+	FelemReq  string `json:"FELEM_REQ"`
+	FtypeId   int64  `json:"FTYPE_ID"`
+}
+
+type CfgEfcall struct {
+	EfcallId     int64  `json:"EFCALL_ID"`
+	EfeatFtypeId int64  `json:"EFEAT_FTYPE_ID"`
+	EfuncId      int64  `json:"EFUNC_ID"`
+	ExecOrder    int64  `json:"EXEC_ORDER"`
+	FelemId      int64  `json:"FELEM_ID"`
+	FtypeId      int64  `json:"FTYPE_ID"`
+	IsVirtual    string `json:"IS_VIRTUAL"`
+}
+
+type CfgEfunc struct {
+	ConnectStr    string `json:"CONNECT_STR"`
+	EfuncCode     string `json:"EFUNC_CODE"`
+	EfuncDesc     string `json:"EFUNC_DESC"`
+	EfuncId       int64  `json:"EFUNC_ID"`
+	FuncLib       string `json:"FUNC_LIB"`
+	FuncVer       string `json:"FUNC_VER"`
+	JavaClassName string `json:"JAVA_CLASS_NAME"`
+	Language      string `json:"LANGUAGE"`
+}
+
+type CfgErfrag struct {
+	ErfragCode    string `json:"ERFRAG_CODE"`
+	ErfragDepends string `json:"ERFRAG_DEPENDS"`
+	ErfragDesc    string `json:"ERFRAG_DESC"`
+	ErfragId      int64  `json:"ERFRAG_ID"`
+	ErfragSource  string `json:"ERFRAG_SOURCE"`
+}
+
+type CfgErrule struct {
+	DisqErfragCode string `json:"DISQ_ERFRAG_CODE"`
+	ErruleCode     string `json:"ERRULE_CODE"`
+	ErruleDesc     string `json:"ERRULE_DESC"`
+	ErruleId       int64  `json:"ERRULE_ID"`
+	ErruleTier     int64  `json:"ERRULE_TIER"`
+	QualErfragCode string `json:"QUAL_ERFRAG_CODE"`
+	RefScore       int64  `json:"REF_SCORE"`
+	Relate         string `json:"RELATE"`
+	Resolve        string `json:"RESOLVE"`
+	RtypeId        int64  `json:"RTYPE_ID"`
+}
+
+type CfgEtype struct {
+	EclassId  int64  `json:"ECLASS_ID"`
+	EtypeCode string `json:"ETYPE_CODE"`
+	EtypeDesc string `json:"ETYPE_DESC"`
+	EtypeId   int64  `json:"ETYPE_ID"`
+}
+
+type CfgFbom struct {
+	Derived      string `json:"DERIVED"`
+	DisplayDelim string `json:"DISPLAY_DELIM"`
+	DisplayLevel int64  `json:"DISPLAY_LEVEL"`
+	ExecOrder    int64  `json:"EXEC_ORDER"`
+	FelemId      int64  `json:"FELEM_ID"`
+	FtypeId      int64  `json:"FTYPE_ID"`
+}
+
 type CfgFbovr struct{}
 type CfgFclass struct{}
 type CfgFelem struct{}
@@ -114,10 +252,12 @@ type ConfigAddDataSourceResponse struct {
 	DsrcId int64 `json:"DSRC_ID"`
 }
 
+// The ConfigListDataSourcesResponse...
 type ConfigListDataSourcesResponse struct {
 	DataSources []DataSource `json:"DATA_SOURCES"`
 }
 
+// The ConfigSaveResponse...
 type ConfigSaveResponse struct {
 	G2Config G2Config `json:"G2_CONFIG"`
 }
