@@ -285,8 +285,8 @@ type CfgSfunc struct {
 }
 
 type Config struct {
-	ConfigId       int64  `json:"CONFIG_ID"`
 	ConfigComments string `json:"CONFIG_COMMENTS"`
+	ConfigId       int64  `json:"CONFIG_ID"`
 	SysCreateDt    string `json:"SYS_CREATE_DT"`
 }
 
@@ -298,17 +298,51 @@ type ConfigBaseVersion struct {
 	Version              string               `json:"VERSION"`
 }
 
-type SysOom struct {
-	FelemId    int64  `json:"FELEM_ID"`
-	FtypeId    int64  `json:"FTYPE_ID"`
-	LensId     int64  `json:"LENS_ID"`
-	LibFeatId  int64  `json:"LIB_FEAT_ID"`
-	LibFelemId int64  `json:"LIB_FELEM_ID"`
-	NextThresh int64  `json:"NEXT_THRESH"`
-	OomLevel   string `json:"OOM_LEVEL"`
-	OomType    string `json:"OOM_TYPE"`
-	Thresh1Cnt int64  `json:"THRESH1_CNT"`
-	Thresh1Oom int64  `json:"THRESH1_OOM"`
+type Feature struct {
+	FeatDesc       string         `json:"FEAT_DESC"`
+	FeatDescValues []FeatureValue `json:"FEAT_DESC_VALUES"`
+	LibFeatId      int64          `json:"LIB_FEAT_ID"`
+	UsageType      string         `json:"USAGE_TYPE"`
+}
+
+type Features struct {
+	Address    []Feature `json:"ADDRESS"`
+	Dob        []Feature `json:"DOB"`
+	Email      []Feature `json:"EMAIL"`
+	Name       []Feature `json:"NAME"`
+	Phone      []Feature `json:"PHONE"`
+	RecordType []Feature `json:"RECORD_TYPE"`
+}
+
+type FeatureScore struct {
+	CandidateFeat          string `json:"CANDIDATE_FEAT"`
+	CandidateFeatId        int64  `json:"CANDIDATE_FEAT_ID"`
+	CandidateFeatUsageType string `json:"CANDIDATE_FEAT_USAGE_TYPE"`
+	FullScore              int64  `json:"FULL_SCORE"`
+	InboundFeat            string `json:"INBOUND_FEAT"`
+	InboundFeatId          int64  `json:"INBOUND_FEAT_ID"`
+	InboundFeatUsageType   string `json:"INBOUND_FEAT_USAGE_TYPE"`
+	ScoreBehavior          string `json:"SCORE_BEHAVIOR"`
+	ScoreBucket            string `json:"SCORE_BUCKET"`
+}
+
+type FeatureScores struct {
+	Address    []FeatureScore `json:"ADDRESS"`
+	Dob        []FeatureScore `json:"DOB"`
+	Email      []FeatureScore `json:"EMAIL"`
+	Name       []FeatureScore `json:"NAME"`
+	Phone      []FeatureScore `json:"PHONE"`
+	RecordType []FeatureScore `json:"RECORD_TYPE"`
+}
+
+type FeatureValue struct {
+	FeatDesc  string `json:"FEAT_DESC"`
+	LibFeatId int64  `json:"LIB_FEAT_ID"`
+}
+
+type FinalState struct {
+	NeedReevaluation int64           `json:"NEED_REEVALUATION"`
+	VirtualEntities  []VirtualEntity `json:"VIRTUAL_ENTITIES"`
 }
 
 type G2Config struct {
@@ -347,10 +381,84 @@ type G2Config struct {
 	SysOom              []SysOom              `json:"SYS_OOM"`
 }
 
+type HowResults struct {
+	FinalState      FinalState       `json:"FINAL_STATE"`
+	ResolutionSteps []ResolutionStep `json:"RESOLUTION_STEPS"`
+}
+
+type MatchInfo struct {
+	ErruleCode    string        `json:"ERRULE_CODE"`
+	FeatureScores FeatureScores `json:"FEATURE_SCORES"`
+	MatchKey      string        `json:"MATCH_KEY"`
+}
+
+type MemberRecord struct {
+	InternalId int64    `json:"INTERNAL_ID"`
+	Records    []Record `json:"RECORDS"`
+}
+
+type Record struct {
+	DataSource     string `json:"DATA_SOURCE"`
+	EntityDesc     string `json:"ENTITY_DESC"`
+	EntityKey      string `json:"ENTITY_KEY"`
+	EntityType     string `json:"ENTITY_TYPE"`
+	ErrultCode     string `json:"ERRULE_CODE"`
+	InternalId     int64  `json:"INTERNAL_ID"`
+	LastSeenDt     string `json:"LAST_SEEN_DT"`
+	MatchKey       string `json:"MATCH_KEY"`
+	MatchLevel     int64  `json:"MATCH_LEVEL"`
+	MatchLevelCode string `json:"MATCH_LEVEL_CODE"`
+	RecordId       string `json:"RECORD_ID"`
+}
+
+type RecordSummary struct {
+	DataSource  string `json:"DATA_SOURCE"`
+	FirstSeenDt string `json:"FIRST_SEEN_DT"`
+	LastSeenDt  string `json:"LAST_SEEN_DT"`
+	RecordCount int64  `json:"RECORD_COUNT"`
+}
+
+type RelatedEntity struct{}
+
+type ResolutionStep struct {
+	InboundVirtualEntityId string        `json:"INBOUND_VIRTUAL_ENTITY_ID"`
+	MatchInfo              MatchInfo     `json:"MATCH_INFO"`
+	ResultVirtualEntityId  string        `json:"RESULT_VIRTUAL_ENTITY_ID"`
+	Step                   int64         `json:"STEP"`
+	VirtualEntity1         VirtualEntity `json:"VIRTUAL_ENTITY_1"`
+	VirtualEntity2         VirtualEntity `json:"VIRTUAL_ENTITY_2"`
+}
+type ResolvedEntity struct {
+	EntityId      int64           `json:"ENTITY_ID"`
+	EntityName    string          `json:"ENTITY_NAME"`
+	Features      Features        `json:"FEATURES"`
+	LastSeenDt    string          `json:"LAST_SEEN_DT"`
+	Records       []Record        `json:"RECORDS"`
+	RecordSummary []RecordSummary `json:"RECORD_SUMMARY"`
+}
+
 type SchemaVersion struct {
 	EngineSchemaVersion          string `json:"ENGINE_SCHEMA_VERSION"`
-	MinimumRequiredSchemaVersion string `json:"MINIMUM_REQUIRED_SCHEMA_VERSION"`
 	MaximumRequiredSchemaVersion string `json:"MAXIMUM_REQUIRED_SCHEMA_VERSION"`
+	MinimumRequiredSchemaVersion string `json:"MINIMUM_REQUIRED_SCHEMA_VERSION"`
+}
+
+type SysOom struct {
+	FelemId    int64  `json:"FELEM_ID"`
+	FtypeId    int64  `json:"FTYPE_ID"`
+	LensId     int64  `json:"LENS_ID"`
+	LibFeatId  int64  `json:"LIB_FEAT_ID"`
+	LibFelemId int64  `json:"LIB_FELEM_ID"`
+	NextThresh int64  `json:"NEXT_THRESH"`
+	OomLevel   string `json:"OOM_LEVEL"`
+	OomType    string `json:"OOM_TYPE"`
+	Thresh1Cnt int64  `json:"THRESH1_CNT"`
+	Thresh1Oom int64  `json:"THRESH1_OOM"`
+}
+
+type VirtualEntity struct {
+	MemberRecords   []MemberRecord `json:"MEMBER_RECORDS"`
+	VirtualEntityId string         `json:"VIRTUAL_ENTITY_ID"`
 }
 
 // ----------------------------------------------------------------------------
@@ -437,7 +545,12 @@ type EngineFindPathIncludingSourceByEntityIDResponse struct{}
 type EngineFindPathIncludingSourceByRecordIDV2Response struct{}
 type EngineFindPathIncludingSourceByRecordIDResponse struct{}
 type EngineGetEntityByEntityIDV2Response struct{}
-type EngineGetEntityByEntityIDResponse struct{}
+
+type EngineGetEntityByEntityIDResponse struct {
+	ResolvedEntity  ResolvedEntity  `json:"RESOLVED_ENTITY"`
+	RelatedEntities []RelatedEntity `json:"RELATED_ENTITIES"`
+}
+
 type EngineGetEntityByRecordIDV2Response struct{}
 type EngineGetEntityByRecordIDResponse struct{}
 type EngineGetRecordV2Response struct{}
@@ -446,7 +559,11 @@ type EngineGetRedoRecordResponse struct{}
 type EngineGetVirtualEntityByRecordIDV2Response struct{}
 type EngineGetVirtualEntityByRecordIDResponse struct{}
 type EngineHowEntityByEntityIDV2Response struct{}
-type EngineHowEntityByEntityIDResponse struct{}
+
+type EngineHowEntityByEntityIDResponse struct {
+	HowResults HowResults `json:"HOW_RESULTS"`
+}
+
 type EngineProcessRedoRecordResponse struct{}
 type EngineProcessRedoRecordWithInfoResponse struct{}
 type EngineProcessWithInfoResponse struct{}
