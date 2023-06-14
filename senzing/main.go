@@ -186,20 +186,124 @@ type CfgFbom struct {
 	FtypeId      int64  `json:"FTYPE_ID"`
 }
 
-type CfgFbovr struct{}
-type CfgFclass struct{}
-type CfgFelem struct{}
-type CfgFtype struct{}
-type CfgGenericThreshold struct{}
-type CfgGplan struct{}
-type CfgLens struct{}
+type CfgFbovr struct {
+	EclassId  int64  `json:"ECLASS_ID"`
+	FtypeExcl string `json:"FTYPE_EXCL"`
+	FtypeFreq string `json:"FTYPE_FREQ"`
+	FtypeId   int64  `json:"FTYPE_ID"`
+	FtypeStab string `json:"FTYPE_STAB"`
+	UtypeCode string `json:"UTYPE_CODE"`
+}
+
+type CfgFclass struct {
+	FclassCode string `json:"FCLASS_CODE"`
+	FclassDesc string `json:"FCLASS_DESC"`
+	FclassId   int64  `json:"FCLASS_ID"`
+}
+type CfgFelem struct {
+	DataType  string `json:"DATA_TYPE"`
+	FelemCode string `json:"FELEM_CODE"`
+	FelemDesc string `json:"FELEM_DESC"`
+	FelemId   int64  `json:"FELEM_ID"`
+	Tokenize  string `json:"TOKENIZE"`
+}
+
+type CfgFtype struct {
+	Anonymize      string `json:"ANONYMIZE"`
+	Derivation     string `json:"DERIVATION"`
+	Derived        string `json:"DERIVED"`
+	FclassId       int64  `json:"FCLASS_ID"`
+	FtypeCode      string `json:"FTYPE_CODE"`
+	FtypeDesc      string `json:"FTYPE_DESC"`
+	FtypeExcl      string `json:"FTYPE_EXCL"`
+	FtypeFreq      string `json:"FTYPE_FREQ"`
+	FtypeId        int64  `json:"FTYPE_ID"`
+	FtypeStab      string `json:"FTYPE_STAB"`
+	PersistHistory string `json:"PERSIST_HISTORY"`
+	RtypeID        int64  `json:"RTYPE_ID"`
+	ShowInMatchKey string `json:"SHOW_IN_MATCH_KEY"`
+	UsedForCand    string `json:"USED_FOR_CAND"`
+	Version        int64  `json:"VERSION"`
+}
+
+type CfgGenericThreshold struct {
+	Behavior     string `json:"BEHAVIOR"`
+	CandidateCap int64  `json:"CANDIDATE_CAP"`
+	FtypeId      int64  `json:"FTYPE_ID"`
+	GplanId      int64  `json:"GPLAN_ID"`
+	ScoringCap   int64  `json:"SCORING_CAP"`
+	SendToRedo   string `json:"SEND_TO_REDO"`
+}
+
+type CfgGplan struct {
+	GplanCode string `json:"GPLAN_CODE"`
+	GplanDesc string `json:"GPLAN_DESC"`
+	GplanId   int64  `json:"GPLAN_ID"`
+}
+
+type CfgLens struct {
+	LensCode string `json:"LENS_CODE"`
+	LensDesc string `json:"LENS_DESC"`
+	LensId   int64  `json:"LENS_ID"`
+}
+
 type CfgLensrl struct{}
-type CfgRclass struct{}
-type CfgRtype struct{}
-type CfgSfcall struct{}
-type CfgSfunc struct{}
-type SysOom struct{}
-type ConfigBaseVersion struct{}
+
+type CfgRclass struct {
+	IsDisclosed string `json:"IS_DISCLOSED"`
+	RclassCode  string `json:"RCLASS_CODE"`
+	RclassDesc  string `json:"RCLASS_DESC"`
+	RclassId    int64  `json:"RCLASS_ID"`
+}
+
+type CfgRtype struct {
+	BreakRes    string `json:"BREAK_RES"`
+	RclassId    int64  `json:"RCLASS_ID"`
+	RelStrength int64  `json:"REL_STRENGTH"`
+	RtypeCode   string `json:"RTYPE_CODE"`
+	RtypeDesc   string `json:"RTYPE_DESC"`
+	RtypeId     int64  `json:"RTYPE_ID"`
+}
+
+type CfgSfcall struct {
+	ExecOrder int64 `json:"EXEC_ORDER"`
+	FelemId   int64 `json:"FELEM_ID"`
+	FtypeId   int64 `json:"FTYPE_ID"`
+	SfcallId  int64 `json:"SFCALL_ID"`
+	SfuncId   int64 `json:"SFUNC_ID"`
+}
+
+type CfgSfunc struct {
+	ConnectStr    string `json:"CONNECT_STR"`
+	FuncLib       string `json:"FUNC_LIB"`
+	FuncVer       string `json:"FUNC_VER"`
+	JavaClassName string `json:"JAVA_CLASS_NAME"`
+	Language      string `json:"LANGUAGE"`
+	SfuncCode     string `json:"SFUNC_CODE"`
+	SfuncDesc     string `json:"SFUNC_DESC"`
+	SfuncId       int64  `json:"SFUNC_ID"`
+}
+
+type SysOom struct {
+	FelemId    int64  `json:"FELEM_ID"`
+	FtypeId    int64  `json:"FTYPE_ID"`
+	LensId     int64  `json:"LENS_ID"`
+	LibFeatId  int64  `json:"LIB_FEAT_ID"`
+	LibFelemId int64  `json:"LIB_FELEM_ID"`
+	NextThresh int64  `json:"NEXT_THRESH"`
+	OomLevel   string `json:"OOM_LEVEL"`
+	OomType    string `json:"OOM_TYPE"`
+	Thresh1Cnt int64  `json:"THRESH1_CNT"`
+	Thresh1Oom int64  `json:"THRESH1_OOM"`
+}
+
+type ConfigBaseVersion struct {
+	BuildDate            string               `json:"BUILD_DATE"`
+	BuildNumber          string               `json:"BUILD_NUMBER"`
+	BuildVersion         string               `json:"BUILD_VERSION"`
+	CompatibilityVersion CompatibilityVersion `json:"COMPATIBILITY_VERSION"`
+	Version              string               `json:"VERSION"`
+}
 
 type G2Config struct {
 	CfgAttr             []CfgAttr             `json:"CFG_ATTR"`
@@ -233,8 +337,8 @@ type G2Config struct {
 	CfgRtype            []CfgRtype            `json:"CFG_RTYPE"`
 	CfgSfcall           []CfgSfcall           `json:"CFG_SFCALL"`
 	CfgSfunc            []CfgSfunc            `json:"CFG_SFUNC"`
-	SysOom              []SysOom              `json:"SYS_OOM"`
 	ConfigBaseVersion   []ConfigBaseVersion   `json:"CONFIG_BASE_VERSION"`
+	SysOom              []SysOom              `json:"SYS_OOM"`
 }
 
 type SchemaVersion struct {
