@@ -387,6 +387,88 @@ type ConfigmgrGetConfigListResponse struct {
 }
 
 // ----------------------------------------------------------------------------
+// Types - structs - Diagnostic
+// ----------------------------------------------------------------------------
+
+type DiagnosticCheckDBPerfResponse struct{}
+type DiagnosticFetchNextEntityBySizeResponse struct{}
+type DiagnosticFindEntitiesByFeatureIDsResponse struct{}
+type DiagnosticGetDataSourceCountsResponse struct{}
+type DiagnosticGetDBInfoResponse struct{}
+type DiagnosticGetEntityDetailsResponse struct{}
+type DiagnosticGetEntityListBySizeResponse struct{}
+type DiagnosticGetEntityResumeResponse struct{}
+type DiagnosticGetEntitySizeBreakdownResponse struct{}
+type DiagnosticGetFeatureResponse struct{}
+type DiagnosticGetGenericFeaturesResponse struct{}
+type DiagnosticGetMappingStatisticsResponse struct{}
+type DiagnosticGetRelationshipDetailsResponse struct{}
+type DiagnosticGetResolutionStatisticsResponse struct{}
+type DiagnosticStreamEntityListBySizeResponse struct{}
+
+// ----------------------------------------------------------------------------
+// Types - structs - Engine
+// ----------------------------------------------------------------------------
+
+type EngineAddRecordWithInfoResponse struct{}
+type EngineAddRecordWithInfoWithReturnedRecordIDResponse struct{}
+type EngineAddRecordWithReturnedRecordIDResponse struct{}
+type EngineCheckRecordResponse struct{}
+type EngineDeleteRecordWithInfoResponse struct{}
+type EngineExportConfigAndConfigIDResponse struct{}
+type EngineExportConfigResponse struct{}
+type EngineFetchNextResponse struct{}
+type EngineFindInterestingEntitiesByEntityIDResponse struct{}
+type EngineFindInterestingEntitiesByRecordIDResponse struct{}
+type EngineFindNetworkByEntityID_V2Response struct{}
+type EngineFindNetworkByEntityIDResponse struct{}
+type EngineFindNetworkByRecordID_V2Response struct{}
+type EngineFindNetworkByRecordIDResponse struct{}
+type EngineFindPathByEntityID_V2Response struct{}
+type EngineFindPathByEntityIDResponse struct{}
+type EngineFindPathByRecordID_V2Response struct{}
+type EngineFindPathByRecordIDResponse struct{}
+type EngineFindPathExcludingByEntityID_V2Response struct{}
+type EngineFindPathExcludingByEntityIDResponse struct{}
+type EngineFindPathExcludingByRecordID_V2Response struct{}
+type EngineFindPathExcludingByRecordIDResponse struct{}
+type EngineFindPathIncludingSourceByEntityID_V2Response struct{}
+type EngineFindPathIncludingSourceByEntityIDResponse struct{}
+type EngineFindPathIncludingSourceByRecordID_V2Response struct{}
+type EngineFindPathIncludingSourceByRecordIDResponse struct{}
+type EngineGetEntityByEntityID_V2Response struct{}
+type EngineGetEntityByEntityIDResponse struct{}
+type EngineGetEntityByRecordID_V2Response struct{}
+type EngineGetEntityByRecordIDResponse struct{}
+type EngineGetRecord_V2Response struct{}
+type EngineGetRecordResponse struct{}
+type EngineGetRedoRecordResponse struct{}
+type EngineGetVirtualEntityByRecordID_V2Response struct{}
+type EngineGetVirtualEntityByRecordIDResponse struct{}
+type EngineHowEntityByEntityID_V2Response struct{}
+type EngineHowEntityByEntityIDResponse struct{}
+type EngineProcessRedoRecordResponse struct{}
+type EngineProcessRedoRecordWithInfoResponse struct{}
+type EngineProcessWithInfoResponse struct{}
+type EngineProcessWithResponseResizeResponse struct{}
+type EngineProcessWithResponseResponse struct{}
+type EngineReevaluateEntityWithInfoResponse struct{}
+type EngineReevaluateRecordWithInfoResponse struct{}
+type EngineReplaceRecordWithInfoResponse struct{}
+type EngineSearchByAttributes_V2Response struct{}
+type EngineSearchByAttributesResponse struct{}
+type EngineStatsResponse struct{}
+type EngineStreamExportJSONEntityReportResponse struct{}
+type EngineWhyEntities_V2Response struct{}
+type EngineWhyEntitiesResponse struct{}
+type EngineWhyEntityByEntityID_V2Response struct{}
+type EngineWhyEntityByEntityIDResponse struct{}
+type EngineWhyEntityByRecordID_V2Response struct{}
+type EngineWhyEntityByRecordIDResponse struct{}
+type EngineWhyRecords_V2Response struct{}
+type EngineWhyRecordsResponse struct{}
+
+// ----------------------------------------------------------------------------
 // Types - structs - Product
 // ----------------------------------------------------------------------------
 
@@ -401,6 +483,9 @@ type ProductLicenseResponse struct {
 	ExpireDate   string `json:"expireDate"`
 	RecordLimit  int64  `json:"recordLimit"`
 }
+
+type ProductValidateLicenseFileResponse struct{}
+type ProductValidateLicenseStringBase64Response struct{}
 
 // The ProductVersionResponse...
 type ProductVersionResponse struct {
