@@ -69,8 +69,8 @@ func TestUnmarshalConfigSaveResponse(test *testing.T) {
 	ctx := context.TODO()
 	result, err := UnmarshalConfigSaveResponse(ctx, configSaveResponse)
 	testError(test, ctx, err)
-	g2Config := result.G2Config
-	test.Logf("CfgAttr: %d\n", len(g2Config.CfgAttr))
+	assert.Equal(test, 168, len(result.G2Config.CfgAttr))
+	assert.Equal(test, 112, len(result.G2Config.CfgCfbom))
 }
 
 func TestUnmarshalProductLicenseResponse(test *testing.T) {}
