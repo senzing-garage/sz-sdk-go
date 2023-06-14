@@ -49,31 +49,31 @@ func testError(test *testing.T, ctx context.Context, err error) {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestParseConfigAddDataSourceResponse(test *testing.T) {
+func TestUnmarshalConfigAddDataSourceResponse(test *testing.T) {
 	ctx := context.TODO()
-	result, err := ParseConfigAddDataSourceResponse(ctx, configAddDataSourceResponse)
+	result, err := UnmarshalConfigAddDataSourceResponse(ctx, configAddDataSourceResponse)
 	testError(test, ctx, err)
 	test.Log(result.DsrcId)
 }
 
-func TestParseConfigListDataSourcesResponse(test *testing.T) {
+func TestUnmarshalConfigListDataSourcesResponse(test *testing.T) {
 	ctx := context.TODO()
-	result, err := ParseConfigListDataSourcesResponse(ctx, configListDataSourcesResponse)
+	result, err := UnmarshalConfigListDataSourcesResponse(ctx, configListDataSourcesResponse)
 	testError(test, ctx, err)
 	for _, dataSource := range result.DataSources {
 		test.Logf("Id: %d; Code: %s\n", dataSource.DsrcId, dataSource.DsrcCode)
 	}
 }
 
-func TestParseConfigSaveResponse(test *testing.T) {
+func TestUnmarshalConfigSaveResponse(test *testing.T) {
 	ctx := context.TODO()
-	result, err := ParseConfigSaveResponse(ctx, configSaveResponse)
+	result, err := UnmarshalConfigSaveResponse(ctx, configSaveResponse)
 	testError(test, ctx, err)
 	for _, dataSource := range result.DataSources {
 		test.Logf("Id: %d; Code: %s\n", dataSource.DsrcId, dataSource.DsrcCode)
 	}
 }
 
-func TestParseProductLicenseResponse(test *testing.T) {}
+func TestUnmarshalProductLicenseResponse(test *testing.T) {}
 
-func TestParseProductVersionResponse(test *testing.T) {}
+func TestUnmarshalProductVersionResponse(test *testing.T) {}
