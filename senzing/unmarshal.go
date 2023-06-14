@@ -481,9 +481,6 @@ func UnmarshalEngineWhyRecordsResponse(ctx context.Context, jsonString string) (
 
 // --- Product ----------------------------------------------------------------
 
-/*
-UnmarshalProductVersionResponse...
-*/
 func UnmarshalProductLicenseResponse(ctx context.Context, jsonString string) (*ProductLicenseResponse, error) {
 	result := &ProductLicenseResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -502,9 +499,6 @@ func UnmarshalProductValidateLicenseStringBase64Response(ctx context.Context, js
 	return result, err
 }
 
-/*
-UnmarshalProductVersionResponse...
-*/
 func UnmarshalProductVersionResponse(ctx context.Context, jsonString string) (*ProductVersionResponse, error) {
 	result := &ProductVersionResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)

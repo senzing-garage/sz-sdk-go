@@ -15,6 +15,7 @@ const (
 )
 
 var (
+	blank                          string = `{}`
 	configAddDataSourceResponse    string = `{"DSRC_ID":1001}`
 	configmgrGetConfigListResponse string = `{"CONFIGS":[{"CONFIG_ID":1862407872,"CONFIG_COMMENTS":"g2configmgr_test at 2023-06-14 14:45:50.734630979 +0000 UTC","SYS_CREATE_DT":"2023-06-14 14:45:50.739"},{"CONFIG_ID":3680541328,"CONFIG_COMMENTS":"Created by g2diagnostic_test at 2023-06-14 14:45:47.847426435 +0000 UTC","SYS_CREATE_DT":"2023-06-14 14:45:48.320"}]}`
 	configListDataSourcesResponse  string = `{"DATA_SOURCES":[{"DSRC_ID":1,"DSRC_CODE":"TEST"},{"DSRC_ID":2,"DSRC_CODE":"SEARCH"},{"DSRC_ID":1001,"DSRC_CODE":"GO_TEST"}]}`
@@ -95,10 +96,527 @@ func TestUnmarshalConfigmgrGetConfigListResponse(test *testing.T) {
 
 // --- Diagnostic -------------------------------------------------------------
 
+func TestUnmarshalDiagnosticCheckDBPerfResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticCheckDBPerfResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticFetchNextEntityBySizeResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticFetchNextEntityBySizeResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticFindEntitiesByFeatureIDsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticFindEntitiesByFeatureIDsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetDataSourceCountsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetDataSourceCountsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetDBInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetDBInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetEntityDetailsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetEntityDetailsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalDiagnosticGetEntityListBySizeResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetEntityListBySizeResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetEntityResumeResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetEntityResumeResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetEntitySizeBreakdownResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetEntitySizeBreakdownResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetFeatureResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetFeatureResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetGenericFeaturesResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetGenericFeaturesResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetMappingStatisticsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetMappingStatisticsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalDiagnosticGetRelationshipDetailsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetRelationshipDetailsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticGetResolutionStatisticsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticGetResolutionStatisticsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalDiagnosticStreamEntityListBySizeResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalDiagnosticStreamEntityListBySizeResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
 // --- Engine -----------------------------------------------------------------
+
+func TestUnmarshalEngineAddRecordWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineAddRecordWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineAddRecordWithInfoWithReturnedRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineAddRecordWithInfoWithReturnedRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineAddRecordWithReturnedRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineAddRecordWithReturnedRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineCheckRecordResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineCheckRecordResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineDeleteRecordWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineDeleteRecordWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineExportConfigAndConfigIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineExportConfigAndConfigIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineExportConfigResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineExportConfigResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFetchNextResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFetchNextResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindInterestingEntitiesByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindInterestingEntitiesByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineFindInterestingEntitiesByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindInterestingEntitiesByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindNetworkByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindNetworkByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindNetworkByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindNetworkByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindNetworkByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindNetworkByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindNetworkByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindNetworkByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineFindPathByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathExcludingByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathExcludingByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathExcludingByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathExcludingByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathExcludingByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathExcludingByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineFindPathExcludingByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathExcludingByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathIncludingSourceByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathIncludingSourceByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathIncludingSourceByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathIncludingSourceByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathIncludingSourceByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathIncludingSourceByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineFindPathIncludingSourceByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineFindPathIncludingSourceByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetEntityByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetEntityByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineGetEntityByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetEntityByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetEntityByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetEntityByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetEntityByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetEntityByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetRecordV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetRecordV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetRecordResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetRecordResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetRedoRecordResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetRedoRecordResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineGetVirtualEntityByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetVirtualEntityByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineGetVirtualEntityByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineGetVirtualEntityByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineHowEntityByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineHowEntityByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineHowEntityByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineHowEntityByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineProcessRedoRecordResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineProcessRedoRecordResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineProcessRedoRecordWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineProcessRedoRecordWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineProcessWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineProcessWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineProcessWithResponseResizeResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineProcessWithResponseResizeResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineProcessWithResponseResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineProcessWithResponseResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineReevaluateEntityWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineReevaluateEntityWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineReevaluateRecordWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineReevaluateRecordWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineReplaceRecordWithInfoResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineReplaceRecordWithInfoResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineSearchByAttributesV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineSearchByAttributesV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineSearchByAttributesResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineSearchByAttributesResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineStatsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineStatsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineStreamExportJSONEntityReportResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineStreamExportJSONEntityReportResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyEntitiesV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntitiesV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyEntitiesResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntitiesResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalEngineWhyEntityByEntityIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntityByEntityIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyEntityByEntityIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntityByEntityIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyEntityByRecordIDV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntityByRecordIDV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyEntityByRecordIDResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyEntityByRecordIDResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyRecordsV2Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyRecordsV2Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalEngineWhyRecordsResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalEngineWhyRecordsResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
 
 // --- Product ----------------------------------------------------------------
 
-func TestUnmarshalProductLicenseResponse(test *testing.T) {}
+func TestUnmarshalProductLicenseResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalProductLicenseResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+func TestUnmarshalProductValidateLicenseFileResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalProductValidateLicenseFileResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
 
-func TestUnmarshalProductVersionResponse(test *testing.T) {}
+func TestUnmarshalProductValidateLicenseStringBase64Response(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalProductValidateLicenseStringBase64Response(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
+
+func TestUnmarshalProductVersionResponse(test *testing.T) {
+	ctx := context.TODO()
+	result, err := UnmarshalProductVersionResponse(ctx, blank)
+	testError(test, ctx, err)
+	printActual(test, result)
+}
