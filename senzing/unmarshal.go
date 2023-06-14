@@ -197,8 +197,8 @@ func UnmarshalEngineFindInterestingEntitiesByRecordIDResponse(ctx context.Contex
 	return result, err
 }
 
-func UnmarshalEngineFindNetworkByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByEntityID_V2Response, error) {
-	result := &EngineFindNetworkByEntityID_V2Response{}
+func UnmarshalEngineFindNetworkByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByEntityIDV2Response, error) {
+	result := &EngineFindNetworkByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -209,8 +209,8 @@ func UnmarshalEngineFindNetworkByEntityIDResponse(ctx context.Context, jsonStrin
 	return result, err
 }
 
-func UnmarshalEngineFindNetworkByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByRecordID_V2Response, error) {
-	result := &EngineFindNetworkByRecordID_V2Response{}
+func UnmarshalEngineFindNetworkByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByRecordIDV2Response, error) {
+	result := &EngineFindNetworkByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -221,8 +221,8 @@ func UnmarshalEngineFindNetworkByRecordIDResponse(ctx context.Context, jsonStrin
 	return result, err
 }
 
-func UnmarshalEngineFindPathByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathByEntityID_V2Response, error) {
-	result := &EngineFindPathByEntityID_V2Response{}
+func UnmarshalEngineFindPathByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathByEntityIDV2Response, error) {
+	result := &EngineFindPathByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -233,8 +233,8 @@ func UnmarshalEngineFindPathByEntityIDResponse(ctx context.Context, jsonString s
 	return result, err
 }
 
-func UnmarshalEngineFindPathByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathByRecordID_V2Response, error) {
-	result := &EngineFindPathByRecordID_V2Response{}
+func UnmarshalEngineFindPathByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathByRecordIDV2Response, error) {
+	result := &EngineFindPathByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -245,8 +245,8 @@ func UnmarshalEngineFindPathByRecordIDResponse(ctx context.Context, jsonString s
 	return result, err
 }
 
-func UnmarshalEngineFindPathExcludingByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByEntityID_V2Response, error) {
-	result := &EngineFindPathExcludingByEntityID_V2Response{}
+func UnmarshalEngineFindPathExcludingByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByEntityIDV2Response, error) {
+	result := &EngineFindPathExcludingByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -257,8 +257,8 @@ func UnmarshalEngineFindPathExcludingByEntityIDResponse(ctx context.Context, jso
 	return result, err
 }
 
-func UnmarshalEngineFindPathExcludingByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByRecordID_V2Response, error) {
-	result := &EngineFindPathExcludingByRecordID_V2Response{}
+func UnmarshalEngineFindPathExcludingByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByRecordIDV2Response, error) {
+	result := &EngineFindPathExcludingByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -269,8 +269,8 @@ func UnmarshalEngineFindPathExcludingByRecordIDResponse(ctx context.Context, jso
 	return result, err
 }
 
-func UnmarshalEngineFindPathIncludingSourceByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByEntityID_V2Response, error) {
-	result := &EngineFindPathIncludingSourceByEntityID_V2Response{}
+func UnmarshalEngineFindPathIncludingSourceByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByEntityIDV2Response, error) {
+	result := &EngineFindPathIncludingSourceByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -281,8 +281,8 @@ func UnmarshalEngineFindPathIncludingSourceByEntityIDResponse(ctx context.Contex
 	return result, err
 }
 
-func UnmarshalEngineFindPathIncludingSourceByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByRecordID_V2Response, error) {
-	result := &EngineFindPathIncludingSourceByRecordID_V2Response{}
+func UnmarshalEngineFindPathIncludingSourceByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByRecordIDV2Response, error) {
+	result := &EngineFindPathIncludingSourceByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -293,8 +293,8 @@ func UnmarshalEngineFindPathIncludingSourceByRecordIDResponse(ctx context.Contex
 	return result, err
 }
 
-func UnmarshalEngineGetEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineGetEntityByEntityID_V2Response, error) {
-	result := &EngineGetEntityByEntityID_V2Response{}
+func UnmarshalEngineGetEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineGetEntityByEntityIDV2Response, error) {
+	result := &EngineGetEntityByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -305,8 +305,8 @@ func UnmarshalEngineGetEntityByEntityIDResponse(ctx context.Context, jsonString 
 	return result, err
 }
 
-func UnmarshalEngineGetEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineGetEntityByRecordID_V2Response, error) {
-	result := &EngineGetEntityByRecordID_V2Response{}
+func UnmarshalEngineGetEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineGetEntityByRecordIDV2Response, error) {
+	result := &EngineGetEntityByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -317,8 +317,8 @@ func UnmarshalEngineGetEntityByRecordIDResponse(ctx context.Context, jsonString 
 	return result, err
 }
 
-func UnmarshalEngineGetRecord_V2Response(ctx context.Context, jsonString string) (*EngineGetRecord_V2Response, error) {
-	result := &EngineGetRecord_V2Response{}
+func UnmarshalEngineGetRecordV2Response(ctx context.Context, jsonString string) (*EngineGetRecordV2Response, error) {
+	result := &EngineGetRecordV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -335,8 +335,8 @@ func UnmarshalEngineGetRedoRecordResponse(ctx context.Context, jsonString string
 	return result, err
 }
 
-func UnmarshalEngineGetVirtualEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineGetVirtualEntityByRecordID_V2Response, error) {
-	result := &EngineGetVirtualEntityByRecordID_V2Response{}
+func UnmarshalEngineGetVirtualEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineGetVirtualEntityByRecordIDV2Response, error) {
+	result := &EngineGetVirtualEntityByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -347,8 +347,8 @@ func UnmarshalEngineGetVirtualEntityByRecordIDResponse(ctx context.Context, json
 	return result, err
 }
 
-func UnmarshalEngineHowEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineHowEntityByEntityID_V2Response, error) {
-	result := &EngineHowEntityByEntityID_V2Response{}
+func UnmarshalEngineHowEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineHowEntityByEntityIDV2Response, error) {
+	result := &EngineHowEntityByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -407,8 +407,8 @@ func UnmarshalEngineReplaceRecordWithInfoResponse(ctx context.Context, jsonStrin
 	return result, err
 }
 
-func UnmarshalEngineSearchByAttributes_V2Response(ctx context.Context, jsonString string) (*EngineSearchByAttributes_V2Response, error) {
-	result := &EngineSearchByAttributes_V2Response{}
+func UnmarshalEngineSearchByAttributesV2Response(ctx context.Context, jsonString string) (*EngineSearchByAttributesV2Response, error) {
+	result := &EngineSearchByAttributesV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -431,8 +431,8 @@ func UnmarshalEngineStreamExportJSONEntityReportResponse(ctx context.Context, js
 	return result, err
 }
 
-func UnmarshalEngineWhyEntities_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntities_V2Response, error) {
-	result := &EngineWhyEntities_V2Response{}
+func UnmarshalEngineWhyEntitiesV2Response(ctx context.Context, jsonString string) (*EngineWhyEntitiesV2Response, error) {
+	result := &EngineWhyEntitiesV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -443,8 +443,8 @@ func UnmarshalEngineWhyEntitiesResponse(ctx context.Context, jsonString string) 
 	return result, err
 }
 
-func UnmarshalEngineWhyEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByEntityID_V2Response, error) {
-	result := &EngineWhyEntityByEntityID_V2Response{}
+func UnmarshalEngineWhyEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByEntityIDV2Response, error) {
+	result := &EngineWhyEntityByEntityIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -455,8 +455,8 @@ func UnmarshalEngineWhyEntityByEntityIDResponse(ctx context.Context, jsonString 
 	return result, err
 }
 
-func UnmarshalEngineWhyEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByRecordID_V2Response, error) {
-	result := &EngineWhyEntityByRecordID_V2Response{}
+func UnmarshalEngineWhyEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByRecordIDV2Response, error) {
+	result := &EngineWhyEntityByRecordIDV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -467,8 +467,8 @@ func UnmarshalEngineWhyEntityByRecordIDResponse(ctx context.Context, jsonString 
 	return result, err
 }
 
-func UnmarshalEngineWhyRecords_V2Response(ctx context.Context, jsonString string) (*EngineWhyRecords_V2Response, error) {
-	result := &EngineWhyRecords_V2Response{}
+func UnmarshalEngineWhyRecordsV2Response(ctx context.Context, jsonString string) (*EngineWhyRecordsV2Response, error) {
+	result := &EngineWhyRecordsV2Response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
