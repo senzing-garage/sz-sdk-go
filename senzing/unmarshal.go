@@ -11,27 +11,18 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-/*
-UnmarshalConfigAddDataSourceResponse...
-*/
 func UnmarshalConfigAddDataSourceResponse(ctx context.Context, jsonString string) (*ConfigAddDataSourceResponse, error) {
 	result := &ConfigAddDataSourceResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-/*
-UnmarshalConfigListDataSourcesResponse...
-*/
 func UnmarshalConfigListDataSourcesResponse(ctx context.Context, jsonString string) (*ConfigListDataSourcesResponse, error) {
 	result := &ConfigListDataSourcesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-/*
-UnmarshalConfigSaveResponse...
-*/
 func UnmarshalConfigSaveResponse(ctx context.Context, jsonString string) (*ConfigSaveResponse, error) {
 	result := &ConfigSaveResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -40,18 +31,12 @@ func UnmarshalConfigSaveResponse(ctx context.Context, jsonString string) (*Confi
 
 // --- Configmgr --------------------------------------------------------------
 
-/*
-UnmarshalConfigmgrGetConfigResponse...
-*/
 func UnmarshalConfigmgrGetConfigResponse(ctx context.Context, jsonString string) (*ConfigmgrGetConfigResponse, error) {
 	result := &ConfigmgrGetConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-/*
-UnmarshalConfigmgrGetConfigListResponse...
-*/
 func UnmarshalConfigmgrGetConfigListResponse(ctx context.Context, jsonString string) (*ConfigmgrGetConfigListResponse, error) {
 	result := &ConfigmgrGetConfigListResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -61,286 +46,437 @@ func UnmarshalConfigmgrGetConfigListResponse(ctx context.Context, jsonString str
 // --- Diagnostic -------------------------------------------------------------
 
 func UnmarshalDiagnosticCheckDBPerfResponse(ctx context.Context, jsonString string) (*DiagnosticCheckDBPerfResponse, error) {
-	return nil, nil
+	result := &DiagnosticCheckDBPerfResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticFetchNextEntityBySizeResponse(ctx context.Context, jsonString string) (*DiagnosticFetchNextEntityBySizeResponse, error) {
-	return nil, nil
+	result := &DiagnosticFetchNextEntityBySizeResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticFindEntitiesByFeatureIDsResponse(ctx context.Context, jsonString string) (*DiagnosticFindEntitiesByFeatureIDsResponse, error) {
-	return nil, nil
+	result := &DiagnosticFindEntitiesByFeatureIDsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetDataSourceCountsResponse(ctx context.Context, jsonString string) (*DiagnosticGetDataSourceCountsResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetDataSourceCountsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticGetDBInfoResponse(ctx context.Context, jsonString string) (*DiagnosticGetDBInfoResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetDBInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetEntityDetailsResponse(ctx context.Context, jsonString string) (*DiagnosticGetEntityDetailsResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetEntityDetailsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticGetEntityListBySizeResponse(ctx context.Context, jsonString string) (*DiagnosticGetEntityListBySizeResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetEntityListBySizeResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetEntityResumeResponse(ctx context.Context, jsonString string) (*DiagnosticGetEntityResumeResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetEntityResumeResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticGetEntitySizeBreakdownResponse(ctx context.Context, jsonString string) (*DiagnosticGetEntitySizeBreakdownResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetEntitySizeBreakdownResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetFeatureResponse(ctx context.Context, jsonString string) (*DiagnosticGetFeatureResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetFeatureResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticGetGenericFeaturesResponse(ctx context.Context, jsonString string) (*DiagnosticGetGenericFeaturesResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetGenericFeaturesResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetMappingStatisticsResponse(ctx context.Context, jsonString string) (*DiagnosticGetMappingStatisticsResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetMappingStatisticsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticGetRelationshipDetailsResponse(ctx context.Context, jsonString string) (*DiagnosticGetRelationshipDetailsResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetRelationshipDetailsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalDiagnosticGetResolutionStatisticsResponse(ctx context.Context, jsonString string) (*DiagnosticGetResolutionStatisticsResponse, error) {
-	return nil, nil
+	result := &DiagnosticGetResolutionStatisticsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalDiagnosticStreamEntityListBySizeResponse(ctx context.Context, jsonString string) (*DiagnosticStreamEntityListBySizeResponse, error) {
-	return nil, nil
+	result := &DiagnosticStreamEntityListBySizeResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 // --- Engine -----------------------------------------------------------------
 
 func UnmarshalEngineAddRecordWithInfoResponse(ctx context.Context, jsonString string) (*EngineAddRecordWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineAddRecordWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineAddRecordWithInfoWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*EngineAddRecordWithInfoWithReturnedRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineAddRecordWithInfoWithReturnedRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineAddRecordWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*EngineAddRecordWithReturnedRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineAddRecordWithReturnedRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineCheckRecordResponse(ctx context.Context, jsonString string) (*EngineCheckRecordResponse, error) {
-	return nil, nil
+	result := &EngineCheckRecordResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineDeleteRecordWithInfoResponse(ctx context.Context, jsonString string) (*EngineDeleteRecordWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineDeleteRecordWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineExportConfigAndConfigIDResponse(ctx context.Context, jsonString string) (*EngineExportConfigAndConfigIDResponse, error) {
-	return nil, nil
+	result := &EngineExportConfigAndConfigIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineExportConfigResponse(ctx context.Context, jsonString string) (*EngineExportConfigResponse, error) {
-	return nil, nil
+	result := &EngineExportConfigResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFetchNextResponse(ctx context.Context, jsonString string) (*EngineFetchNextResponse, error) {
-	return nil, nil
+	result := &EngineFetchNextResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindInterestingEntitiesByEntityIDResponse(ctx context.Context, jsonString string) (*EngineFindInterestingEntitiesByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineFindInterestingEntitiesByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindInterestingEntitiesByRecordIDResponse(ctx context.Context, jsonString string) (*EngineFindInterestingEntitiesByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineFindInterestingEntitiesByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindNetworkByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindNetworkByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindNetworkByEntityIDResponse(ctx context.Context, jsonString string) (*EngineFindNetworkByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineFindNetworkByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindNetworkByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindNetworkByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindNetworkByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindNetworkByRecordIDResponse(ctx context.Context, jsonString string) (*EngineFindNetworkByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineFindNetworkByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathByEntityIDResponse(ctx context.Context, jsonString string) (*EngineFindPathByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathByRecordIDResponse(ctx context.Context, jsonString string) (*EngineFindPathByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathExcludingByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathExcludingByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathExcludingByEntityIDResponse(ctx context.Context, jsonString string) (*EngineFindPathExcludingByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathExcludingByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathExcludingByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathExcludingByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathExcludingByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathExcludingByRecordIDResponse(ctx context.Context, jsonString string) (*EngineFindPathExcludingByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathExcludingByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathIncludingSourceByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathIncludingSourceByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathIncludingSourceByEntityIDResponse(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathIncludingSourceByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathIncludingSourceByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineFindPathIncludingSourceByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineFindPathIncludingSourceByRecordIDResponse(ctx context.Context, jsonString string) (*EngineFindPathIncludingSourceByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineFindPathIncludingSourceByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineGetEntityByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineGetEntityByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetEntityByEntityIDResponse(ctx context.Context, jsonString string) (*EngineGetEntityByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineGetEntityByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineGetEntityByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineGetEntityByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetEntityByRecordIDResponse(ctx context.Context, jsonString string) (*EngineGetEntityByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineGetEntityByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetRecord_V2Response(ctx context.Context, jsonString string) (*EngineGetRecord_V2Response, error) {
-	return nil, nil
+	result := &EngineGetRecord_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetRecordResponse(ctx context.Context, jsonString string) (*EngineGetRecordResponse, error) {
-	return nil, nil
+	result := &EngineGetRecordResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetRedoRecordResponse(ctx context.Context, jsonString string) (*EngineGetRedoRecordResponse, error) {
-	return nil, nil
+	result := &EngineGetRedoRecordResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetVirtualEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineGetVirtualEntityByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineGetVirtualEntityByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineGetVirtualEntityByRecordIDResponse(ctx context.Context, jsonString string) (*EngineGetVirtualEntityByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineGetVirtualEntityByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineHowEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineHowEntityByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineHowEntityByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineHowEntityByEntityIDResponse(ctx context.Context, jsonString string) (*EngineHowEntityByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineHowEntityByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineProcessRedoRecordResponse(ctx context.Context, jsonString string) (*EngineProcessRedoRecordResponse, error) {
-	return nil, nil
+	result := &EngineProcessRedoRecordResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineProcessRedoRecordWithInfoResponse(ctx context.Context, jsonString string) (*EngineProcessRedoRecordWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineProcessRedoRecordWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineProcessWithInfoResponse(ctx context.Context, jsonString string) (*EngineProcessWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineProcessWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineProcessWithResponseResizeResponse(ctx context.Context, jsonString string) (*EngineProcessWithResponseResizeResponse, error) {
-	return nil, nil
+	result := &EngineProcessWithResponseResizeResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineProcessWithResponseResponse(ctx context.Context, jsonString string) (*EngineProcessWithResponseResponse, error) {
-	return nil, nil
+	result := &EngineProcessWithResponseResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineReevaluateEntityWithInfoResponse(ctx context.Context, jsonString string) (*EngineReevaluateEntityWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineReevaluateEntityWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
+
 func UnmarshalEngineReevaluateRecordWithInfoResponse(ctx context.Context, jsonString string) (*EngineReevaluateRecordWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineReevaluateRecordWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineReplaceRecordWithInfoResponse(ctx context.Context, jsonString string) (*EngineReplaceRecordWithInfoResponse, error) {
-	return nil, nil
+	result := &EngineReplaceRecordWithInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineSearchByAttributes_V2Response(ctx context.Context, jsonString string) (*EngineSearchByAttributes_V2Response, error) {
-	return nil, nil
+	result := &EngineSearchByAttributes_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineSearchByAttributesResponse(ctx context.Context, jsonString string) (*EngineSearchByAttributesResponse, error) {
-	return nil, nil
+	result := &EngineSearchByAttributesResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineStatsResponse(ctx context.Context, jsonString string) (*EngineStatsResponse, error) {
-	return nil, nil
+	result := &EngineStatsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineStreamExportJSONEntityReportResponse(ctx context.Context, jsonString string) (*EngineStreamExportJSONEntityReportResponse, error) {
-	return nil, nil
+	result := &EngineStreamExportJSONEntityReportResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntities_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntities_V2Response, error) {
-	return nil, nil
+	result := &EngineWhyEntities_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntitiesResponse(ctx context.Context, jsonString string) (*EngineWhyEntitiesResponse, error) {
-	return nil, nil
+	result := &EngineWhyEntitiesResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntityByEntityID_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByEntityID_V2Response, error) {
-	return nil, nil
+	result := &EngineWhyEntityByEntityID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntityByEntityIDResponse(ctx context.Context, jsonString string) (*EngineWhyEntityByEntityIDResponse, error) {
-	return nil, nil
+	result := &EngineWhyEntityByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntityByRecordID_V2Response(ctx context.Context, jsonString string) (*EngineWhyEntityByRecordID_V2Response, error) {
-	return nil, nil
+	result := &EngineWhyEntityByRecordID_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyEntityByRecordIDResponse(ctx context.Context, jsonString string) (*EngineWhyEntityByRecordIDResponse, error) {
-	return nil, nil
+	result := &EngineWhyEntityByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyRecords_V2Response(ctx context.Context, jsonString string) (*EngineWhyRecords_V2Response, error) {
-	return nil, nil
+	result := &EngineWhyRecords_V2Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalEngineWhyRecordsResponse(ctx context.Context, jsonString string) (*EngineWhyRecordsResponse, error) {
-	return nil, nil
+	result := &EngineWhyRecordsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 // --- Product ----------------------------------------------------------------
@@ -355,11 +491,15 @@ func UnmarshalProductLicenseResponse(ctx context.Context, jsonString string) (*P
 }
 
 func UnmarshalProductValidateLicenseFileResponse(ctx context.Context, jsonString string) (*ProductValidateLicenseFileResponse, error) {
-	return nil, nil
+	result := &ProductValidateLicenseFileResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 func UnmarshalProductValidateLicenseStringBase64Response(ctx context.Context, jsonString string) (*ProductValidateLicenseStringBase64Response, error) {
-	return nil, nil
+	result := &ProductValidateLicenseStringBase64Response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
 }
 
 /*
