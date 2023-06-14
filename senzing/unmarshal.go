@@ -506,5 +506,6 @@ func UnmarshalProductVersionResponse(ctx context.Context, jsonString string) (*P
 }
 
 func Junk(ctx context.Context, jsonString string) (*ProductVersionResponse, error) {
+	// Comment #1
 	return nil, nil
 }
