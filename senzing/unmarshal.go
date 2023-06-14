@@ -504,8 +504,3 @@ func UnmarshalProductVersionResponse(ctx context.Context, jsonString string) (*P
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
-
-func Junk(ctx context.Context, jsonString string) (*ProductVersionResponse, error) {
-	// Comment #1
-	return nil, nil
-}
