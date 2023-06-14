@@ -284,6 +284,14 @@ type CfgSfunc struct {
 	SfuncId       int64  `json:"SFUNC_ID"`
 }
 
+type ConfigBaseVersion struct {
+	BuildDate            string               `json:"BUILD_DATE"`
+	BuildNumber          string               `json:"BUILD_NUMBER"`
+	BuildVersion         string               `json:"BUILD_VERSION"`
+	CompatibilityVersion CompatibilityVersion `json:"COMPATIBILITY_VERSION"`
+	Version              string               `json:"VERSION"`
+}
+
 type SysOom struct {
 	FelemId    int64  `json:"FELEM_ID"`
 	FtypeId    int64  `json:"FTYPE_ID"`
@@ -295,14 +303,6 @@ type SysOom struct {
 	OomType    string `json:"OOM_TYPE"`
 	Thresh1Cnt int64  `json:"THRESH1_CNT"`
 	Thresh1Oom int64  `json:"THRESH1_OOM"`
-}
-
-type ConfigBaseVersion struct {
-	BuildDate            string               `json:"BUILD_DATE"`
-	BuildNumber          string               `json:"BUILD_NUMBER"`
-	BuildVersion         string               `json:"BUILD_VERSION"`
-	CompatibilityVersion CompatibilityVersion `json:"COMPATIBILITY_VERSION"`
-	Version              string               `json:"VERSION"`
 }
 
 type G2Config struct {
@@ -337,7 +337,7 @@ type G2Config struct {
 	CfgRtype            []CfgRtype            `json:"CFG_RTYPE"`
 	CfgSfcall           []CfgSfcall           `json:"CFG_SFCALL"`
 	CfgSfunc            []CfgSfunc            `json:"CFG_SFUNC"`
-	ConfigBaseVersion   []ConfigBaseVersion   `json:"CONFIG_BASE_VERSION"`
+	ConfigBaseVersion   ConfigBaseVersion     `json:"CONFIG_BASE_VERSION"`
 	SysOom              []SysOom              `json:"SYS_OOM"`
 }
 

@@ -69,9 +69,8 @@ func TestUnmarshalConfigSaveResponse(test *testing.T) {
 	ctx := context.TODO()
 	result, err := UnmarshalConfigSaveResponse(ctx, configSaveResponse)
 	testError(test, ctx, err)
-	for _, dataSource := range result.DataSources {
-		test.Logf("Id: %d; Code: %s\n", dataSource.DsrcId, dataSource.DsrcCode)
-	}
+	g2Config := result.G2Config
+	test.Logf("CfgAttr: %d\n", len(g2Config.CfgAttr))
 }
 
 func TestUnmarshalProductLicenseResponse(test *testing.T) {}
