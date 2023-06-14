@@ -284,6 +284,12 @@ type CfgSfunc struct {
 	SfuncId       int64  `json:"SFUNC_ID"`
 }
 
+type Config struct {
+	ConfigId       int64  `json:"CONFIG_ID"`
+	ConfigComments string `json:"CONFIG_COMMENTS"`
+	SysCreateDt    string `json:"SYS_CREATE_DT"`
+}
+
 type ConfigBaseVersion struct {
 	BuildDate            string               `json:"BUILD_DATE"`
 	BuildNumber          string               `json:"BUILD_NUMBER"`
@@ -364,6 +370,20 @@ type ConfigListDataSourcesResponse struct {
 // The ConfigSaveResponse...
 type ConfigSaveResponse struct {
 	G2Config G2Config `json:"G2_CONFIG"`
+}
+
+// ----------------------------------------------------------------------------
+// Types - structs - Configmgr
+// ----------------------------------------------------------------------------
+
+// The ConfigmgrGetConfigResponse...
+type ConfigmgrGetConfigResponse struct {
+	G2Config G2Config `json:"G2_CONFIG"`
+}
+
+// The ConfigmgrGetConfigListResponse...
+type ConfigmgrGetConfigListResponse struct {
+	Configs []Config `json:"CONFIGS"`
 }
 
 // ----------------------------------------------------------------------------

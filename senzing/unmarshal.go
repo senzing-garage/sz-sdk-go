@@ -9,6 +9,8 @@ import (
 // Public functions
 // ----------------------------------------------------------------------------
 
+// --- Config -----------------------------------------------------------------
+
 /*
 UnmarshalConfigAddDataSourceResponse...
 */
@@ -35,6 +37,32 @@ func UnmarshalConfigSaveResponse(ctx context.Context, jsonString string) (*Confi
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
+
+// --- Configmgr --------------------------------------------------------------
+
+/*
+UnmarshalConfigmgrGetConfigResponse...
+*/
+func UnmarshalConfigmgrGetConfigResponse(ctx context.Context, jsonString string) (*ConfigmgrGetConfigResponse, error) {
+	result := &ConfigmgrGetConfigResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+/*
+UnmarshalConfigmgrGetConfigListResponse...
+*/
+func UnmarshalConfigmgrGetConfigListResponse(ctx context.Context, jsonString string) (*ConfigmgrGetConfigListResponse, error) {
+	result := &ConfigmgrGetConfigListResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+// --- Diagnostic -------------------------------------------------------------
+
+// --- Engine -----------------------------------------------------------------
+
+// --- Product ----------------------------------------------------------------
 
 /*
 UnmarshalProductVersionResponse...
