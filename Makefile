@@ -51,6 +51,7 @@ test:
 #	@go test -v ./g2engine
 #	@go test -v ./g2error
 #	@go test -v ./g2product
+#	@go test -v ./senzing
 
 # -----------------------------------------------------------------------------
 # Utility targets
