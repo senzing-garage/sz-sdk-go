@@ -298,6 +298,10 @@ type ConfigBaseVersion struct {
 	Version              string               `json:"VERSION"`
 }
 
+type EntityFromSearch struct {
+	// TODO:
+}
+
 type Feature struct {
 	FeatDesc       string         `json:"FEAT_DESC"`
 	FeatDescValues []FeatureValue `json:"FEAT_DESC_VALUES"`
@@ -390,6 +394,10 @@ type MatchInfo struct {
 	ErruleCode    string        `json:"ERRULE_CODE"`
 	FeatureScores FeatureScores `json:"FEATURE_SCORES"`
 	MatchKey      string        `json:"MATCH_KEY"`
+}
+
+type MatchInfoFromSearch struct {
+	// TODO:
 }
 
 type MemberRecord struct {

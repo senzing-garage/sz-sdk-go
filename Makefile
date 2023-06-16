@@ -42,7 +42,7 @@ dependencies:
 
 .PHONY: test
 test:
-#	@go test -v -p 1 ./...
+	@go test -v -p 1 ./...
 #	@go test -v ./.
 #	@go test -v ./g2api
 #	@go test -v ./g2config
@@ -51,7 +51,7 @@ test:
 #	@go test -v ./g2engine
 #	@go test -v ./g2error
 #	@go test -v ./g2product
-	@go test -v ./senzing
+#	@go test -v ./senzing
 
 # -----------------------------------------------------------------------------
 # Utility targets
