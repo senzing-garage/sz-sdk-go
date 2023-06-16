@@ -428,6 +428,7 @@ type ResolutionStep struct {
 	VirtualEntity1         VirtualEntity `json:"VIRTUAL_ENTITY_1"`
 	VirtualEntity2         VirtualEntity `json:"VIRTUAL_ENTITY_2"`
 }
+
 type ResolvedEntity struct {
 	EntityId      int64           `json:"ENTITY_ID"`
 	EntityName    string          `json:"ENTITY_NAME"`
@@ -435,6 +436,11 @@ type ResolvedEntity struct {
 	LastSeenDt    string          `json:"LAST_SEEN_DT"`
 	Records       []Record        `json:"RECORDS"`
 	RecordSummary []RecordSummary `json:"RECORD_SUMMARY"`
+}
+
+type ResolvedEntityFromSearch struct {
+	MatchInfo MatchInfoFromSearch `json:"MATCH_INFO"`
+	Entity    EntityFromSearch    `json:"ENTITY"`
 }
 
 type SchemaVersion struct {
@@ -573,7 +579,11 @@ type EngineReevaluateEntityWithInfoResponse struct{}
 type EngineReevaluateRecordWithInfoResponse struct{}
 type EngineReplaceRecordWithInfoResponse struct{}
 type EngineSearchByAttributesV2Response struct{}
-type EngineSearchByAttributesResponse struct{}
+
+type EngineSearchByAttributesResponse struct {
+	ResolvedEntities []ResolvedEntityFromSearch `json:"RESOLVED_ENTITIES"`
+}
+
 type EngineStatsResponse struct{}
 type EngineStreamExportJSONEntityReportResponse struct{}
 type EngineWhyEntitiesV2Response struct{}
