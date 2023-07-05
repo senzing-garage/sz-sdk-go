@@ -415,6 +415,12 @@ func UnmarshalEngineSearchByAttributesV2Response(ctx context.Context, jsonString
 	return result, err
 }
 
+func UnmarshalEngineSearchByAttributesV3Response(ctx context.Context, jsonString string) (*typedef.EngineSearchByAttributesV3response, error) {
+	result := &typedef.EngineSearchByAttributesV3response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
 func UnmarshalEngineSearchByAttributesResponse(ctx context.Context, jsonString string) (*typedef.EngineSearchByAttributesResponse, error) {
 	result := &typedef.EngineSearchByAttributesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)

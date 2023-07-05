@@ -11,6 +11,12 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+**/__pycache__
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
 .history
