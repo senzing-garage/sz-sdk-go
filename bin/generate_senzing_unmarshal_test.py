@@ -8,7 +8,7 @@ import logging
 import json
 import os
 import re
-from test_cases_from_g2_sdk_json_type_defintion import TEST_CASES
+from test_cases_from_g2_sdk_json_type_definition import TEST_CASES
 
 IS_DEBUG = False
 FINAL_RESULT = {}
