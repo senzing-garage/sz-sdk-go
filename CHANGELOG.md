@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.6.7] - 2023-07-05
+
+### Added in 0.6.7
+
+- Completed `senzing` package for unmarshalling
+
 ## [0.6.6] - 2023-06-16
 
 ### Added in 0.6.6
