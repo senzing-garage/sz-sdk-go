@@ -27,6 +27,19 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 default: help
 
 # -----------------------------------------------------------------------------
+# Generate tests
+# -----------------------------------------------------------------------------
+
+.PHONY: generate-tests
+generate-tests: generate_senzing_unmarshal_test
+
+
+.PHONY: generate_senzing_unmarshal_test
+generate_senzing_unmarshal_test:
+	@rm ./senzing/unmarshal_test.go || true
+	@./bin/generate_senzing_unmarshal_test.py
+
+# -----------------------------------------------------------------------------
 # Build
 # -----------------------------------------------------------------------------
 

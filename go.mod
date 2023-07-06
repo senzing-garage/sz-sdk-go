@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/aquilax/truncate v1.0.0
+	github.com/senzing/g2-sdk-json-type-definition v0.1.1
 	github.com/senzing/go-observing v0.2.6
 	github.com/stretchr/testify v1.8.4
 )
