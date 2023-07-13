@@ -53,7 +53,7 @@ var IdMessages = map[int]string{
 	4008: Prefix + "G2ConfigMgr_replaceDefaultConfigID(%d, %d) failed. Return code: %d",
 	4009: Prefix + "G2ConfigMgr_setDefaultConfigID(%d) failed. Return code: %d",
 	5901: "During test setup, call to messagelogger.NewSenzingApiLogger() failed.",
-	5902: "During test setup, call to g2eg2engineconfigurationjson.BuildSimpleSystemConfigurationJson() failed.",
+	5902: "During test setup, call to g2eg2engineconfigurationjson.BuildSimpleSystemConfigurationJsonViaMap() failed.",
 	5903: "During test setup, call to g2engine.Init() failed.",
 	5904: "During test setup, call to g2engine.PurgeRepository() failed.",
 	5905: "During test setup, call to g2engine.Destroy() failed.",
