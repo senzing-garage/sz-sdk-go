@@ -1,9 +1,5 @@
 # Makefile for g2-sdk-go.
 
-# Detect the operating system and architecture
-
-include Makefile.osdetect
-
 # -----------------------------------------------------------------------------
 # Variables
 # -----------------------------------------------------------------------------
