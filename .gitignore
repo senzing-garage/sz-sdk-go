@@ -29,3 +29,5 @@ go.work
 
 # Makefile
 target/
+
+bin/__pycache__
