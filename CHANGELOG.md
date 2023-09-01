@@ -10,6 +10,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.7.0] - 2023-09-01
+
+### Changed in 0.7.0
+
+- Support for SenzingAPI 3.8.0
+
+### Removed in 0.7.0
+
+- In `g2api.G2diagnostic.`
+  - CloseEntityListBySize
+  - FetchNextEntityBySize
+  - FindEntitiesByFeatureIDs
+  - GetDataSourceCounts
+  - GetEntityDetails
+  - GetEntityListBySize
+  - GetEntityResume
+  - GetEntitySizeBreakdown
+  - GetFeature
+  - GetGenericFeatures
+  - GetMappingStatistics
+  - GetRelationshipDetails
+  - GetResolutionStatistics
+- In `g2api.G2diagnostic.`
+  - AddRecordWithInfoWithReturnedRecordID
+  - AddRecordWithReturnedRecordID
+  - CheckRecord
+  - ProcessRedoRecord
+  - ProcessRedoRecordWithInfo
+  - ProcessWithResponse
+  - ProcessWithResponseResize
+
 ## [0.6.9] - 2023-09-01
 
 ### Changed in 0.6.9

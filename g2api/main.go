@@ -50,25 +50,25 @@ type G2configmgr interface {
 // The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
-	CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error
+	// CloseEntityListBySize(ctx context.Context, entityListBySizeHandle uintptr) error
 	Destroy(ctx context.Context) error
-	FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error)
-	FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error)
+	// FetchNextEntityBySize(ctx context.Context, entityListBySizeHandle uintptr) (string, error)
+	// FindEntitiesByFeatureIDs(ctx context.Context, features string) (string, error)
 	GetAvailableMemory(ctx context.Context) (int64, error)
-	GetDataSourceCounts(ctx context.Context) (string, error)
+	// GetDataSourceCounts(ctx context.Context) (string, error)
 	GetDBInfo(ctx context.Context) (string, error)
-	GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error)
-	GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error)
-	GetEntityResume(ctx context.Context, entityID int64) (string, error)
-	GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error)
-	GetFeature(ctx context.Context, libFeatID int64) (string, error)
-	GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
+	// GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error)
+	// GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error)
+	// GetEntityResume(ctx context.Context, entityID int64) (string, error)
+	// GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error)
+	// GetFeature(ctx context.Context, libFeatID int64) (string, error)
+	// GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
 	GetLogicalCores(ctx context.Context) (int, error)
-	GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
+	// GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
 	GetObserverOrigin(ctx context.Context) string
 	GetPhysicalCores(ctx context.Context) (int, error)
-	GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
-	GetResolutionStatistics(ctx context.Context) (string, error)
+	// GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
+	// GetResolutionStatistics(ctx context.Context) (string, error)
 	GetSdkId(ctx context.Context) string
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
@@ -84,9 +84,9 @@ type G2diagnostic interface {
 type G2engine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string) error
 	AddRecordWithInfo(ctx context.Context, dataSourceCode string, recordID string, jsonData string, loadID string, flags int64) (string, error)
-	AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error)
-	AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error)
-	CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error)
+	// AddRecordWithInfoWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string, flags int64) (string, string, error)
+	// AddRecordWithReturnedRecordID(ctx context.Context, dataSourceCode string, jsonData string, loadID string) (string, error)
+	// CheckRecord(ctx context.Context, record string, recordQueryList string) (string, error)
 	CloseExport(ctx context.Context, responseHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, loadID string) error
@@ -134,11 +134,11 @@ type G2engine interface {
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
 	PrimeEngine(ctx context.Context) error
 	Process(ctx context.Context, record string) error
-	ProcessRedoRecord(ctx context.Context) (string, error)
-	ProcessRedoRecordWithInfo(ctx context.Context, flags int64) (string, string, error)
+	// ProcessRedoRecord(ctx context.Context) (string, error)
+	// ProcessRedoRecordWithInfo(ctx context.Context, flags int64) (string, string, error)
 	ProcessWithInfo(ctx context.Context, record string, flags int64) (string, error)
-	ProcessWithResponse(ctx context.Context, record string) (string, error)
-	ProcessWithResponseResize(ctx context.Context, record string) (string, error)
+	// ProcessWithResponse(ctx context.Context, record string) (string, error)
+	// ProcessWithResponseResize(ctx context.Context, record string) (string, error)
 	PurgeRepository(ctx context.Context) error
 	ReevaluateEntity(ctx context.Context, entityID int64, flags int64) error
 	ReevaluateEntityWithInfo(ctx context.Context, entityID int64, flags int64) (string, error)
