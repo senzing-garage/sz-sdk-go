@@ -11,9 +11,6 @@ type G2ErrorTypeIds int
 // One of these errors must be the last in each G2ErrorTypes value list.
 // ----------------------------------------------------------------------------
 
-type G2x struct {
-}
-
 type G2BadInputError struct {
 	error
 	G2ErrorTypeIds []G2ErrorTypeIds
@@ -74,67 +71,61 @@ const (
 
 // Message templates for g2engine implementations.
 // Note: The lists of G2ErrorTypeIds are from innermost error to outer most error.
-// Example:  #99904 is G2BadUserInputError{G2ModuleInvalidXMLError{errors.New(message)}}
+// Example:  #10 is G2RetryableError{G2RetryTimeoutExceededError{errors.New(message)}}
 var G2ErrorTypes = map[int][]G2ErrorTypeIds{
-	2:  {G2BadInput},                          // EAS_ERR_INVALID_XML                                                                    "Invalid XML"
-	5:  {G2Base},                              // EAS_ERR_EXCEEDED_MAX_RETRIES                                                           "Exceeded the Maximum Number of Retries Allowed"
-	7:  {G2BadInput},                          // EAS_ERR_EMPTY_XML_MESSAGE                                                              "Empty XML Message"
-	10: {G2RetryTimeoutExceeded, G2Retryable}, // EAS_ERR_RETRY_TIMEOUT                                                                  "Retry timeout exceeded"
-	14: {G2Configuration},                     // EAS_ERR_INVALID_DATASTORE_CONFIGURATION_TYPE                                           "Invalid Datastore Configuration Type"
-	19: {G2Configuration},                     // EAS_ERR_NO_CONFIGURATION_FOUND                                                         "Configuration not found"
-	20: {G2Configuration},                     // EAS_ERR_CONFIG_CANNOT_BE_NULL_DATABASE                                                 "Configuration cannot be loaded from database connection"
-	21: {G2Configuration},                     // EAS_ERR_CONFIG_CANNOT_BE_NULL_CONFIG_FILE                                              "Configuration cannot be loaded from config file"
-	22: {G2BadInput},                          // EAS_ERR_INVALID_DOCTYPE                                                                "Invalid DocType {0}"
-	23: {G2BadInput},                          // EAS_ERR_CONFLICTING_DATA_SOURCE_VALUES                                                 "Conflicting DATA_SOURCE values '{0}' and '{1}'"
-	24: {G2BadInput},                          // EAS_ERR_CONFLICTING_RECORD_ID_VALUES                                                   "Conflicting RECORD_ID values '{0}' and '{1}'"
-	25: {G2BadInput},                          // EAS_ERR_CONFLICTING_LOAD_ID_VALUES                                                     "Conflicting LOAD_ID values '{0}' and '{1}'"
-	26: {G2BadInput},                          // EAS_ERR_RESERVED_WORD_USED_IN_DOCUMENT                                                 "Inbound data contains a reserved keyword '{0}'"
-	27: {G2UnknownDatasource, G2BadInput},     // EAS_ERR_UNKNOWN_DSRC_CODE_VALUE                                                        "Unknown DATA_SOURCE value '{0}'"
-	28: {G2Configuration},                     // EAS_ERR_INVALID_JSON_CONFIG_DOCUMENT                                                   "Invalid JSON config document"
-	29: {G2Base},                              // EAS_ERR_INVALID_HANDLE                                                                 "Invalid Handle"
-	30: {G2Configuration},                     // EAS_ERR_INVALID_MATCH_LEVEL                                                            "Invalid match level '{0}'"
-	33: {G2NotFound, G2BadInput},              // EAS_ERR_UNKNOWN_DSRC_RECORD_ID                                                         "Unknown record: dsrc[{0}], record[{1}]"
-	34: {G2Configuration},                     // EAS_ERR_AMBIGUOUS_ENTITY_FTYPE_MISSING                                                 "AMBIGUOUS_ENTITY Feature Type is not configured"
-	35: {G2Configuration},                     // EAS_ERR_AMBIGUOUS_TIER_FELEM_MISSING                                                   "AMBIGUOUS_TIER Feature Element is not configured"
-	36: {G2Configuration},                     // EAS_ERR_AMBIGUOUS_FTYPE_ID_FELEM_MISSING                                               "AMBIGUOUS_FTYPE_ID Feature Element is not configured"
-	37: {G2NotFound, G2BadInput},              // EAS_ERR_UNKNOWN_RESOLVED_ENTITY_VALUE                                                  "Unknown resolved entity value '{0}'"
-	38: {G2Base},                              // EAS_ERR_RECORD_HAS_NO_RESOLVED_ENTITY                                                  "Data source record has no resolved entity: dsrc[{0}], recordID[{1}]"
-	39: {G2Base},                              // EAS_ERR_NO_OBSERVED_ENTITY_FOR_DSRC_ENTITY_KEY                                         "No observed entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]"
-	40: {G2Configuration},                     // EAS_ERR_CONFIG_COMPATIBILITY_MISMATCH                                                  "The engine configuration compatibility version [{0}] does not match the version of the provided config[{1}]."
-	41: {G2Base},                              // EAS_ERR_DOCUMENT_PREPROCESSING_FAILED                                                  "Document preprocessing failed"
-	42: {G2Base},                              // EAS_ERR_DOCUMENT_LOAD_PROCESSING_FAILED                                                "Document load processing failed"
-	43: {G2Base},                              // EAS_ERR_DOCUMENT_ER_PROCESSING_FAILED                                                  "Document ER processing failed"
-	44: {G2Base},                              // EAS_ERR_CHECK_ENTITY_PROCESSING_FAILED                                                 "Check entity processing failed"
-	45: {G2Base},                              // EAS_ERR_UMF_PROC_PROCESSING_FAILED                                                     "UMF procedure processing failed"
-	46: {G2Base},                              // EAS_ERR_DOCUMENT_HASHING_PROCESSING_FAILED                                             "Document hashing-processing failed"
-	47: {G2Base},                              // EAS_ERR_SESSION_IS_INVALID                                                             "Session is invalid"
-	48: {G2NotInitialized, G2Unrecoverable},   // EAS_ERR_G2_NOT_INITIALIZED                                                             "G2 is not initialized"
-	49: {G2NotInitialized, G2Unrecoverable},   // EAS_ERR_G2AUDIT_NOT_INITIALIZED                                                        "G2Audit is not initialized"
-	50: {G2NotInitialized, G2Unrecoverable},   // EAS_ERR_G2HASHER_NOT_INITIALIZED                                                       "G2Hasher is not initialized"
-	51: {G2BadInput},                          // EAS_ERR_BOTH_RECORD_ID_AND_ENT_SRC_KEY_SPECIFIED                                       "Cannot use both Record ID and Entity Source Key in record"
-	52: {G2Base},                              // EAS_ERR_UNKNOWN_RELATIONSHIP_ID_VALUE                                                  "Unknown relationship ID value '{0}'"
-	53: {G2BadInput},                          // EAS_ERR_G2DIAGNOSTIC_NOT_INITIALIZED                                                   "G2Diagnostic is not initialized"
-	54: {G2Database, G2Unrecoverable},         // EAS_ERR_G2_DATA_REPOSITORY_WAS_PURGED                                                  "Data repository was purged"
-	55: {G2Base},                              // EAS_ERR_NO_RESOLVED_ENTITY_FOR_DSRC_ENTITY_KEY                                         "No resolved entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]"
-	56: {G2Base},                              // EAS_ERR_NO_RECORDS_EXIST_FOR_RESOLVED_ENTITY                                           "No data source records exist for entity ID: entityID[{0}]"
-	57: {G2Base},                              // EAS_ERR_UNKNOWN_FEATURE_ID_VALUE                                                       "Unknown feature ID value '{0}'"
-	58: {G2Base},                              // EAS_ERR_G2_INITIALIZATION_FAILURE                                                      "G2 initialization process has failed"
-	60: {G2Configuration},                     // EAS_ERR_CONFIG_DATABASE_MISMATCH                                                       "The engine configuration does not match the records loaded into the repository:  errors[{0}]."
-	61: {G2Configuration},                     // EAS_ERR_AMBIGUOUS_SUPPRESSED_LIBFEAT_FELEM_MISSING                                     "AMBIGUOUS_SUPRESSED_LIBFEAT Feature Element is not configured"
-	62: {G2Configuration},                     // EAS_ERR_AMBIGUOUS_TYPE_FELEM_MISSING                                                   "AMBIGUOUS_TYPE Feature Element is not configured"
-	63: {G2NotInitialized, G2Unrecoverable},   // EAS_ERR_G2CONFIGMGR_NOT_INITIALIZED                                                    "G2ConfigMgr is not initialized"
-	64: {G2Configuration},                     // EAS_ERR_CONFUSED_ENTITY_FTYPE_MISSING                                                  "CONFUSED_ENTITY Feature Type is not configured"
-	65: {G2BadInput},                          // EAS_ERR_UNKNOWN_ENTITY_TYPE_ID                                                         "Unknown entity type ID '{0}'"
-	66: {G2BadInput},                          // EAS_ERR_UNKNOWN_GENERIC_PLAN_VALUE                                                     "Unknown generic plan value '{0}'"
-	67: {G2Configuration},                     // EAS_ERR_INVALID_GENERIC_PLAN_VALUE                                                     "Invalid Generic Plan ID [{0}] configured for the '{1}' retention level.'"
-	68: {G2Base},                              // EAS_ERR_UNKNOWN_ER_RESULT                                                              "Unknown ER-result."
-	69: {G2Base},                              // EAS_ERR_NO_CANDIDATES                                                                  "No candidates."
-	// 70:    {G2x},                                 // EAS_ERR_FAILED_TO_READ_FROM_OUTPUT_FILE                                                "Failed to read from the output file."
-	// 71:    {G2x},                                 // EAS_ERR_DIRECTORY_DOES_NOT_EXIST                                                       "{0} directory [{1}] does not exist.  Check your command-line arguments."
-	// 72:    {G2x},                                 // EAS_ERR_NO_CONFIG_UPGRADE_FILES                                                        "No configuration upgrade files found in directory [{0}]."
-	// 73:    {G2x},                                 // EAS_ERR_G2CONFIGTOOL_NOT_FOUND                                                         "G2ConfigTool.py not found."
-	// 74:    {G2x},                                 // EAS_ERR_ERROR_EXECUTING_CONFIG_SCRIPT                                                  "Error when executing configuration script. {0} {1}"
-	// 75:    {G2x},                                 // EAS_ERR_NO_DATABASE_UPGRADE_FILES                                                      "No database upgrade files found in directory [{0}]."
+	2:     {G2BadInput},                            // EAS_ERR_INVALID_XML                                                                    "Invalid XML"
+	5:     {G2Base},                                // EAS_ERR_EXCEEDED_MAX_RETRIES                                                           "Exceeded the Maximum Number of Retries Allowed"
+	7:     {G2BadInput},                            // EAS_ERR_EMPTY_XML_MESSAGE                                                              "Empty XML Message"
+	10:    {G2RetryTimeoutExceeded, G2Retryable},   // EAS_ERR_RETRY_TIMEOUT                                                                  "Retry timeout exceeded"
+	14:    {G2Configuration},                       // EAS_ERR_INVALID_DATASTORE_CONFIGURATION_TYPE                                           "Invalid Datastore Configuration Type"
+	19:    {G2Configuration},                       // EAS_ERR_NO_CONFIGURATION_FOUND                                                         "Configuration not found"
+	20:    {G2Configuration},                       // EAS_ERR_CONFIG_CANNOT_BE_NULL_DATABASE                                                 "Configuration cannot be loaded from database connection"
+	21:    {G2Configuration},                       // EAS_ERR_CONFIG_CANNOT_BE_NULL_CONFIG_FILE                                              "Configuration cannot be loaded from config file"
+	22:    {G2BadInput},                            // EAS_ERR_INVALID_DOCTYPE                                                                "Invalid DocType {0}"
+	23:    {G2BadInput},                            // EAS_ERR_CONFLICTING_DATA_SOURCE_VALUES                                                 "Conflicting DATA_SOURCE values '{0}' and '{1}'"
+	24:    {G2BadInput},                            // EAS_ERR_CONFLICTING_RECORD_ID_VALUES                                                   "Conflicting RECORD_ID values '{0}' and '{1}'"
+	25:    {G2BadInput},                            // EAS_ERR_CONFLICTING_LOAD_ID_VALUES                                                     "Conflicting LOAD_ID values '{0}' and '{1}'"
+	26:    {G2BadInput},                            // EAS_ERR_RESERVED_WORD_USED_IN_DOCUMENT                                                 "Inbound data contains a reserved keyword '{0}'"
+	27:    {G2UnknownDatasource, G2BadInput},       // EAS_ERR_UNKNOWN_DSRC_CODE_VALUE                                                        "Unknown DATA_SOURCE value '{0}'"
+	28:    {G2Configuration},                       // EAS_ERR_INVALID_JSON_CONFIG_DOCUMENT                                                   "Invalid JSON config document"
+	29:    {G2Base},                                // EAS_ERR_INVALID_HANDLE                                                                 "Invalid Handle"
+	30:    {G2Configuration},                       // EAS_ERR_INVALID_MATCH_LEVEL                                                            "Invalid match level '{0}'"
+	33:    {G2NotFound, G2BadInput},                // EAS_ERR_UNKNOWN_DSRC_RECORD_ID                                                         "Unknown record: dsrc[{0}], record[{1}]"
+	34:    {G2Configuration},                       // EAS_ERR_AMBIGUOUS_ENTITY_FTYPE_MISSING                                                 "AMBIGUOUS_ENTITY Feature Type is not configured"
+	35:    {G2Configuration},                       // EAS_ERR_AMBIGUOUS_TIER_FELEM_MISSING                                                   "AMBIGUOUS_TIER Feature Element is not configured"
+	36:    {G2Configuration},                       // EAS_ERR_AMBIGUOUS_FTYPE_ID_FELEM_MISSING                                               "AMBIGUOUS_FTYPE_ID Feature Element is not configured"
+	37:    {G2NotFound, G2BadInput},                // EAS_ERR_UNKNOWN_RESOLVED_ENTITY_VALUE                                                  "Unknown resolved entity value '{0}'"
+	38:    {G2Base},                                // EAS_ERR_RECORD_HAS_NO_RESOLVED_ENTITY                                                  "Data source record has no resolved entity: dsrc[{0}], recordID[{1}]"
+	39:    {G2Base},                                // EAS_ERR_NO_OBSERVED_ENTITY_FOR_DSRC_ENTITY_KEY                                         "No observed entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]"
+	40:    {G2Configuration},                       // EAS_ERR_CONFIG_COMPATIBILITY_MISMATCH                                                  "The engine configuration compatibility version [{0}] does not match the version of the provided config[{1}]."
+	41:    {G2Base},                                // EAS_ERR_DOCUMENT_PREPROCESSING_FAILED                                                  "Document preprocessing failed"
+	42:    {G2Base},                                // EAS_ERR_DOCUMENT_LOAD_PROCESSING_FAILED                                                "Document load processing failed"
+	43:    {G2Base},                                // EAS_ERR_DOCUMENT_ER_PROCESSING_FAILED                                                  "Document ER processing failed"
+	44:    {G2Base},                                // EAS_ERR_CHECK_ENTITY_PROCESSING_FAILED                                                 "Check entity processing failed"
+	45:    {G2Base},                                // EAS_ERR_UMF_PROC_PROCESSING_FAILED                                                     "UMF procedure processing failed"
+	46:    {G2Base},                                // EAS_ERR_DOCUMENT_HASHING_PROCESSING_FAILED                                             "Document hashing-processing failed"
+	47:    {G2Base},                                // EAS_ERR_SESSION_IS_INVALID                                                             "Session is invalid"
+	48:    {G2NotInitialized, G2Unrecoverable},     // EAS_ERR_G2_NOT_INITIALIZED                                                             "G2 is not initialized"
+	49:    {G2NotInitialized, G2Unrecoverable},     // EAS_ERR_G2AUDIT_NOT_INITIALIZED                                                        "G2Audit is not initialized"
+	50:    {G2NotInitialized, G2Unrecoverable},     // EAS_ERR_G2HASHER_NOT_INITIALIZED                                                       "G2Hasher is not initialized"
+	51:    {G2BadInput},                            // EAS_ERR_BOTH_RECORD_ID_AND_ENT_SRC_KEY_SPECIFIED                                       "Cannot use both Record ID and Entity Source Key in record"
+	52:    {G2Base},                                // EAS_ERR_UNKNOWN_RELATIONSHIP_ID_VALUE                                                  "Unknown relationship ID value '{0}'"
+	53:    {G2BadInput},                            // EAS_ERR_G2DIAGNOSTIC_NOT_INITIALIZED                                                   "G2Diagnostic is not initialized"
+	54:    {G2Database, G2Unrecoverable},           // EAS_ERR_G2_DATA_REPOSITORY_WAS_PURGED                                                  "Data repository was purged"
+	55:    {G2Base},                                // EAS_ERR_NO_RESOLVED_ENTITY_FOR_DSRC_ENTITY_KEY                                         "No resolved entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]"
+	56:    {G2Base},                                // EAS_ERR_NO_RECORDS_EXIST_FOR_RESOLVED_ENTITY                                           "No data source records exist for entity ID: entityID[{0}]"
+	57:    {G2Base},                                // EAS_ERR_UNKNOWN_FEATURE_ID_VALUE                                                       "Unknown feature ID value '{0}'"
+	58:    {G2Base},                                // EAS_ERR_G2_INITIALIZATION_FAILURE                                                      "G2 initialization process has failed"
+	60:    {G2Configuration},                       // EAS_ERR_CONFIG_DATABASE_MISMATCH                                                       "The engine configuration does not match the records loaded into the repository:  errors[{0}]."
+	61:    {G2Configuration},                       // EAS_ERR_AMBIGUOUS_SUPPRESSED_LIBFEAT_FELEM_MISSING                                     "AMBIGUOUS_SUPRESSED_LIBFEAT Feature Element is not configured"
+	62:    {G2Configuration},                       // EAS_ERR_AMBIGUOUS_TYPE_FELEM_MISSING                                                   "AMBIGUOUS_TYPE Feature Element is not configured"
+	63:    {G2NotInitialized, G2Unrecoverable},     // EAS_ERR_G2CONFIGMGR_NOT_INITIALIZED                                                    "G2ConfigMgr is not initialized"
+	64:    {G2Configuration},                       // EAS_ERR_CONFUSED_ENTITY_FTYPE_MISSING                                                  "CONFUSED_ENTITY Feature Type is not configured"
+	65:    {G2BadInput},                            // EAS_ERR_UNKNOWN_ENTITY_TYPE_ID                                                         "Unknown entity type ID '{0}'"
+	66:    {G2BadInput},                            // EAS_ERR_UNKNOWN_GENERIC_PLAN_VALUE                                                     "Unknown generic plan value '{0}'"
+	67:    {G2Configuration},                       // EAS_ERR_INVALID_GENERIC_PLAN_VALUE                                                     "Invalid Generic Plan ID [{0}] configured for the '{1}' retention level.'"
+	68:    {G2Base},                                // EAS_ERR_UNKNOWN_ER_RESULT                                                              "Unknown ER-result."
+	69:    {G2Base},                                // EAS_ERR_NO_CANDIDATES                                                                  "No candidates."
 	76:    {G2Base},                                // EAS_ERR_INBOUND_FEATURE_VERSION_NEWER_THAN_CONFIG                                      "Inbound Feature Version [{0}] is newer than configured version [{1}] for feature type[{2}]."
 	77:    {G2Base},                                // EAS_ERR_ERROR_WHEN_PRIMING_GNR                                                         "Error when priming GNR resources '{0}'"
 	78:    {G2Base},                                // EAS_ERR_ERROR_WHEN_ENCRYPTING                                                          "Error when encrypting '{0}'"
@@ -174,11 +165,9 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	2001:  {G2Configuration},                       // EAS_ERR_FEATURE_HAS_NO_FTYPE_CODE                                                      "Cannot process feature with no FTYPE_CODE[{0}]"
 	2002:  {G2Base},                                // EAS_ERR_REQUESTED_CONFIG_FOR_INVALID_FTYPE_CODE                                        "Requested config for invalid FTYPE_CODE[{0}]"
 	2003:  {G2Base},                                // EAS_ERR_NO_FELEM_CODE                                                                  "Cannot process OBS_FELEM with no FELEM_CODE[{0}]"
-	2004:  {G2x},                                   // EAS_WRN_FELEM_CODE_BUT_NO_VALUE                                                        "OBS_FELEM has FELEM_CODE but no FELEM_VALUE[{0}]"
 	2005:  {G2Base},                                // EAS_ERR_INVALID_FELEM_CODE                                                             "FELEM_CODE[{0}] is not configured for FTYPE_CODE[{1}]"
 	2006:  {G2Base},                                // EAS_ERR_MISSING_ENT_SRC_KEY                                                            "OBS_ENT is missing ENT_SRC_KEY"
 	2007:  {G2Base},                                // EAS_ERR_MISSING_OBS_SRC_KEY                                                            "OBS is missing OBS_SRC_KEY"
-	2008:  {G2x},                                   // EAS_WRN_FEATURE_HAS_NO_FELEM                                                           "Cannot process feature with no elements[{0}]"
 	2012:  {G2Configuration},                       // EAS_ERR_ERRULE_CONFIGURED_FOR_RESOLVE_AND_RELATE                                       "ER Rule [{0}] is configured for both resolve and relate."
 	2015:  {G2Configuration},                       // EAS_ERR_INVALID_FTYPE_CODE                                                             "Invalid FTYPE_CODE[{0}]"
 	2027:  {G2Base},                                // EAS_ERR_PLUGIN_INIT                                                                    "Plugin initialization error {0}"
@@ -195,8 +184,6 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	2050:  {G2Configuration},                       // EAS_ERR_QUAL_FRAG_NOT_FOUND                                                            "Rule[{0}] Qualifier Fragment[{1}]: Fragment not found"
 	2051:  {G2Configuration},                       // EAS_ERR_DISQUAL_FRAG_NOT_FOUND                                                         "Rule[{0}] Disqualifier Fragment[{1}]: Fragment not found"
 	2057:  {G2BadInput},                            // EAS_ERR_BAD_DSRC_ACTION                                                                "OBS_SRC_KEY[{0}] has DSRC_ACTION[{1}] which is invalid.  Valid values are [A]dd, [C]hange, [D]elete, [P]rune or E[X]tensive Evaluation"
-	2059:  {G2x},                                   // EAS_ERR_INHERIT_MISSING_RES_ENT_ID                                                     "OBS_ENT INHERIT TAG IS MISSING REQUIRED RES_ENT_ID TAG"
-	2060:  {G2x},                                   // EAS_ERR_INHERIT_MULTIPLE                                                               "OBS_ENT HAS MULTIPLE INHERIT TAGS.  ONLY ONE IS ALLOWED"
 	2061:  {G2Configuration},                       // EAS_ERR_DUPLICATE_LOOKUP_IDENTIFIER                                                    "Duplicate [{0}] with identifier value [{1}].  Only unique values are allowed."
 	2062:  {G2Configuration},                       // EAS_ERR_INVALID_LOOKUP_IDENTIFIER                                                      "Requested lookup of [{0}] using unknown value [{1}].  Value not found."
 	2065:  {G2Configuration},                       // EAS_ERR_FTYPE_HAS_MULTIPLE_DEFINITIONS                                                 "FType configured with multiple definitions. FTYPE_CODE[{0}] used in FTYPE_ID[{1}] and FTYPE_ID[{2}]"
@@ -240,7 +227,6 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	2112:  {G2Configuration},                       // EAS_ERR_XPATH_FRAGMENT_NOT_CONFIGURED                                                  "XPath fragment not configured[{0}]"
 	2113:  {G2Configuration},                       // EAS_ERR_XPATH_FUNCTION_UNSUPPORTED                                                     "XPath function unsupported [{0}]"
 	2114:  {G2Configuration},                       // EAS_ERR_INVALID_FTYPE_SCORESET                                                         "Cannot set score for invalid FTYPE_ID [{0}]"
-	2115:  {G2x},                                   // EAS_INF_UNRESOLVE_ABORTED_TIME_EXCEEDED                                                "Unresolve for entities aborted"
 	2116:  {G2Base},                                // EAS_ERR_UNITIALIZED_AMBIGUOUS_CACHE                                                    "Uninitialized Ambiguous Test Cache"
 	2117:  {G2Configuration},                       // EAS_ERR_SCORING_CALL_HAS_NO_BOM                                                        "Scoring call configured with no Bill of Materials  CFCALL_ID[{0}]."
 	2118:  {G2Configuration},                       // EAS_ERR_BOM_CONFIG_INVALID_FOR_SCORING_PLUGIN                                          "Configured plugin for CFCALL_ID[{0}] has invalid BOM."
@@ -427,7 +413,7 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	8608:  {G2Configuration},                       // EAS_ERR_NO_SALT_VALUE_CONFIGURED                                                       "No salt value is configured. A salt value must be configured if you wish to export the token library."
 	8701:  {G2Configuration},                       // EAS_ERR_PARAMETER_NOT_READABLE                                                         "The parameter store does not support a read interface"
 	8702:  {G2Configuration},                       // EAS_ERR_PARAMETER_NOT_WRITABLE                                                         "The parameter store does not support a write interface"
-	9000:  {G2x},                                   // EAS_LIMIT_MAX_OBS_ENT                                                                  "LIMIT: Maximum number of records ingested: {0}"
+	9000:  {G2License, G2Unrecoverable},            // EAS_LIMIT_MAX_OBS_ENT                                                                  "LIMIT: Maximum number of records ingested: {0}"
 	9107:  {G2Configuration},                       // EAS_ERR_CANT_GET_PARAMETER_FROM_THE_STORE                                              "Cannot get parameter [{0}] from parameter store"
 	9110:  {G2Configuration},                       // EAS_ERR_INSUFFICIENT_CONFIG                                                            "Insufficient configuration for the {0} table!"
 	9111:  {G2Configuration},                       // EAS_ERR_PARSE_FRAGMENT                                                                 "ERROR parsing FragmentID[{0}] FragmentName[{1}] : [{2}] is an invalid RuleID dependency"
@@ -507,7 +493,6 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	9413:  {G2Configuration},                       // EAS_ERR_G2SS_INCORRECT_PASSWORD                                                        "The export file password appears to be incorrect."
 	9414:  {G2BadInput},                            // EAS_ERR_STRING_IS_INVALID_UTF8                                                         "Invalid data string. Data must be in UTF-8."
 	9500:  {G2Configuration},                       // EAS_ERR_TOKEN_LIBRARY_CHECKSUM_MISMATCH                                                "Cannot load token library. The checksum does not match the configuration of this node. Found: [{0}] Expected: [{1}]"
-	9501:  {G2x},                                   // EAS_TOKEN_LIBRARY_ALREADY_HASHED                                                       "Cannot hash token library. The Token Library contains previous hashed data"
 	9701:  {G2Base},                                // EAS_ERR_CANT_RETRIEVE_INDEX_FROM_MEMORY_ROW                                            "Cannot retrieve index[{0}] from memory row of key[{1}], out of range!"
 	9703:  {G2Base},                                // EAS_ERR_MEMTBL_COL_INDEX_TOO_BIG                                                       "Current field in memory row is passed end of row"
 	9802:  {G2Configuration},                       // EAS_ERR_INBOUND_OBS_CONFIG_CHECKSUM_MISMATCH                                           "Configuration checksum on inbound observation [{0}] does not match this nodes configuration checksum [{1}]. Cannot process."
@@ -524,20 +509,41 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 	30123: {G2BadInput},                            // EAS_ERR_JSON_PARSING_FAILURE_OBJECT_HAS_DUPLICATE_KEYS                                 "Json object has duplicate keys."
 	30131: {G2BadInput},                            // EAS_ERR_UNKNOWN_COLUMN_REQUESTED_FOR_CSV_EXPORT                                        "Invalid column [{0}] requested for CSV export."
 
+	// Deleted:
+
+	// 70:    {G2x},                                // EAS_ERR_FAILED_TO_READ_FROM_OUTPUT_FILE                                                "Failed to read from the output file."
+	// 71:    {G2x},                                // EAS_ERR_DIRECTORY_DOES_NOT_EXIST                                                       "{0} directory [{1}] does not exist.  Check your command-line arguments."
+	// 72:    {G2x},                                // EAS_ERR_NO_CONFIG_UPGRADE_FILES                                                        "No configuration upgrade files found in directory [{0}]."
+	// 73:    {G2x},                                // EAS_ERR_G2CONFIGTOOL_NOT_FOUND                                                         "G2ConfigTool.py not found."
+	// 74:    {G2x},                                // EAS_ERR_ERROR_EXECUTING_CONFIG_SCRIPT                                                  "Error when executing configuration script. {0} {1}"
+	// 75:    {G2x},                                // EAS_ERR_NO_DATABASE_UPGRADE_FILES                                                      "No database upgrade files found in directory [{0}]."
+	// 2004:  {G2x},                                // EAS_WRN_FELEM_CODE_BUT_NO_VALUE                                                        "OBS_FELEM has FELEM_CODE but no FELEM_VALUE[{0}]"
+	// 2008:  {G2x},                                // EAS_WRN_FEATURE_HAS_NO_FELEM                                                           "Cannot process feature with no elements[{0}]"
+	// 2059:  {G2x},                                // EAS_ERR_INHERIT_MISSING_RES_ENT_ID                                                     "OBS_ENT INHERIT TAG IS MISSING REQUIRED RES_ENT_ID TAG"
+	// 2060:  {G2x},                                // EAS_ERR_INHERIT_MULTIPLE                                                               "OBS_ENT HAS MULTIPLE INHERIT TAGS.  ONLY ONE IS ALLOWED"
+	// 2115:  {G2x},                                // EAS_INF_UNRESOLVE_ABORTED_TIME_EXCEEDED                                                "Unresolve for entities aborted"
+	// 9501:  {G2x},                                // EAS_TOKEN_LIBRARY_ALREADY_HASHED                                                       "Cannot hash token library. The Token Library contains previous hashed data"
+
 	// Duplicates:
 
-	// 2091:  {G2x},                              // EAS_INF_OBS_ENT_ID_NOT_PROVIDED                                                        "Requested resolution without providing an OBS_ENT_ID"
-	// 7245:  {G2x},                              // EAS_ERR_INVALID_MINIMUM_DATASTORE_SCHEMA_VERSION                                       "Invalid minimum datastore version number for engine schema [version '{0}']."
+	// 2091:  {G2x},                                // EAS_INF_OBS_ENT_ID_NOT_PROVIDED                                                        "Requested resolution without providing an OBS_ENT_ID"
+	// 7245:  {G2x},                                // EAS_ERR_INVALID_MINIMUM_DATASTORE_SCHEMA_VERSION                                       "Invalid minimum datastore version number for engine schema [version '{0}']."
 
 	// The 999nn series is for testing.
 
-	99900: {G2x},
-	99901: {G2x},
-	99902: {G2x},
-	99903: {G2x},
-	99904: {G2x},
-	99905: {G2x},
-	99906: {G2x},
+	99900: {G2Base},
+	99910: {G2BadInput},
+	99911: {G2NotFound, G2BadInput},
+	99912: {G2UnknownDatasource, G2BadInput},
+	99920: {G2Configuration},
+	99930: {G2Retryable},
+	99931: {G2DatabaseConnectionLost, G2Retryable},
+	99932: {G2RetryTimeoutExceeded, G2Retryable},
+	99940: {G2Unrecoverable},
+	99941: {G2Database, G2Unrecoverable},
+	99942: {G2License, G2Unrecoverable},
+	99943: {G2NotInitialized, G2Unrecoverable},
+	99944: {G2Unhandled, G2Unrecoverable},
 }
 
 // A list of all G2ErrorTypeIds.
