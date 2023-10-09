@@ -145,13 +145,18 @@ func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 
 		// Category errors.
 
-		case G2BadUserInput:
-			result = G2BadUserInputError{
+		case G2BadInput:
+			result = G2BadInputError{
 				error:          result,
 				G2ErrorTypeIds: errorTypeIds,
 			}
 		case G2Base:
 			result = G2BaseError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		case G2Configuration:
+			result = G2ConfigurationError{
 				error:          result,
 				G2ErrorTypeIds: errorTypeIds,
 			}
@@ -166,47 +171,23 @@ func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 				G2ErrorTypeIds: errorTypeIds,
 			}
 
-		// Detail errors.
+			// Detail errors.
 
-		case G2Configuration:
-			result = G2ConfigurationError{result}
-		case G2DatabaseConnectionLost:
-			result = G2DatabaseConnectionLostError{result}
 		case G2Database:
 			result = G2DatabaseError{result}
-		case G2IncompleteRecord:
-			result = G2IncompleteRecordError{result}
-		case G2MalformedJson:
-			result = G2MalformedJsonError{result}
-		case G2MessageBuffer:
-			result = G2MessageBufferError{result}
-		case G2MissingConfiguration:
-			result = G2MissingConfigurationError{result}
-		case G2MissingDataSource:
-			result = G2MissingDataSourceError{result}
-		case G2ModuleEmptyMessage:
-			result = G2ModuleEmptyMessageError{result}
-		case G2Module:
-			result = G2ModuleError{result}
-		case G2ModuleGeneric:
-			result = G2ModuleGenericError{result}
-		case G2ModuleInvalidXML:
-			result = G2ModuleInvalidXMLError{result}
-		case G2ModuleLicense:
+		case G2DatabaseConnectionLost:
+			result = G2DatabaseConnectionLostError{result}
+		case G2License:
 			result = G2ModuleLicenseError{result}
-		case G2ModuleNotInitialized:
-			result = G2ModuleNotInitializedError{result}
-		case G2ModuleResolveMissingResEnt:
-			result = G2ModuleResolveMissingResEntError{result}
 		case G2NotFound:
 			result = G2NotFoundError{result}
-		case G2RepositoryPurged:
-			result = G2RepositoryPurgedError{result}
+		case G2NotInitialized:
+			result = G2NotInitializedError{result}
 		case G2RetryTimeoutExceeded:
 			result = G2RetryTimeoutExceededError{result}
-		case G2UnacceptableJsonKeyValue:
-			result = G2UnacceptableJsonKeyValueError{result}
 		case G2Unhandled:
+			result = G2UnhandledError{result}
+		case G2UnknownDatasource:
 			result = G2UnhandledError{result}
 
 		// Default error.
@@ -248,10 +229,12 @@ func Cast(originalError error, desiredTypeError error) error {
 	// Get the desiredTypeError's G2ErrorTypeIds value.
 
 	switch {
-	case errors.As(desiredTypeError, &G2BadUserInputError{}):
-		errorTypeIds = desiredTypeError.(G2BadUserInputError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2BadInputError{}):
+		errorTypeIds = desiredTypeError.(G2BadInputError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2BaseError{}):
 		errorTypeIds = desiredTypeError.(G2BaseError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2ConfigurationError{}):
+		errorTypeIds = desiredTypeError.(G2ConfigurationError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2RetryableError{}):
 		errorTypeIds = desiredTypeError.(G2RetryableError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2UnrecoverableError{}):
@@ -358,11 +341,14 @@ Input
   - errorType: The error type desired.
 */
 func Is(err error, errorType G2ErrorTypeIds) bool {
-	if errors.As(err, &G2BadUserInputError{}) {
-		return isIn(errorType, err.(G2BadUserInputError).G2ErrorTypeIds)
+	if errors.As(err, &G2BadInputError{}) {
+		return isIn(errorType, err.(G2BadInputError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2BaseError{}) {
 		return isIn(errorType, err.(G2BaseError).G2ErrorTypeIds)
+	}
+	if errors.As(err, &G2ConfigurationError{}) {
+		return isIn(errorType, err.(G2ConfigurationError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2RetryableError{}) {
 		return isIn(errorType, err.(G2RetryableError).G2ErrorTypeIds)

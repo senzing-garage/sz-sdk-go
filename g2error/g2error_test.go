@@ -50,7 +50,7 @@ var testCases = []struct {
 		}`,
 		expectedCode:    99901,
 		expectedMessage: "Test message",
-		expectedType:    G2BadUserInputError{},
+		expectedType:    G2BadInputError{},
 		expectedTypes:   []G2ErrorTypeIds{G2BadUserInput},
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
@@ -92,7 +92,7 @@ var testCases = []struct {
 		}`,
 		expectedCode:    99904,
 		expectedMessage: "Test message",
-		expectedType:    G2BadUserInputError{},
+		expectedType:    G2BadInputError{},
 		expectedTypes:   []G2ErrorTypeIds{G2BadUserInput, G2ModuleInvalidXML},
 		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
 	},
@@ -365,9 +365,9 @@ func ExampleG2Error() {
 func ExampleG2Error_typeAssertion() {
 	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
 	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	if errors.As(err, &G2BadUserInputError{}) {
+	if errors.As(err, &G2BadInputError{}) {
 		fmt.Println("Is a G2BadUserInputError")
-		if _, ok := err.(G2BadUserInputError).error.(G2ModuleInvalidXMLError); ok {
+		if _, ok := err.(G2BadInputError).error.(G2ModuleInvalidXMLError); ok {
 			fmt.Println("Is a G2ModuleInvalidXMLError")
 		}
 	}
