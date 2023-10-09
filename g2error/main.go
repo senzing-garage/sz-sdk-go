@@ -548,8 +548,8 @@ var G2ErrorTypes = map[int][]G2ErrorTypeIds{
 
 // A list of all G2ErrorTypeIds.
 var AllG2ErrorTypes = []G2ErrorTypeIds{
-	G2Base,
 	G2BadInput,
+	G2Base,
 	G2Configuration,
 	G2Database,
 	G2DatabaseConnectionLost,
