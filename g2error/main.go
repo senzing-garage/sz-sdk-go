@@ -38,7 +38,7 @@ type G2UnrecoverableError struct {
 
 type G2DatabaseConnectionLostError struct{ error }
 type G2DatabaseError struct{ error }
-type G2ModuleLicenseError struct{ error }
+type G2LicenseError struct{ error }
 type G2NotFoundError struct{ error }
 type G2NotInitializedError struct{ error }
 type G2RetryTimeoutExceededError struct{ error }

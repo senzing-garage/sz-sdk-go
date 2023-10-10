@@ -178,7 +178,7 @@ func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 		case G2DatabaseConnectionLost:
 			result = G2DatabaseConnectionLostError{result}
 		case G2License:
-			result = G2ModuleLicenseError{result}
+			result = G2LicenseError{result}
 		case G2NotFound:
 			result = G2NotFoundError{result}
 		case G2NotInitialized:
