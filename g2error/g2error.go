@@ -22,19 +22,21 @@ type MessageFormatSenzing struct {
 // Private Functions
 // ----------------------------------------------------------------------------
 
-// With recursion, extractErrorTexts() parses JSON like:
-//
-//	"text": "x",
-//	"errors": [{
-//		"text": {
-//			"text": "y",
-//			"errors": [{
-//				"text": {
-//					"text": "z",
-//					"errors": [{
-//						"text": "1019E|Datastore schema..."
-//
-// and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
+/*
+With recursion, extractErrorTexts() parses JSON like:
+
+	"text": "x",
+	"errors": [{
+		"text": {
+			"text": "y",
+			"errors": [{
+				"text": {
+					"text": "z",
+					"errors": [{
+						"text": "1019E|Datastore schema..."
+
+and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
+*/
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
@@ -68,6 +70,9 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 	return append(messageTexts, newMessageTexts...), err
 }
 
+/*
+extractErrorNumber scans nested messages for a Senzing error code number.
+*/
 func extractErrorNumber(message string) (int, error) {
 
 	// If non-JSON submitted, inspect the string and return.
@@ -120,6 +125,9 @@ func extractErrorNumber(message string) (int, error) {
 	return -1, err
 }
 
+/*
+isIn determines if a G2ErrorTypeId is in a list of G2ErrorTypeIds.
+*/
 func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	for _, g2ErrorTypeId := range haystack {
 		if needle == g2ErrorTypeId {
@@ -129,6 +137,9 @@ func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	return false
 }
 
+/*
+isJson determines if the string is syntactically JSON.
+*/
 func isJson(unknownString string) bool {
 	unknownStringUnescaped, err := strconv.Unquote(unknownString)
 	if err != nil {
@@ -138,6 +149,13 @@ func isJson(unknownString string) bool {
 	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
+/*
+wrapError return an error that has nested errors.
+
+Input
+  - originalError: The error containing the message to be maintained (i.e. err.Error()).
+  - errorTypeIds: An ordered list of error types to wrap the original error.
+*/
 func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 	result := originalError
 	for _, errorTypeId := range errorTypeIds {

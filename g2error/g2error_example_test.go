@@ -3,6 +3,7 @@ package g2error
 import (
 	"errors"
 	"fmt"
+	"reflect"
 )
 
 // ----------------------------------------------------------------------------
@@ -11,29 +12,29 @@ import (
 
 func ExampleCast() {
 	originalError := errors.New("Original message")
-	senzingErrorMessage := "99900E|Test message" // Example message from Senzing G2 engine.
+	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
 	desiredTypeError := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	err := Cast(originalError, desiredTypeError)
-	fmt.Println(err)
-	// Output: Original message
+	fmt.Printf("Error type: %s; Error message: %s", reflect.TypeOf(err), err.Error())
+	// Output: Error type: g2error.G2BadInputError; Error message: Original message
 }
 
 func ExampleG2ErrorMessage() {
-	senzingErrorMessage := "99900E|Test message" // Example message from Senzing G2 engine.
+	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
 	result := G2ErrorMessage(senzingErrorMessage)
 	fmt.Println(result)
 	// Output: Test message
 }
 
 func ExampleG2ErrorCode() {
-	senzingErrorMessage := "99900E|Test message" // Example message from Senzing G2 engine.
+	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
 	result := G2ErrorCode(senzingErrorMessage)
 	fmt.Println(result)
-	// Output: 99900
+	// Output: 99911
 }
 
 func ExampleG2Error() {
-	senzingErrorMessage := "99900E|Test message" // Example message from Senzing G2 engine.
+	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
 	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	fmt.Println(err)
 	// Output: {"messageId": 1}
@@ -62,6 +63,9 @@ func ExampleIs() {
 		}
 		if Is(err, G2NotFound) {
 			fmt.Println("Is a G2NotFoundError")
+		}
+		if Is(err, G2Unrecoverable) {
+			fmt.Println("Is a G2Unrecoverable")
 		}
 	}
 	// Output:
