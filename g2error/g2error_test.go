@@ -37,79 +37,180 @@ var testCases = []struct {
 		expectedMessage: "Test message",
 		expectedType:    G2BaseError{},
 		expectedTypes:   []G2ErrorTypeIds{G2Base},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
 	},
 	{
-		name:           "g2error-99901",
-		senzingMessage: "99901W|Test message",
+		name:           "g2error-99910",
+		senzingMessage: "99910W|Test message",
 		message: `{
 			"errors": [{
-				"text": "99901W|Test message",
+				"text": "99910W|Test message",
 				"status": "Warning"
 			}]
 		}`,
-		expectedCode:    99901,
+		expectedCode:    99910,
 		expectedMessage: "Test message",
-		expectedType:    G2BadUserInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2BadUserInput},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		expectedType:    G2BadInputError{},
+		expectedTypes:   []G2ErrorTypeIds{G2BadInput},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
 	},
 	{
-		name:           "g2error-99902",
-		senzingMessage: "99902W|Test message",
+		name:           "g2error-99911",
+		senzingMessage: "99911E|Test message",
 		message: `{
 			"errors": [{
-				"text": "99902W|Test message"
+				"text": "99911E|Test message"
 			}]
 		}`,
-		expectedCode:    99902,
+		expectedCode:    99911,
+		expectedMessage: "Test message",
+		expectedType:    G2BadInputError{},
+		expectedTypes:   []G2ErrorTypeIds{G2NotFound, G2BadInput},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+	},
+	{
+		name:           "g2error-99912",
+		senzingMessage: "99912E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99912E|Test message"
+			}]
+		}`,
+		expectedCode:    99912,
+		expectedMessage: "Test message",
+		expectedType:    G2BadInputError{},
+		expectedTypes:   []G2ErrorTypeIds{G2UnknownDatasource, G2BadInput},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+	},
+	{
+		name:           "g2error-99920",
+		senzingMessage: "99920W|Test message",
+		message: `{
+			"errors": [{
+				"text": "99920W|Test message"
+			}]
+		}`,
+		expectedCode:    99920,
+		expectedMessage: "Test message",
+		expectedType:    G2ConfigurationError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Configuration},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+	},
+	{
+		name:           "g2error-99930",
+		senzingMessage: "99930E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99930E|Test message"
+			}]
+		}`,
+		expectedCode:    99930,
 		expectedMessage: "Test message",
 		expectedType:    G2RetryableError{},
 		expectedTypes:   []G2ErrorTypeIds{G2Retryable},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
 	},
 	{
-		name:           "g2error-99903",
-		senzingMessage: "99903E|Test message",
+		name:           "g2error-99931",
+		senzingMessage: "99931E|Test message",
 		message: `{
 			"errors": [{
-				"text": "99903E|Test message"
+				"text": "99931E|Test message"
 			}]
 		}`,
-		expectedCode:    99903,
+		expectedCode:    99931,
+		expectedMessage: "Test message",
+		expectedType:    G2RetryableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2DatabaseConnectionLost, G2Retryable},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+	},
+	{
+		name:           "g2error-99932",
+		senzingMessage: "99932E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99932E|Test message"
+			}]
+		}`,
+		expectedCode:    99932,
+		expectedMessage: "Test message",
+		expectedType:    G2RetryableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2RetryTimeoutExceeded, G2Retryable},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+	},
+	{
+		name:           "g2error-99940",
+		senzingMessage: "99940E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99940E|Test message"
+			}]
+		}`,
+		expectedCode:    99940,
 		expectedMessage: "Test message",
 		expectedType:    G2UnrecoverableError{},
 		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		falseTypes:      []G2ErrorTypeIds{G2BadInput},
 	},
 	{
-		name:           "g2error-99904",
-		senzingMessage: "99904E|Test message",
+		name:           "g2error-99941",
+		senzingMessage: "99941E|Test message",
 		message: `{
 			"errors": [{
-				"text": "99904E|Test message"
+				"text": "99941E|Test message"
 			}]
 		}`,
-		expectedCode:    99904,
+		expectedCode:    99941,
 		expectedMessage: "Test message",
-		expectedType:    G2BadUserInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2BadUserInput, G2ModuleInvalidXML},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Database, G2Unrecoverable},
+		falseTypes:      []G2ErrorTypeIds{G2BadInput},
 	},
 	{
-		name:           "g2error-99905",
-		senzingMessage: "99905E|Test message",
+		name:           "g2error-99942",
+		senzingMessage: "99942E|Test message",
 		message: `{
 			"errors": [{
-				"text": "99905E|Test message"
+				"text": "99942E|Test message"
 			}]
 		}`,
-		expectedCode:    99905,
+		expectedCode:    99942,
 		expectedMessage: "Test message",
-		expectedType:    G2RetryableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Retryable, G2Configuration},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2License, G2Unrecoverable},
+		falseTypes:      []G2ErrorTypeIds{G2BadInput},
 	},
+	{
+		name:           "g2error-99943",
+		senzingMessage: "99943E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99943E|Test message"
+			}]
+		}`,
+		expectedCode:    99943,
+		expectedMessage: "Test message",
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2NotInitialized, G2Unrecoverable},
+		falseTypes:      []G2ErrorTypeIds{G2BadInput},
+	},
+	{
+		name:           "g2error-99944",
+		senzingMessage: "99944E|Test message",
+		message: `{
+			"errors": [{
+				"text": "99944E|Test message"
+			}]
+		}`,
+		expectedCode:    99944,
+		expectedMessage: "Test message",
+		expectedType:    G2UnrecoverableError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Unhandled, G2Unrecoverable},
+		falseTypes:      []G2ErrorTypeIds{G2BadInput},
+	},
+
+	// ------------------------------------------------------------------------
+
 	{
 		name:           "g2error-0023",
 		senzingMessage: "0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
@@ -118,24 +219,11 @@ var testCases = []struct {
 		}`,
 		expectedCode:    23,
 		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		expectedType:    G2BadInputError{},
+		expectedTypes:   []G2ErrorTypeIds{G2BadInput},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
 	},
-	{
-		name:           "g2error-99906",
-		senzingMessage: "99906E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99906E|Test message"
-			}]
-		}`,
-		expectedCode:    99906,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable, G2ModuleLicense},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
-	},
+
 	{
 		name:           "g2error-1019",
 		senzingMessage: "1019E|Test message",
@@ -190,9 +278,9 @@ var testCases = []struct {
 		}`,
 		expectedCode:    1019,
 		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable, G2DatabaseSchemaTablesNotFound},
-		falseTypes:      []G2ErrorTypeIds{G2ModuleEmptyMessage},
+		expectedType:    G2ConfigurationError{},
+		expectedTypes:   []G2ErrorTypeIds{G2Configuration},
+		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
 	},
 }
 
@@ -210,7 +298,7 @@ func TestG2error_Cast(test *testing.T) {
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 			for _, g2ErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
+				assert.True(test, Is(actual, g2ErrorTypeId), fmt.Sprintf("%d should be %d", g2ErrorTypeId, actual))
 			}
 			for _, g2ErrorTypeId := range testCase.falseTypes {
 				assert.False(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
@@ -326,82 +414,4 @@ func TestG2error_Unwrap(test *testing.T) {
 		err = errors.Unwrap(err)
 	}
 	assert.Equal(test, expectedWrapCount, actualWrapCount)
-}
-
-// ----------------------------------------------------------------------------
-// Examples for godoc documentation
-// ----------------------------------------------------------------------------
-
-func ExampleCast() {
-	originalError := errors.New("Original message")
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	desiredTypeError := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	err := Cast(originalError, desiredTypeError)
-	fmt.Println(err)
-	// Output: Original message
-}
-
-func ExampleG2ErrorMessage() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	result := G2ErrorMessage(senzingErrorMessage)
-	fmt.Println(result)
-	// Output: Test message
-}
-
-func ExampleG2ErrorCode() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	result := G2ErrorCode(senzingErrorMessage)
-	fmt.Println(result)
-	// Output: 99904
-}
-
-func ExampleG2Error() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	fmt.Println(err)
-	// Output: {"messageId": 1}
-}
-
-func ExampleG2Error_typeAssertion() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	if errors.As(err, &G2BadUserInputError{}) {
-		fmt.Println("Is a G2BadUserInputError")
-		if _, ok := err.(G2BadUserInputError).error.(G2ModuleInvalidXMLError); ok {
-			fmt.Println("Is a G2ModuleInvalidXMLError")
-		}
-	}
-	// Output:
-	// Is a G2BadUserInputError
-	// Is a G2ModuleInvalidXMLError
-}
-
-func ExampleIs() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	if err != nil {
-		if Is(err, G2BadUserInput) {
-			fmt.Println("Is a G2BadUserInputError")
-		}
-		if Is(err, G2ModuleInvalidXML) {
-			fmt.Println("Is a G2ModuleInvalidXMLError")
-		}
-		if Is(err, G2ModuleEmptyMessage) {
-			fmt.Println("Is a G2ModuleEmptyMessageError.")
-		}
-	}
-	// Output:
-	// Is a G2BadUserInputError
-	// Is a G2ModuleInvalidXMLError
-}
-
-func ExampleIsInList() {
-	senzingErrorMessage := "99904E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	if err != nil {
-		if IsInList(err, []G2ErrorTypeIds{G2ModuleInvalidXML, G2ModuleEmptyMessage, G2MalformedJson}) {
-			fmt.Println("Yes it is one of those listed")
-		}
-	}
-	// Output: Yes it is one of those listed
 }

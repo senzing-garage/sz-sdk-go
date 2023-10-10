@@ -22,19 +22,21 @@ type MessageFormatSenzing struct {
 // Private Functions
 // ----------------------------------------------------------------------------
 
-// With recursion, extractErrorTexts() parses JSON like:
-//
-//	"text": "x",
-//	"errors": [{
-//		"text": {
-//			"text": "y",
-//			"errors": [{
-//				"text": {
-//					"text": "z",
-//					"errors": [{
-//						"text": "1019E|Datastore schema..."
-//
-// and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
+/*
+With recursion, extractErrorTexts() parses JSON like:
+
+	"text": "x",
+	"errors": [{
+		"text": {
+			"text": "y",
+			"errors": [{
+				"text": {
+					"text": "z",
+					"errors": [{
+						"text": "1019E|Datastore schema..."
+
+and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
+*/
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
 	var err error = nil
 
@@ -68,6 +70,9 @@ func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]st
 	return append(messageTexts, newMessageTexts...), err
 }
 
+/*
+extractErrorNumber scans nested messages for a Senzing error code number.
+*/
 func extractErrorNumber(message string) (int, error) {
 
 	// If non-JSON submitted, inspect the string and return.
@@ -120,6 +125,9 @@ func extractErrorNumber(message string) (int, error) {
 	return -1, err
 }
 
+/*
+isIn determines if a G2ErrorTypeId is in a list of G2ErrorTypeIds.
+*/
 func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	for _, g2ErrorTypeId := range haystack {
 		if needle == g2ErrorTypeId {
@@ -129,6 +137,9 @@ func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
 	return false
 }
 
+/*
+isJson determines if the string is syntactically JSON.
+*/
 func isJson(unknownString string) bool {
 	unknownStringUnescaped, err := strconv.Unquote(unknownString)
 	if err != nil {
@@ -138,6 +149,13 @@ func isJson(unknownString string) bool {
 	return json.Unmarshal([]byte(unknownStringUnescaped), &jsonString) == nil
 }
 
+/*
+wrapError return an error that has nested errors.
+
+Input
+  - originalError: The error containing the message to be maintained (i.e. err.Error()).
+  - errorTypeIds: An ordered list of error types to wrap the original error.
+*/
 func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 	result := originalError
 	for _, errorTypeId := range errorTypeIds {
@@ -145,13 +163,18 @@ func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 
 		// Category errors.
 
-		case G2BadUserInput:
-			result = G2BadUserInputError{
+		case G2BadInput:
+			result = G2BadInputError{
 				error:          result,
 				G2ErrorTypeIds: errorTypeIds,
 			}
 		case G2Base:
 			result = G2BaseError{
+				error:          result,
+				G2ErrorTypeIds: errorTypeIds,
+			}
+		case G2Configuration:
+			result = G2ConfigurationError{
 				error:          result,
 				G2ErrorTypeIds: errorTypeIds,
 			}
@@ -166,47 +189,23 @@ func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
 				G2ErrorTypeIds: errorTypeIds,
 			}
 
-		// Detail errors.
+			// Detail errors.
 
-		case G2Configuration:
-			result = G2ConfigurationError{result}
-		case G2DatabaseConnectionLost:
-			result = G2DatabaseConnectionLostError{result}
 		case G2Database:
 			result = G2DatabaseError{result}
-		case G2IncompleteRecord:
-			result = G2IncompleteRecordError{result}
-		case G2MalformedJson:
-			result = G2MalformedJsonError{result}
-		case G2MessageBuffer:
-			result = G2MessageBufferError{result}
-		case G2MissingConfiguration:
-			result = G2MissingConfigurationError{result}
-		case G2MissingDataSource:
-			result = G2MissingDataSourceError{result}
-		case G2ModuleEmptyMessage:
-			result = G2ModuleEmptyMessageError{result}
-		case G2Module:
-			result = G2ModuleError{result}
-		case G2ModuleGeneric:
-			result = G2ModuleGenericError{result}
-		case G2ModuleInvalidXML:
-			result = G2ModuleInvalidXMLError{result}
-		case G2ModuleLicense:
-			result = G2ModuleLicenseError{result}
-		case G2ModuleNotInitialized:
-			result = G2ModuleNotInitializedError{result}
-		case G2ModuleResolveMissingResEnt:
-			result = G2ModuleResolveMissingResEntError{result}
+		case G2DatabaseConnectionLost:
+			result = G2DatabaseConnectionLostError{result}
+		case G2License:
+			result = G2LicenseError{result}
 		case G2NotFound:
 			result = G2NotFoundError{result}
-		case G2RepositoryPurged:
-			result = G2RepositoryPurgedError{result}
+		case G2NotInitialized:
+			result = G2NotInitializedError{result}
 		case G2RetryTimeoutExceeded:
 			result = G2RetryTimeoutExceededError{result}
-		case G2UnacceptableJsonKeyValue:
-			result = G2UnacceptableJsonKeyValueError{result}
 		case G2Unhandled:
+			result = G2UnhandledError{result}
+		case G2UnknownDatasource:
 			result = G2UnhandledError{result}
 
 		// Default error.
@@ -248,10 +247,12 @@ func Cast(originalError error, desiredTypeError error) error {
 	// Get the desiredTypeError's G2ErrorTypeIds value.
 
 	switch {
-	case errors.As(desiredTypeError, &G2BadUserInputError{}):
-		errorTypeIds = desiredTypeError.(G2BadUserInputError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2BadInputError{}):
+		errorTypeIds = desiredTypeError.(G2BadInputError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2BaseError{}):
 		errorTypeIds = desiredTypeError.(G2BaseError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &G2ConfigurationError{}):
+		errorTypeIds = desiredTypeError.(G2ConfigurationError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2RetryableError{}):
 		errorTypeIds = desiredTypeError.(G2RetryableError).G2ErrorTypeIds
 	case errors.As(desiredTypeError, &G2UnrecoverableError{}):
@@ -358,11 +359,14 @@ Input
   - errorType: The error type desired.
 */
 func Is(err error, errorType G2ErrorTypeIds) bool {
-	if errors.As(err, &G2BadUserInputError{}) {
-		return isIn(errorType, err.(G2BadUserInputError).G2ErrorTypeIds)
+	if errors.As(err, &G2BadInputError{}) {
+		return isIn(errorType, err.(G2BadInputError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2BaseError{}) {
 		return isIn(errorType, err.(G2BaseError).G2ErrorTypeIds)
+	}
+	if errors.As(err, &G2ConfigurationError{}) {
+		return isIn(errorType, err.(G2ConfigurationError).G2ErrorTypeIds)
 	}
 	if errors.As(err, &G2RetryableError{}) {
 		return isIn(errorType, err.(G2RetryableError).G2ErrorTypeIds)
