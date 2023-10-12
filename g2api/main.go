@@ -19,7 +19,7 @@ type G2config interface {
 	Destroy(ctx context.Context) error
 	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
 	ListDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	Load(ctx context.Context, jsonConfig string) (uintptr, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
@@ -38,7 +38,7 @@ type G2configmgr interface {
 	GetDefaultConfigID(ctx context.Context) (int64, error)
 	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	ReplaceDefaultConfigID(ctx context.Context, oldConfigID int64, newConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
@@ -71,8 +71,8 @@ type G2diagnostic interface {
 	// GetResolutionStatistics(ctx context.Context) (string, error)
 	GetSdkId(ctx context.Context) string
 	GetTotalSystemMemory(ctx context.Context) (int64, error)
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
+	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int64) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
@@ -99,22 +99,22 @@ type G2engine interface {
 	FetchNext(ctx context.Context, responseHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error)
-	FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
-	FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int, flags int64) (string, error)
-	FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int, buildOutDegree int, maxEntities int) (string, error)
-	FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, flags int64) (string, error)
-	FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int) (string, error)
-	FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, flags int64) (string, error)
-	FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int) (string, error)
-	FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, flags int64) (string, error)
-	FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string) (string, error)
-	FindPathExcludingByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, flags int64) (string, error)
-	FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string) (string, error)
-	FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string, flags int64) (string, error)
-	FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int, excludedEntities string, requiredDsrcs string) (string, error)
-	FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string, flags int64) (string, error)
-	FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int, excludedRecords string, requiredDsrcs string) (string, error)
+	FindNetworkByEntityID_V2(ctx context.Context, entityList string, maxDegree int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
+	FindNetworkByEntityID(ctx context.Context, entityList string, maxDegree int64, buildOutDegree int64, maxEntities int64) (string, error)
+	FindNetworkByRecordID_V2(ctx context.Context, recordList string, maxDegree int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
+	FindNetworkByRecordID(ctx context.Context, recordList string, maxDegree int64, buildOutDegree int64, maxEntities int64) (string, error)
+	FindPathByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64, flags int64) (string, error)
+	FindPathByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64) (string, error)
+	FindPathByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64, flags int64) (string, error)
+	FindPathByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64) (string, error)
+	FindPathExcludingByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64, excludedEntities string, flags int64) (string, error)
+	FindPathExcludingByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64, excludedEntities string) (string, error)
+	FindPathExcludingByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64, excludedRecords string, flags int64) (string, error)
+	FindPathExcludingByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64, excludedRecords string) (string, error)
+	FindPathIncludingSourceByEntityID_V2(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64, excludedEntities string, requiredDsrcs string, flags int64) (string, error)
+	FindPathIncludingSourceByEntityID(ctx context.Context, entityID1 int64, entityID2 int64, maxDegree int64, excludedEntities string, requiredDsrcs string) (string, error)
+	FindPathIncludingSourceByRecordID_V2(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64, excludedRecords string, requiredDsrcs string, flags int64) (string, error)
+	FindPathIncludingSourceByRecordID(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, maxDegree int64, excludedRecords string, requiredDsrcs string) (string, error)
 	GetActiveConfigID(ctx context.Context) (int64, error)
 	GetEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
 	GetEntityByEntityID(ctx context.Context, entityID int64) (string, error)
@@ -130,8 +130,8 @@ type G2engine interface {
 	GetVirtualEntityByRecordID(ctx context.Context, recordList string) (string, error)
 	HowEntityByEntityID_V2(ctx context.Context, entityID int64, flags int64) (string, error)
 	HowEntityByEntityID(ctx context.Context, entityID int64) (string, error)
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
-	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
+	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int64) error
 	PrimeEngine(ctx context.Context) error
 	Process(ctx context.Context, record string) error
 	// ProcessRedoRecord(ctx context.Context) (string, error)
@@ -169,7 +169,7 @@ type G2product interface {
 	Destroy(ctx context.Context) error
 	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
-	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int) error
+	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
 	License(ctx context.Context) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
