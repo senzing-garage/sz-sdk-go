@@ -495,18 +495,6 @@ func UnmarshalProductLicenseResponse(ctx context.Context, jsonString string) (*t
 	return result, err
 }
 
-// func UnmarshalProductValidateLicenseFileResponse(ctx context.Context, jsonString string) (*typedef.ProductValidateLicenseFileResponse, error) {
-// 	result := &typedef.ProductValidateLicenseFileResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-// func UnmarshalProductValidateLicenseStringBase64Response(ctx context.Context, jsonString string) (*typedef.ProductValidateLicenseStringBase64Response, error) {
-// 	result := &typedef.ProductValidateLicenseStringBase64Response{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
 func UnmarshalProductVersionResponse(ctx context.Context, jsonString string) (*typedef.ProductVersionResponse, error) {
 	result := &typedef.ProductVersionResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
