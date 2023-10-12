@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.7.2] - 2023-10-12
+
+- Changed from `int` to `int64` where required by the SenzingAPI
+
+### Changed in 0.7.1
+
+- Updated `g2error` error codes
+
 ## [0.7.1] - 2023-10-10
 
 ### Changed in 0.7.1
