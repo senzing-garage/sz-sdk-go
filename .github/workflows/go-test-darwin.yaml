@@ -6,12 +6,13 @@ name: go-test-darwin.yaml
 on: [push]
 
 jobs:
-  build:
-    runs-on: macos-latest
+  go-test-darwin:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [macos-latest]
         go: ["1.21"]
-    name: Go ${{ matrix.go }} - darwin
+    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
