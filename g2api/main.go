@@ -175,7 +175,5 @@ type G2product interface {
 	SetLogLevel(ctx context.Context, logLevelName string) error
 	SetObserverOrigin(ctx context.Context, origin string)
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
-	ValidateLicenseFile(ctx context.Context, licenseFilePath string) (string, error)
-	ValidateLicenseStringBase64(ctx context.Context, licenseString string) (string, error)
 	Version(ctx context.Context) (string, error)
 }

@@ -10,13 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.7.3] - 2023-10-12
+
+### Deleted in 0.7.3
+
+- `g2product.ValidateLicenseFile`
+- `g2product.ValidateLicenseStringBase64`
+
 ## [0.7.2] - 2023-10-12
 
+### Changed in 0.7.2
+
 - Changed from `int` to `int64` where required by the SenzingAPI
-
-### Changed in 0.7.1
-
-- Updated `g2error` error codes
 
 ## [0.7.1] - 2023-10-10
 

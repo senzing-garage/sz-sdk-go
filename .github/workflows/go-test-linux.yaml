@@ -6,12 +6,13 @@ name: go-test-linux.yaml
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  go-test-linux:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
+        os: [ubuntu-latest]
         go: ["1.21"]
-    name: Go ${{ matrix.go }} - linux
+    name: "go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
