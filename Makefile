@@ -1,5 +1,9 @@
 # Makefile for g2-sdk-go.
 
+# Detect the operating system and architecture.
+
+include Makefile.osdetect
+
 # -----------------------------------------------------------------------------
 # Variables
 # -----------------------------------------------------------------------------
@@ -19,7 +23,13 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 
 # Recursive assignment ('=')
 
+GO_OSARCH = $(subst /, ,$@)
+GO_OS = $(word 1, $(GO_OSARCH))
+GO_ARCH = $(word 2, $(GO_OSARCH))
+
 # Conditional assignment. ('?=')
+# Can be overridden with "export"
+# Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
 
 # Export environment variables.
 
@@ -31,6 +41,27 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 
 .PHONY: default
 default: help
+
+# -----------------------------------------------------------------------------
+# Operating System / Architecture targets
+# -----------------------------------------------------------------------------
+
+-include Makefile.$(OSTYPE)
+-include Makefile.$(OSTYPE)_$(OSARCH)
+
+
+.PHONY: hello-world
+hello-world: hello-world-osarch-specific
+
+# -----------------------------------------------------------------------------
+# Dependency management
+# -----------------------------------------------------------------------------
+
+.PHONY: dependencies
+dependencies:
+	@go get -u ./...
+	@go get -t -u ./...
+	@go mod tidy
 
 # -----------------------------------------------------------------------------
 # Generate tests
@@ -46,44 +77,33 @@ generate_senzing_unmarshal_test:
 	@./bin/generate_senzing_unmarshal_test.py
 
 # -----------------------------------------------------------------------------
-# Dependency management
+# Build
 # -----------------------------------------------------------------------------
 
-.PHONY: dependencies
-dependencies:
-	@go get -u ./...
-	@go get -t -u ./...
-	@go mod tidy
+PLATFORMS := darwin/amd64 linux/amd64 windows/amd64
+$(PLATFORMS):
+	@echo Building $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
+	@GOOS=$(GO_OS) GOARCH=$(GO_ARCH) go build -o $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
+
+
+.PHONY: build
+build: build-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Test
 # -----------------------------------------------------------------------------
 
 .PHONY: test
-test:
-	@go test -v -p 1 ./...
-#	@go test -v ./.
-#	@go test -v ./g2api
-#	@go test -v ./g2config
-#	@go test -v ./g2configmgr
-#	@go test -v ./g2diagnostic
-#	@go test -v ./g2engine
-#	@go test -v ./g2error
-#	@go test -v ./g2product
-#	@go test -v ./senzing
+test: test-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
 
 .PHONY: clean
-clean:
+clean: clean-osarch-specific
 	@go clean -cache
 	@go clean -testcache
-	@docker rm --force $(DOCKER_CONTAINER_NAME) 2> /dev/null || true
-	@docker rmi --force $(DOCKER_IMAGE_NAME) $(DOCKER_BUILD_IMAGE_NAME) 2> /dev/null || true
-	@rm -rf $(TARGET_DIRECTORY) || true
-	@rm -f $(GOPATH)/bin/$(PROGRAM_NAME) || true
 
 
 .PHONY: help
@@ -101,8 +121,7 @@ print-make-variables:
 
 
 .PHONY: setup
-setup:
-	@echo "No setup required."
+setup: setup-osarch-specific
 
 
 .PHONY: update-pkg-cache
