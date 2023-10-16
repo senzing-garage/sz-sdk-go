@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactor to [template-go](https://github.com/Senzing/template-go)
 - Update dependencies
+  - github.com/senzing/go-observing v0.2.8
 
 ## [0.7.3] - 2023-10-12
 
