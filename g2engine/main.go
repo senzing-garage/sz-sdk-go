@@ -175,6 +175,10 @@ var IdMessages = map[int]string{
 	160:  "Exit  " + Prefix + "UnregisterObserver(%s) returned (%v).",
 	161:  "Enter " + Prefix + "GetSdkId().",
 	162:  "Exit  " + Prefix + "GetSdkId() returned (%s).",
+	163:  "Enter " + Prefix + "ExportCSVEntityReportIterator(%s, %d).",
+	164:  "Exit  " + Prefix + "ExportCSVEntityReportIterator(%s, %d) returned (%v, %v).",
+	165:  "Enter " + Prefix + "ExportJSONEntityReportIterator(%d).",
+	166:  "Exit  " + Prefix + "ExportJSONEntityReportIterator(%d) returned (%v, %v).",
 	4001: Prefix + "G2_addRecord(%s, %s, %s, %s) failed. Return code: %d",
 	4002: Prefix + "G2_addRecordWithInfo(%s, %s, %s, %s, %d) failed. Return code: %d",
 	4003: Prefix + "G2_addRecordWithInfoWithReturnedRecordID(%s, %s, %s, %d) failed. Return code: %d",
@@ -351,6 +355,8 @@ var IdMessages = map[int]string{
 	8076: Prefix + "RegisterObserver",
 	8077: Prefix + "SetLogLevel",
 	8078: Prefix + "UnregisterObserver",
+	8079: Prefix + "ExportCSVEntityReport",
+	8080: Prefix + "ExportJSONEntityReport",
 }
 
 // Status strings for specific g2engine messages.
