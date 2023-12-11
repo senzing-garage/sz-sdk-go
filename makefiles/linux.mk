@@ -6,12 +6,8 @@
 
 
 # -----------------------------------------------------------------------------
-# OS-ARCH specific targets
+# OS specific targets
 # -----------------------------------------------------------------------------
-
-.PHONY: build-osarch-specific
-build-osarch-specific: linux/amd64
-
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:

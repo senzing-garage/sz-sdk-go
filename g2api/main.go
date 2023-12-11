@@ -95,7 +95,9 @@ type G2engine interface {
 	ExportConfig(ctx context.Context) (string, error)
 	ExportConfigAndConfigID(ctx context.Context) (string, int64, error)
 	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
+	ExportCSVEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan string
 	ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error)
+	ExportJSONEntityReportIterator(ctx context.Context, flags int64) chan string
 	FetchNext(ctx context.Context, responseHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)

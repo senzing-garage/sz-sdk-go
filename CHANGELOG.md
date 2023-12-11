@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.7.5] - 2023-12-11
+
+### Added in 0.7.5
+
+- `ExportCSVEntityReportIterator` and `ExportJSONEntityReportIterator`
+
 ## [0.7.4] - 2023-10-16
 
 ### Changed in 0.7.4
