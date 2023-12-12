@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.7.6] - 2023-12-12
+
+### Added in 0.7.6
+
+- Additional support for Iterators
+
 ## [0.7.5] - 2023-12-11
 
 ### Added in 0.7.5
