@@ -12,7 +12,6 @@ import (
 
 // StringFragment is used as a return value when iterating over log strings.
 type StringFragment struct {
-	Done  bool
 	Error error
 	Value string
 }
