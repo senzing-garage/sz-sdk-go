@@ -13,4 +13,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Make go version tag
-        uses: Senzing/github-action-make-go-tag@main
+        uses: senzing-factory/github-action-make-go-tag@main

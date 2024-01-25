@@ -12,7 +12,7 @@ import (
 // Types
 // ----------------------------------------------------------------------------
 
-// See https://github.com/Senzing/go-logging/blob/main/messageformat/messageformat_senzing.go
+// See https://github.com/senzing-garage/go-logging/blob/main/messageformat/messageformat_senzing.go
 type MessageFormatSenzing struct {
 	Errors interface{} `json:"errors,omitempty"` // List of errors.
 	Text   interface{} `json:"text,omitempty"`   // Message text.
