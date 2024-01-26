@@ -23,8 +23,8 @@ the recommendation is not to use it yet.
 The Senzing g2-sdk-go packages provide interface definitions for implementations of the Senzing Go Software Development Kit.
 `g2-sdk-go` contains no "running code", but serves to unify implementations of the Senzing Go SDK.
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/senzing/g2-sdk-go.svg)](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/senzing/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing/g2-sdk-go)
+[![Go Reference](https://pkg.go.dev/badge/github.com/senzing-garage/g2-sdk-go.svg)](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/senzing-garage/g2-sdk-go)](https://goreportcard.com/report/github.com/senzing-garage/g2-sdk-go)
 [![License](https://img.shields.io/badge/License-Apache2-brightgreen.svg)](https://github.com/senzing-garage/g2-sdk-go/blob/main/LICENSE)
 
 [![gosec.yaml](https://github.com/senzing-garage/g2-sdk-go/actions/workflows/gosec.yaml/badge.svg)](https://github.com/senzing-garage/g2-sdk-go/actions/workflows/gosec.yaml)
@@ -37,11 +37,11 @@ The Senzing g2-sdk-go packages provide interface definitions for implementations
 When programming, the recommendation is to "program to an interface".
 The Senzing Go SDK API interfaces are documented at:
 
-- [G2Config](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2config#G2config)
-- [G2Configmgr](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2configmgr#G2configmgr)
-- [G2Diagnostic](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2diagnostic#G2diagnostic)
-- [G2Engine](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2engine#G2engine)
-- [G2Product](https://pkg.go.dev/github.com/senzing/g2-sdk-go/g2product#G2product)
+- [G2Config](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2config#G2config)
+- [G2Configmgr](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2configmgr#G2configmgr)
+- [G2Diagnostic](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2diagnostic#G2diagnostic)
+- [G2Engine](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2engine#G2engine)
+- [G2Product](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2product#G2product)
 
 The Senzing g2-sdk-go packages provide interface definitions for the following implementations.
 For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in package directories.
@@ -57,14 +57,14 @@ For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in
 
 Documentation and examples for the implementations are at:
 
-- [g2-sdk-go-base](https://pkg.go.dev/github.com/senzing/g2-sdk-go-base)
-- [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing/g2-sdk-go-grpc)
-- [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing/g2-sdk-go-mock)
-- [go-sdk-abstract-factory](https://pkg.go.dev/github.com/senzing/go-sdk-abstract-factory)
+- [g2-sdk-go-base](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go-base)
+- [g2-sdk-go-grpc](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go-grpc)
+- [g2-sdk-go-mock](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go-mock)
+- [go-sdk-abstract-factory](https://pkg.go.dev/github.com/senzing-garage/go-sdk-abstract-factory)
 
 ## References
 
 1. [Development](docs/development.md)
 1. [Errors](docs/errors.md)
 1. [Examples](docs/examples.md)
-1. [Package reference](https://pkg.go.dev/github.com/senzing/g2-sdk-go)
+1. [Package reference](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go)
