@@ -5,6 +5,9 @@ name: go-test-windows.yaml
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   go-test-windows:
     runs-on: ${{ matrix.os }}
