@@ -16,7 +16,7 @@ const (
 	printResults      = false
 )
 
-var ()
+var()
 
 // ----------------------------------------------------------------------------
 // Internal functions
