@@ -161,7 +161,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
                     json=canonical_test_case_json, struct=canonical_senzing_api_class
                 )
             )
-            file.write("}\n")
+            file.write("}")
     file.write(OUTPUT_FOOTER)
 
 # Epilog.
