@@ -53,24 +53,6 @@ func UnmarshalG2diagnosticCheckDBPerfResponse(ctx context.Context, jsonString st
 	return result, err
 }
 
-func UnmarshalG2diagnosticFetchNextEntityBySizeResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticFetchNextEntityBySizeResponse, error) {
-	result := &typedef.G2diagnosticFetchNextEntityBySizeResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetDataSourceCountsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetDataSourceCountsResponse, error) {
-	result := &typedef.G2diagnosticGetDataSourceCountsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetDBInfoResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetDbinfoResponse, error) {
-	result := &typedef.G2diagnosticGetDbinfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
 func UnmarshalG2diagnosticGetEntityDetailsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetEntityDetailsResponse, error) {
 	result := &typedef.G2diagnosticGetEntityDetailsResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -135,24 +117,6 @@ func UnmarshalG2diagnosticGetResolutionStatisticsResponse(ctx context.Context, j
 
 func UnmarshalG2engineAddRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineAddRecordWithInfoResponse, error) {
 	result := &typedef.G2engineAddRecordWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineAddRecordWithInfoWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineAddRecordWithInfoWithReturnedRecordIDResponse, error) {
-	result := &typedef.G2engineAddRecordWithInfoWithReturnedRecordIDResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalG2engineAddRecordWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineAddRecordWithReturnedRecordIDResponse, error) {
-// 	result := &typedef.G2engineAddRecordWithReturnedRecordIDResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-func UnmarshalG2engineCheckRecordResponse(ctx context.Context, jsonString string) (*typedef.G2engineCheckRecordResponse, error) {
-	result := &typedef.G2engineCheckRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -367,24 +331,6 @@ func UnmarshalG2engineProcessRedoRecordWithInfoResponse(ctx context.Context, jso
 	return result, err
 }
 
-func UnmarshalG2engineProcessWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineProcessWithInfoResponse, error) {
-	result := &typedef.G2engineProcessWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineProcessWithResponseResizeResponse(ctx context.Context, jsonString string) (*typedef.G2engineProcessWithResponseResizeResponse, error) {
-	result := &typedef.G2engineProcessWithResponseResizeResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineProcessWithResponseResponse(ctx context.Context, jsonString string) (*typedef.G2engineProcessWithResponseResponse, error) {
-	result := &typedef.G2engineProcessWithResponseResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
 func UnmarshalG2engineReevaluateEntityWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineReevaluateEntityWithInfoResponse, error) {
 	result := &typedef.G2engineReevaluateEntityWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -441,30 +387,6 @@ func UnmarshalG2engineWhyEntitiesV2Response(ctx context.Context, jsonString stri
 
 func UnmarshalG2engineWhyEntitiesResponse(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntitiesResponse, error) {
 	result := &typedef.G2engineWhyEntitiesResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineWhyEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntityByEntityIdv2response, error) {
-	result := &typedef.G2engineWhyEntityByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineWhyEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntityByEntityIDResponse, error) {
-	result := &typedef.G2engineWhyEntityByEntityIDResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineWhyEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntityByRecordIdv2response, error) {
-	result := &typedef.G2engineWhyEntityByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2engineWhyEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntityByRecordIDResponse, error) {
-	result := &typedef.G2engineWhyEntityByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
