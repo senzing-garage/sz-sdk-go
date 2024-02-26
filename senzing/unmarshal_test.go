@@ -46,7 +46,6 @@ func testError(test *testing.T, ctx context.Context, err error) {
 // ----------------------------------------------------------------------------
 
 
-
 func TestG2configAddDataSourceResponseTest101(test *testing.T) {
 	ctx := context.TODO()
 	jsonString := `{"DSRC_ID":1}`
@@ -2022,3 +2021,4 @@ func TestG2engineProcessRedoRecordWithInfoResponseTest101(test *testing.T) {
 	testError(test, ctx, err)
 	printActual(test, result)
 }
+
