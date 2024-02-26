@@ -143,7 +143,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
     file.write(OUTPUT_HEADER)
     for senzing_api_class, method_test_cases in TEST_CASES.items():
         for test_case_name, test_case_json in method_test_cases.items():
-            file.write("\n\n")
+            file.write("\n")
             better_test_case_name = re.sub(
                 "[^0-9a-zA-Z]+", "", test_case_name
             ).capitalize()
@@ -161,7 +161,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
                     json=canonical_test_case_json, struct=canonical_senzing_api_class
                 )
             )
-            file.write("}")
+            file.write("}\n")
     file.write(OUTPUT_FOOTER)
 
 # Epilog.
