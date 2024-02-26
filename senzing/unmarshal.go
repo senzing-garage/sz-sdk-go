@@ -13,490 +13,346 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-func UnmarshalConfigAddDataSourceResponse(ctx context.Context, jsonString string) (*typedef.ConfigAddDataSourceResponse, error) {
-	result := &typedef.ConfigAddDataSourceResponse{}
+func UnmarshalG2configAddDataSourceResponse(ctx context.Context, jsonString string) (*typedef.G2configAddDataSourceResponse, error) {
+	result := &typedef.G2configAddDataSourceResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalConfigListDataSourcesResponse(ctx context.Context, jsonString string) (*typedef.ConfigListDataSourcesResponse, error) {
-	result := &typedef.ConfigListDataSourcesResponse{}
+func UnmarshalG2configListDataSourcesResponse(ctx context.Context, jsonString string) (*typedef.G2configListDataSourcesResponse, error) {
+	result := &typedef.G2configListDataSourcesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalConfigSaveResponse(ctx context.Context, jsonString string) (*typedef.ConfigSaveResponse, error) {
-	result := &typedef.ConfigSaveResponse{}
+func UnmarshalG2configSaveResponse(ctx context.Context, jsonString string) (*typedef.G2configSaveResponse, error) {
+	result := &typedef.G2configSaveResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
 // --- Configmgr --------------------------------------------------------------
 
-func UnmarshalConfigmgrGetConfigResponse(ctx context.Context, jsonString string) (*typedef.ConfigmgrGetConfigResponse, error) {
-	result := &typedef.ConfigmgrGetConfigResponse{}
+func UnmarshalG2configmgrGetConfigResponse(ctx context.Context, jsonString string) (*typedef.G2configmgrGetConfigResponse, error) {
+	result := &typedef.G2configmgrGetConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalConfigmgrGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.ConfigmgrGetConfigListResponse, error) {
-	result := &typedef.ConfigmgrGetConfigListResponse{}
+func UnmarshalG2configmgrGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.G2configmgrGetConfigListResponse, error) {
+	result := &typedef.G2configmgrGetConfigListResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
 // --- Diagnostic -------------------------------------------------------------
 
-func UnmarshalDiagnosticCheckDBPerfResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticCheckDbperfResponse, error) {
-	result := &typedef.DiagnosticCheckDbperfResponse{}
+func UnmarshalG2diagnosticCheckDBPerfResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticCheckDbperfResponse, error) {
+	result := &typedef.G2diagnosticCheckDbperfResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticFetchNextEntityBySizeResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticFetchNextEntityBySizeResponse, error) {
-	result := &typedef.DiagnosticFetchNextEntityBySizeResponse{}
+// --- G2engine -----------------------------------------------------------------
+
+func UnmarshalG2engineAddRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineAddRecordWithInfoResponse, error) {
+	result := &typedef.G2engineAddRecordWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticFindEntitiesByFeatureIDsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticFindEntitiesByFeatureIdsResponse, error) {
-	result := &typedef.DiagnosticFindEntitiesByFeatureIdsResponse{}
+func UnmarshalG2engineDeleteRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineDeleteRecordWithInfoResponse, error) {
+	result := &typedef.G2engineDeleteRecordWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetDataSourceCountsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetDataSourceCountsResponse, error) {
-	result := &typedef.DiagnosticGetDataSourceCountsResponse{}
+func UnmarshalG2engineExportConfigAndConfigIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineExportConfigAndConfigIDResponse, error) {
+	result := &typedef.G2engineExportConfigAndConfigIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetDBInfoResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetDbinfoResponse, error) {
-	result := &typedef.DiagnosticGetDbinfoResponse{}
+func UnmarshalG2engineExportConfigResponse(ctx context.Context, jsonString string) (*typedef.G2engineExportConfigResponse, error) {
+	result := &typedef.G2engineExportConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetEntityDetailsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetEntityDetailsResponse, error) {
-	result := &typedef.DiagnosticGetEntityDetailsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalDiagnosticGetEntityListBySizeResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetEntityListBySizeResponse, error) {
-// 	result := &typedef.DiagnosticGetEntityListBySizeResponse{}
+// func UnmarshalG2engineFetchNextResponse(ctx context.Context, jsonString string) (*typedef.G2engineFetchNextResponse, error) {
+// 	result := &typedef.G2engineFetchNextResponse{}
 // 	err := json.Unmarshal([]byte(jsonString), result)
 // 	return result, err
 // }
 
-func UnmarshalDiagnosticGetEntityResumeResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetEntityResumeResponse, error) {
-	result := &typedef.DiagnosticGetEntityResumeResponse{}
+func UnmarshalG2engineFindInterestingEntitiesByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindInterestingEntitiesByEntityIDResponse, error) {
+	result := &typedef.G2engineFindInterestingEntitiesByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetEntitySizeBreakdownResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetEntitySizeBreakdownResponse, error) {
-	result := &typedef.DiagnosticGetEntitySizeBreakdownResponse{}
+func UnmarshalG2engineFindInterestingEntitiesByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindInterestingEntitiesByRecordIDResponse, error) {
+	result := &typedef.G2engineFindInterestingEntitiesByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetFeatureResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetFeatureResponse, error) {
-	result := &typedef.DiagnosticGetFeatureResponse{}
+func UnmarshalG2engineFindNetworkByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindNetworkByEntityIdv2response, error) {
+	result := &typedef.G2engineFindNetworkByEntityIdv2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetGenericFeaturesResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetGenericFeaturesResponse, error) {
-	result := &typedef.DiagnosticGetGenericFeaturesResponse{}
+func UnmarshalG2engineFindNetworkByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindNetworkByEntityIDResponse, error) {
+	result := &typedef.G2engineFindNetworkByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetMappingStatisticsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetMappingStatisticsResponse, error) {
-	result := &typedef.DiagnosticGetMappingStatisticsResponse{}
+func UnmarshalG2engineFindNetworkByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindNetworkByRecordIdv2response, error) {
+	result := &typedef.G2engineFindNetworkByRecordIdv2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetRelationshipDetailsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetRelationshipDetailsResponse, error) {
-	result := &typedef.DiagnosticGetRelationshipDetailsResponse{}
+func UnmarshalG2engineFindNetworkByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindNetworkByRecordIDResponse, error) {
+	result := &typedef.G2engineFindNetworkByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalDiagnosticGetResolutionStatisticsResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticGetResolutionStatisticsResponse, error) {
-	result := &typedef.DiagnosticGetResolutionStatisticsResponse{}
+func UnmarshalG2engineFindPathByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathByEntityIdv2response, error) {
+	result := &typedef.G2engineFindPathByEntityIdv2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-// func UnmarshalDiagnosticStreamEntityListBySizeResponse(ctx context.Context, jsonString string) (*typedef.DiagnosticStreamEntityListBySizeResponse, error) {
-// 	result := &typedef.DiagnosticStreamEntityListBySizeResponse{}
+func UnmarshalG2engineFindPathByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathByEntityIDResponse, error) {
+	result := &typedef.G2engineFindPathByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathByRecordIdv2response, error) {
+	result := &typedef.G2engineFindPathByRecordIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathByRecordIDResponse, error) {
+	result := &typedef.G2engineFindPathByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathExcludingByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathExcludingByEntityIdv2response, error) {
+	result := &typedef.G2engineFindPathExcludingByEntityIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathExcludingByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathExcludingByEntityIDResponse, error) {
+	result := &typedef.G2engineFindPathExcludingByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathExcludingByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathExcludingByRecordIdv2response, error) {
+	result := &typedef.G2engineFindPathExcludingByRecordIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathExcludingByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathExcludingByRecordIDResponse, error) {
+	result := &typedef.G2engineFindPathExcludingByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathIncludingSourceByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathIncludingSourceByEntityIdv2response, error) {
+	result := &typedef.G2engineFindPathIncludingSourceByEntityIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathIncludingSourceByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathIncludingSourceByEntityIDResponse, error) {
+	result := &typedef.G2engineFindPathIncludingSourceByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathIncludingSourceByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineFindPathIncludingSourceByRecordIdv2response, error) {
+	result := &typedef.G2engineFindPathIncludingSourceByRecordIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineFindPathIncludingSourceByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineFindPathIncludingSourceByRecordIDResponse, error) {
+	result := &typedef.G2engineFindPathIncludingSourceByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineGetEntityByEntityIdv2response, error) {
+	result := &typedef.G2engineGetEntityByEntityIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineGetEntityByEntityIDResponse, error) {
+	result := &typedef.G2engineGetEntityByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineGetEntityByRecordIdv2response, error) {
+	result := &typedef.G2engineGetEntityByRecordIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineGetEntityByRecordIDResponse, error) {
+	result := &typedef.G2engineGetEntityByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetRecordV2Response(ctx context.Context, jsonString string) (*typedef.G2engineGetRecordV2response, error) {
+	result := &typedef.G2engineGetRecordV2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineGetRecordResponse(ctx context.Context, jsonString string) (*typedef.G2engineGetRecordResponse, error) {
+	result := &typedef.G2engineGetRecordResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+// func UnmarshalG2engineGetRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.G2engineGetRedoRecordResponse, error) {
+// 	result := &typedef.G2engineGetRedoRecordResponse{}
 // 	err := json.Unmarshal([]byte(jsonString), result)
 // 	return result, err
 // }
 
-// --- Engine -----------------------------------------------------------------
-
-func UnmarshalEngineAddRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineAddRecordWithInfoResponse, error) {
-	result := &typedef.EngineAddRecordWithInfoResponse{}
+func UnmarshalG2engineGetVirtualEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineGetVirtualEntityByRecordIdv2response, error) {
+	result := &typedef.G2engineGetVirtualEntityByRecordIdv2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineAddRecordWithInfoWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineAddRecordWithInfoWithReturnedRecordIdresponse, error) {
-	result := &typedef.EngineAddRecordWithInfoWithReturnedRecordIdresponse{}
+func UnmarshalG2engineGetVirtualEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineGetVirtualEntityByRecordIDResponse, error) {
+	result := &typedef.G2engineGetVirtualEntityByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-// func UnmarshalEngineAddRecordWithReturnedRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineAddRecordWithReturnedRecordIDResponse, error) {
-// 	result := &typedef.EngineAddRecordWithReturnedRecordIDResponse{}
+func UnmarshalG2engineHowEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.G2engineHowEntityByEntityIdv2response, error) {
+	result := &typedef.G2engineHowEntityByEntityIdv2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineHowEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.G2engineHowEntityByEntityIDResponse, error) {
+	result := &typedef.G2engineHowEntityByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+// func UnmarshalG2engineProcessRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.G2engineProcessRedoRecordResponse, error) {
+// 	result := &typedef.G2engineProcessRedoRecordResponse{}
 // 	err := json.Unmarshal([]byte(jsonString), result)
 // 	return result, err
 // }
 
-func UnmarshalEngineCheckRecordResponse(ctx context.Context, jsonString string) (*typedef.EngineCheckRecordResponse, error) {
-	result := &typedef.EngineCheckRecordResponse{}
+func UnmarshalG2engineProcessRedoRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineProcessRedoRecordWithInfoResponse, error) {
+	result := &typedef.G2engineProcessRedoRecordWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineDeleteRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineDeleteRecordWithInfoResponse, error) {
-	result := &typedef.EngineDeleteRecordWithInfoResponse{}
+func UnmarshalG2engineReevaluateEntityWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineReevaluateEntityWithInfoResponse, error) {
+	result := &typedef.G2engineReevaluateEntityWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineExportConfigAndConfigIDResponse(ctx context.Context, jsonString string) (*typedef.EngineExportConfigAndConfigIdresponse, error) {
-	result := &typedef.EngineExportConfigAndConfigIdresponse{}
+func UnmarshalG2engineReevaluateRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineReevaluateRecordWithInfoResponse, error) {
+	result := &typedef.G2engineReevaluateRecordWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineExportConfigResponse(ctx context.Context, jsonString string) (*typedef.EngineExportConfigResponse, error) {
-	result := &typedef.EngineExportConfigResponse{}
+func UnmarshalG2engineReplaceRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineReplaceRecordWithInfoResponse, error) {
+	result := &typedef.G2engineReplaceRecordWithInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-// func UnmarshalEngineFetchNextResponse(ctx context.Context, jsonString string) (*typedef.EngineFetchNextResponse, error) {
-// 	result := &typedef.EngineFetchNextResponse{}
+func UnmarshalG2engineSearchByAttributesV2Response(ctx context.Context, jsonString string) (*typedef.G2engineSearchByAttributesV2response, error) {
+	result := &typedef.G2engineSearchByAttributesV2response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineSearchByAttributesV3Response(ctx context.Context, jsonString string) (*typedef.G2engineSearchByAttributesV3response, error) {
+	result := &typedef.G2engineSearchByAttributesV3response{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineSearchByAttributesResponse(ctx context.Context, jsonString string) (*typedef.G2engineSearchByAttributesResponse, error) {
+	result := &typedef.G2engineSearchByAttributesResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalG2engineStatsResponse(ctx context.Context, jsonString string) (*typedef.G2engineStatsResponse, error) {
+	result := &typedef.G2engineStatsResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+// func UnmarshalG2engineStreamExportJSONEntityReportResponse(ctx context.Context, jsonString string) (*typedef.G2engineStreamExportJSONEntityReportResponse, error) {
+// 	result := &typedef.G2engineStreamExportJSONEntityReportResponse{}
 // 	err := json.Unmarshal([]byte(jsonString), result)
 // 	return result, err
 // }
 
-func UnmarshalEngineFindInterestingEntitiesByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindInterestingEntitiesByEntityIdresponse, error) {
-	result := &typedef.EngineFindInterestingEntitiesByEntityIdresponse{}
+func UnmarshalG2engineWhyEntitiesV2Response(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntitiesV2response, error) {
+	result := &typedef.G2engineWhyEntitiesV2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineFindInterestingEntitiesByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindInterestingEntitiesByRecordIdresponse, error) {
-	result := &typedef.EngineFindInterestingEntitiesByRecordIdresponse{}
+func UnmarshalG2engineWhyEntitiesResponse(ctx context.Context, jsonString string) (*typedef.G2engineWhyEntitiesResponse, error) {
+	result := &typedef.G2engineWhyEntitiesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineFindNetworkByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindNetworkByEntityIdv2response, error) {
-	result := &typedef.EngineFindNetworkByEntityIdv2response{}
+func UnmarshalG2engineWhyRecordsV2Response(ctx context.Context, jsonString string) (*typedef.G2engineWhyRecordsV2response, error) {
+	result := &typedef.G2engineWhyRecordsV2response{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalEngineFindNetworkByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindNetworkByEntityIdresponse, error) {
-	result := &typedef.EngineFindNetworkByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindNetworkByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindNetworkByRecordIdv2response, error) {
-	result := &typedef.EngineFindNetworkByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindNetworkByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindNetworkByRecordIdresponse, error) {
-	result := &typedef.EngineFindNetworkByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathByEntityIdv2response, error) {
-	result := &typedef.EngineFindPathByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathByEntityIdresponse, error) {
-	result := &typedef.EngineFindPathByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathByRecordIdv2response, error) {
-	result := &typedef.EngineFindPathByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathByRecordIdresponse, error) {
-	result := &typedef.EngineFindPathByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathExcludingByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathExcludingByEntityIdv2response, error) {
-	result := &typedef.EngineFindPathExcludingByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathExcludingByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathExcludingByEntityIdresponse, error) {
-	result := &typedef.EngineFindPathExcludingByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathExcludingByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathExcludingByRecordIdv2response, error) {
-	result := &typedef.EngineFindPathExcludingByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathExcludingByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathExcludingByRecordIdresponse, error) {
-	result := &typedef.EngineFindPathExcludingByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathIncludingSourceByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathIncludingSourceByEntityIdv2response, error) {
-	result := &typedef.EngineFindPathIncludingSourceByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathIncludingSourceByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathIncludingSourceByEntityIdresponse, error) {
-	result := &typedef.EngineFindPathIncludingSourceByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathIncludingSourceByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineFindPathIncludingSourceByRecordIdv2response, error) {
-	result := &typedef.EngineFindPathIncludingSourceByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineFindPathIncludingSourceByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineFindPathIncludingSourceByRecordIdresponse, error) {
-	result := &typedef.EngineFindPathIncludingSourceByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineGetEntityByEntityIdv2response, error) {
-	result := &typedef.EngineGetEntityByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineGetEntityByEntityIdresponse, error) {
-	result := &typedef.EngineGetEntityByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineGetEntityByRecordIdv2response, error) {
-	result := &typedef.EngineGetEntityByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineGetEntityByRecordIdresponse, error) {
-	result := &typedef.EngineGetEntityByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetRecordV2Response(ctx context.Context, jsonString string) (*typedef.EngineGetRecordV2response, error) {
-	result := &typedef.EngineGetRecordV2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetRecordResponse(ctx context.Context, jsonString string) (*typedef.EngineGetRecordResponse, error) {
-	result := &typedef.EngineGetRecordResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalEngineGetRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.EngineGetRedoRecordResponse, error) {
-// 	result := &typedef.EngineGetRedoRecordResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-func UnmarshalEngineGetVirtualEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineGetVirtualEntityByRecordIdv2response, error) {
-	result := &typedef.EngineGetVirtualEntityByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineGetVirtualEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineGetVirtualEntityByRecordIdresponse, error) {
-	result := &typedef.EngineGetVirtualEntityByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineHowEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineHowEntityByEntityIdv2response, error) {
-	result := &typedef.EngineHowEntityByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineHowEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineHowEntityByEntityIdresponse, error) {
-	result := &typedef.EngineHowEntityByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalEngineProcessRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.EngineProcessRedoRecordResponse, error) {
-// 	result := &typedef.EngineProcessRedoRecordResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-func UnmarshalEngineProcessRedoRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineProcessRedoRecordWithInfoResponse, error) {
-	result := &typedef.EngineProcessRedoRecordWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineProcessWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineProcessWithInfoResponse, error) {
-	result := &typedef.EngineProcessWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineProcessWithResponseResizeResponse(ctx context.Context, jsonString string) (*typedef.EngineProcessWithResponseResizeResponse, error) {
-	result := &typedef.EngineProcessWithResponseResizeResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineProcessWithResponseResponse(ctx context.Context, jsonString string) (*typedef.EngineProcessWithResponseResponse, error) {
-	result := &typedef.EngineProcessWithResponseResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineReevaluateEntityWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineReevaluateEntityWithInfoResponse, error) {
-	result := &typedef.EngineReevaluateEntityWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineReevaluateRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineReevaluateRecordWithInfoResponse, error) {
-	result := &typedef.EngineReevaluateRecordWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineReplaceRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.EngineReplaceRecordWithInfoResponse, error) {
-	result := &typedef.EngineReplaceRecordWithInfoResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineSearchByAttributesV2Response(ctx context.Context, jsonString string) (*typedef.EngineSearchByAttributesV2response, error) {
-	result := &typedef.EngineSearchByAttributesV2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineSearchByAttributesV3Response(ctx context.Context, jsonString string) (*typedef.EngineSearchByAttributesV3response, error) {
-	result := &typedef.EngineSearchByAttributesV3response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineSearchByAttributesResponse(ctx context.Context, jsonString string) (*typedef.EngineSearchByAttributesResponse, error) {
-	result := &typedef.EngineSearchByAttributesResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineStatsResponse(ctx context.Context, jsonString string) (*typedef.EngineStatsResponse, error) {
-	result := &typedef.EngineStatsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalEngineStreamExportJSONEntityReportResponse(ctx context.Context, jsonString string) (*typedef.EngineStreamExportJSONEntityReportResponse, error) {
-// 	result := &typedef.EngineStreamExportJSONEntityReportResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-func UnmarshalEngineWhyEntitiesV2Response(ctx context.Context, jsonString string) (*typedef.EngineWhyEntitiesV2response, error) {
-	result := &typedef.EngineWhyEntitiesV2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyEntitiesResponse(ctx context.Context, jsonString string) (*typedef.EngineWhyEntitiesResponse, error) {
-	result := &typedef.EngineWhyEntitiesResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyEntityByEntityIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineWhyEntityByEntityIdv2response, error) {
-	result := &typedef.EngineWhyEntityByEntityIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyEntityByEntityIDResponse(ctx context.Context, jsonString string) (*typedef.EngineWhyEntityByEntityIdresponse, error) {
-	result := &typedef.EngineWhyEntityByEntityIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyEntityByRecordIDV2Response(ctx context.Context, jsonString string) (*typedef.EngineWhyEntityByRecordIdv2response, error) {
-	result := &typedef.EngineWhyEntityByRecordIdv2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyEntityByRecordIDResponse(ctx context.Context, jsonString string) (*typedef.EngineWhyEntityByRecordIdresponse, error) {
-	result := &typedef.EngineWhyEntityByRecordIdresponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyRecordsV2Response(ctx context.Context, jsonString string) (*typedef.EngineWhyRecordsV2response, error) {
-	result := &typedef.EngineWhyRecordsV2response{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalEngineWhyRecordsResponse(ctx context.Context, jsonString string) (*typedef.EngineWhyRecordsResponse, error) {
-	result := &typedef.EngineWhyRecordsResponse{}
+func UnmarshalG2engineWhyRecordsResponse(ctx context.Context, jsonString string) (*typedef.G2engineWhyRecordsResponse, error) {
+	result := &typedef.G2engineWhyRecordsResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
 // --- Product ----------------------------------------------------------------
 
-func UnmarshalProductLicenseResponse(ctx context.Context, jsonString string) (*typedef.ProductLicenseResponse, error) {
-	result := &typedef.ProductLicenseResponse{}
+func UnmarshalG2productLicenseResponse(ctx context.Context, jsonString string) (*typedef.G2productLicenseResponse, error) {
+	result := &typedef.G2productLicenseResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalProductVersionResponse(ctx context.Context, jsonString string) (*typedef.ProductVersionResponse, error) {
-	result := &typedef.ProductVersionResponse{}
+func UnmarshalG2productVersionResponse(ctx context.Context, jsonString string) (*typedef.G2productVersionResponse, error) {
+	result := &typedef.G2productVersionResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
