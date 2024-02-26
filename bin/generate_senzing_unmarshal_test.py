@@ -132,11 +132,11 @@ func testError(test *testing.T, ctx context.Context, err error) {
 """  # noqa: E101, W191
 
 TEST_FUNCTION_TEMPLATE = f"""
-    ctx := context.TODO()
+	ctx := context.TODO()
 	jsonString := `{{json}}`
-    result, err := Unmarshal{{struct}}(ctx, jsonString)
+	result, err := Unmarshal{{struct}}(ctx, jsonString)
 	testError(test, ctx, err)
-    printActual(test, result)
+	printActual(test, result)
 """  # noqa: E101,F541,W191
 
 OUTPUT_FOOTER = """
