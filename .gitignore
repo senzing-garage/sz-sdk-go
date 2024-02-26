@@ -33,3 +33,6 @@ target/
 
 bin/__pycache__
 .pydevproject
+/.pytest_cache/
+
+.coverage
