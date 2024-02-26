@@ -60,22 +60,9 @@ type G2configmgr interface {
 // The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
 type G2diagnostic interface {
 	CheckDBPerf(ctx context.Context, secondsToRun int) (string, error)
-	// (ctx context.Context, entityListBySizeHandle uintptr) error
 	Destroy(ctx context.Context) error
-	// GetEntityDetails(ctx context.Context, entityID int64, includeInternalFeatures int) (string, error)
-	// GetEntityListBySize(ctx context.Context, entitySize int) (uintptr, error)
-	// GetEntityResume(ctx context.Context, entityID int64) (string, error)
-	// GetEntitySizeBreakdown(ctx context.Context, minimumEntitySize int, includeInternalFeatures int) (string, error)
-	// GetFeature(ctx context.Context, libFeatID int64) (string, error)
-	// GetGenericFeatures(ctx context.Context, featureType string, maximumEstimatedCount int) (string, error)
-	GetLogicalCores(ctx context.Context) (int, error)
-	// GetMappingStatistics(ctx context.Context, includeInternalFeatures int) (string, error)
 	GetObserverOrigin(ctx context.Context) string
-	GetPhysicalCores(ctx context.Context) (int, error)
-	// GetRelationshipDetails(ctx context.Context, relationshipID int64, includeInternalFeatures int) (string, error)
-	// GetResolutionStatistics(ctx context.Context) (string, error)
 	GetSdkId(ctx context.Context) string
-	GetTotalSystemMemory(ctx context.Context) (int64, error)
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int64) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error

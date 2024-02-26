@@ -10,12 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
-## [0.9.1] - 2024-02-26
+## [0.10.0] - 2024-02-26
 
-### Changed in 0.9.1
+### Changed in 0.10.0
 
 - Updated dependencies
 - Updated names used in `g2-sdk-json-type-definition`
+- Deleted methods not used in V4
 
 ## [0.9.0] - 2024-01-26
 

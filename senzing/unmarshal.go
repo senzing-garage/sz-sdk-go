@@ -53,66 +53,6 @@ func UnmarshalG2diagnosticCheckDBPerfResponse(ctx context.Context, jsonString st
 	return result, err
 }
 
-func UnmarshalG2diagnosticGetEntityDetailsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetEntityDetailsResponse, error) {
-	result := &typedef.G2diagnosticGetEntityDetailsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalG2diagnosticGetEntityListBySizeResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetEntityListBySizeResponse, error) {
-// 	result := &typedef.G2diagnosticGetEntityListBySizeResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
-func UnmarshalG2diagnosticGetEntityResumeResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetEntityResumeResponse, error) {
-	result := &typedef.G2diagnosticGetEntityResumeResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetEntitySizeBreakdownResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetEntitySizeBreakdownResponse, error) {
-	result := &typedef.G2diagnosticGetEntitySizeBreakdownResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetFeatureResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetFeatureResponse, error) {
-	result := &typedef.G2diagnosticGetFeatureResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetGenericFeaturesResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetGenericFeaturesResponse, error) {
-	result := &typedef.G2diagnosticGetGenericFeaturesResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetMappingStatisticsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetMappingStatisticsResponse, error) {
-	result := &typedef.G2diagnosticGetMappingStatisticsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetRelationshipDetailsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetRelationshipDetailsResponse, error) {
-	result := &typedef.G2diagnosticGetRelationshipDetailsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-func UnmarshalG2diagnosticGetResolutionStatisticsResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticGetResolutionStatisticsResponse, error) {
-	result := &typedef.G2diagnosticGetResolutionStatisticsResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
-// func UnmarshalG2diagnosticStreamEntityListBySizeResponse(ctx context.Context, jsonString string) (*typedef.G2diagnosticStreamEntityListBySizeResponse, error) {
-// 	result := &typedef.G2diagnosticStreamEntityListBySizeResponse{}
-// 	err := json.Unmarshal([]byte(jsonString), result)
-// 	return result, err
-// }
-
 // --- G2engine -----------------------------------------------------------------
 
 func UnmarshalG2engineAddRecordWithInfoResponse(ctx context.Context, jsonString string) (*typedef.G2engineAddRecordWithInfoResponse, error) {
