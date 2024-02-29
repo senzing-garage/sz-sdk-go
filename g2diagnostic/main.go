@@ -38,7 +38,7 @@ var IdMessages = map[int]string{
 	59:   "Enter " + Prefix + "GetSdkId().",
 	60:   "Exit  " + Prefix + "GetSdkId() returned (%s).",
 	61:   "Enter " + Prefix + "PurgeRepository().",
-	61:   "Exit  " + Prefix + "PurgeRepository() returned (%v).",
+	62:   "Exit  " + Prefix + "PurgeRepository() returned (%v).",
 	4001: Prefix + "G2Diagnostic_checkDBPerf(%d) failed. Return code: %d",
 	4003: Prefix + "G2Diagnostic_destroy() failed.  Return code: %d",
 	4014: Prefix + "G2Diagnostic_getLastException() failed. Return code: %d",
