@@ -65,6 +65,7 @@ type G2diagnostic interface {
 	GetSdkId(ctx context.Context) string
 	Init(ctx context.Context, moduleName string, iniParams string, verboseLogging int64) error
 	InitWithConfigID(ctx context.Context, moduleName string, iniParams string, initConfigID int64, verboseLogging int64) error
+	PurgeRepository(ctx context.Context) error
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinit(ctx context.Context, initConfigID int64) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
