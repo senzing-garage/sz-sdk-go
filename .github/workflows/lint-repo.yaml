@@ -14,6 +14,21 @@ permissions:
 
 jobs:
   lint-code-base:
-    uses: senzing-factory/build-resources/.github/workflows/linter.yaml@main
-    with:
-      validate-all-codebase: true
+    name: lint code base
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - name: lint code base
+        uses: super-linter/super-linter@v6.3.0
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # only lint new and modified files
+          VALIDATE_ALL_CODEBASE: ${{ inputs.validate-all-codebase }}
+          VALIDATE_GO_MODULES: true
+          VALIDATE_SHELL_SHFMT: false
