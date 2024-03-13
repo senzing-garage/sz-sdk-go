@@ -1,6 +1,8 @@
 name: go test darwin
 
-on: [push]
+on:
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read
