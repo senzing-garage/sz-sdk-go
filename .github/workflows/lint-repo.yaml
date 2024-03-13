@@ -28,6 +28,7 @@ jobs:
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LOG_LEVEL: DEBUG
           # only lint new and modified files
           VALIDATE_ALL_CODEBASE: ${{ inputs.validate-all-codebase }}
           #VALIDATE_GO: false

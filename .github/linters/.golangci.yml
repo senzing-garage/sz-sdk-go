@@ -1,0 +1,13 @@
+run: 
+  modules-download-mode: readonly
+  show-stats: true
+
+output:
+  print-linter-name: false
+  sort-results: true
+
+linters:
+  enable:
+    - gofmt
+    - gosec
+    - govet
