@@ -14,12 +14,12 @@ type FlagMask int64
 // Flags used by the Senzing G2Engine.
 // These flags are single-bit flags.
 const (
-	G2_EXPORT_INCLUDE_RESOLVED         FlagMask = 0         // 0 we should include entities with "resolved" relationships
-	G2_EXPORT_INCLUDE_POSSIBLY_SAME    FlagMask = 1 << iota // 1 we should include entities with "possibly same" relationships
-	G2_EXPORT_INCLUDE_POSSIBLY_RELATED                      // 2 we should include entities with "possibly related" relationships
-	G2_EXPORT_INCLUDE_NAME_ONLY                             // 3 we should include entities with "name only" relationships
-	G2_EXPORT_INCLUDE_DISCLOSED                             // 4 we should include entities with "disclosed" relationships
-	G2_EXPORT_INCLUDE_SINGLETONS                            // 5 we should include singleton entities
+	G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES  FlagMask = 0         // 0 we should include entities with "resolved" relationships
+	G2_EXPORT_INCLUDE_POSSIBLY_SAME          FlagMask = 1 << iota // 1 we should include entities with "possibly same" relationships
+	G2_EXPORT_INCLUDE_POSSIBLY_RELATED                            // 2 we should include entities with "possibly related" relationships
+	G2_EXPORT_INCLUDE_NAME_ONLY                                   // 3 we should include entities with "name only" relationships
+	G2_EXPORT_INCLUDE_DISCLOSED                                   // 4 we should include entities with "disclosed" relationships
+	G2_EXPORT_INCLUDE_SINGLE_RECORD_ENTITIES                      // 5 we should include singleton entities
 
 	/* flags for outputting entity relation data  */
 	G2_ENTITY_INCLUDE_POSSIBLY_SAME_RELATIONS    // 6 include "possibly same" relationships on entities
@@ -37,7 +37,7 @@ const (
 	G2_ENTITY_INCLUDE_RECORD_DATA            // 14 include the basic record data for the entity
 	G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO   // 15 include the record matching info for the entity
 	G2_ENTITY_INCLUDE_RECORD_JSON_DATA       // 16 include the record json data for the entity
-	G2_ENTITY_INCLUDE_RECORD_FORMATTED_DATA  // 17 include the record formattted data for the entity
+	BIT_17                                   // 17
 	G2_ENTITY_INCLUDE_RECORD_FEATURE_IDS     // 18 include the features identifiers for the records
 	G2_ENTITY_INCLUDE_RELATED_ENTITY_NAME    // 19 include the name of the related entities
 	G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO  // 20 include the record matching info of the related entities
@@ -52,40 +52,86 @@ const (
 	G2_FIND_PATH_PREFER_EXCLUDE // 25 excluded entities are still allowed, but not preferred
 
 	/* flags for including search result feature scores  */
-	G2_INCLUDE_FEATURE_SCORES // 26 include feature scores
-	G2_SEARCH_INCLUDE_STATS   //  27 include statistics from search results
+	G2_INCLUDE_FEATURE_SCORES                  // 26 include feature scores
+	G2_SEARCH_INCLUDE_STATS                    // 27 include statistics from search results
+	G2_ENTITY_INCLUDE_RECORD_TYPES             // 28 include the record types of the entity
+	G2_ENTITY_INCLUDE_RELATED_RECORD_TYPES     // 29 include the record types of the related entities
+	G2_FIND_PATH_MATCHING_INFO                 // 30 include matching info on entity paths
+	G2_ENTITY_INCLUDE_RECORD_UNMAPPED_DATA     // 31 include the record unmapped data for the entity
+	G2_ENTITY_OPTION_INCLUDE_FEATURE_ELEMENTS  // 32 include feature elements
+	G2_FIND_NETWORK_MATCHING_INFO              // 33 include matching info on entity networks
+	G2_ENTITY_OPTION_INCLUDE_MATCH_KEY_DETAILS // 34 include internal features
+	BIT_35                                     // 35
+	BIT_36                                     // 36
+	BIT_37                                     // 37
+	BIT_38                                     // 38
+	BIT_39                                     // 39
+	BIT_40                                     // 40
+	BIT_41                                     // 41
+	BIT_42                                     // 42
+	BIT_43                                     // 43
+	BIT_44                                     // 44
+	BIT_45                                     // 45
+	BIT_46                                     // 46
+	BIT_47                                     // 47
+	BIT_48                                     // 48
+	BIT_49                                     // 49
+	BIT_50                                     // 50
+	BIT_51                                     // 51
+	BIT_52                                     // 52
+	BIT_53                                     // 53
+	BIT_54                                     // 54
+	BIT_55                                     // 55
+	BIT_56                                     // 56
+	BIT_57                                     // 57
+	BIT_58                                     // 58
+	BIT_59                                     // 59
+	BIT_60                                     // 60
+	BIT_61                                     // 61
+	G2_RETURN_INFO                             // 62
 )
 
 // Flags used by the Senzing G2Engine.
 // These flags combine single-bit flags.
 const (
-	/* flags for exporting entity data  */
-	G2_EXPORT_INCLUDE_ALL_ENTITIES      = G2_EXPORT_INCLUDE_RESOLVED | G2_EXPORT_INCLUDE_SINGLETONS
-	G2_EXPORT_INCLUDE_ALL_RELATIONSHIPS = G2_EXPORT_INCLUDE_POSSIBLY_SAME | G2_EXPORT_INCLUDE_POSSIBLY_RELATED | G2_EXPORT_INCLUDE_NAME_ONLY | G2_EXPORT_INCLUDE_DISCLOSED
+	/* Flags for exporting entity data.  */
 
-	/* flags for outputting entity relation data  */
-	G2_ENTITY_INCLUDE_ALL_RELATIONS  = G2_ENTITY_INCLUDE_POSSIBLY_SAME_RELATIONS | G2_ENTITY_INCLUDE_POSSIBLY_RELATED_RELATIONS | G2_ENTITY_INCLUDE_NAME_ONLY_RELATIONS | G2_ENTITY_INCLUDE_DISCLOSED_RELATIONS
-	G2_SEARCH_INCLUDE_FEATURE_SCORES = G2_INCLUDE_FEATURE_SCORES // include feature scores from search results
+	G2_EXPORT_INCLUDE_ALL_ENTITIES             = G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES | G2_EXPORT_INCLUDE_SINGLE_RECORD_ENTITIES                                               // Include all entities.
+	G2_EXPORT_INCLUDE_ALL_HAVING_RELATIONSHIPS = G2_EXPORT_INCLUDE_DISCLOSED | G2_EXPORT_INCLUDE_NAME_ONLY | G2_EXPORT_INCLUDE_POSSIBLY_RELATED | G2_EXPORT_INCLUDE_POSSIBLY_SAME // Include all entities with relationships.
 
-	/* flags for searching for entities  */
-	G2_SEARCH_INCLUDE_RESOLVED         = G2_EXPORT_INCLUDE_RESOLVED
-	G2_SEARCH_INCLUDE_POSSIBLY_SAME    = G2_EXPORT_INCLUDE_POSSIBLY_SAME
-	G2_SEARCH_INCLUDE_POSSIBLY_RELATED = G2_EXPORT_INCLUDE_POSSIBLY_RELATED
-	G2_SEARCH_INCLUDE_NAME_ONLY        = G2_EXPORT_INCLUDE_NAME_ONLY
-	G2_SEARCH_INCLUDE_ALL_ENTITIES     = G2_SEARCH_INCLUDE_RESOLVED | G2_SEARCH_INCLUDE_POSSIBLY_SAME | G2_SEARCH_INCLUDE_POSSIBLY_RELATED | G2_SEARCH_INCLUDE_NAME_ONLY
+	/* Flags for outputting entity relation data  */
 
-	/* recommended settings */
-	G2_RECORD_DEFAULT_FLAGS       = G2_ENTITY_INCLUDE_RECORD_JSON_DATA                                                                                                                                                                                                                                                                                                                   // the recommended default flag values for getting records
-	G2_ENTITY_DEFAULT_FLAGS       = G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_ENTITY_INCLUDE_RECORD_DATA | G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO | G2_ENTITY_INCLUDE_RELATED_ENTITY_NAME | G2_ENTITY_INCLUDE_RELATED_RECORD_SUMMARY | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO // the recommended default flag values for getting entities
-	G2_ENTITY_BRIEF_DEFAULT_FLAGS = G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO | G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO                                                                                                                                                                                                                                   // the recommended default flag values for a brief entity result
-	G2_EXPORT_DEFAULT_FLAGS       = G2_EXPORT_INCLUDE_ALL_ENTITIES | G2_EXPORT_INCLUDE_ALL_RELATIONSHIPS | G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_DATA | G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO                                                // the recommended default flag values for exporting entities
-	G2_FIND_PATH_DEFAULT_FLAGS    = G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO                                                                                                                                                                                                         // the recommended default flag values for finding entity paths
-	G2_WHY_ENTITY_DEFAULT_FLAGS   = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_INCLUDE_RECORD_FEATURE_IDS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_INCLUDE_FEATURE_SCORES                                                                                                                                                                     // the recommended default flag values for why-analysis on entities
-	G2_HOW_ENTITY_DEFAULT_FLAGS   = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_INCLUDE_RECORD_FEATURE_IDS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_INCLUDE_FEATURE_SCORES                                                                                                                                                                     // the recommended default flag values for how-analysis on entities
+	G2_ENTITY_INCLUDE_ALL_RELATIONS = G2_ENTITY_INCLUDE_DISCLOSED_RELATIONS | G2_ENTITY_INCLUDE_NAME_ONLY_RELATIONS | G2_ENTITY_INCLUDE_POSSIBLY_RELATED_RELATIONS | G2_ENTITY_INCLUDE_POSSIBLY_SAME_RELATIONS // Include all relationships on entities.
 
-	G2_SEARCH_BY_ATTRIBUTES_ALL            = G2_SEARCH_INCLUDE_ALL_ENTITIES | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_SEARCH_INCLUDE_FEATURE_SCORES                               // the recommended flag values for searching by attributes, returning all matching entities
-	G2_SEARCH_BY_ATTRIBUTES_STRONG         = G2_SEARCH_INCLUDE_RESOLVED | G2_SEARCH_INCLUDE_POSSIBLY_SAME | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_SEARCH_INCLUDE_FEATURE_SCORES // the recommended flag values for searching by attributes, returning only strongly matching entities
-	G2_SEARCH_BY_ATTRIBUTES_MINIMAL_ALL    = G2_SEARCH_INCLUDE_ALL_ENTITIES                                                                                                                                                                                 // return minimal data with all matches
-	G2_SEARCH_BY_ATTRIBUTES_MINIMAL_STRONG = G2_SEARCH_INCLUDE_RESOLVED | G2_SEARCH_INCLUDE_POSSIBLY_SAME                                                                                                                                                   // return minimal data with only the strongest matches
-	G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS  = G2_SEARCH_BY_ATTRIBUTES_ALL                                                                                                                                                                                    // the recommended default flag values for search-by-attributes
+	/* Flags for searching for entities.  */
+
+	G2_SEARCH_INCLUDE_ALL_ENTITIES      = G2_SEARCH_INCLUDE_NAME_ONLY | G2_SEARCH_INCLUDE_POSSIBLY_RELATED | G2_SEARCH_INCLUDE_POSSIBLY_SAME | G2_SEARCH_INCLUDE_RESOLVED
+	G2_SEARCH_INCLUDE_FEATURE_SCORES    = G2_INCLUDE_FEATURE_SCORES                  // Include feature scores from search results
+	G2_SEARCH_INCLUDE_MATCH_KEY_DETAILS = G2_ENTITY_OPTION_INCLUDE_MATCH_KEY_DETAILS // Include detailed match key in search results.
+	G2_SEARCH_INCLUDE_NAME_ONLY         = G2_EXPORT_INCLUDE_NAME_ONLY
+	G2_SEARCH_INCLUDE_POSSIBLY_RELATED  = G2_EXPORT_INCLUDE_POSSIBLY_RELATED
+	G2_SEARCH_INCLUDE_POSSIBLY_SAME     = G2_EXPORT_INCLUDE_POSSIBLY_SAME
+	G2_SEARCH_INCLUDE_RESOLVED          = G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES
+
+	/* Recommended settings for searching by attributes. */
+
+	G2_SEARCH_BY_ATTRIBUTES_ALL            = G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_SEARCH_INCLUDE_ALL_ENTITIES | G2_SEARCH_INCLUDE_FEATURE_SCORES                               // The recommended flag values for searching by attributes, returning all matching entities.
+	G2_SEARCH_BY_ATTRIBUTES_MINIMAL_ALL    = G2_SEARCH_INCLUDE_ALL_ENTITIES                                                                                                                                                                                 // Return minimal data with all matches.
+	G2_SEARCH_BY_ATTRIBUTES_MINIMAL_STRONG = G2_SEARCH_INCLUDE_POSSIBLY_SAME | G2_SEARCH_INCLUDE_RESOLVED                                                                                                                                                   // Return minimal data with only the strongest matches.
+	G2_SEARCH_BY_ATTRIBUTES_STRONG         = G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES | G2_SEARCH_INCLUDE_FEATURE_SCORES | G2_SEARCH_INCLUDE_POSSIBLY_SAME | G2_SEARCH_INCLUDE_RESOLVED // The recommended flag values for searching by attributes, returning only strongly matching entities.
+
+	/* Recommended defaults */
+
+	G2_ENTITY_BRIEF_DEFAULT_FLAGS         = G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO                                                                                                                                                                                                                                   // The recommended default flag values for a brief entity result.
+	G2_ENTITY_DEFAULT_FLAGS               = G2_ENTITY_INCLUDE_ALL_RELATIONS | G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_DATA | G2_ENTITY_INCLUDE_RECORD_MATCHING_INFO | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_ENTITY_INCLUDE_RELATED_ENTITY_NAME | G2_ENTITY_INCLUDE_RELATED_MATCHING_INFO | G2_ENTITY_INCLUDE_RELATED_RECORD_SUMMARY | G2_ENTITY_INCLUDE_REPRESENTATIVE_FEATURES // The recommended default flag values for getting entities.
+	G2_EXPORT_DEFAULT_FLAGS               = G2_ENTITY_DEFAULT_FLAGS | G2_EXPORT_INCLUDE_ALL_ENTITIES                                                                                                                                                                                                                                                                                             // The recommended default flag values for exporting entities.
+	G2_FIND_NETWORK_DEFAULT_FLAGS         = G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_FIND_NETWORK_MATCHING_INFO                                                                                                                                                                                                                                                     // The recommended default flag values for finding entity paths.
+	G2_FIND_PATH_DEFAULT_FLAGS            = G2_ENTITY_INCLUDE_ENTITY_NAME | G2_ENTITY_INCLUDE_RECORD_SUMMARY | G2_FIND_PATH_MATCHING_INFO                                                                                                                                                                                                                                                        // The recommended default flag values for finding entity paths.
+	G2_HOW_ENTITY_DEFAULT_FLAGS           = G2_INCLUDE_FEATURE_SCORES                                                                                                                                                                                                                                                                                                                            // The recommended default flag values for how-analysis on entities.
+	G2_RECORD_DEFAULT_FLAGS               = G2_ENTITY_INCLUDE_RECORD_JSON_DATA                                                                                                                                                                                                                                                                                                                   // The recommended default flag values for getting records.
+	G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS = G2_SEARCH_BY_ATTRIBUTES_ALL                                                                                                                                                                                                                                                                                                                          // The recommended default flag values for search-by-attributes
+	G2_VIRTUAL_ENTITY_DEFAULT_FLAGS       = G2_ENTITY_DEFAULT_FLAGS                                                                                                                                                                                                                                                                                                                              // The recommended default flag values for virtual-entity-analysis on entities.
+	G2_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_INCLUDE_FEATURE_SCORES                                                                                                                                                                                                            // The recommended default flag values for why-analysis on entities.
+	G2_WHY_RECORDS_DEFAULT_FLAGS          = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_INCLUDE_FEATURE_SCORES                                                                                                                                                                                                            // The recommended default flag values for why-analysis on entities.
+
 )
