@@ -472,9 +472,6 @@ var testCases = []struct {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2api_Null(test *testing.T) {
-}
-
 func TestFlagValues(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {

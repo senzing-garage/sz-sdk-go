@@ -81,7 +81,7 @@ var IdMessages = map[int]string{
 	8003: Prefix + "GetConfig",
 	8004: Prefix + "GetConfigList",
 	8005: Prefix + "GetDefaultConfigId",
-	8006: Prefix + "Init",
+	8006: Prefix + "Initialize",
 	8007: Prefix + "ReplaceDefaultConfigId",
 	8008: Prefix + "SetDefaultConfigId",
 	8009: Prefix + "GetSdkId",

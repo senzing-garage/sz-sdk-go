@@ -70,13 +70,13 @@ var IdMessages = map[int]string{
 	5933: "During test setup, call to g2engine.Destroy() failed.",
 	8001: Prefix + "CheckDatabasePerformance",
 	8003: Prefix + "Destroy",
-	8010: Prefix + "",
 	8021: Prefix + "Initialize",
 	8023: Prefix + "Reinitialize",
 	8024: Prefix + "GetSdkId",
 	8025: Prefix + "RegisterObserver",
 	8026: Prefix + "SetLogLevel",
 	8027: Prefix + "UnregisterObserver",
+	8028: Prefix + "PurgeRepository",
 }
 
 // Status strings for specific g2diagnostic messages.

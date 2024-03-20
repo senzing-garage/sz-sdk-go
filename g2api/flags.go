@@ -88,7 +88,7 @@ const (
 	BIT_60                                     // 59
 	BIT_61                                     // 60
 	BIT_62                                     // 61
-	G2_RETURN_INFO                             // 62
+	G2_RETURN_INFO                             // 62 return "WithInfo" information
 )
 
 // Flags used by the Senzing G2Engine.
@@ -136,6 +136,15 @@ const (
 	G2_WHY_RECORDS_DEFAULT_FLAGS          = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_INCLUDE_FEATURE_SCORES // The recommended default flag values for why-analysis on entities.
 )
 
+/*
+The Flags function method returns the Senzing engine configuration.
+
+Input
+  - flags: A list of "G2_XXX" flags
+
+Output
+  - An int64 combining all input "G2_XXX" flags.
+*/
 func Flags(flags ...int64) int64 {
 	var result int64 = 0
 	for _, flag := range flags {
