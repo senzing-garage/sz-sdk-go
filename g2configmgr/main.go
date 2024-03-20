@@ -65,7 +65,7 @@ var IdMessages = map[int]string{
 	5911: "During test setup, call to g2config.Destroy() failed.",
 	5912: "During test setup, call to g2configmgr.Initialize() failed.",
 	5913: "During test setup, call to g2configmgr.AddConfig() failed.",
-	5914: "During test setup, call to g2configmgr.SetDefaultConfigID() failed.",
+	5914: "During test setup, call to g2configmgr.SetDefaultConfigId() failed.",
 	5915: "During test setup, call to g2configmgr.Destroy() failed.",
 	5916: "During test setup, call to g2engine.Initialize() failed.",
 	5917: "During test setup, call to g2engine.AddRecord() failed.",

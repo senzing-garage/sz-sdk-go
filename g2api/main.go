@@ -74,10 +74,10 @@ type G2diagnostic interface {
 
 // The G2engine interface is a Golang representation of Senzing's libg2.h
 type G2engine interface {
-	AddRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) error
+	AddRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	CloseExport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
-	DeleteRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) error
+	DeleteRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	Destroy(ctx context.Context) error
 	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
 	ExportCsvEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
@@ -102,11 +102,11 @@ type G2engine interface {
 	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64, configId int64) error
 	PrimeEngine(ctx context.Context) error
 	ProcessRedoRecord(ctx context.Context, redoRecord string, flags int64) (string, error)
-	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) error
-	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) error
+	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
+	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	Reinitialize(ctx context.Context, initConfigId int64) error
-	ReplaceRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) error
+	ReplaceRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, attributes string, searchProfile string, flags int64) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
 	SetObserverOrigin(ctx context.Context, origin string)
