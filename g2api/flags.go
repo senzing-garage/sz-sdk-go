@@ -135,3 +135,11 @@ const (
 	G2_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_INCLUDE_FEATURE_SCORES // The recommended default flag values for why-analysis on entities.
 	G2_WHY_RECORDS_DEFAULT_FLAGS          = G2_ENTITY_DEFAULT_FLAGS | G2_ENTITY_OPTION_INCLUDE_FEATURE_STATS | G2_ENTITY_OPTION_INCLUDE_INTERNAL_FEATURES | G2_INCLUDE_FEATURE_SCORES // The recommended default flag values for why-analysis on entities.
 )
+
+func Flags(flags ...int64) int64 {
+	var result int64 = 0
+	for _, flag := range flags {
+		result = result | flag
+	}
+	return result
+}

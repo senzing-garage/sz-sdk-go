@@ -79,10 +79,10 @@ type G2engine interface {
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) error
 	Destroy(ctx context.Context) error
-	ExportCSVEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
-	ExportCSVEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
-	ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error)
-	ExportJSONEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
+	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
+	ExportCsvEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
+	ExportJsonEntityReport(ctx context.Context, flags int64) (uintptr, error)
+	ExportJsonEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
 	FindNetworkByEntityId(ctx context.Context, entityList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
 	FindNetworkByRecordId(ctx context.Context, recordList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)

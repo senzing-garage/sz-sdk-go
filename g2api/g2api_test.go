@@ -456,6 +456,16 @@ var testCases = []struct {
 		actual:   G2_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS,
 		expected: 0x000000000400380F,
 	},
+	{
+		name:     "OR 4",
+		actual:   G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES | G2_EXPORT_INCLUDE_POSSIBLY_SAME | G2_EXPORT_INCLUDE_POSSIBLY_RELATED | G2_EXPORT_INCLUDE_NAME_ONLY,
+		expected: 0x000000000000000F,
+	},
+	{
+		name:     "Flags(...)",
+		actual:   Flags(G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES, G2_EXPORT_INCLUDE_POSSIBLY_SAME, G2_EXPORT_INCLUDE_POSSIBLY_RELATED, G2_EXPORT_INCLUDE_NAME_ONLY),
+		expected: 0x000000000000000F,
+	},
 }
 
 // ----------------------------------------------------------------------------
