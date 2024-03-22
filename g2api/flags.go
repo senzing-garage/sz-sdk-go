@@ -5,8 +5,7 @@ package g2api
 // ----------------------------------------------------------------------------
 
 const (
-	G2_NO_FLAGS                              int64 = 0
-	G2_INITIALIZE_WITH_DEFAULT_CONFIGURATION int64 = 0
+	G2_NO_FLAGS int64 = 0
 )
 
 // Flags used by the Senzing G2Engine.
