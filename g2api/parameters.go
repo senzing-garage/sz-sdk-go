@@ -10,4 +10,5 @@ const (
 	G2_NO_EXCLUSIONS                         string = ""
 	G2_NO_REQUIRED_DATASOURCES               string = ""
 	G2_NO_SEARCH_PROFILE                     string = ""
+	G2_WITHOUT_INFO                          int64  = 0
 )

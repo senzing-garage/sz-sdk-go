@@ -92,7 +92,7 @@ const (
 	BIT_60                                     // 59
 	BIT_61                                     // 60
 	BIT_62                                     // 61
-	G2_RETURN_INFO                             // 62 return "WithInfo" information
+	G2_WITH_INFO                               // 62 return "WithInfo" information
 )
 
 // Flags used by the Senzing G2Engine.

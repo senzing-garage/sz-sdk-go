@@ -352,8 +352,8 @@ var testCases = []struct {
 		expected: 0x2000000000000000,
 	},
 	{ // 63
-		name:     "G2_RETURN_INFO",
-		actual:   G2_RETURN_INFO,
+		name:     "G2_WITH_INFO",
+		actual:   G2_WITH_INFO,
 		expected: 0x4000000000000000,
 	},
 	{
