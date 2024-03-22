@@ -9,6 +9,7 @@ package g2api
 // BIT_NN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered as 0..63
 const (
 	G2_NO_FLAGS                              int64 = 0
+	G2_INITIALIZE_WITH_DEFAULT_CONFIGURATION int64 = 0
 	G2_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES  int64 = 1 << iota // 0 we should include entities with "resolved" relationships
 	G2_EXPORT_INCLUDE_POSSIBLY_SAME                            // 1 we should include entities with "possibly same" relationships
 	G2_EXPORT_INCLUDE_POSSIBLY_RELATED                         // 2 we should include entities with "possibly related" relationships
