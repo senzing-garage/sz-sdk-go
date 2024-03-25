@@ -78,7 +78,7 @@ func extractErrorNumber(message string) (int, error) {
 	// If non-JSON submitted, inspect the string and return.
 
 	if !isJson(message) {
-		return G2ErrorCode(message), nil
+		return SzErrorCode(message), nil
 	}
 
 	// All "text" values will be aggregated into errorTexts.
@@ -111,26 +111,26 @@ func extractErrorNumber(message string) (int, error) {
 		}
 	}
 
-	// Loop through harvested "texts" and return the first one that produces a G2ErrorCode.
+	// Loop through harvested "texts" and return the first one that produces a SzErrorCode.
 
 	for _, errorText := range errorTexts {
-		result := G2ErrorCode(errorText)
+		result := SzErrorCode(errorText)
 		if result > 0 {
 			return result, nil
 		}
 	}
 
-	// No G2ErrorCode found.
+	// No SZErrorCode found.
 
 	return -1, err
 }
 
 /*
-isIn determines if a G2ErrorTypeId is in a list of G2ErrorTypeIds.
+isIn determines if a SzErrorTypeId is in a list of SzErrorTypeIds.
 */
-func isIn(needle G2ErrorTypeIds, haystack []G2ErrorTypeIds) bool {
-	for _, g2ErrorTypeId := range haystack {
-		if needle == g2ErrorTypeId {
+func isIn(needle SzErrorTypeIds, haystack []SzErrorTypeIds) bool {
+	for _, szErrorTypeId := range haystack {
+		if needle == szErrorTypeId {
 			return true
 		}
 	}
@@ -156,64 +156,64 @@ Input
   - originalError: The error containing the message to be maintained (i.e. err.Error()).
   - errorTypeIds: An ordered list of error types to wrap the original error.
 */
-func wrapError(originalError error, errorTypeIds []G2ErrorTypeIds) error {
+func wrapError(originalError error, errorTypeIds []SzErrorTypeIds) error {
 	result := originalError
 	for _, errorTypeId := range errorTypeIds {
 		switch errorTypeId {
 
 		// Category errors.
 
-		case G2BadInput:
-			result = G2BadInputError{
+		case SzBadInput:
+			result = SzBadInputError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
-		case G2Base:
-			result = G2BaseError{
+		case SzBase:
+			result = SzBaseError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
-		case G2Configuration:
-			result = G2ConfigurationError{
+		case SzConfiguration:
+			result = SzConfigurationError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
-		case G2Retryable:
-			result = G2RetryableError{
+		case SzRetryable:
+			result = SzRetryableError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
-		case G2Unrecoverable:
-			result = G2UnrecoverableError{
+		case SzUnrecoverable:
+			result = SzUnrecoverableError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
 
 			// Detail errors.
 
-		case G2Database:
-			result = G2DatabaseError{result}
-		case G2DatabaseConnectionLost:
-			result = G2DatabaseConnectionLostError{result}
-		case G2License:
-			result = G2LicenseError{result}
-		case G2NotFound:
-			result = G2NotFoundError{result}
-		case G2NotInitialized:
-			result = G2NotInitializedError{result}
-		case G2RetryTimeoutExceeded:
-			result = G2RetryTimeoutExceededError{result}
-		case G2Unhandled:
-			result = G2UnhandledError{result}
-		case G2UnknownDatasource:
-			result = G2UnhandledError{result}
+		case SzDatabase:
+			result = SzDatabaseError{result}
+		case SzDatabaseConnectionLost:
+			result = SzDatabaseConnectionLostError{result}
+		case SzLicense:
+			result = SzLicenseError{result}
+		case SzNotFound:
+			result = SzNotFoundError{result}
+		case SzNotInitialized:
+			result = SzNotInitializedError{result}
+		case SzRetryTimeoutExceeded:
+			result = SzRetryTimeoutExceededError{result}
+		case SzUnhandled:
+			result = SzUnhandledError{result}
+		case SzUnknownDatasource:
+			result = SzUnhandledError{result}
 
 		// Default error.
 
 		default:
-			result = G2BaseError{
+			result = SzBaseError{
 				error:          result,
-				G2ErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIds,
 			}
 		}
 	}
@@ -234,7 +234,7 @@ Input
   - desiredTypeError: An error having the nested types desired in the resulting error.
 */
 func Cast(originalError error, desiredTypeError error) error {
-	var errorTypeIds []G2ErrorTypeIds
+	var errorTypeIds []SzErrorTypeIds
 
 	// Handle case of nil.
 
@@ -244,25 +244,25 @@ func Cast(originalError error, desiredTypeError error) error {
 
 	result := originalError
 
-	// Get the desiredTypeError's G2ErrorTypeIds value.
+	// Get the desiredTypeError's SzErrorTypeIds value.
 
 	switch {
-	case errors.As(desiredTypeError, &G2BadInputError{}):
-		errorTypeIds = desiredTypeError.(G2BadInputError).G2ErrorTypeIds
-	case errors.As(desiredTypeError, &G2BaseError{}):
-		errorTypeIds = desiredTypeError.(G2BaseError).G2ErrorTypeIds
-	case errors.As(desiredTypeError, &G2ConfigurationError{}):
-		errorTypeIds = desiredTypeError.(G2ConfigurationError).G2ErrorTypeIds
-	case errors.As(desiredTypeError, &G2RetryableError{}):
-		errorTypeIds = desiredTypeError.(G2RetryableError).G2ErrorTypeIds
-	case errors.As(desiredTypeError, &G2UnrecoverableError{}):
-		errorTypeIds = desiredTypeError.(G2UnrecoverableError).G2ErrorTypeIds
+	case errors.As(desiredTypeError, &SzBadInputError{}):
+		errorTypeIds = desiredTypeError.(SzBadInputError).SzErrorTypeIds
+	case errors.As(desiredTypeError, &SzBaseError{}):
+		errorTypeIds = desiredTypeError.(SzBaseError).SzErrorTypeIds
+	case errors.As(desiredTypeError, &SzConfigurationError{}):
+		errorTypeIds = desiredTypeError.(SzConfigurationError).SzErrorTypeIds
+	case errors.As(desiredTypeError, &SzRetryableError{}):
+		errorTypeIds = desiredTypeError.(SzRetryableError).SzErrorTypeIds
+	case errors.As(desiredTypeError, &SzUnrecoverableError{}):
+		errorTypeIds = desiredTypeError.(SzUnrecoverableError).SzErrorTypeIds
 	}
 
 	// Cast.
 
 	if len(errorTypeIds) > 0 {
-		if IsInList(originalError, AllG2ErrorTypes) {
+		if IsInList(originalError, AllSzErrorTypes) {
 			result = errors.New(result.Error())
 		}
 		result = wrapError(result, errorTypeIds)
@@ -272,7 +272,7 @@ func Cast(originalError error, desiredTypeError error) error {
 
 /*
 The Convert function uses the error message from the originalError to determine
-the appropriate g2error type hierarchy.
+the appropriate szerror type hierarchy.
 
 Input
   - originalError: The error containing the message to be analyzed.
@@ -288,18 +288,18 @@ func Convert(originalError error) error {
 		if extractedErrorNumber < 1 {
 			return originalError
 		}
-		result = G2Error(extractedErrorNumber, originalError.Error())
+		result = SzError(extractedErrorNumber, originalError.Error())
 	}
 	return result
 }
 
 /*
-The G2ErrorMessage function returns the string value from the Senzing error message.
+The SzErrorMessage function returns the string value from the Senzing error message.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's G2xxx_getLastException message.
 */
-func G2ErrorMessage(senzingErrorMessage string) string {
+func SzErrorMessage(senzingErrorMessage string) string {
 	result := ""
 	splits := strings.Split(senzingErrorMessage, "|")
 	if len(splits) > 1 {
@@ -309,13 +309,13 @@ func G2ErrorMessage(senzingErrorMessage string) string {
 }
 
 /*
-The G2ErrorCode function returns the integer error code value from the Senzing error message.
+The SzErrorCode function returns the integer error code value from the Senzing error message.
 Example Senzing error message: "0037E|Unknown resolved entity value '-4'"
 
 Input
   - senzingErrorMessage: The message returned from Senzing's G2xxx_getLastException message.
 */
-func G2ErrorCode(senzingErrorMessage string) int {
+func SzErrorCode(senzingErrorMessage string) int {
 
 	result := 0
 	if strings.Contains(senzingErrorMessage, "|") {
@@ -337,15 +337,15 @@ func G2ErrorCode(senzingErrorMessage string) int {
 }
 
 /*
-The G2Error function returns the integer error code value from the Senzing error message.
+The SzError function returns the integer error code value from the Senzing error message.
 
 Input
   - senzingErrorCode: The error integer extracted from Senzing's G2xxx_getLastException message.
   - message: The message to be returned by err.Error().
 */
-func G2Error(senzingErrorCode int, message string) error {
+func SzError(senzingErrorCode int, message string) error {
 	var result error = errors.New(message)
-	if errorTypeIds, ok := G2ErrorTypes[senzingErrorCode]; ok {
+	if errorTypeIds, ok := SzErrorTypes[senzingErrorCode]; ok {
 		result = wrapError(result, errorTypeIds)
 	}
 	return result
@@ -358,21 +358,21 @@ Input
   - err: The error to be tested.
   - errorType: The error type desired.
 */
-func Is(err error, errorType G2ErrorTypeIds) bool {
-	if errors.As(err, &G2BadInputError{}) {
-		return isIn(errorType, err.(G2BadInputError).G2ErrorTypeIds)
+func Is(err error, errorType SzErrorTypeIds) bool {
+	if errors.As(err, &SzBadInputError{}) {
+		return isIn(errorType, err.(SzBadInputError).SzErrorTypeIds)
 	}
-	if errors.As(err, &G2BaseError{}) {
-		return isIn(errorType, err.(G2BaseError).G2ErrorTypeIds)
+	if errors.As(err, &SzBaseError{}) {
+		return isIn(errorType, err.(SzBaseError).SzErrorTypeIds)
 	}
-	if errors.As(err, &G2ConfigurationError{}) {
-		return isIn(errorType, err.(G2ConfigurationError).G2ErrorTypeIds)
+	if errors.As(err, &SzConfigurationError{}) {
+		return isIn(errorType, err.(SzConfigurationError).SzErrorTypeIds)
 	}
-	if errors.As(err, &G2RetryableError{}) {
-		return isIn(errorType, err.(G2RetryableError).G2ErrorTypeIds)
+	if errors.As(err, &SzRetryableError{}) {
+		return isIn(errorType, err.(SzRetryableError).SzErrorTypeIds)
 	}
-	if errors.As(err, &G2UnrecoverableError{}) {
-		return isIn(errorType, err.(G2UnrecoverableError).G2ErrorTypeIds)
+	if errors.As(err, &SzUnrecoverableError{}) {
+		return isIn(errorType, err.(SzUnrecoverableError).SzErrorTypeIds)
 	}
 	return false
 }
@@ -385,10 +385,10 @@ Input
   - err: The error to be tested.
   - errorType: A list of error types desired.
 */
-func IsInList(err error, errorType []G2ErrorTypeIds) bool {
+func IsInList(err error, errorType []SzErrorTypeIds) bool {
 	result := false
-	for _, g2ErrorTypeId := range errorType {
-		if Is(err, g2ErrorTypeId) {
+	for _, szErrorTypeId := range errorType {
+		if Is(err, szErrorTypeId) {
 			return true
 		}
 	}

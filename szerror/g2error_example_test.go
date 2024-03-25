@@ -12,72 +12,72 @@ import (
 
 func ExampleCast() {
 	originalError := errors.New("Original message")
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	desiredTypeError := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	desiredTypeError := SzError(SzErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	err := Cast(originalError, desiredTypeError)
 	fmt.Printf("Error type: %s; Error message: %s", reflect.TypeOf(err), err.Error())
-	// Output: Error type: szerror.G2BadInputError; Error message: Original message
+	// Output: Error type: szerror.SzBadInputError; Error message: Original message
 }
 
-func ExampleG2ErrorMessage() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	result := G2ErrorMessage(senzingErrorMessage)
+func ExampleSzErrorMessage() {
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	result := SzErrorMessage(senzingErrorMessage)
 	fmt.Println(result)
 	// Output: Test message
 }
 
-func ExampleG2ErrorCode() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	result := G2ErrorCode(senzingErrorMessage)
+func ExampleSzErrorCode() {
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	result := SzErrorCode(senzingErrorMessage)
 	fmt.Println(result)
-	// Output: 99911
+	// Output: 33
 }
 
-func ExampleG2Error() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+func ExampleSzError() {
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	err := SzError(SzErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	fmt.Println(err)
 	// Output: {"messageId": 1}
 }
 
-func ExampleG2Error_typeAssertion() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
-	if errors.As(err, &G2BadInputError{}) {
-		fmt.Println("Is a G2BadInputError")
-		if _, ok := err.(G2BadInputError).error.(G2NotFoundError); ok {
-			fmt.Println("Is a G2NotFoundError")
+func ExampleSzError_typeAssertion() {
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	err := SzError(SzErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+	if errors.As(err, &SzBadInputError{}) {
+		fmt.Println("Is a SzBadInputError")
+		if _, ok := err.(SzBadInputError).error.(SzNotFoundError); ok {
+			fmt.Println("Is a SzNotFoundError")
 		}
 	}
 	// Output:
-	// Is a G2BadInputError
-	// Is a G2NotFoundError
+	// Is a SzBadInputError
+	// Is a SzNotFoundError
 }
 
 func ExampleIs() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	err := SzError(SzErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	if err != nil {
-		if Is(err, G2BadInput) {
-			fmt.Println("Is a G2BadInputError")
+		if Is(err, SzBadInput) {
+			fmt.Println("Is a SzBadInputError")
 		}
-		if Is(err, G2NotFound) {
-			fmt.Println("Is a G2NotFoundError")
+		if Is(err, SzNotFound) {
+			fmt.Println("Is a SzNotFoundError")
 		}
-		if Is(err, G2Unrecoverable) {
-			fmt.Println("Is a G2Unrecoverable")
+		if Is(err, SzUnrecoverable) {
+			fmt.Println("Is a SzUnrecoverable")
 		}
 	}
 	// Output:
-	// Is a G2BadInputError
-	// Is a G2NotFoundError
+	// Is a SzBadInputError
+	// Is a SzNotFoundError
 }
 
 func ExampleIsInList() {
-	senzingErrorMessage := "99911E|Test message" // Example message from Senzing G2 engine.
-	err := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
+	senzingErrorMessage := "33E|Test message" // Example message from Senzing G2 engine.
+	err := SzError(SzErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	if err != nil {
-		if IsInList(err, []G2ErrorTypeIds{G2License, G2RetryTimeoutExceeded, G2BadInput}) {
+		if IsInList(err, []SzErrorTypeIds{SzLicense, SzRetryTimeoutExceeded, SzBadInput}) {
 			fmt.Println("Yes it is one of those listed")
 		}
 	}

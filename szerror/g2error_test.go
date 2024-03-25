@@ -12,15 +12,15 @@ var testCases = []struct {
 	expectedCode    int
 	expectedMessage string
 	expectedType    error
-	expectedTypes   []G2ErrorTypeIds
-	falseTypes      []G2ErrorTypeIds
+	expectedTypes   []SzErrorTypeIds
+	falseTypes      []SzErrorTypeIds
 	message         string
 	name            string
 	senzingMessage  string
 }{
 	{
-		name:           "g2error-99900",
-		senzingMessage: "99900I|Test message",
+		name:           "szerror-0005",
+		senzingMessage: "5I|Test message",
 		message: `{
 			"errors": [
 				{
@@ -29,203 +29,171 @@ var testCases = []struct {
 				},
 				{
 					"id": "senzing-60044001",
-					"text": "99900I|Test message"
+					"text": "5I|Test message"
 				}
 			]
 		}`,
-		expectedCode:    99900,
+		expectedCode:    5,
 		expectedMessage: "Test message",
-		expectedType:    G2BaseError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Base},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzBaseError{},
+		expectedTypes:   []SzErrorTypeIds{SzBase},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 	{
-		name:           "g2error-99910",
-		senzingMessage: "99910W|Test message",
+		name:           "szerror-0007",
+		senzingMessage: "7W|Test message",
 		message: `{
 			"errors": [{
-				"text": "99910W|Test message",
+				"text": "7W|Test message",
 				"status": "Warning"
 			}]
 		}`,
-		expectedCode:    99910,
+		expectedCode:    7,
 		expectedMessage: "Test message",
-		expectedType:    G2BadInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2BadInput},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzBadInputError{},
+		expectedTypes:   []SzErrorTypeIds{SzBadInput},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 	{
-		name:           "g2error-99911",
-		senzingMessage: "99911E|Test message",
+		name:           "szerror-0010",
+		senzingMessage: "10E|Test message",
 		message: `{
 			"errors": [{
-				"text": "99911E|Test message"
+				"text": "10E|Test message"
 			}]
 		}`,
-		expectedCode:    99911,
+		expectedCode:    10,
 		expectedMessage: "Test message",
-		expectedType:    G2BadInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2NotFound, G2BadInput},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzRetryableError{},
+		expectedTypes:   []SzErrorTypeIds{SzRetryTimeoutExceeded, SzRetryable},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 	{
-		name:           "g2error-99912",
-		senzingMessage: "99912E|Test message",
+		name:           "szerror-0014",
+		senzingMessage: "14W|Test message",
 		message: `{
 			"errors": [{
-				"text": "99912E|Test message"
+				"text": "14W|Test message"
 			}]
 		}`,
-		expectedCode:    99912,
+		expectedCode:    14,
 		expectedMessage: "Test message",
-		expectedType:    G2BadInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2UnknownDatasource, G2BadInput},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzConfigurationError{},
+		expectedTypes:   []SzErrorTypeIds{SzConfiguration},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 	{
-		name:           "g2error-99920",
-		senzingMessage: "99920W|Test message",
-		message: `{
-			"errors": [{
-				"text": "99920W|Test message"
-			}]
-		}`,
-		expectedCode:    99920,
-		expectedMessage: "Test message",
-		expectedType:    G2ConfigurationError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Configuration},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
-	},
-	{
-		name:           "g2error-99930",
-		senzingMessage: "99930E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99930E|Test message"
-			}]
-		}`,
-		expectedCode:    99930,
-		expectedMessage: "Test message",
-		expectedType:    G2RetryableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Retryable},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
-	},
-	{
-		name:           "g2error-99931",
-		senzingMessage: "99931E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99931E|Test message"
-			}]
-		}`,
-		expectedCode:    99931,
-		expectedMessage: "Test message",
-		expectedType:    G2RetryableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2DatabaseConnectionLost, G2Retryable},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
-	},
-	{
-		name:           "g2error-99932",
-		senzingMessage: "99932E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99932E|Test message"
-			}]
-		}`,
-		expectedCode:    99932,
-		expectedMessage: "Test message",
-		expectedType:    G2RetryableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2RetryTimeoutExceeded, G2Retryable},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
-	},
-	{
-		name:           "g2error-99940",
-		senzingMessage: "99940E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99940E|Test message"
-			}]
-		}`,
-		expectedCode:    99940,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2BadInput},
-	},
-	{
-		name:           "g2error-99941",
-		senzingMessage: "99941E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99941E|Test message"
-			}]
-		}`,
-		expectedCode:    99941,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Database, G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2BadInput},
-	},
-	{
-		name:           "g2error-99942",
-		senzingMessage: "99942E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99942E|Test message"
-			}]
-		}`,
-		expectedCode:    99942,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2License, G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2BadInput},
-	},
-	{
-		name:           "g2error-99943",
-		senzingMessage: "99943E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99943E|Test message"
-			}]
-		}`,
-		expectedCode:    99943,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2NotInitialized, G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2BadInput},
-	},
-	{
-		name:           "g2error-99944",
-		senzingMessage: "99944E|Test message",
-		message: `{
-			"errors": [{
-				"text": "99944E|Test message"
-			}]
-		}`,
-		expectedCode:    99944,
-		expectedMessage: "Test message",
-		expectedType:    G2UnrecoverableError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Unhandled, G2Unrecoverable},
-		falseTypes:      []G2ErrorTypeIds{G2BadInput},
-	},
-
-	// ------------------------------------------------------------------------
-
-	{
-		name:           "g2error-0023",
+		name:           "szerror-0023",
 		senzingMessage: "0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
 		message: `{
 			"errors": ["0023E|Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'"],
 		}`,
 		expectedCode:    23,
 		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
-		expectedType:    G2BadInputError{},
-		expectedTypes:   []G2ErrorTypeIds{G2BadInput},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzBadInputError{},
+		expectedTypes:   []SzErrorTypeIds{SzBadInput},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
-
 	{
-		name:           "g2error-1019",
+		name:           "szerror-0027",
+		senzingMessage: "27E|Test message",
+		message: `{
+			"errors": [{
+				"text": "27E|Test message"
+			}]
+		}`,
+		expectedCode:    27,
+		expectedMessage: "Test message",
+		expectedType:    SzBadInputError{},
+		expectedTypes:   []SzErrorTypeIds{SzUnknownDatasource, SzBadInput},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+	},
+	{
+		name:           "szerror-0033",
+		senzingMessage: "33E|Test message",
+		message: `{
+			"errors": [{
+				"text": "33E|Test message"
+			}]
+		}`,
+		expectedCode:    33,
+		expectedMessage: "Test message",
+		expectedType:    SzBadInputError{},
+		expectedTypes:   []SzErrorTypeIds{SzNotFound, SzBadInput},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+	},
+	{
+		name:           "szerror-0048",
+		senzingMessage: "48E|Test message",
+		message: `{
+			"errors": [{
+				"text": "48E|Test message"
+			}]
+		}`,
+		expectedCode:    48,
+		expectedMessage: "Test message",
+		expectedType:    SzUnrecoverableError{},
+		expectedTypes:   []SzErrorTypeIds{SzNotInitialized, SzUnrecoverable},
+		falseTypes:      []SzErrorTypeIds{SzBadInput},
+	},
+	{
+		name:           "szerror-0054",
+		senzingMessage: "54E|Test message",
+		message: `{
+			"errors": [{
+				"text": "54E|Test message"
+			}]
+		}`,
+		expectedCode:    54,
+		expectedMessage: "Test message",
+		expectedType:    SzUnrecoverableError{},
+		expectedTypes:   []SzErrorTypeIds{SzDatabase, SzUnrecoverable},
+		falseTypes:      []SzErrorTypeIds{SzBadInput},
+	},
+	{
+		name:           "szerror-00087",
+		senzingMessage: "87E|Test message",
+		message: `{
+			"errors": [{
+				"text": "87E|Test message"
+			}]
+		}`,
+		expectedCode:    87,
+		expectedMessage: "Test message",
+		expectedType:    SzUnrecoverableError{},
+		expectedTypes:   []SzErrorTypeIds{SzUnhandled, SzUnrecoverable},
+		falseTypes:      []SzErrorTypeIds{SzBadInput},
+	},
+	{
+		name:           "szerror-0999",
+		senzingMessage: "999E|Test message",
+		message: `{
+			"errors": [{
+				"text": "999E|Test message"
+			}]
+		}`,
+		expectedCode:    999,
+		expectedMessage: "Test message",
+		expectedType:    SzUnrecoverableError{},
+		expectedTypes:   []SzErrorTypeIds{SzLicense, SzUnrecoverable},
+		falseTypes:      []SzErrorTypeIds{SzBadInput},
+	},
+	{
+		name:           "szerror-1006",
+		senzingMessage: "1006E|Test message",
+		message: `{
+			"errors": [{
+				"text": "1006E|Test message"
+			}]
+		}`,
+		expectedCode:    1006,
+		expectedMessage: "Test message",
+		expectedType:    SzRetryableError{},
+		expectedTypes:   []SzErrorTypeIds{SzDatabaseConnectionLost, SzRetryable},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+	},
+	{
+		name:           "szerror-1019",
 		senzingMessage: "1019E|Test message",
 		message: `
 		{
@@ -278,9 +246,9 @@ var testCases = []struct {
 		}`,
 		expectedCode:    1019,
 		expectedMessage: "Test message",
-		expectedType:    G2ConfigurationError{},
-		expectedTypes:   []G2ErrorTypeIds{G2Configuration},
-		falseTypes:      []G2ErrorTypeIds{G2Unrecoverable},
+		expectedType:    SzConfigurationError{},
+		expectedTypes:   []SzErrorTypeIds{SzConfiguration},
+		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 }
 
@@ -288,11 +256,11 @@ var testCases = []struct {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2error_Cast(test *testing.T) {
+func TestSzerror_Cast(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
-			desiredTypeError := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(originalError, desiredTypeError)
 			assert.NotNil(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
@@ -307,13 +275,13 @@ func TestG2error_Cast(test *testing.T) {
 	}
 }
 
-func TestG2error_Cast_nil(test *testing.T) {
+func TestSzerror_Cast_nil(test *testing.T) {
 	actual := Convert(nil)
 	assert.Nil(test, actual)
 
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			desiredTypeError := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(nil, desiredTypeError)
 			assert.Nil(test, actual, "Nil actual")
 		})
@@ -327,7 +295,7 @@ func TestG2error_Cast_nil(test *testing.T) {
 	}
 }
 
-func TestG2error_Convert(test *testing.T) {
+func TestSzerror_Convert(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
@@ -345,33 +313,33 @@ func TestG2error_Convert(test *testing.T) {
 	}
 }
 
-func TestG2error_Convert_nil(test *testing.T) {
+func TestSzerror_Convert_nil(test *testing.T) {
 	actual := Convert(nil)
 	assert.Nil(test, actual)
 }
 
-func TestG2error_G2ErrorMessage(test *testing.T) {
+func TestSzerror_SzErrorMessage(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := G2ErrorMessage(testCase.senzingMessage)
+			actual := SzErrorMessage(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedMessage, actual, testCase.name)
 		})
 	}
 }
 
-func TestG2error_G2ErrorCode(test *testing.T) {
+func TestSzerror_SzErrorCode(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := G2ErrorCode(testCase.senzingMessage)
+			actual := SzErrorCode(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedCode, actual, testCase.name)
 		})
 	}
 }
 
-func TestG2error_G2Error(test *testing.T) {
+func TestSzerror_SzError(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			assert.NotNil(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
@@ -379,10 +347,10 @@ func TestG2error_G2Error(test *testing.T) {
 	}
 }
 
-func TestG2error_Is(test *testing.T) {
+func TestSzerror_Is(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			assert.NotNil(test, actual)
 			for _, g2ErrorTypeId := range testCase.expectedTypes {
 				assert.True(test, Is(actual, g2ErrorTypeId), g2ErrorTypeId)
@@ -394,10 +362,10 @@ func TestG2error_Is(test *testing.T) {
 	}
 }
 
-func TestG2error_IsInList(test *testing.T) {
+func TestSzerror_IsInList(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := G2Error(G2ErrorCode(testCase.senzingMessage), testCase.message)
+			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			assert.NotNil(test, actual)
 			assert.True(test, IsInList(actual, testCase.expectedTypes))
 			assert.False(test, IsInList(actual, testCase.falseTypes))
@@ -405,10 +373,10 @@ func TestG2error_IsInList(test *testing.T) {
 	}
 }
 
-func TestG2error_Unwrap(test *testing.T) {
+func TestSzerror_Unwrap(test *testing.T) {
 	expectedWrapCount := 1
 	actualWrapCount := 0
-	err := G2Error(99901, "Test message")
+	err := SzError(99901, "Test message")
 	for err != nil {
 		actualWrapCount += 1
 		err = errors.Unwrap(err)
