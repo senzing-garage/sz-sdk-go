@@ -16,7 +16,7 @@ func ExampleCast() {
 	desiredTypeError := G2Error(G2ErrorCode(senzingErrorMessage), `{"messageId": 1}`)
 	err := Cast(originalError, desiredTypeError)
 	fmt.Printf("Error type: %s; Error message: %s", reflect.TypeOf(err), err.Error())
-	// Output: Error type: g2error.G2BadInputError; Error message: Original message
+	// Output: Error type: szerror.G2BadInputError; Error message: Original message
 }
 
 func ExampleG2ErrorMessage() {
