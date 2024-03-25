@@ -22,7 +22,7 @@ type StringFragment struct {
 
 // The G2config interface is a Golang representation of Senzing's libg2config.h
 type G2config interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
+	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceDefinition string) (string, error)
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) error
