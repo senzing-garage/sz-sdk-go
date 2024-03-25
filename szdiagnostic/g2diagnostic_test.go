@@ -1,4 +1,4 @@
-package g2product
+package szdiagnostic
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2product_Null(test *testing.T) {
+func TestG2diagnostic_Null(test *testing.T) {
 }

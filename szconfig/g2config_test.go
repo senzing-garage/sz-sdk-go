@@ -1,4 +1,4 @@
-package g2configmgr
+package szconfig
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2configmgr_Null(test *testing.T) {
+func TestG2config_Null(test *testing.T) {
 }

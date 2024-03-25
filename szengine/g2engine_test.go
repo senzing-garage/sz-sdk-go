@@ -1,4 +1,4 @@
-package g2engine
+package szengine
 
 import (
 	"testing"

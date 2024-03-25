@@ -1,4 +1,4 @@
-package g2diagnostic
+package szdiagnostic
 
 // ----------------------------------------------------------------------------
 // Constants

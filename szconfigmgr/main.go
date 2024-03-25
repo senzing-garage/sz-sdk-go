@@ -1,60 +1,57 @@
-package g2config
+package szconfigmgr
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
 // Log message prefix.
-const Prefix = "g2config."
+const Prefix = "g2configmgr."
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for g2config implementations.
+// Message templates for g2configmgr implementations.
 var IdMessages = map[int]string{
-	1:    "Enter " + Prefix + "AddDataSource(%v, %s).",
-	2:    "Exit  " + Prefix + "AddDataSource(%v, %s) returned (%s, %v).",
+	1:    "Enter " + Prefix + "AddConfig(%s, %s).",
+	2:    "Exit  " + Prefix + "AddConfig(%s, %s) returned (%d, %v).",
 	3:    "Enter " + Prefix + "ClearLastException().",
 	4:    "Exit  " + Prefix + "ClearLastException() returned (%v).",
-	5:    "Enter " + Prefix + "Close(%v).",
-	6:    "Exit  " + Prefix + "Close(%v) returned (%v).",
-	7:    "Enter " + Prefix + "Create().",
-	8:    "Exit  " + Prefix + "Create() returned (%v, %v).",
-	9:    "Enter " + Prefix + "DeleteDataSource(%v, %s).",
-	10:   "Exit  " + Prefix + "DeleteDataSource(%v, %s) returned (%v).",
-	11:   "Enter " + Prefix + "Destroy().",
-	12:   "Exit  " + Prefix + "Destroy() returned (%v).",
+	5:    "Enter " + Prefix + "Destroy().",
+	6:    "Exit  " + Prefix + "Destroy() returned (%v).",
+	7:    "Enter " + Prefix + "GetConfig(%d).",
+	8:    "Exit  " + Prefix + "GetConfig(%d) returned (%s, %v).",
+	9:    "Enter " + Prefix + "GetConfigList().",
+	10:   "Exit  " + Prefix + "GetConfigList() returned (%s, %v).",
+	11:   "Enter " + Prefix + "GetDefaultConfigId().",
+	12:   "Exit  " + Prefix + "GetDefaultConfigId() returned (%d, %v).",
 	13:   "Enter " + Prefix + "GetLastException().",
 	14:   "Exit  " + Prefix + "GetLastException() returned (%s, %v).",
 	15:   "Enter " + Prefix + "GetLastExceptionCode().",
 	16:   "Exit  " + Prefix + "GetLastExceptionCode() returned (%d, %v).",
 	17:   "Enter " + Prefix + "Initialize(%s, %s, %d).",
 	18:   "Exit  " + Prefix + "Initialize(%s, %s, %d) returned (%v).",
-	19:   "Enter " + Prefix + "GetDataSources(%v).",
-	20:   "Exit  " + Prefix + "GetDataSources(%v) returned (%s, %v).",
-	21:   "Enter " + Prefix + "Load(%s).",
-	22:   "Exit  " + Prefix + "Load(%s) returned (%v, %v).",
-	23:   "Enter " + Prefix + "GetJsonString(%v).",
-	24:   "Exit  " + Prefix + "GetJsonString(%v) returned (%s, %v).",
-	25:   "Enter " + Prefix + "SetLogLevel(%v).",
-	26:   "Exit  " + Prefix + "SetLogLevel(%v) returned (%v).",
-	27:   "Enter " + Prefix + "RegisterObserver(%s).",
-	28:   "Exit  " + Prefix + "RegisterObserver(%s) returned (%v).",
-	29:   "Enter " + Prefix + "UnregisterObserver(%s).",
-	30:   "Exit  " + Prefix + "UnregisterObserver(%s) returned (%v).",
-	31:   "Enter " + Prefix + "GetSdkId().",
-	32:   "Exit  " + Prefix + "GetSdkId() returned (%s).",
-	4001: Prefix + "G2Config_addDataSource(%v, %s) failed. Return code: %d",
-	4002: Prefix + "G2Config_close(%v) failed. Return code: %d",
-	4003: Prefix + "G2Config_create() failed. Return code: %d",
-	4004: Prefix + "G2Config_deleteDataSource(%v, %s) failed. Return code: %d",
-	4005: Prefix + "G2Config_getLastException() failed. Return code: %d",
-	4006: Prefix + "G2Config_destroy() failed. Return code: %d",
-	4007: Prefix + "G2Config_init(%s, %s, %d) failed. Return code: %d",
-	4008: Prefix + "G2Config_listDataSources() failed. Return code: %d",
-	4009: Prefix + "G2Config_load(%s) failed. Return code: %d",
-	4010: Prefix + "G2Config_save(%v) failed. Return code: %d",
+	19:   "Enter " + Prefix + "ReplaceDefaultConfigId(%d, %d).",
+	20:   "Exit  " + Prefix + "ReplaceDefaultConfigId(%d, %d) returned (%v).",
+	21:   "Enter " + Prefix + "SetDefaultConfigId(%d).",
+	22:   "Exit  " + Prefix + "SetDefaultConfigId(%d) returned (%v).",
+	23:   "Enter " + Prefix + "SetLogLevel(%v).",
+	24:   "Exit  " + Prefix + "SetLogLevel(%v) returned (%v).",
+	25:   "Enter " + Prefix + "RegisterObserver(%s).",
+	26:   "Exit  " + Prefix + "RegisterObserver(%s) returned (%v).",
+	27:   "Enter " + Prefix + "UnregisterObserver(%s).",
+	28:   "Exit  " + Prefix + "UnregisterObserver(%s) returned (%v).",
+	29:   "Enter " + Prefix + "GetSdkId().",
+	30:   "Exit  " + Prefix + "GetSdkId() returned (%s).",
+	4001: Prefix + "G2ConfigMgr_addConfig(%s, %s) failed. Return code: %d",
+	4002: Prefix + "G2ConfigMgr_destroy() failed. Return code: %d",
+	4003: Prefix + "G2ConfigMgr_getConfig(%d) failed. Return code: %d",
+	4004: Prefix + "G2ConfigMgr_getConfigList() failed. Return code: %d",
+	4005: Prefix + "G2ConfigMgr_getDefaultConfigID() failed. Return code: %d",
+	4006: Prefix + "G2ConfigMgr_getLastException() failed. Return code: %d",
+	4007: Prefix + "G2ConfigMgr_init(%s, %s, %d) failed. Return code: %d",
+	4008: Prefix + "G2ConfigMgr_replaceDefaultConfigID(%d, %d) failed. Return code: %d",
+	4009: Prefix + "G2ConfigMgr_setDefaultConfigID(%d) failed. Return code: %d",
 	5901: "During test setup, call to messagelogger.NewSenzingApiLogger() failed.",
 	5902: "During test setup, call to g2engineconfigurationjson.BuildSimpleSystemConfigurationJsonViaMap() failed.",
 	5903: "During test setup, call to g2engine.Initialize() failed.",
@@ -79,20 +76,19 @@ var IdMessages = map[int]string{
 	5931: "During test setup, call to g2engine.Initialize() failed.",
 	5932: "During test setup, call to g2diagnostic.PurgeRepository() failed.",
 	5933: "During test setup, call to g2engine.Destroy() failed.",
-	8001: Prefix + "AddDataSource",
-	8002: Prefix + "Close",
-	8003: Prefix + "Create",
-	8004: Prefix + "DeleteDataSource",
-	8005: Prefix + "Destroy",
+	8001: Prefix + "AddConfig",
+	8002: Prefix + "Destroy",
+	8003: Prefix + "GetConfig",
+	8004: Prefix + "GetConfigList",
+	8005: Prefix + "GetDefaultConfigId",
 	8006: Prefix + "Initialize",
-	8007: Prefix + "GetDataSources",
-	8008: Prefix + "Load",
-	8009: Prefix + "GetJsonString",
-	8010: Prefix + "GetSdkId",
-	8011: Prefix + "RegisterObserver",
-	8012: Prefix + "SetLogLevel",
-	8013: Prefix + "UnregisterObserver",
+	8007: Prefix + "ReplaceDefaultConfigId",
+	8008: Prefix + "SetDefaultConfigId",
+	8009: Prefix + "GetSdkId",
+	8010: Prefix + "RegisterObserver",
+	8011: Prefix + "SetLogLevel",
+	8012: Prefix + "UnregisterObserver",
 }
 
-// Status strings for specific g2config messages.
+// Status strings for specific g2configmgr messages.
 var IdStatuses = map[int]string{}

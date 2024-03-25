@@ -1,4 +1,4 @@
-package g2api
+package szapi
 
 import (
 	"context"
