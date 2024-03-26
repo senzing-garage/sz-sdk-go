@@ -20,8 +20,8 @@ type StringFragment struct {
 // Types - interface
 // ----------------------------------------------------------------------------
 
-// The G2config interface is a Golang representation of Senzing's libg2config.h
-type G2config interface {
+// The Szconfig interface is a Golang representation of Senzing's libg2config.h
+type Szconfig interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceDefinition string) (string, error)
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
@@ -39,8 +39,8 @@ type G2config interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The G2configmgr interface is a Golang representation of Senzing's libg2configmgr.h
-type G2configmgr interface {
+// The Szconfigmgr interface is a Golang representation of Senzing's libg2configmgr.h
+type Szconfigmgr interface {
 	AddConfig(ctx context.Context, configDefinition string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configId int64) (string, error)
@@ -57,8 +57,8 @@ type G2configmgr interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The G2diagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
-type G2diagnostic interface {
+// The Szdiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
+type Szdiagnostic interface {
 	CheckDatabasePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
 	GetObserverOrigin(ctx context.Context) string
@@ -72,8 +72,8 @@ type G2diagnostic interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The G2engine interface is a Golang representation of Senzing's libg2.h
-type G2engine interface {
+// The Szengine interface is a Golang representation of Senzing's libg2.h
+type Szengine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	CloseExport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
@@ -116,8 +116,8 @@ type G2engine interface {
 	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
 }
 
-// The G2product interface is a Golang representation of Senzing's libg2product.h
-type G2product interface {
+// The Szproduct interface is a Golang representation of Senzing's libg2product.h
+type Szproduct interface {
 	Destroy(ctx context.Context) error
 	GetLicense(ctx context.Context) (string, error)
 	GetObserverOrigin(ctx context.Context) string

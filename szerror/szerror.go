@@ -27,13 +27,13 @@ With recursion, extractErrorTexts() parses JSON like:
 
 	"text": "x",
 	"errors": [{
-		"text": {
-			"text": "y",
-			"errors": [{
-				"text": {
-					"text": "z",
-					"errors": [{
-						"text": "1019E|Datastore schema..."
+	    "text": {
+	        "text": "y",
+	        "errors": [{
+	            "text": {
+	                "text": "z",
+	                "errors": [{
+	                    "text": "1019E|Datastore schema..."
 
 and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
 */

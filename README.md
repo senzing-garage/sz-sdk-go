@@ -37,11 +37,11 @@ The Senzing g2-sdk-go packages provide interface definitions for implementations
 When programming, the recommendation is to "program to an interface".
 The Senzing Go SDK API interfaces are documented at:
 
-- [G2Config](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2config#G2config)
-- [G2Configmgr](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2configmgr#G2configmgr)
-- [G2Diagnostic](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2diagnostic#G2diagnostic)
-- [G2Engine](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2engine#G2engine)
-- [G2Product](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/g2product#G2product)
+- [Szconfig](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/szconfig#Szconfig)
+- [Szconfigmgr](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/szconfigmgr#Szconfigmgr)
+- [Szdiagnostic](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/szdiagnostic#Szdiagnostic)
+- [Szengine](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/szengine#Szengine)
+- [Szproduct](https://pkg.go.dev/github.com/senzing-garage/g2-sdk-go/szproduct#Szproduct)
 
 The Senzing g2-sdk-go packages provide interface definitions for the following implementations.
 For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in package directories.

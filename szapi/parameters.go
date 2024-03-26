@@ -5,10 +5,10 @@ package szapi
 // ----------------------------------------------------------------------------
 
 const (
-	G2_INITIALIZE_WITH_DEFAULT_CONFIGURATION int64  = 0
-	G2_NO_ATTRIBUTES                         string = ""
-	G2_NO_EXCLUSIONS                         string = ""
-	G2_NO_REQUIRED_DATASOURCES               string = ""
-	G2_NO_SEARCH_PROFILE                     string = ""
-	G2_WITHOUT_INFO                          int64  = 0
+	SZ_INITIALIZE_WITH_DEFAULT_CONFIGURATION int64  = 0
+	SZ_NO_ATTRIBUTES                         string = ""
+	SZ_NO_EXCLUSIONS                         string = ""
+	SZ_NO_REQUIRED_DATASOURCES               string = ""
+	SZ_NO_SEARCH_PROFILE                     string = ""
+	SZ_WITHOUT_INFO                          int64  = 0
 )

@@ -1,4 +1,4 @@
-package szconfigmgr
+package szdiagnostic
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2configmgr_Null(test *testing.T) {
+func TestSzdiagnostic_Null(test *testing.T) {
 }

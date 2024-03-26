@@ -1,4 +1,4 @@
-package szproduct
+package szengine
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2product_Null(test *testing.T) {
+func TestSzengine_Null(test *testing.T) {
 }

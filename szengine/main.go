@@ -5,13 +5,13 @@ package szengine
 // ----------------------------------------------------------------------------
 
 // Log message prefix.
-const Prefix = "g2engine."
+const Prefix = "szengine."
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for g2engine implementations.
+// Message templates for szengine implementations.
 var IdMessages = map[int]string{
 	1:    "Enter " + Prefix + "AddRecord(%s, %s, %s, %d).",
 	2:    "Exit  " + Prefix + "AddRecord(%s, %s, %s, %d) returned (%s, %v).",
@@ -159,29 +159,29 @@ var IdMessages = map[int]string{
 	4073: Prefix + "G2_whyRecords(%s, %s, %s, %s) failed. Return code: %d",
 	4074: Prefix + "G2_whyRecords_V2(%s, %s, %s, %s, %d) failed. Return code: %d",
 	5901: "During test setup, call to messagelogger.NewSenzingApiLogger() failed.",
-	5902: "During test setup, call to g2engineconfigurationjson.BuildSimpleSystemConfigurationJsonViaMap() failed.",
-	5903: "During test setup, call to g2engine.Initialize() failed.",
-	5904: "During test setup, call to g2diagnostic.PurgeRepository() failed.",
-	5905: "During test setup, call to g2engine.Destroy() failed.",
-	5906: "During test setup, call to g2config.Initialize() failed.",
-	5907: "During test setup, call to g2config.Create() failed.",
-	5908: "During test setup, call to g2config.AddDataSource() failed.",
-	5909: "During test setup, call to g2config.GetJsonString() failed.",
-	5910: "During test setup, call to g2config.Close() failed.",
-	5911: "During test setup, call to g2config.Destroy() failed.",
-	5912: "During test setup, call to g2configmgr.Initialize() failed.",
-	5913: "During test setup, call to g2configmgr.AddConfig() failed.",
-	5914: "During test setup, call to g2configmgr.SetDefaultConfigId() failed.",
-	5915: "During test setup, call to g2configmgr.Destroy() failed.",
-	5916: "During test setup, call to g2engine.Initialize() failed.",
-	5917: "During test setup, call to g2engine.AddRecord() failed.",
-	5918: "During test setup, call to g2engine.Destroy() failed.",
+	5902: "During test setup, call to szengineconfigurationjson.BuildSimpleSystemConfigurationJsonViaMap() failed.",
+	5903: "During test setup, call to szengine.Initialize() failed.",
+	5904: "During test setup, call to szdiagnostic.PurgeRepository() failed.",
+	5905: "During test setup, call to szengine.Destroy() failed.",
+	5906: "During test setup, call to szconfig.Initialize() failed.",
+	5907: "During test setup, call to szconfig.Create() failed.",
+	5908: "During test setup, call to szconfig.AddDataSource() failed.",
+	5909: "During test setup, call to szconfig.GetJsonString() failed.",
+	5910: "During test setup, call to szconfig.Close() failed.",
+	5911: "During test setup, call to szconfig.Destroy() failed.",
+	5912: "During test setup, call to szconfigmgr.Initialize() failed.",
+	5913: "During test setup, call to szconfigmgr.AddConfig() failed.",
+	5914: "During test setup, call to szconfigmgr.SetDefaultConfigId() failed.",
+	5915: "During test setup, call to szconfigmgr.Destroy() failed.",
+	5916: "During test setup, call to szengine.Initialize() failed.",
+	5917: "During test setup, call to szengine.AddRecord() failed.",
+	5918: "During test setup, call to szengine.Destroy() failed.",
 	5920: "During test setup, call to setupSenzingConfig() failed.",
 	5921: "During test setup, call to setupPurgeRepository() failed.",
 	5922: "During test setup, call to setupAddRecords() failed.",
-	5931: "During test setup, call to g2engine.Initialize() failed.",
-	5932: "During test setup, call to g2diagnostic.PurgeRepository() failed.",
-	5933: "During test setup, call to g2engine.Destroy() failed.",
+	5931: "During test setup, call to szengine.Initialize() failed.",
+	5932: "During test setup, call to szdiagnostic.PurgeRepository() failed.",
+	5933: "During test setup, call to szengine.Destroy() failed.",
 	8001: Prefix + "AddRecord",
 	8006: Prefix + "CloseExport",
 	8007: Prefix + "CountRedoRecords",
@@ -222,5 +222,5 @@ var IdMessages = map[int]string{
 	8080: Prefix + "ExportJSONEntityReport",
 }
 
-// Status strings for specific g2engine messages.
+// Status strings for specific szengine messages.
 var IdStatuses = map[int]string{}

@@ -1,4 +1,4 @@
-package szconfig
+package szproduct
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestG2config_Null(test *testing.T) {
+func TestSzproduct_Null(test *testing.T) {
 }
