@@ -10,8 +10,8 @@ import os
 
 from test_cases_from_g2_sdk_json_type_definition import TEST_CASES
 
-INPUT_FILE = "bin/response-test-cases.json"
-OUTPUT_FILE = "bin/response-test-cases-verified.json"
+INPUT_FILE = "bin/response-testcases.json"
+OUTPUT_FILE = "bin/response-testcases-verified.json"
 
 
 # -----------------------------------------------------------------------------

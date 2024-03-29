@@ -37615,7 +37615,7 @@
     },
     "SzEngineGetVirtualEntityByRecordIdResponse": {
         "tests": {
-            "test-002": {
+            "test-001": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "Robert Smith",
@@ -38304,7 +38304,7 @@
                     ]
                 }
             },
-            "test-003": {
+            "test-002": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank",
@@ -38969,7 +38969,7 @@
                     ]
                 }
             },
-            "test-004": {
+            "test-003": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank",
@@ -39658,7 +39658,7 @@
                     ]
                 }
             },
-            "test-005": {
+            "test-004": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank",
@@ -40273,7 +40273,7 @@
                     ]
                 }
             },
-            "test-006": {
+            "test-005": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank",
@@ -40569,6 +40569,127 @@
                     ]
                 }
             },
+            "test-006": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": 1,
+                    "ENTITY_NAME": "blank",
+                    "RECORDS": [
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "ACCT_NUM": [
+                                    {
+                                        "ACCOUNT_DOMAIN": "blank",
+                                        "ACCOUNT_NUMBER": "blank"
+                                    }
+                                ],
+                                "DATA_SOURCE": "blank",
+                                "ENTITY_TYPE": "blank",
+                                "PHONES": [
+                                    {
+                                        "PHONE_NUMBER": "blank"
+                                    }
+                                ],
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "SSN_LAST4": [
+                                    {
+                                        "SSN_LAST4": 1
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "ACCT_NUM": [
+                                    {
+                                        "ACCOUNT_DOMAIN": "blank",
+                                        "ACCOUNT_NUMBER": "blank"
+                                    }
+                                ],
+                                "DATA_SOURCE": "blank",
+                                "ENTITY_TYPE": "blank",
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "SSN_LAST4": [
+                                    {
+                                        "SSN_LAST4": 1
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "ACCT_NUM": [
+                                    {
+                                        "ACCOUNT_DOMAIN": "blank",
+                                        "ACCOUNT_NUMBER": "blank"
+                                    }
+                                ],
+                                "DATA_SOURCE": "blank",
+                                "ENTITY_TYPE": "blank",
+                                "PHONES": [
+                                    {
+                                        "PHONE_NUMBER": "blank"
+                                    }
+                                ],
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        }
+                    ]
+                }
+            },
             "test-007": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
@@ -40650,42 +40771,6 @@
                             },
                             "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                             "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "ACCT_NUM": [
-                                    {
-                                        "ACCOUNT_DOMAIN": "blank",
-                                        "ACCOUNT_NUMBER": "blank"
-                                    }
-                                ],
-                                "DATA_SOURCE": "blank",
-                                "ENTITY_TYPE": "blank",
-                                "PHONES": [
-                                    {
-                                        "PHONE_NUMBER": "blank"
-                                    }
-                                ],
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
                         }
                     ]
                 }
@@ -40735,7 +40820,57 @@
                             },
                             "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                             "RECORD_ID": "blank"
-                        },
+                        }
+                    ]
+                }
+            },
+            "test-009": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": 1,
+                    "ENTITY_NAME": "blank",
+                    "RECORDS": [
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "ACCT_NUM": [
+                                    {
+                                        "ACCOUNT_DOMAIN": "blank",
+                                        "ACCOUNT_NUMBER": "blank"
+                                    }
+                                ],
+                                "DATA_SOURCE": "blank",
+                                "ENTITY_TYPE": "blank",
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    },
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        }
+                    ]
+                }
+            },
+            "test-010": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": 1,
+                    "ENTITY_NAME": "blank",
+                    "RECORDS": [
                         {
                             "DATA_SOURCE": "blank",
                             "ENTITY_DESC": "blank",
@@ -40771,15 +40906,7 @@
                             },
                             "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                             "RECORD_ID": "blank"
-                        }
-                    ]
-                }
-            },
-            "test-009": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": 1,
-                    "ENTITY_NAME": "blank",
-                    "RECORDS": [
+                        },
                         {
                             "DATA_SOURCE": "blank",
                             "ENTITY_DESC": "blank",
@@ -40820,15 +40947,7 @@
                             },
                             "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                             "RECORD_ID": "blank"
-                        }
-                    ]
-                }
-            },
-            "test-010": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": 1,
-                    "ENTITY_NAME": "blank",
-                    "RECORDS": [
+                        },
                         {
                             "DATA_SOURCE": "blank",
                             "ENTITY_DESC": "blank",
@@ -40849,6 +40968,42 @@
                                     {
                                         "SSN_NUMBER": "blank"
                                     },
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "ACCT_NUM": [
+                                    {
+                                        "ACCOUNT_DOMAIN": "blank",
+                                        "ACCOUNT_NUMBER": "blank"
+                                    }
+                                ],
+                                "DATA_SOURCE": "blank",
+                                "ENTITY_TYPE": "blank",
+                                "PHONES": [
+                                    {
+                                        "PHONE_NUMBER": "blank"
+                                    }
+                                ],
+                                "RECORD_ID": "blank",
+                                "SSN": [
                                     {
                                         "SSN_NUMBER": "blank"
                                     }
@@ -40947,76 +41102,6 @@
                             },
                             "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                             "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "ACCT_NUM": [
-                                    {
-                                        "ACCOUNT_DOMAIN": "blank",
-                                        "ACCOUNT_NUMBER": "blank"
-                                    }
-                                ],
-                                "DATA_SOURCE": "blank",
-                                "ENTITY_TYPE": "blank",
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    },
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "ACCT_NUM": [
-                                    {
-                                        "ACCOUNT_DOMAIN": "blank",
-                                        "ACCOUNT_NUMBER": "blank"
-                                    }
-                                ],
-                                "DATA_SOURCE": "blank",
-                                "ENTITY_TYPE": "blank",
-                                "PHONES": [
-                                    {
-                                        "PHONE_NUMBER": "blank"
-                                    }
-                                ],
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
                         }
                     ]
                 }
@@ -41033,23 +41118,16 @@
                             "ENTITY_TYPE": "blank",
                             "INTERNAL_ID": 1,
                             "JSON_DATA": {
-                                "ACCT_NUM": [
+                                "DATA_SOURCE": "blank",
+                                "PHONES": [
                                     {
-                                        "ACCOUNT_DOMAIN": "blank",
-                                        "ACCOUNT_NUMBER": "blank"
+                                        "PHONE_NUMBER": "blank"
                                     }
                                 ],
-                                "DATA_SOURCE": "blank",
-                                "ENTITY_TYPE": "blank",
                                 "RECORD_ID": "blank",
                                 "SSN": [
                                     {
                                         "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "SSN_LAST4": [
-                                    {
-                                        "SSN_LAST4": 1
                                     }
                                 ],
                                 "name": [
@@ -41069,14 +41147,7 @@
                             "ENTITY_TYPE": "blank",
                             "INTERNAL_ID": 1,
                             "JSON_DATA": {
-                                "ACCT_NUM": [
-                                    {
-                                        "ACCOUNT_DOMAIN": "blank",
-                                        "ACCOUNT_NUMBER": "blank"
-                                    }
-                                ],
                                 "DATA_SOURCE": "blank",
-                                "ENTITY_TYPE": "blank",
                                 "PHONES": [
                                     {
                                         "PHONE_NUMBER": "blank"
@@ -41086,11 +41157,6 @@
                                 "SSN": [
                                     {
                                         "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "SSN_LAST4": [
-                                    {
-                                        "SSN_LAST4": 1
                                     }
                                 ],
                                 "name": [
@@ -41111,6 +41177,54 @@
                     "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank",
                     "RECORDS": [
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "DATA_SOURCE": "blank",
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "JSON_DATA": {
+                                "DATA_SOURCE": "blank",
+                                "RECORD_ID": "blank",
+                                "SSN": [
+                                    {
+                                        "SSN_NUMBER": "blank"
+                                    }
+                                ],
+                                "name": [
+                                    {
+                                        "NAME_FIRST": "blank",
+                                        "NAME_LAST": "blank"
+                                    }
+                                ]
+                            },
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
                         {
                             "DATA_SOURCE": "blank",
                             "ENTITY_DESC": "blank",
@@ -41175,124 +41289,10 @@
             "test-014": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
-                    "ENTITY_NAME": "blank",
-                    "RECORDS": [
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "DATA_SOURCE": "blank",
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "DATA_SOURCE": "blank",
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "DATA_SOURCE": "blank",
-                                "PHONES": [
-                                    {
-                                        "PHONE_NUMBER": "blank"
-                                    }
-                                ],
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "JSON_DATA": {
-                                "DATA_SOURCE": "blank",
-                                "PHONES": [
-                                    {
-                                        "PHONE_NUMBER": "blank"
-                                    }
-                                ],
-                                "RECORD_ID": "blank",
-                                "SSN": [
-                                    {
-                                        "SSN_NUMBER": "blank"
-                                    }
-                                ],
-                                "name": [
-                                    {
-                                        "NAME_FIRST": "blank",
-                                        "NAME_LAST": "blank"
-                                    }
-                                ]
-                            },
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
-                            "RECORD_ID": "blank"
-                        }
-                    ]
-                }
-            },
-            "test-015": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": 1,
                     "ENTITY_NAME": "blank"
                 }
             },
-            "test-016": {
+            "test-015": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "FEATURES": {
@@ -41400,7 +41400,7 @@
                     }
                 }
             },
-            "test-017": {
+            "test-016": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "FEATURES": {
@@ -41470,6 +41470,54 @@
                                         "SUPPRESSED": "blank",
                                         "USED_FOR_CAND": "blank",
                                         "USED_FOR_SCORING": "blank"
+                                    }
+                                ],
+                                "LIB_FEAT_ID": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            "test-017": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": 1,
+                    "FEATURES": {
+                        "NAME": [
+                            {
+                                "FEAT_DESC": "blank",
+                                "FEAT_DESC_VALUES": [
+                                    {
+                                        "FEAT_DESC": "blank",
+                                        "LIB_FEAT_ID": 1
+                                    }
+                                ],
+                                "LIB_FEAT_ID": 1,
+                                "USAGE_TYPE": "blank"
+                            }
+                        ],
+                        "PASSPORT": [
+                            {
+                                "FEAT_DESC": "blank",
+                                "FEAT_DESC_VALUES": [
+                                    {
+                                        "FEAT_DESC": "blank",
+                                        "LIB_FEAT_ID": 1
+                                    },
+                                    {
+                                        "FEAT_DESC": "blank",
+                                        "LIB_FEAT_ID": 1
+                                    }
+                                ],
+                                "LIB_FEAT_ID": 1
+                            }
+                        ],
+                        "SSN": [
+                            {
+                                "FEAT_DESC": "blank",
+                                "FEAT_DESC_VALUES": [
+                                    {
+                                        "FEAT_DESC": "blank",
+                                        "LIB_FEAT_ID": 1
                                     }
                                 ],
                                 "LIB_FEAT_ID": 1
@@ -41502,7 +41550,13 @@
                                     {
                                         "FEAT_DESC": "blank",
                                         "LIB_FEAT_ID": 1
-                                    },
+                                    }
+                                ],
+                                "LIB_FEAT_ID": 1
+                            },
+                            {
+                                "FEAT_DESC": "blank",
+                                "FEAT_DESC_VALUES": [
                                     {
                                         "FEAT_DESC": "blank",
                                         "LIB_FEAT_ID": 1
@@ -41529,60 +41583,6 @@
             "test-019": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
-                    "FEATURES": {
-                        "NAME": [
-                            {
-                                "FEAT_DESC": "blank",
-                                "FEAT_DESC_VALUES": [
-                                    {
-                                        "FEAT_DESC": "blank",
-                                        "LIB_FEAT_ID": 1
-                                    }
-                                ],
-                                "LIB_FEAT_ID": 1,
-                                "USAGE_TYPE": "blank"
-                            }
-                        ],
-                        "PASSPORT": [
-                            {
-                                "FEAT_DESC": "blank",
-                                "FEAT_DESC_VALUES": [
-                                    {
-                                        "FEAT_DESC": "blank",
-                                        "LIB_FEAT_ID": 1
-                                    }
-                                ],
-                                "LIB_FEAT_ID": 1
-                            },
-                            {
-                                "FEAT_DESC": "blank",
-                                "FEAT_DESC_VALUES": [
-                                    {
-                                        "FEAT_DESC": "blank",
-                                        "LIB_FEAT_ID": 1
-                                    }
-                                ],
-                                "LIB_FEAT_ID": 1
-                            }
-                        ],
-                        "SSN": [
-                            {
-                                "FEAT_DESC": "blank",
-                                "FEAT_DESC_VALUES": [
-                                    {
-                                        "FEAT_DESC": "blank",
-                                        "LIB_FEAT_ID": 1
-                                    }
-                                ],
-                                "LIB_FEAT_ID": 1
-                            }
-                        ]
-                    }
-                }
-            },
-            "test-020": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": 1,
                     "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
                     "RECORD_SUMMARY": [
                         {
@@ -41594,7 +41594,7 @@
                     ]
                 }
             },
-            "test-021": {
+            "test-020": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "RECORDS": [
@@ -41632,6 +41632,31 @@
                             "PHONE_DATA": [],
                             "RECORD_ID": "blank",
                             "RELATIONSHIP_DATA": []
+                        }
+                    ]
+                }
+            },
+            "test-021": {
+                "RESOLVED_ENTITY": {
+                    "ENTITY_ID": 1,
+                    "RECORDS": [
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
+                        },
+                        {
+                            "DATA_SOURCE": "blank",
+                            "ENTITY_DESC": "blank",
+                            "ENTITY_KEY": "blank",
+                            "ENTITY_TYPE": "blank",
+                            "INTERNAL_ID": 1,
+                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "RECORD_ID": "blank"
                         }
                     ]
                 }
@@ -41642,68 +41667,43 @@
                     "RECORDS": [
                         {
                             "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "FEATURES": [
+                                {
+                                    "LIB_FEAT_ID": 1,
+                                    "USAGE_TYPE": "blank"
+                                },
+                                {
+                                    "LIB_FEAT_ID": 1
+                                },
+                                {
+                                    "LIB_FEAT_ID": 1
+                                },
+                                {
+                                    "LIB_FEAT_ID": 1
+                                }
+                            ],
                             "RECORD_ID": "blank"
                         },
                         {
                             "DATA_SOURCE": "blank",
-                            "ENTITY_DESC": "blank",
-                            "ENTITY_KEY": "blank",
-                            "ENTITY_TYPE": "blank",
-                            "INTERNAL_ID": 1,
-                            "LAST_SEEN_DT": "2024-01-01T01:01:01+00:00",
+                            "FEATURES": [
+                                {
+                                    "LIB_FEAT_ID": 1,
+                                    "USAGE_TYPE": "blank"
+                                },
+                                {
+                                    "LIB_FEAT_ID": 1
+                                },
+                                {
+                                    "LIB_FEAT_ID": 1
+                                }
+                            ],
                             "RECORD_ID": "blank"
                         }
                     ]
                 }
             },
             "test-023": {
-                "RESOLVED_ENTITY": {
-                    "ENTITY_ID": 1,
-                    "RECORDS": [
-                        {
-                            "DATA_SOURCE": "blank",
-                            "FEATURES": [
-                                {
-                                    "LIB_FEAT_ID": 1,
-                                    "USAGE_TYPE": "blank"
-                                },
-                                {
-                                    "LIB_FEAT_ID": 1
-                                },
-                                {
-                                    "LIB_FEAT_ID": 1
-                                },
-                                {
-                                    "LIB_FEAT_ID": 1
-                                }
-                            ],
-                            "RECORD_ID": "blank"
-                        },
-                        {
-                            "DATA_SOURCE": "blank",
-                            "FEATURES": [
-                                {
-                                    "LIB_FEAT_ID": 1,
-                                    "USAGE_TYPE": "blank"
-                                },
-                                {
-                                    "LIB_FEAT_ID": 1
-                                },
-                                {
-                                    "LIB_FEAT_ID": 1
-                                }
-                            ],
-                            "RECORD_ID": "blank"
-                        }
-                    ]
-                }
-            },
-            "test-024": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "RECORDS": [
@@ -41747,7 +41747,7 @@
                     ]
                 }
             },
-            "test-025": {
+            "test-024": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1,
                     "RECORDS": [
@@ -41762,7 +41762,7 @@
                     ]
                 }
             },
-            "test-026": {
+            "test-025": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1
                 }
