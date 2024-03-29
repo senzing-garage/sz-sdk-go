@@ -22,7 +22,7 @@ type StringFragment struct {
 
 // The Szconfig interface is a Golang representation of Senzing's libg2config.h
 type Szconfig interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceDefinition string) (string, error)
+	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) error
@@ -105,7 +105,7 @@ type Szengine interface {
 	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
 	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	Reinitialize(ctx context.Context, initConfigId int64) error
+	Reinitialize(ctx context.Context, configId int64) error
 	ReplaceRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, attributes string, searchProfile string, flags int64) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
@@ -114,6 +114,16 @@ type Szengine interface {
 	WhyEntities(ctx context.Context, entityId1 int64, entityId2 int64, flags int64) (string, error)
 	WhyRecordInEntity(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
+}
+
+// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory patter
+type SzAbstractFactory interface {
+	Close(ctx context.Context) error
+	CreateConfig(ctx context.Context) (Szconfig, error)
+	CreateConfigMgr(ctx context.Context) (Szconfigmgr, error)
+	CreateDiagnostic(ctx context.Context) (Szdiagnostic, error)
+	CreateEngine(ctx context.Context) (Szengine, error)
+	CreateProduct(ctx context.Context) (Szproduct, error)
 }
 
 // The Szproduct interface is a Golang representation of Senzing's libg2product.h
