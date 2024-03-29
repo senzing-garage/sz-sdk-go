@@ -1,15 +1,15 @@
 /*
 # Synopsis
 
-The Senzing g2-sdk-go packages contain definitions that are common to implementations of the Senzing Go SDK.
+The Senzing sz-sdk-go packages contain definitions that are common to implementations of the Senzing Go SDK.
 
 # Overview
 
-The Senzing g2-sdk-go implementations enable Go programs to call Senzing library functions.
-Under the covers, Golang's CGO is used by the g2-sdk-go packages to make the calls
+The Senzing sz-sdk-go implementations enable Go programs to call Senzing library functions.
+Under the covers, Golang's CGO is used by the sz-sdk-go packages to make the calls
 to the Senzing C library functions.
 
-More information at https://github.com/senzing-garage/g2-sdk-go
+More information at https://github.com/senzing-garage/sz-sdk-go
 
 # Examples
 

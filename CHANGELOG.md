@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.11.0] - 2024-03-29
+
+### Changed in 0.11.0
+
+- Changed repository from "g2-sdk-go" to "sz-sdk-go"
+
 ## [0.10.1] - 2024-02-29
 
 ### Changed in 0.10.1

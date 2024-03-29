@@ -1,4 +1,4 @@
-# g2-sdk-go development
+# sz-sdk-go development
 
 ## Install Go
 
@@ -10,7 +10,7 @@
 
     ```console
     export GIT_ACCOUNT=senzing
-    export GIT_REPOSITORY=g2-sdk-go
+    export GIT_REPOSITORY=sz-sdk-go
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
 
