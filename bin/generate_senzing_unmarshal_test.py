@@ -29,17 +29,17 @@ OUTPUT_HEADER += """
 package senzing
 
 import (
-    "context"
-    "fmt"
-    "testing"
+	"context"
+	"fmt"
+	"testing"
 
-    truncator "github.com/aquilax/truncate"
-    "github.com/stretchr/testify/assert"
+	truncator "github.com/aquilax/truncate"
+	"github.com/stretchr/testify/assert"
 )
 
 const (
-    defaultTruncation = 127
-    printResults      = false
+	defaultTruncation = 127
+	printResults      = false
 )
 
 // ----------------------------------------------------------------------------
@@ -47,25 +47,25 @@ const (
 // ----------------------------------------------------------------------------
 
 func truncate(aString string, length int) string {
-    return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
+	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
 func printResult(test *testing.T, title string, result interface{}) {
-    if printResults {
-        test.Logf("%s: %+v", title, truncate(fmt.Sprintf("%+v", result), defaultTruncation))
-    }
+	if printResults {
+		test.Logf("%s: %+v", title, truncate(fmt.Sprintf("%+v", result), defaultTruncation))
+	}
 }
 
 func printActual(test *testing.T, actual interface{}) {
-    printResult(test, "Actual", actual)
+	printResult(test, "Actual", actual)
 }
 
 func testError(test *testing.T, ctx context.Context, err error) {
-    _ = ctx
-    if err != nil {
-        test.Log("Error:", err.Error())
-        assert.FailNow(test, err.Error())
-    }
+	_ = ctx
+	if err != nil {
+		test.Log("Error:", err.Error())
+		assert.FailNow(test, err.Error())
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -74,11 +74,11 @@ func testError(test *testing.T, ctx context.Context, err error) {
 """  # noqa: E101, W191
 
 TEST_FUNCTION_TEMPLATE = f"""
-    ctx := context.TODO()
-    jsonString := `{{json}}`
-    result, err := Unmarshal{{struct}}(ctx, jsonString)
-    testError(test, ctx, err)
-    printActual(test, result)
+	ctx := context.TODO()
+	jsonString := `{{json}}`
+	result, err := Unmarshal{{struct}}(ctx, jsonString)
+	testError(test, ctx, err)
+	printActual(test, result)
 """  # noqa: E101,F541,W191
 
 OUTPUT_FOOTER = """
