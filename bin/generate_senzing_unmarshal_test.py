@@ -10,7 +10,7 @@ import os
 import re
 from datetime import datetime, timezone
 
-INPUT_FILE = "bin/response-test-cases.json"
+INPUT_FILE = "bin/response-testcases.json"
 OUTPUT_FILE = "senzing/unmarshal_test.go"
 
 # -----------------------------------------------------------------------------
@@ -116,15 +116,15 @@ logging.info("{0}".format("-" * 80))
 # Load testcase metadata.
 
 with open(INPUT_FILE, encoding="utf-8") as input_file:
-    response_test_cases = json.load(input_file)
+    response_testcases = json.load(input_file)
 
 # Write testcase file.
 
 with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
     file.write(OUTPUT_HEADER)
-    for senzing_api_class, bob in response_test_cases.items():
-        method_test_cases = bob.get("tests", {})
-        for testcase_name, test_case_json in method_test_cases.items():
+    for senzing_api_class, senzing_api_class_data in response_testcases.items():
+        tests = senzing_api_class_data.get("tests", {})
+        for testcase_name, testcase_json in tests.items():
             file.write(
                 "\nfunc Test{0}{1}(test *testing.T) {{".format(
                     senzing_api_class, canonical_testcase_name(testcase_name)
@@ -132,7 +132,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
             )
             file.write(
                 TEST_FUNCTION_TEMPLATE.format(
-                    json=canonical_json(test_case_json), struct=senzing_api_class
+                    json=canonical_json(testcase_json), struct=senzing_api_class
                 )
             )
             file.write("}")
