@@ -8,7 +8,7 @@ const (
 	SZ_NO_FLAGS int64 = 0
 )
 
-// Flags used by the Senzing G2Engine.
+// Flags used by the Senzing SzEngine.
 // These flags are single-bit flags.
 // BIT_NN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered as 0..63
 const (

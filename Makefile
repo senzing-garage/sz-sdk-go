@@ -1,4 +1,4 @@
-# Makefile for g2-sdk-go.
+# Makefile for sz-sdk-go.
 
 # Detect the operating system and architecture.
 

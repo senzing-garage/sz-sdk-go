@@ -1,1 +1,1 @@
-# g2-sdk-go examples
+# sz-sdk-go examples
