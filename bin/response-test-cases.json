@@ -1,6 +1,7 @@
 {
     "SzConfigAddDataSourceResponse": {
         "tests": {
+            "test-000": {},
             "test-001": {
                 "DSRC_ID": 1
             }
@@ -8,6 +9,7 @@
     },
     "SzConfigGetDataSourcesResponse": {
         "tests": {
+            "test-000": {},
             "test-001": {
                 "DATA_SOURCES": [
                     {
@@ -156,6 +158,7 @@
             "pythonClass": "SzConfigGetJSONStringResponse"
         },
         "tests": {
+            "test-000": {},
             "test-001": {
                 "G2_CONFIG": {
                     "CFG_ATTR": [
@@ -19879,7 +19882,6 @@
             "pythonClass": "SzEngineGetVirtualEntityByRecordIDResponse"
         },
         "tests": {
-            "test-000": "{}",
             "test-001": {
                 "RESOLVED_ENTITY": {
                     "ENTITY_ID": 1

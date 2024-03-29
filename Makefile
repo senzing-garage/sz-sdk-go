@@ -76,6 +76,12 @@ generate_senzing_unmarshal_test:
 	@rm ./senzing/unmarshal_test.go || true
 	@./bin/generate_senzing_unmarshal_test.py
 
+
+.PHONY: verify
+verify:
+	@rm ./bin/response-test-cases-verified.json || true
+	@./bin/verify_response_test_cases.py
+
 # -----------------------------------------------------------------------------
 # Build
 #  - docker-build: https://docs.docker.com/engine/reference/commandline/build/

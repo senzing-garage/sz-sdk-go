@@ -169,7 +169,7 @@ func UnmarshalSzEngineSearchByAttributesResponse(ctx context.Context, jsonString
 // 	return result, err
 // }
 
-func UnmarshalSzEngineWhyEntitiesResponsee(ctx context.Context, jsonString string) (*typedef.SzEngineWhyEntitiesResponse, error) {
+func UnmarshalSzEngineWhyEntitiesResponse(ctx context.Context, jsonString string) (*typedef.SzEngineWhyEntitiesResponse, error) {
 	result := &typedef.SzEngineWhyEntitiesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
