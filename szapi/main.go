@@ -116,7 +116,7 @@ type Szengine interface {
 	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
 }
 
-// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory patter
+// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory pattern
 type SzAbstractFactory interface {
 	Close(ctx context.Context) error
 	CreateConfig(ctx context.Context) (Szconfig, error)
