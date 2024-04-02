@@ -10428,7 +10428,7 @@
             "pythonClass": "SzConfigGetJSONStringResponse"
         }
     },
-    "SzConfigmgrGetConfigListResponse": {
+    "SzConfigmanagerGetConfigListResponse": {
         "tests": {
             "test-001": {
                 "CONFIGS": [
@@ -10446,7 +10446,7 @@
             }
         }
     },
-    "SzConfigmgrGetConfigResponse": {
+    "SzConfigmanagerGetConfigResponse": {
         "tests": {
             "test-001": {
                 "G2_CONFIG": {

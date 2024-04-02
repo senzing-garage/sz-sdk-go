@@ -1,4 +1,4 @@
-package szapi
+package szinterface
 
 import (
 	"context"
@@ -20,9 +20,9 @@ type StringFragment struct {
 // Types - interface
 // ----------------------------------------------------------------------------
 
-// The Szconfig interface is a Golang representation of Senzing's libg2config.h
-type Szconfig interface {
-	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceDefinition string) (string, error)
+// The SzConfig interface is a Golang representation of Senzing's libg2config.h
+type SzConfig interface {
+	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
 	Close(ctx context.Context, configHandle uintptr) error
 	Create(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) error
@@ -39,8 +39,8 @@ type Szconfig interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The Szconfigmgr interface is a Golang representation of Senzing's libg2configmgr.h
-type Szconfigmgr interface {
+// The SzConfigManager interface is a Golang representation of Senzing's libg2configmgr.h
+type SzConfigManager interface {
 	AddConfig(ctx context.Context, configDefinition string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configId int64) (string, error)
@@ -57,8 +57,8 @@ type Szconfigmgr interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The Szdiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
-type Szdiagnostic interface {
+// The SzDiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
+type SzDiagnostic interface {
 	CheckDatabasePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
 	GetObserverOrigin(ctx context.Context) string
@@ -72,8 +72,8 @@ type Szdiagnostic interface {
 	UnregisterObserver(ctx context.Context, observer observer.Observer) error
 }
 
-// The Szengine interface is a Golang representation of Senzing's libg2.h
-type Szengine interface {
+// The SzEngine interface is a Golang representation of Senzing's libg2.h
+type SzEngine interface {
 	AddRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	CloseExport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
@@ -105,7 +105,7 @@ type Szengine interface {
 	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
 	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
-	Reinitialize(ctx context.Context, initConfigId int64) error
+	Reinitialize(ctx context.Context, configId int64) error
 	ReplaceRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, attributes string, searchProfile string, flags int64) (string, error)
 	SetLogLevel(ctx context.Context, logLevelName string) error
@@ -116,8 +116,18 @@ type Szengine interface {
 	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
 }
 
-// The Szproduct interface is a Golang representation of Senzing's libg2product.h
-type Szproduct interface {
+// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory pattern
+type SzAbstractFactory interface {
+	Close(ctx context.Context) error
+	CreateConfig(ctx context.Context) (SzConfig, error)
+	CreateConfigMgr(ctx context.Context) (SzConfigManager, error)
+	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
+	CreateEngine(ctx context.Context) (SzEngine, error)
+	CreateProduct(ctx context.Context) (SzProduct, error)
+}
+
+// The SzProduct interface is a Golang representation of Senzing's libg2product.h
+type SzProduct interface {
 	Destroy(ctx context.Context) error
 	GetLicense(ctx context.Context) (string, error)
 	GetObserverOrigin(ctx context.Context) string

@@ -1,17 +1,17 @@
-package szconfigmgr
+package szconfigmanager
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
 // Log message prefix.
-const Prefix = "szconfigmgr."
+const Prefix = "szconfigmanager."
 
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
 
-// Message templates for szconfigmgr implementations.
+// Message templates for szconfigmanager implementations.
 var IdMessages = map[int]string{
 	1:    "Enter " + Prefix + "AddConfig(%s, %s).",
 	2:    "Exit  " + Prefix + "AddConfig(%s, %s) returned (%d, %v).",
@@ -63,10 +63,10 @@ var IdMessages = map[int]string{
 	5909: "During test setup, call to szconfig.GetJsonString() failed.",
 	5910: "During test setup, call to szconfig.Close() failed.",
 	5911: "During test setup, call to szconfig.Destroy() failed.",
-	5912: "During test setup, call to szconfigmgr.Initialize() failed.",
-	5913: "During test setup, call to szconfigmgr.AddConfig() failed.",
-	5914: "During test setup, call to szconfigmgr.SetDefaultConfigId() failed.",
-	5915: "During test setup, call to szconfigmgr.Destroy() failed.",
+	5912: "During test setup, call to szconfigmanager.Initialize() failed.",
+	5913: "During test setup, call to szconfigmanager.AddConfig() failed.",
+	5914: "During test setup, call to szconfigmanager.SetDefaultConfigId() failed.",
+	5915: "During test setup, call to szconfigmanager.Destroy() failed.",
 	5916: "During test setup, call to szengine.Initialize() failed.",
 	5917: "During test setup, call to szengine.AddRecord() failed.",
 	5918: "During test setup, call to szengine.Destroy() failed.",
@@ -90,5 +90,5 @@ var IdMessages = map[int]string{
 	8012: Prefix + "UnregisterObserver",
 }
 
-// Status strings for specific szconfigmgr messages.
+// Status strings for specific szconfigmanager messages.
 var IdStatuses = map[int]string{}
