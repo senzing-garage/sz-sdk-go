@@ -1,4 +1,4 @@
-package szinterface
+package sz
 
 import (
 	"context"
