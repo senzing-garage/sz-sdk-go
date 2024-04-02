@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.11.1] - 2024-04-02
+
+### Changed in 0.11.1
+
+- Changed package from "szapi" to "szinterface"
+- Changed package from "szconfigmgr" to "szconfigmanager"
+
 ## [0.11.0] - 2024-03-29
 
 ### Changed in 0.11.0

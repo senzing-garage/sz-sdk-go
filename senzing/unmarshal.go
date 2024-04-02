@@ -33,14 +33,14 @@ func UnmarshalSzConfigGetJsonStringResponse(ctx context.Context, jsonString stri
 
 // --- Configmgr --------------------------------------------------------------
 
-func UnmarshalSzConfigmgrGetConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigmgrGetConfigResponse, error) {
-	result := &typedef.SzConfigmgrGetConfigResponse{}
+func UnmarshalSzConfigmanagerGetConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigResponse, error) {
+	result := &typedef.SzConfigManagerGetConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzConfigmgrGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.SzConfigmgrGetConfigListResponse, error) {
-	result := &typedef.SzConfigmgrGetConfigListResponse{}
+func UnmarshalSzConfigmanagerGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
+	result := &typedef.SzConfigManagerGetConfigListResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }

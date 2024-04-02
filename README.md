@@ -38,7 +38,7 @@ When programming, the recommendation is to "program to an interface".
 The Senzing Go SDK API interfaces are documented at:
 
 - [Szconfig](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfig#Szconfig)
-- [Szconfigmgr](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfigmgr#Szconfigmgr)
+- [Szconfigmanager](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfigmanager#Szconfigmanager)
 - [Szdiagnostic](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szdiagnostic#Szdiagnostic)
 - [Szengine](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szengine#Szengine)
 - [Szproduct](https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szproduct#Szproduct)

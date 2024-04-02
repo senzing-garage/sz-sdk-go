@@ -1,4 +1,4 @@
-package szconfigmgr
+package szconfigmanager
 
 import (
 	"testing"
@@ -8,5 +8,5 @@ import (
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSzconfigmgr_Null(test *testing.T) {
+func TestSzconfigmanager_Null(test *testing.T) {
 }
