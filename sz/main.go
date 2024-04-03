@@ -24,7 +24,7 @@ type StringFragment struct {
 type SzConfig interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
 	CloseConfig(ctx context.Context, configHandle uintptr) error
-	CreateCreate(ctx context.Context) (uintptr, error)
+	CreateConfig(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) error
 	Destroy(ctx context.Context) error
 	ExportConfig(ctx context.Context, configHandle uintptr) (string, error)
