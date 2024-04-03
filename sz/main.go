@@ -23,16 +23,16 @@ type StringFragment struct {
 // The SzConfig interface is a Golang representation of Senzing's libg2config.h
 type SzConfig interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
-	Close(ctx context.Context, configHandle uintptr) error
-	Create(ctx context.Context) (uintptr, error)
+	CloseConfig(ctx context.Context, configHandle uintptr) error
+	CreateCreate(ctx context.Context) (uintptr, error)
 	DeleteDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) error
 	Destroy(ctx context.Context) error
+	ExportConfig(ctx context.Context, configHandle uintptr) (string, error)
 	GetDataSources(ctx context.Context, configHandle uintptr) (string, error)
-	GetJsonString(ctx context.Context, configHandle uintptr) (string, error)
 	GetObserverOrigin(ctx context.Context) string
 	GetSdkId(ctx context.Context) string
+	ImportConfig(ctx context.Context, configDefinition string) (uintptr, error)
 	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64) error
-	Load(ctx context.Context, configDefinition string) (uintptr, error)
 	RegisterObserver(ctx context.Context, observer observer.Observer) error
 	SetLogLevel(ctx context.Context, logLevelName string) error
 	SetObserverOrigin(ctx context.Context, origin string)
