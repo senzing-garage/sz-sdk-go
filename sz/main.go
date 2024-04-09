@@ -18,6 +18,15 @@ type StringFragment struct {
 // Types - interface
 // ----------------------------------------------------------------------------
 
+// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory pattern
+type SzAbstractFactory interface {
+	CreateConfig(ctx context.Context) (SzConfig, error)
+	CreateConfigManager(ctx context.Context) (SzConfigManager, error)
+	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
+	CreateEngine(ctx context.Context) (SzEngine, error)
+	CreateProduct(ctx context.Context) (SzProduct, error)
+}
+
 // The SzConfig interface is a Golang representation of Senzing's libg2config.h
 type SzConfig interface {
 	AddDataSource(ctx context.Context, configHandle uintptr, dataSourceCode string) (string, error)
@@ -88,15 +97,6 @@ type SzEngine interface {
 	WhyEntities(ctx context.Context, entityId1 int64, entityId2 int64, flags int64) (string, error)
 	WhyRecordInEntity(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
-}
-
-// The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory pattern
-type SzAbstractFactory interface {
-	CreateConfig(ctx context.Context) (SzConfig, error)
-	CreateConfigManager(ctx context.Context) (SzConfigManager, error)
-	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
-	CreateEngine(ctx context.Context) (SzEngine, error)
-	CreateProduct(ctx context.Context) (SzProduct, error)
 }
 
 // The SzProduct interface is a Golang representation of Senzing's libg2product.h
