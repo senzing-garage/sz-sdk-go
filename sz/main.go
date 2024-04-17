@@ -20,11 +20,11 @@ type StringFragment struct {
 
 // The SzAbstractFactory interface is the interface for all Senzing factories in the Abstract Factory pattern
 type SzAbstractFactory interface {
-	CreateConfig(ctx context.Context) (SzConfig, error)
-	CreateConfigManager(ctx context.Context) (SzConfigManager, error)
-	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
-	CreateEngine(ctx context.Context) (SzEngine, error)
-	CreateProduct(ctx context.Context) (SzProduct, error)
+	CreateSzConfig(ctx context.Context) (SzConfig, error)
+	CreateSzConfigManager(ctx context.Context) (SzConfigManager, error)
+	CreateSzDiagnostic(ctx context.Context) (SzDiagnostic, error)
+	CreateSzEngine(ctx context.Context) (SzEngine, error)
+	CreateSzProduct(ctx context.Context) (SzProduct, error)
 }
 
 // The SzConfig interface is a Golang representation of Senzing's libg2config.h
@@ -37,7 +37,6 @@ type SzConfig interface {
 	ExportConfig(ctx context.Context, configHandle uintptr) (string, error)
 	GetDataSources(ctx context.Context, configHandle uintptr) (string, error)
 	ImportConfig(ctx context.Context, configDefinition string) (uintptr, error)
-	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64) error
 }
 
 // The SzConfigManager interface is a Golang representation of Senzing's libg2configmgr.h
@@ -47,7 +46,6 @@ type SzConfigManager interface {
 	GetConfig(ctx context.Context, configId int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigId(ctx context.Context) (int64, error)
-	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64) error
 	ReplaceDefaultConfigId(ctx context.Context, currentDefaultConfigId int64, newDefaultConfigId int64) error
 	SetDefaultConfigId(ctx context.Context, configId int64) error
 }
@@ -56,7 +54,6 @@ type SzConfigManager interface {
 type SzDiagnostic interface {
 	CheckDatabasePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
-	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64, configId int64) error
 	PurgeRepository(ctx context.Context) error
 	Reinitialize(ctx context.Context, configId int64) error
 }
@@ -86,7 +83,6 @@ type SzEngine interface {
 	GetStats(ctx context.Context) (string, error)
 	GetVirtualEntityByRecordId(ctx context.Context, recordList string, flags int64) (string, error)
 	HowEntityByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
-	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64, configId int64) error
 	PrimeEngine(ctx context.Context) error
 	ProcessRedoRecord(ctx context.Context, redoRecord string, flags int64) (string, error)
 	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
@@ -104,5 +100,4 @@ type SzProduct interface {
 	Destroy(ctx context.Context) error
 	GetLicense(ctx context.Context) (string, error)
 	GetVersion(ctx context.Context) (string, error)
-	Initialize(ctx context.Context, instanceName string, settings string, verboseLogging int64) error
 }
