@@ -88,7 +88,6 @@ type SzEngine interface {
 	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
 	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	Reinitialize(ctx context.Context, configId int64) error
-	ReplaceRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
 	SearchByAttributes(ctx context.Context, attributes string, searchProfile string, flags int64) (string, error)
 	WhyEntities(ctx context.Context, entityId1 int64, entityId2 int64, flags int64) (string, error)
 	WhyRecordInEntity(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
