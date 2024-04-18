@@ -205,7 +205,7 @@ func wrapError(originalError error, errorTypeIds []SzErrorTypeIds) error {
 			result = SzRetryTimeoutExceededError{result}
 		case SzUnhandled:
 			result = SzUnhandledError{result}
-		case SzUnknownDatasource:
+		case SzUnknownDataSource:
 			result = SzUnhandledError{result}
 
 		// Default error.

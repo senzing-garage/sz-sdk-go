@@ -105,7 +105,7 @@ var testCases = []struct {
 		expectedCode:    27,
 		expectedMessage: "Test message",
 		expectedType:    SzBadInputError{},
-		expectedTypes:   []SzErrorTypeIds{SzUnknownDatasource, SzBadInput},
+		expectedTypes:   []SzErrorTypeIds{SzUnknownDataSource, SzBadInput},
 		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
 	},
 	{
