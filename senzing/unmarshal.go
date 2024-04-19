@@ -151,12 +151,6 @@ func UnmarshalSzEngineReevaluateRecordResponse(ctx context.Context, jsonString s
 	return result, err
 }
 
-func UnmarshalSzEngineReplaceRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineReplaceRecordResponse, error) {
-	result := &typedef.SzEngineReplaceRecordResponse{}
-	err := json.Unmarshal([]byte(jsonString), result)
-	return result, err
-}
-
 func UnmarshalSzEngineSearchByAttributesResponse(ctx context.Context, jsonString string) (*typedef.SzEngineSearchByAttributesResponse, error) {
 	result := &typedef.SzEngineSearchByAttributesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)

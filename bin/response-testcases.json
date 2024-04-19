@@ -44509,25 +44509,6 @@
             }
         }
     },
-    "SzEngineReplaceRecordResponse": {
-        "tests": {
-            "test-001": {
-                "AFFECTED_ENTITIES": [
-                    {
-                        "ENTITY_ID": 1
-                    },
-                    {
-                        "ENTITY_ID": 1
-                    }
-                ],
-                "DATA_SOURCE": "blank",
-                "INTERESTING_ENTITIES": {
-                    "ENTITIES": []
-                },
-                "RECORD_ID": "blank"
-            }
-        }
-    },
     "SzEngineSearchByAttributesResponse": {
         "tests": {
             "test-001": {
