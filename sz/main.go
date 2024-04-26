@@ -52,8 +52,9 @@ type SzConfigManager interface {
 
 // The SzDiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
 type SzDiagnostic interface {
-	CheckDatabasePerformance(ctx context.Context, secondsToRun int) (string, error)
+	CheckDatastorePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
+	GetDatastoreInfo(ctx context.Context, secondsToRun int) (string, error)
 	PurgeRepository(ctx context.Context) error
 	Reinitialize(ctx context.Context, configId int64) error
 }
