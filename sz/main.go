@@ -54,7 +54,7 @@ type SzConfigManager interface {
 type SzDiagnostic interface {
 	CheckDatastorePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
-	GetDatastoreInfo(ctx context.Context, secondsToRun int) (string, error)
+	GetDatastoreInfo(ctx context.Context) (string, error)
 	PurgeRepository(ctx context.Context) error
 	Reinitialize(ctx context.Context, configId int64) error
 }
