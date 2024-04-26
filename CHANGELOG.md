@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.12.1] - 2024-04-26
+
+### Changed in 0.12.1
+
+- Changed from `CheckDatabasePerformance` to `CheckDatastorePerformance`
+- Added `GetDatastoreInfo`
+
 ## [0.12.0] - 2024-04-19
 
 ### Changed in 0.12.0
