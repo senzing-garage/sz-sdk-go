@@ -80,7 +80,6 @@ type SzEngine interface {
 	GetEntityByRecordId(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	GetRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
-	GetRepositoryLastModifiedTime(ctx context.Context) (int64, error)
 	GetStats(ctx context.Context) (string, error)
 	GetVirtualEntityByRecordId(ctx context.Context, recordList string, flags int64) (string, error)
 	HowEntityByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
