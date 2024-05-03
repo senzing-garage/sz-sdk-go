@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.12.2] - 2024-05-03
+
+### Deleted in 0.12.2
+
+- `GetRepositoryLastModifiedTime`
+
 ## [0.12.1] - 2024-04-26
 
 ### Changed in 0.12.1
