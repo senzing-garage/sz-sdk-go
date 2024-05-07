@@ -55,6 +55,7 @@ type SzDiagnostic interface {
 	CheckDatastorePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
 	GetDatastoreInfo(ctx context.Context) (string, error)
+	GetFeature(ctx context.Context, featureId int64) (string, error)
 	PurgeRepository(ctx context.Context) error
 	Reinitialize(ctx context.Context, configId int64) error
 }
@@ -71,6 +72,8 @@ type SzEngine interface {
 	ExportJsonEntityReport(ctx context.Context, flags int64) (uintptr, error)
 	ExportJsonEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
+	FindInterestingEntitiesByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
+	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
 	FindNetworkByEntityId(ctx context.Context, entityList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
 	FindNetworkByRecordId(ctx context.Context, recordList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
 	FindPathByEntityId(ctx context.Context, startEntityId int64, endEntityId int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)

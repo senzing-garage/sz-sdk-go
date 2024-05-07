@@ -10,6 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.12.3] - 2024-05-07
+
+### Added in 0.12.3
+
+- `FindInterestingEntitiesByEntityId` and `FindInterestingEntitiesByRecordId`
+- `GetFeature`
+
+### Changed in 0.12.3
+
+- Flag variable names
+
 ## [0.12.2] - 2024-05-03
 
 ### Deleted in 0.12.2
