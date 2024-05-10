@@ -25,21 +25,22 @@ func UnmarshalSzConfigGetDataSourcesResponse(ctx context.Context, jsonString str
 	return result, err
 }
 
-func UnmarshalSzConfigGetJsonStringResponse(ctx context.Context, jsonString string) (*typedef.SzConfigGetJSONStringResponse, error) {
-	result := &typedef.SzConfigGetJSONStringResponse{}
+func UnmarshalSzConfigExportConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
+	// TODO: Update to &typedef.SzConfigExportConfigResponse{}
+	result := &typedef.SzConfigExportConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-// --- Configmgr --------------------------------------------------------------
+// --- ConfigManager ----------------------------------------------------------
 
-func UnmarshalSzConfigmanagerGetConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigResponse, error) {
+func UnmarshalSzConfigManagerGetConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigResponse, error) {
 	result := &typedef.SzConfigManagerGetConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzConfigmanagerGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
+func UnmarshalSzConfigManagerGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
 	result := &typedef.SzConfigManagerGetConfigListResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
@@ -47,8 +48,20 @@ func UnmarshalSzConfigmanagerGetConfigListResponse(ctx context.Context, jsonStri
 
 // --- Diagnostic -------------------------------------------------------------
 
-func UnmarshalSzDiagnosticCheckDatabasePerformanceResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticCheckDatabasePerformanceResponse, error) {
-	result := &typedef.SzDiagnosticCheckDatabasePerformanceResponse{}
+func UnmarshalSzDiagnosticCheckDatastorePerformanceResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticCheckDatastorePerformanceResponse, error) {
+	result := &typedef.SzDiagnosticCheckDatastorePerformanceResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalSzDiagnosticGetDatastoreInfoResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetDatastoreInfoResponse, error) {
+	result := &typedef.SzDiagnosticGetDatastoreInfoResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalSzDiagnosticGetFeatureResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
+	result := &typedef.SzDiagnosticGetFeatureResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
@@ -72,6 +85,18 @@ func UnmarshalSzEngineDeleteRecordResponse(ctx context.Context, jsonString strin
 // 	err := json.Unmarshal([]byte(jsonString), result)
 // 	return result, err
 // }
+
+func UnmarshalSzEngineFindInterestingEntitiesByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByEntityIDResponse, error) {
+	result := &typedef.SzEngineFindInterestingEntitiesByEntityIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
+
+func UnmarshalSzEngineFindInterestingEntitiesByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByRecordIDResponse, error) {
+	result := &typedef.SzEngineFindInterestingEntitiesByRecordIDResponse{}
+	err := json.Unmarshal([]byte(jsonString), result)
+	return result, err
+}
 
 func UnmarshalSzEngineFindNetworkByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindNetworkByEntityIDResponse, error) {
 	result := &typedef.SzEngineFindNetworkByEntityIDResponse{}
