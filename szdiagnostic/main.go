@@ -13,12 +13,13 @@ const Prefix = "szdiagnostic."
 
 // Message templates for szdiagnostic implementations.
 var IdMessages = map[int]string{
-	1:    "Enter " + Prefix + "CheckDatabasePerformance(%d).",
-	2:    "Exit  " + Prefix + "CheckDatabasePerformance(%d) returned (%s, %v).",
-	3:    "Enter " + Prefix + "ClearLastException().",
-	4:    "Exit  " + Prefix + "ClearLastException() returned (%v).",
-	7:    "Enter " + Prefix + "Destroy().",
-	8:    "Exit  " + Prefix + "Destroy() returned (%v).",
+	1: "Enter " + Prefix + "CheckDatabasePerformance(%d).",
+	2: "Exit  " + Prefix + "CheckDatabasePerformance(%d) returned (%s, %v).",
+	3: "Enter " + Prefix + "ClearLastException().",
+	4: "Exit  " + Prefix + "ClearLastException() returned (%v).",
+	7: "Enter " + Prefix + "Destroy().",
+	8: "Exit  " + Prefix + "Destroy() returned (%v).",
+
 	31:   "Enter " + Prefix + "GetLastException().",
 	32:   "Exit  " + Prefix + "GetLastException() returned (%s, %v).",
 	33:   "Enter " + Prefix + "GetLastExceptionCode().",

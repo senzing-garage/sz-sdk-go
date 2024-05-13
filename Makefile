@@ -128,7 +128,7 @@ print-make-variables:
 
 
 .PHONY: setup
-setup: setup-osarch-specific
+setup: generate-tests setup-osarch-specific
 
 
 .PHONY: update-pkg-cache
