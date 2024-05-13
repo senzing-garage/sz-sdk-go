@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.12.4] - 2024-05-13
+
+### Added in 0.12.4
+
+### Changed in 0.12.3
+
+- Identifiers for messages
+
 ## [0.12.3] - 2024-05-07
 
 ### Added in 0.12.3
