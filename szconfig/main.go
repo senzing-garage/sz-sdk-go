@@ -52,7 +52,7 @@ var IdMessages = map[int]string{
 	4005: Prefix + "G2Config_destroy() failed. Return code: %d",
 	4006: Prefix + "G2Config_getLastException() failed. Return code: %d",
 	4007: Prefix + "G2Config_init(%s, %s, %d) failed. Return code: %d",
-	4008: Prefix + "G2Config_listDataSources() failed. Return code: %d",
+	4008: Prefix + "G2Config_listDataSources(%d) failed. Return code: %d",
 	4009: Prefix + "G2Config_load(%s) failed. Return code: %d",
 	4010: Prefix + "G2Config_save(%v) failed. Return code: %d",
 	5901: "During test setup, call to messagelogger.NewSenzingApiLogger() failed.",
