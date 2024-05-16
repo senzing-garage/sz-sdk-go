@@ -27,7 +27,7 @@ jobs:
 
       - name: run go test
         run: |
-          go test -v -p 1 ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+          go test -v -p 1 ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
           ls
 
       - name: Store coverage file
