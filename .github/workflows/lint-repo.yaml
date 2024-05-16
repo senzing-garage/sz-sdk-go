@@ -26,9 +26,9 @@ jobs:
       - name: lint code base
         uses: super-linter/super-linter@v6.3.0
         env:
-          DEFAULT_BRANCH: main
+          #DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LOG_LEVEL: DEBUG
+          #LOG_LEVEL: DEBUG
           # only lint new and modified files
           VALIDATE_ALL_CODEBASE: true
           #VALIDATE_GO: false

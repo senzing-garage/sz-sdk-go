@@ -26,4 +26,9 @@ jobs:
           go-version: ${{ matrix.go }}
 
       - name: run go test
-        run: go test -v -p 1 ./...
+        run: go test -v -p 1 ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+
+      - name: check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yml
