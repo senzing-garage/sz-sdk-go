@@ -29,12 +29,13 @@ jobs:
         run: |
           go test -v -p 1 ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
           cp cover cover.out
+          ls
 
       - name: Store coverage file
         uses: actions/upload-artifact@v4
         with:
-          name: cover
-          path: cover
+          name: cover.out
+          path: cover.out
 
   go-coverage:
     name: go coverage
@@ -47,7 +48,7 @@ jobs:
       - uses: actions/download-artifact@v4
         id: download
         with:
-          pattern: cover
+          pattern: cover.out
           merge-multiple: true
         
       - name: check test coverage
