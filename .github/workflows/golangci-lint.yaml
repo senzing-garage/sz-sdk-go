@@ -33,5 +33,6 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
+          args: --config=${{ github.workspace }}/.github/linters/.golangci.yml
           only-new-issues: false
           version: latest
