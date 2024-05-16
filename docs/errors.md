@@ -1,1 +1,1 @@
-# g2-sdk-go errors
+# sz-sdk-go errors

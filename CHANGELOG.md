@@ -10,6 +10,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.12.4] - 2024-05-13
+
+### Added in 0.12.4
+
+### Changed in 0.12.3
+
+- Identifiers for messages
+
+## [0.12.3] - 2024-05-07
+
+### Added in 0.12.3
+
+- `FindInterestingEntitiesByEntityId` and `FindInterestingEntitiesByRecordId`
+- `GetFeature`
+
+### Changed in 0.12.3
+
+- Flag variable names
+
+## [0.12.2] - 2024-05-03
+
+### Deleted in 0.12.2
+
+- `GetRepositoryLastModifiedTime`
+
+## [0.12.1] - 2024-04-26
+
+### Changed in 0.12.1
+
+- Changed from `CheckDatabasePerformance` to `CheckDatastorePerformance`
+- Added `GetDatastoreInfo`
+
+## [0.12.0] - 2024-04-19
+
+### Changed in 0.12.0
+
+- Updated to Senzing V4 method signatures
+- Updated dependencies
+
+## [0.11.1] - 2024-04-02
+
+### Changed in 0.11.1
+
+- Changed package from "szapi" to "szinterface"
+- Changed package from "szconfigmgr" to "szconfigmanager"
+
+## [0.11.0] - 2024-03-29
+
+### Changed in 0.11.0
+
+- Changed repository from "g2-sdk-go" to "sz-sdk-go"
+
 ## [0.10.1] - 2024-02-29
 
 ### Changed in 0.10.1
