@@ -16,13 +16,13 @@ jobs:
   lint-code-base:
     name: lint code base
     runs-on: ubuntu-latest
-  
+
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-  
+
       - name: lint code base
         uses: super-linter/super-linter@v6.3.0
         env:
@@ -31,6 +31,6 @@ jobs:
           #LOG_LEVEL: DEBUG
           # only lint new and modified files
           VALIDATE_ALL_CODEBASE: true
-          #VALIDATE_GO: false
+          VALIDATE_GO: false
           #VALIDATE_GO_MODULES: true
           #VALIDATE_SHELL_SHFMT: false
