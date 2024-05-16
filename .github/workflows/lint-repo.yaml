@@ -32,5 +32,5 @@ jobs:
           # only lint new and modified files
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_GO: false
-          #VALIDATE_GO_MODULES: true
+          VALIDATE_GO_MODULES: true
           #VALIDATE_SHELL_SHFMT: false
