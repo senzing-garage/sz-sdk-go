@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LOG_LEVEL: DEBUG
           # only lint new and modified files
-          VALIDATE_ALL_CODEBASE: ${{ inputs.validate-all-codebase }}
+          VALIDATE_ALL_CODEBASE: true
           #VALIDATE_GO: false
-          VALIDATE_GO_MODULES: true
+          #VALIDATE_GO_MODULES: true
           #VALIDATE_SHELL_SHFMT: false
