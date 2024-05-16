@@ -118,6 +118,14 @@ check-coverage: install-go-test-coverage
 	${GOBIN}/go-test-coverage --config=./.testcoverage.yml
 
 # -----------------------------------------------------------------------------
+# Lint
+# -----------------------------------------------------------------------------
+
+.PHONY: run-golangci-lint
+run-golangci-lint:
+golangci-lint run --config=.github/linters/.golangci.yml
+
+# -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
 

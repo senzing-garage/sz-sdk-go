@@ -1,8 +1,6 @@
 name: go test windows
 
-on:
-  pull_request:
-    branches: [main]
+on: [pull_request, workflow_dispatch]
 
 permissions:
   contents: read
