@@ -37,17 +37,4 @@ jobs:
   coverage:
     name: coverage
     needs: go-test-linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        id: download
-        with:
-          pattern: cover.out
-          merge-multiple: true
-
-      - name: check test coverage
-        uses: vladopajic/go-test-coverage@v2
-        with:
-          config: ./.testcoverage.yml
+    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@senzing-garage-sz-sdk-go-125-skern
