@@ -37,4 +37,4 @@ jobs:
   coverage:
     name: coverage
     needs: go-test-linux
-    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@senzing-garage-sz-sdk-go-125-skern
+    uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@main
