@@ -38,6 +38,7 @@ jobs:
 
   go-coverage:
     name: go coverage
+    needs: go-test-windows
     runs-on: ubuntu-latest
 
     steps:
