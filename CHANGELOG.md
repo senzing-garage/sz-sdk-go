@@ -21,13 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changes to pass new battery of GitHub action tests
 - Refactored `szerror`
 
-### Changed in 0.12.3
-
 ## [0.12.4] - 2024-05-13
 
-### Added in 0.12.4
-
-### Changed in 0.12.3
+### Changed in 0.12.4
 
 - Identifiers for messages
 
