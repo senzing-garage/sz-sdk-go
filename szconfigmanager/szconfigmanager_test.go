@@ -9,4 +9,5 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestSzconfigmanager_Null(test *testing.T) {
+	_ = test
 }

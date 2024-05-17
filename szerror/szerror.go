@@ -38,7 +38,7 @@ With recursion, extractErrorTexts() parses JSON like:
 and returns something like []string{"x", "y", "z", "1019E|Datastore schema..."}
 */
 func extractErrorTexts(messageErrors []interface{}, messageTexts []string) ([]string, error) {
-	var err error = nil
+	var err error
 
 	// All "text" string values will be aggregated into errorTexts.
 
@@ -77,7 +77,7 @@ func extractErrorNumber(message string) (int, error) {
 
 	// If non-JSON submitted, inspect the string and return.
 
-	if !isJson(message) {
+	if !isJSON(message) {
 		return SzErrorCode(message), nil
 	}
 
@@ -138,9 +138,9 @@ func isIn(needle SzErrorTypeIds, haystack []SzErrorTypeIds) bool {
 }
 
 /*
-isJson determines if the string is syntactically JSON.
+isJSON determines if the string is syntactically JSON.
 */
-func isJson(unknownString string) bool {
+func isJSON(unknownString string) bool {
 	unknownStringUnescaped, err := strconv.Unquote(unknownString)
 	if err != nil {
 		unknownStringUnescaped = unknownString
@@ -323,10 +323,7 @@ func SzErrorCode(senzingErrorMessage string) int {
 
 		// Make a Regex to say we only want numbers.
 
-		regularExpression, err := regexp.Compile("[^0-9]+")
-		if err != nil {
-			return result
-		}
+		regularExpression := regexp.MustCompile("[^0-9]+")
 		numericOnlyString := regularExpression.ReplaceAllString(splits[0], "")
 		result, err := strconv.Atoi(numericOnlyString)
 		if err == nil {
@@ -344,7 +341,7 @@ Input
   - message: The message to be returned by err.Error().
 */
 func SzError(senzingErrorCode int, message string) error {
-	var result error = errors.New(message)
+	var result = errors.New(message)
 	if errorTypeIds, ok := SzErrorTypes[senzingErrorCode]; ok {
 		result = wrapError(result, errorTypeIds)
 	}

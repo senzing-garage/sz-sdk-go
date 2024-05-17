@@ -277,20 +277,20 @@ func TestSzerror_Cast(test *testing.T) {
 
 func TestSzerror_Cast_nil(test *testing.T) {
 	actual := Convert(nil)
-	assert.Nil(test, actual)
+	assert.NoError(test, actual)
 
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(nil, desiredTypeError)
-			assert.Nil(test, actual, "Nil actual")
+			assert.NoError(test, actual, "Nil actual")
 		})
 	}
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			actual := Cast(originalError, nil)
-			assert.NotNil(test, actual, "Nil desired type")
+			assert.Error(test, actual, "Nil desired type")
 		})
 	}
 }
@@ -300,7 +300,7 @@ func TestSzerror_Convert(test *testing.T) {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			actual := Convert(originalError)
-			assert.NotNil(test, actual)
+			assert.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 			for _, szErrorTypeId := range testCase.expectedTypes {
@@ -315,7 +315,7 @@ func TestSzerror_Convert(test *testing.T) {
 
 func TestSzerror_Convert_nil(test *testing.T) {
 	actual := Convert(nil)
-	assert.Nil(test, actual)
+	assert.NoError(test, actual)
 }
 
 func TestSzerror_SzErrorMessage(test *testing.T) {
@@ -378,7 +378,7 @@ func TestSzerror_Unwrap(test *testing.T) {
 	actualWrapCount := 0
 	err := SzError(99901, "Test message")
 	for err != nil {
-		actualWrapCount += 1
+		actualWrapCount++
 		err = errors.Unwrap(err)
 	}
 	assert.Equal(test, expectedWrapCount, actualWrapCount)
