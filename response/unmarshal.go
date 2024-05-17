@@ -1,4 +1,4 @@
-package senzing
+package response
 
 import (
 	"context"
@@ -13,21 +13,21 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-func UnmarshalSzConfigAddDataSourceResponse(ctx context.Context, jsonString string) (*typedef.SzConfigAddDataSourceResponse, error) {
+func SzConfigAddDataSource(ctx context.Context, jsonString string) (*typedef.SzConfigAddDataSourceResponse, error) {
 	_ = ctx
 	result := &typedef.SzConfigAddDataSourceResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzConfigExportConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
+func SzConfigExportConfig(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
 	_ = ctx
 	result := &typedef.SzConfigExportConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzConfigGetDataSourcesResponse(ctx context.Context, jsonString string) (*typedef.SzConfigGetDataSourcesResponse, error) {
+func SzConfigGetDataSources(ctx context.Context, jsonString string) (*typedef.SzConfigGetDataSourcesResponse, error) {
 	_ = ctx
 	result := &typedef.SzConfigGetDataSourcesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -36,14 +36,14 @@ func UnmarshalSzConfigGetDataSourcesResponse(ctx context.Context, jsonString str
 
 // --- ConfigManager ----------------------------------------------------------
 
-func UnmarshalSzConfigManagerGetConfigResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigResponse, error) {
+func SzConfigManagerGetConfig(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigResponse, error) {
 	_ = ctx
 	result := &typedef.SzConfigManagerGetConfigResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzConfigManagerGetConfigListResponse(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
+func SzConfigManagerGetConfigList(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
 	_ = ctx
 	result := &typedef.SzConfigManagerGetConfigListResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -52,21 +52,21 @@ func UnmarshalSzConfigManagerGetConfigListResponse(ctx context.Context, jsonStri
 
 // --- Diagnostic -------------------------------------------------------------
 
-func UnmarshalSzDiagnosticCheckDatastorePerformanceResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticCheckDatastorePerformanceResponse, error) {
+func SzDiagnosticCheckDatastorePerformance(ctx context.Context, jsonString string) (*typedef.SzDiagnosticCheckDatastorePerformanceResponse, error) {
 	_ = ctx
 	result := &typedef.SzDiagnosticCheckDatastorePerformanceResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzDiagnosticGetDatastoreInfoResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetDatastoreInfoResponse, error) {
+func SzDiagnosticGetDatastoreInfo(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetDatastoreInfoResponse, error) {
 	_ = ctx
 	result := &typedef.SzDiagnosticGetDatastoreInfoResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzDiagnosticGetFeatureResponse(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
+func SzDiagnosticGetFeature(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
 	_ = ctx
 	result := &typedef.SzDiagnosticGetFeatureResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -75,168 +75,168 @@ func UnmarshalSzDiagnosticGetFeatureResponse(ctx context.Context, jsonString str
 
 // --- Engine -----------------------------------------------------------------
 
-func UnmarshalSzEngineAddRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineAddRecordResponse, error) {
+func SzEngineAddRecord(ctx context.Context, jsonString string) (*typedef.SzEngineAddRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineAddRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineDeleteRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineDeleteRecordResponse, error) {
+func SzEngineDeleteRecord(ctx context.Context, jsonString string) (*typedef.SzEngineDeleteRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineDeleteRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFetchNextResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFetchNextResponse, error) {
+func SzEngineFetchNext(ctx context.Context, jsonString string) (*typedef.SzEngineFetchNextResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFetchNextResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindInterestingEntitiesByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByEntityIDResponse, error) {
+func SzEngineFindInterestingEntitiesByEntityID(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByEntityIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindInterestingEntitiesByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindInterestingEntitiesByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByRecordIDResponse, error) {
+func SzEngineFindInterestingEntitiesByRecordID(ctx context.Context, jsonString string) (*typedef.SzEngineFindInterestingEntitiesByRecordIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindInterestingEntitiesByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindNetworkByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindNetworkByEntityIDResponse, error) {
+func SzEngineFindNetworkByEntityID(ctx context.Context, jsonString string) (*typedef.SzEngineFindNetworkByEntityIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindNetworkByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindNetworkByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindNetworkByRecordIDResponse, error) {
+func SzEngineFindNetworkByRecordID(ctx context.Context, jsonString string) (*typedef.SzEngineFindNetworkByRecordIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindNetworkByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindPathByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindPathByEntityIDResponse, error) {
+func SzEngineFindPathByEntityID(ctx context.Context, jsonString string) (*typedef.SzEngineFindPathByEntityIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindPathByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineFindPathByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineFindPathByRecordIDResponse, error) {
+func SzEngineFindPathByRecordID(ctx context.Context, jsonString string) (*typedef.SzEngineFindPathByRecordIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineFindPathByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetEntityByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetEntityByEntityIDResponse, error) {
+func SzEngineGetEntityByEntityID(ctx context.Context, jsonString string) (*typedef.SzEngineGetEntityByEntityIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetEntityByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetEntityByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetEntityByRecordIDResponse, error) {
+func SzEngineGetEntityByRecordID(ctx context.Context, jsonString string) (*typedef.SzEngineGetEntityByRecordIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetEntityByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetRecordResponse, error) {
+func SzEngineGetRecord(ctx context.Context, jsonString string) (*typedef.SzEngineGetRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetRedoRecordResponse, error) {
+func SzEngineGetRedoRecord(ctx context.Context, jsonString string) (*typedef.SzEngineGetRedoRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetRedoRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetStatsResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetStatsResponse, error) {
+func SzEngineGetStats(ctx context.Context, jsonString string) (*typedef.SzEngineGetStatsResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetStatsResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineGetVirtualEntityByRecordIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineGetVirtualEntityByRecordIDResponse, error) {
+func SzEngineGetVirtualEntityByRecordID(ctx context.Context, jsonString string) (*typedef.SzEngineGetVirtualEntityByRecordIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineGetVirtualEntityByRecordIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineHowEntityByEntityIdResponse(ctx context.Context, jsonString string) (*typedef.SzEngineHowEntityByEntityIDResponse, error) {
+func SzEngineHowEntityByEntityID(ctx context.Context, jsonString string) (*typedef.SzEngineHowEntityByEntityIDResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineHowEntityByEntityIDResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineProcessRedoRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineProcessRedoRecordResponse, error) {
+func SzEngineProcessRedoRecord(ctx context.Context, jsonString string) (*typedef.SzEngineProcessRedoRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineProcessRedoRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineReevaluateEntityResponse(ctx context.Context, jsonString string) (*typedef.SzEngineReevaluateEntityResponse, error) {
+func SzEngineReevaluateEntity(ctx context.Context, jsonString string) (*typedef.SzEngineReevaluateEntityResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineReevaluateEntityResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineReevaluateRecordResponse(ctx context.Context, jsonString string) (*typedef.SzEngineReevaluateRecordResponse, error) {
+func SzEngineReevaluateRecord(ctx context.Context, jsonString string) (*typedef.SzEngineReevaluateRecordResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineReevaluateRecordResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineSearchByAttributesResponse(ctx context.Context, jsonString string) (*typedef.SzEngineSearchByAttributesResponse, error) {
+func SzEngineSearchByAttributes(ctx context.Context, jsonString string) (*typedef.SzEngineSearchByAttributesResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineSearchByAttributesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineStreamExportJsonEntityReportResponse(ctx context.Context, jsonString string) (*typedef.SzEngineStreamExportJSONEntityReportResponse, error) {
+func SzEngineStreamExportJSONEntityReport(ctx context.Context, jsonString string) (*typedef.SzEngineStreamExportJSONEntityReportResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineStreamExportJSONEntityReportResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineWhyEntitiesResponse(ctx context.Context, jsonString string) (*typedef.SzEngineWhyEntitiesResponse, error) {
+func SzEngineWhyEntities(ctx context.Context, jsonString string) (*typedef.SzEngineWhyEntitiesResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineWhyEntitiesResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineWhyRecordInEntityResponse(ctx context.Context, jsonString string) (*typedef.SzEngineWhyRecordInEntityResponse, error) {
+func SzEngineWhyRecordInEntity(ctx context.Context, jsonString string) (*typedef.SzEngineWhyRecordInEntityResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineWhyRecordInEntityResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzEngineWhyRecordsResponse(ctx context.Context, jsonString string) (*typedef.SzEngineWhyRecordsResponse, error) {
+func SzEngineWhyRecords(ctx context.Context, jsonString string) (*typedef.SzEngineWhyRecordsResponse, error) {
 	_ = ctx
 	result := &typedef.SzEngineWhyRecordsResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
@@ -245,14 +245,14 @@ func UnmarshalSzEngineWhyRecordsResponse(ctx context.Context, jsonString string)
 
 // --- Product ----------------------------------------------------------------
 
-func UnmarshalSzProductGetLicenseResponse(ctx context.Context, jsonString string) (*typedef.SzProductGetLicenseResponse, error) {
+func SzProductGetLicense(ctx context.Context, jsonString string) (*typedef.SzProductGetLicenseResponse, error) {
 	_ = ctx
 	result := &typedef.SzProductGetLicenseResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }
 
-func UnmarshalSzProductGetVersionResponse(ctx context.Context, jsonString string) (*typedef.SzProductGetVersionResponse, error) {
+func SzProductGetVersion(ctx context.Context, jsonString string) (*typedef.SzProductGetVersionResponse, error) {
 	_ = ctx
 	result := &typedef.SzProductGetVersionResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)

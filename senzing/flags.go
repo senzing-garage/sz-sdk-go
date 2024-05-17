@@ -1,16 +1,16 @@
-package sz
+package senzing
 
 // ----------------------------------------------------------------------------
 // Constants
 // ----------------------------------------------------------------------------
 
 const (
-	SZ_NO_FLAGS int64 = 0
+	SzNoFlags int64 = 0
 )
 
 // Flags used by the Senzing SzEngine.
 // These flags are single-bit flags.
-// BIT_NN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered as 0..63
+// BitNN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered as 0..63
 const (
 	SZ_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES  int64 = 1 << iota // 0 we should include entities with "resolved" relationships
 	SZ_EXPORT_INCLUDE_POSSIBLY_SAME                            // 1 we should include entities with "possibly same" relationships
@@ -38,7 +38,7 @@ const (
 	SZ_ENTITY_INCLUDE_RECORD_DATA            // 14 include the basic record data for the entity
 	SZ_ENTITY_INCLUDE_RECORD_MATCHING_INFO   // 15 include the record matching info for the entity
 	SZ_ENTITY_INCLUDE_RECORD_JSON_DATA       // 16 include the record json data for the entity
-	BIT_18                                   // 17
+	Bit18                                    // 17
 	SZ_ENTITY_INCLUDE_RECORD_FEATURE_IDS     // 18 include the features identifiers for the records
 	SZ_ENTITY_INCLUDE_RELATED_ENTITY_NAME    // 19 include the name of the related entities
 	SZ_ENTITY_INCLUDE_RELATED_MATCHING_INFO  // 20 include the record matching info of the related entities
@@ -65,33 +65,33 @@ const (
 	SZ_ENTITY_INCLUDE_FEATURE_ELEMENTS     // 32 include feature elements
 	SZ_FIND_NETWORK_INCLUDE_MATCHING_INFO  // 33 include matching info on entity networks
 	SZ_INCLUDE_MATCH_KEY_DETAILS           // 34 include internal features
-	BIT_36                                 // 35
-	BIT_37                                 // 36
-	BIT_38                                 // 37
-	BIT_39                                 // 38
-	BIT_40                                 // 39
-	BIT_41                                 // 40
-	BIT_42                                 // 41
-	BIT_43                                 // 42
-	BIT_44                                 // 43
-	BIT_45                                 // 44
-	BIT_46                                 // 45
-	BIT_47                                 // 46
-	BIT_48                                 // 47
-	BIT_49                                 // 48
-	BIT_50                                 // 49
-	BIT_51                                 // 50
-	BIT_52                                 // 51
-	BIT_53                                 // 52
-	BIT_54                                 // 53
-	BIT_55                                 // 54
-	BIT_56                                 // 55
-	BIT_57                                 // 56
-	BIT_58                                 // 57
-	BIT_59                                 // 58
-	BIT_60                                 // 59
-	BIT_61                                 // 60
-	BIT_62                                 // 61
+	Bit36                                  // 35
+	Bit37                                  // 36
+	Bit38                                  // 37
+	Bit39                                  // 38
+	Bit40                                  // 39
+	Bit41                                  // 40
+	Bit42                                  // 41
+	Bit43                                  // 42
+	Bit44                                  // 43
+	Bit45                                  // 44
+	Bit46                                  // 45
+	Bit47                                  // 46
+	Bit48                                  // 47
+	Bit49                                  // 48
+	Bit50                                  // 49
+	Bit51                                  // 50
+	Bit52                                  // 51
+	Bit53                                  // 52
+	Bit54                                  // 53
+	Bit55                                  // 54
+	Bit56                                  // 55
+	Bit57                                  // 56
+	Bit58                                  // 57
+	Bit59                                  // 58
+	Bit60                                  // 59
+	Bit61                                  // 60
+	Bit62                                  // 61
 	SZ_WITH_INFO                           // 62 return "WithInfo" information
 )
 
