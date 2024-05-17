@@ -11,7 +11,7 @@ import re
 from datetime import datetime, timezone
 
 INPUT_FILE = "bin/response-testcases.json"
-OUTPUT_FILE = "senzing/unmarshal_test.go"
+OUTPUT_FILE = "response/response_test.go"
 
 # -----------------------------------------------------------------------------
 # --- Output templates
@@ -26,7 +26,7 @@ OUTPUT_HEADER += f"// Generated date: {datetime.now(timezone.utc).isoformat()}\n
 
 # noqa: E101
 OUTPUT_HEADER += """
-package senzing
+package response
 
 import (
 	"context"
@@ -76,7 +76,7 @@ func testError(test *testing.T, ctx context.Context, err error) {
 TEST_FUNCTION_TEMPLATE = f"""
 	ctx := context.TODO()
 	jsonString := `{{json}}`
-	result, err := Unmarshal{{struct}}(ctx, jsonString)
+	result, err := {{struct}}(ctx, jsonString)
 	testError(test, ctx, err)
 	printActual(test, result)
 """  # noqa: E101,F541,W191

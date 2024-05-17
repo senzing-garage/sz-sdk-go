@@ -26,6 +26,7 @@ GO_PACKAGE_NAME := $(shell echo $(GIT_REMOTE_URL) | sed -e 's|^git@github.com:|g
 GO_OSARCH = $(subst /, ,$@)
 GO_OS = $(word 1, $(GO_OSARCH))
 GO_ARCH = $(word 2, $(GO_OSARCH))
+GOBIN ?= $$(go env GOPATH)/bin
 
 # Conditional assignment. ('?=')
 # Can be overridden with "export"
@@ -73,8 +74,8 @@ generate-tests: generate_senzing_unmarshal_test
 
 .PHONY: generate_senzing_unmarshal_test
 generate_senzing_unmarshal_test:
-	@rm ./senzing/unmarshal_test.go || true
-	@./bin/generate_senzing_unmarshal_test.py
+	@rm ./response/response_test.go || true
+	@./bin/generate_response_response_test.py
 
 
 .PHONY: verify
@@ -102,6 +103,27 @@ build: build-osarch-specific
 
 .PHONY: test
 test: test-osarch-specific
+
+# -----------------------------------------------------------------------------
+# Coverage
+# -----------------------------------------------------------------------------
+
+.PHONY: install-go-test-coverage
+install-go-test-coverage:
+	go install github.com/vladopajic/go-test-coverage/v2@latest
+
+.PHONY: check-coverage
+check-coverage: install-go-test-coverage
+	go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
+	${GOBIN}/go-test-coverage --config=./.testcoverage.yml
+
+# -----------------------------------------------------------------------------
+# Lint
+# -----------------------------------------------------------------------------
+
+.PHONY: run-golangci-lint
+run-golangci-lint:
+	golangci-lint run --config=.github/linters/.golangci.yml
 
 # -----------------------------------------------------------------------------
 # Utility targets

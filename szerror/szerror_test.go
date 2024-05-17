@@ -1,19 +1,19 @@
 package szerror
 
 import (
-	"errors"
-	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var testCases = []struct {
 	expectedCode    int
 	expectedMessage string
-	expectedType    error
-	expectedTypes   []SzErrorTypeIds
-	falseTypes      []SzErrorTypeIds
+	expectedError   error
+	expectedTypes   []TypeIDs
+	falseTypes      []TypeIDs
 	message         string
 	name            string
 	senzingMessage  string
@@ -35,9 +35,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    5,
 		expectedMessage: "Test message",
-		expectedType:    SzBaseError{},
-		expectedTypes:   []SzErrorTypeIds{SzBase},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzBase,
+		expectedTypes:   []TypeIDs{SzBase},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0007",
@@ -50,9 +50,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    7,
 		expectedMessage: "Test message",
-		expectedType:    SzBadInputError{},
-		expectedTypes:   []SzErrorTypeIds{SzBadInput},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzBadInput,
+		expectedTypes:   []TypeIDs{SzBadInput},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0010",
@@ -64,9 +64,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    10,
 		expectedMessage: "Test message",
-		expectedType:    SzRetryableError{},
-		expectedTypes:   []SzErrorTypeIds{SzRetryTimeoutExceeded, SzRetryable},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzRetryable,
+		expectedTypes:   []TypeIDs{SzRetryTimeoutExceeded, SzRetryable},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0014",
@@ -78,9 +78,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    14,
 		expectedMessage: "Test message",
-		expectedType:    SzConfigurationError{},
-		expectedTypes:   []SzErrorTypeIds{SzConfiguration},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzConfiguration,
+		expectedTypes:   []TypeIDs{SzConfiguration},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0023",
@@ -90,23 +90,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    23,
 		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
-		expectedType:    SzBadInputError{},
-		expectedTypes:   []SzErrorTypeIds{SzBadInput},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
-	},
-	{
-		name:           "szerror-0027",
-		senzingMessage: "27E|Test message",
-		message: `{
-            "errors": [{
-                "text": "27E|Test message"
-            }]
-        }`,
-		expectedCode:    27,
-		expectedMessage: "Test message",
-		expectedType:    SzBadInputError{},
-		expectedTypes:   []SzErrorTypeIds{SzUnknownDataSource, SzBadInput},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzBadInput,
+		expectedTypes:   []TypeIDs{SzBadInput},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0033",
@@ -118,9 +104,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    33,
 		expectedMessage: "Test message",
-		expectedType:    SzBadInputError{},
-		expectedTypes:   []SzErrorTypeIds{SzNotFound, SzBadInput},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzBadInput,
+		expectedTypes:   []TypeIDs{SzNotFound, SzBadInput},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-0048",
@@ -132,9 +118,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    48,
 		expectedMessage: "Test message",
-		expectedType:    SzUnrecoverableError{},
-		expectedTypes:   []SzErrorTypeIds{SzNotInitialized, SzUnrecoverable},
-		falseTypes:      []SzErrorTypeIds{SzBadInput},
+		expectedError:   ErrSzUnrecoverable,
+		expectedTypes:   []TypeIDs{SzNotInitialized, SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzBadInput},
 	},
 	{
 		name:           "szerror-0054",
@@ -146,9 +132,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    54,
 		expectedMessage: "Test message",
-		expectedType:    SzUnrecoverableError{},
-		expectedTypes:   []SzErrorTypeIds{SzDatabase, SzUnrecoverable},
-		falseTypes:      []SzErrorTypeIds{SzBadInput},
+		expectedError:   ErrSzUnrecoverable,
+		expectedTypes:   []TypeIDs{SzDatabase, SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzBadInput},
 	},
 	{
 		name:           "szerror-00087",
@@ -160,9 +146,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    87,
 		expectedMessage: "Test message",
-		expectedType:    SzUnrecoverableError{},
-		expectedTypes:   []SzErrorTypeIds{SzUnhandled, SzUnrecoverable},
-		falseTypes:      []SzErrorTypeIds{SzBadInput},
+		expectedError:   ErrSzUnrecoverable,
+		expectedTypes:   []TypeIDs{SzUnhandled, SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzBadInput},
 	},
 	{
 		name:           "szerror-0999",
@@ -174,9 +160,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    999,
 		expectedMessage: "Test message",
-		expectedType:    SzUnrecoverableError{},
-		expectedTypes:   []SzErrorTypeIds{SzLicense, SzUnrecoverable},
-		falseTypes:      []SzErrorTypeIds{SzBadInput},
+		expectedError:   ErrSzUnrecoverable,
+		expectedTypes:   []TypeIDs{SzLicense, SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzBadInput},
 	},
 	{
 		name:           "szerror-1006",
@@ -188,15 +174,14 @@ var testCases = []struct {
         }`,
 		expectedCode:    1006,
 		expectedMessage: "Test message",
-		expectedType:    SzRetryableError{},
-		expectedTypes:   []SzErrorTypeIds{SzDatabaseConnectionLost, SzRetryable},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzRetryable,
+		expectedTypes:   []TypeIDs{SzDatabaseConnectionLost, SzRetryable},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 	{
 		name:           "szerror-1019",
 		senzingMessage: "1019E|Test message",
-		message: `
-        {
+		message: `{
             "date": "2023-03-23",
             "time": "22:24:53.180659263",
             "level": "FATAL",
@@ -246,9 +231,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    1019,
 		expectedMessage: "Test message",
-		expectedType:    SzConfigurationError{},
-		expectedTypes:   []SzErrorTypeIds{SzConfiguration},
-		falseTypes:      []SzErrorTypeIds{SzUnrecoverable},
+		expectedError:   ErrSzConfiguration,
+		expectedTypes:   []TypeIDs{SzConfiguration},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
 }
 
@@ -256,72 +241,10 @@ var testCases = []struct {
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSzerror_Cast(test *testing.T) {
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			originalError := errors.New(testCase.message)
-			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			actual := Cast(originalError, desiredTypeError)
-			assert.NotNil(test, actual)
-			assert.IsType(test, testCase.expectedType, actual)
-			assert.Equal(test, testCase.message, actual.Error())
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), fmt.Sprintf("%d should be %d", szErrorTypeId, actual))
-			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
-			}
-		})
-	}
-}
-
-func TestSzerror_Cast_nil(test *testing.T) {
-	actual := Convert(nil)
-	assert.Nil(test, actual)
-
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			actual := Cast(nil, desiredTypeError)
-			assert.Nil(test, actual, "Nil actual")
-		})
-	}
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			originalError := errors.New(testCase.message)
-			actual := Cast(originalError, nil)
-			assert.NotNil(test, actual, "Nil desired type")
-		})
-	}
-}
-
-func TestSzerror_Convert(test *testing.T) {
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			originalError := errors.New(testCase.message)
-			actual := Convert(originalError)
-			assert.NotNil(test, actual)
-			assert.IsType(test, testCase.expectedType, actual)
-			assert.Equal(test, testCase.message, actual.Error())
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), szErrorTypeId)
-			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
-			}
-		})
-	}
-}
-
-func TestSzerror_Convert_nil(test *testing.T) {
-	actual := Convert(nil)
-	assert.Nil(test, actual)
-}
-
 func TestSzerror_SzErrorMessage(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := SzErrorMessage(testCase.senzingMessage)
+			actual := Message(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedMessage, actual, testCase.name)
 		})
 	}
@@ -330,7 +253,7 @@ func TestSzerror_SzErrorMessage(test *testing.T) {
 func TestSzerror_SzErrorCode(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := SzErrorCode(testCase.senzingMessage)
+			actual := Code(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedCode, actual, testCase.name)
 		})
 	}
@@ -339,47 +262,9 @@ func TestSzerror_SzErrorCode(test *testing.T) {
 func TestSzerror_SzError(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
-			assert.IsType(test, testCase.expectedType, actual)
-			assert.Equal(test, testCase.message, actual.Error())
+			actual := New(Code(testCase.senzingMessage), testCase.message)
+			require.ErrorIs(test, actual, testCase.expectedError)
+			assert.Equal(test, testCase.message, strings.TrimSpace(actual.Error()))
 		})
 	}
-}
-
-func TestSzerror_Is(test *testing.T) {
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), szErrorTypeId)
-			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
-			}
-		})
-	}
-}
-
-func TestSzerror_IsInList(test *testing.T) {
-	for _, testCase := range testCases {
-		test.Run(testCase.name, func(test *testing.T) {
-			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
-			assert.True(test, IsInList(actual, testCase.expectedTypes))
-			assert.False(test, IsInList(actual, testCase.falseTypes))
-		})
-	}
-}
-
-func TestSzerror_Unwrap(test *testing.T) {
-	expectedWrapCount := 1
-	actualWrapCount := 0
-	err := SzError(99901, "Test message")
-	for err != nil {
-		actualWrapCount += 1
-		err = errors.Unwrap(err)
-	}
-	assert.Equal(test, expectedWrapCount, actualWrapCount)
 }

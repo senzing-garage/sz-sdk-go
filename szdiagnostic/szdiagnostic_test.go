@@ -9,4 +9,5 @@ import (
 // ----------------------------------------------------------------------------
 
 func TestSzdiagnostic_Null(test *testing.T) {
+	_ = test
 }

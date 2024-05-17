@@ -1,12 +1,12 @@
 {
-    "SzConfigAddDataSourceResponse": {
+    "SzConfigAddDataSource": {
         "tests": {
             "test-001": {
                 "DSRC_ID": 1
             }
         }
     },
-    "SzConfigExportConfigResponse": {
+    "SzConfigExportConfig": {
         "tests": {
             "test-001": {
                 "G2_CONFIG": {
@@ -10280,7 +10280,7 @@
             }
         }
     },
-    "SzConfigGetDataSourcesResponse": {
+    "SzConfigGetDataSources": {
         "tests": {
             "test-001": {
                 "DATA_SOURCES": [
@@ -10424,7 +10424,7 @@
             }
         }
     },
-    "SzConfigManagerGetConfigListResponse": {
+    "SzConfigManagerGetConfigList": {
         "tests": {
             "test-001": {
                 "CONFIGS": [
@@ -10442,7 +10442,7 @@
             }
         }
     },
-    "SzConfigManagerGetConfigResponse": {
+    "SzConfigManagerGetConfig": {
         "tests": {
             "test-001": {
                 "G2_CONFIG": {
@@ -30355,7 +30355,7 @@
             }
         }
     },
-    "SzDiagnosticCheckDatastorePerformanceResponse": {
+    "SzDiagnosticCheckDatastorePerformance": {
         "tests": {
             "test-001": {
                 "insertTime": 1,
@@ -30363,7 +30363,7 @@
             }
         }
     },
-    "SzDiagnosticGetDatastoreInfoResponse": {
+    "SzDiagnosticGetDatastoreInfo": {
         "tests": {
             "test-001": {
                 "dataStores": [
@@ -30376,7 +30376,7 @@
             }
         }
     },
-    "SzDiagnosticGetFeatureResponse": {
+    "SzDiagnosticGetFeature": {
         "tests": {
             "test-001": {
                 "LIB_FEAT_ID": 1,
@@ -30410,7 +30410,7 @@
             }
         }
     },
-    "SzEngineAddRecordResponse": {
+    "SzEngineAddRecord": {
         "tests": {
             "test-001": {
                 "AFFECTED_ENTITIES": [],
@@ -30479,7 +30479,7 @@
             }
         }
     },
-    "SzEngineDeleteRecordResponse": {
+    "SzEngineDeleteRecord": {
         "tests": {
             "test-001": {
                 "AFFECTED_ENTITIES": [],
@@ -30530,15 +30530,15 @@
             }
         }
     },
-    "SzEngineFetchNextResponse": {
+    "SzEngineFetchNext": {
         "tests": {
             "test-001": {}
         }
     },
-    "SzEngineFindInterestingEntitiesByEntityIdResponse": {
+    "SzEngineFindInterestingEntitiesByEntityID": {
         "metadata": {
-            "goClass": "SzEngineFindInterestingEntitiesByEntityIDResponse",
-            "pythonClass": "SzEngineFindInterestingEntitiesByEntityIDResponse"
+            "goClass": "SzEngineFindInterestingEntitiesByEntityID",
+            "pythonClass": "SzEngineFindInterestingEntitiesByEntityID"
         },
         "tests": {
             "test-001": {
@@ -30548,10 +30548,10 @@
             }
         }
     },
-    "SzEngineFindInterestingEntitiesByRecordIdResponse": {
+    "SzEngineFindInterestingEntitiesByRecordID": {
         "metadata": {
-            "goClass": "SzEngineFindInterestingEntitiesByRecordIDResponse",
-            "pythonClass": "SzEngineFindInterestingEntitiesByRecordIDResponse"
+            "goClass": "SzEngineFindInterestingEntitiesByRecordID",
+            "pythonClass": "SzEngineFindInterestingEntitiesByRecordID"
         },
         "tests": {
             "test-001": {
@@ -30561,7 +30561,7 @@
             }
         }
     },
-    "SzEngineFindNetworkByEntityIdResponse": {
+    "SzEngineFindNetworkByEntityID": {
         "tests": {
             "test-001": {
                 "ENTITIES": [
@@ -32552,11 +32552,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineFindNetworkByEntityIDResponse",
-            "pythonClass": "SzEngineFindNetworkByEntityIDResponse"
+            "goClass": "SzEngineFindNetworkByEntityID",
+            "pythonClass": "SzEngineFindNetworkByEntityID"
         }
     },
-    "SzEngineFindNetworkByRecordIdResponse": {
+    "SzEngineFindNetworkByRecordID": {
         "tests": {
             "test-001": {
                 "ENTITIES": [
@@ -33120,11 +33120,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineFindNetworkByRecordIDResponse",
-            "pythonClass": "SzEngineFindNetworkByRecordIDResponse"
+            "goClass": "SzEngineFindNetworkByRecordID",
+            "pythonClass": "SzEngineFindNetworkByRecordID"
         }
     },
-    "SzEngineFindPathByEntityIdResponse": {
+    "SzEngineFindPathByEntityID": {
         "tests": {
             "test-001": {
                 "ENTITIES": [
@@ -34404,11 +34404,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineFindPathByEntityIDResponse",
-            "pythonClass": "SzEngineFindPathByEntityIDResponse"
+            "goClass": "SzEngineFindPathByEntityID",
+            "pythonClass": "SzEngineFindPathByEntityID"
         }
     },
-    "SzEngineFindPathByRecordIdResponse": {
+    "SzEngineFindPathByRecordID": {
         "tests": {
             "test-001": {
                 "ENTITIES": [
@@ -35245,11 +35245,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineFindPathByRecordIDResponse",
-            "pythonClass": "SzEngineFindPathByRecordIDResponse"
+            "goClass": "SzEngineFindPathByRecordID",
+            "pythonClass": "SzEngineFindPathByRecordID"
         }
     },
-    "SzEngineGetEntityByEntityIdResponse": {
+    "SzEngineGetEntityByEntityID": {
         "tests": {
             "test-001": {
                 "RELATED_ENTITIES": [],
@@ -37092,11 +37092,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineGetEntityByEntityIDResponse",
-            "pythonClass": "SzEngineGetEntityByEntityIDResponse"
+            "goClass": "SzEngineGetEntityByEntityID",
+            "pythonClass": "SzEngineGetEntityByEntityID"
         }
     },
-    "SzEngineGetEntityByRecordIdResponse": {
+    "SzEngineGetEntityByRecordID": {
         "tests": {
             "test-001": {
                 "RELATED_ENTITIES": [],
@@ -37540,11 +37540,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineGetEntityByRecordIDResponse",
-            "pythonClass": "SzEngineGetEntityByRecordIDResponse"
+            "goClass": "SzEngineGetEntityByRecordID",
+            "pythonClass": "SzEngineGetEntityByRecordID"
         }
     },
-    "SzEngineGetRecordResponse": {
+    "SzEngineGetRecord": {
         "tests": {
             "test-001": {
                 "ADDRESS_DATA": [],
@@ -37687,12 +37687,12 @@
             }
         }
     },
-    "SzEngineGetRedoRecordResponse": {
+    "SzEngineGetRedoRecord": {
         "tests": {
             "test-001": {}
         }
     },
-    "SzEngineGetVirtualEntityByRecordIdResponse": {
+    "SzEngineGetVirtualEntityByRecordID": {
         "tests": {
             "test-001": {
                 "RESOLVED_ENTITY": {
@@ -41848,11 +41848,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineGetVirtualEntityByRecordIDResponse",
-            "pythonClass": "SzEngineGetVirtualEntityByRecordIDResponse"
+            "goClass": "SzEngineGetVirtualEntityByRecordID",
+            "pythonClass": "SzEngineGetVirtualEntityByRecordID"
         }
     },
-    "SzEngineHowEntityByEntityIdResponse": {
+    "SzEngineHowEntityByEntityID": {
         "tests": {
             "test-001": {
                 "HOW_RESULTS": {
@@ -43877,11 +43877,11 @@
             }
         },
         "metadata": {
-            "goClass": "SzEngineHowEntityByEntityIDResponse",
-            "pythonClass": "SzEngineHowEntityByEntityIDResponse"
+            "goClass": "SzEngineHowEntityByEntityID",
+            "pythonClass": "SzEngineHowEntityByEntityID"
         }
     },
-    "SzEngineProcessRedoRecordResponse": {
+    "SzEngineProcessRedoRecord": {
         "tests": {
             "test-001": {
                 "AFFECTED_ENTITIES": [],
@@ -43920,7 +43920,7 @@
             }
         }
     },
-    "SzEngineReevaluateEntityResponse": {
+    "SzEngineReevaluateEntity": {
         "tests": {
             "test-001": {
                 "AFFECTED_ENTITIES": [
@@ -44572,7 +44572,7 @@
             }
         }
     },
-    "SzEngineReevaluateRecordResponse": {
+    "SzEngineReevaluateRecord": {
         "tests": {
             "test-001": {
                 "AFFECTED_ENTITIES": [
@@ -44588,7 +44588,7 @@
             }
         }
     },
-    "SzEngineSearchByAttributesResponse": {
+    "SzEngineSearchByAttributes": {
         "tests": {
             "test-001": {
                 "RESOLVED_ENTITIES": [],
@@ -46406,16 +46406,16 @@
             }
         }
     },
-    "SzEngineStreamExportJsonEntityReportResponse": {
+    "SzEngineStreamExportJSONEntityReport": {
         "metadata": {
-            "goClass": "SzEngineStreamExportJSONEntityReportResponse",
-            "pythonClass": "SzEngineStreamExportJSONEntityReportResponse"
+            "goClass": "SzEngineStreamExportJSONEntityReport",
+            "pythonClass": "SzEngineStreamExportJSONEntityReport"
         },
         "tests": {
             "test-001": {}
         }
     },
-    "SzEngineWhyEntitiesResponse": {
+    "SzEngineWhyEntities": {
         "tests": {
             "test-001": {
                 "ENTITIES": [
@@ -48061,12 +48061,12 @@
             }
         }
     },
-    "SzEngineWhyRecordInEntityResponse": {
+    "SzEngineWhyRecordInEntity": {
         "tests": {
             "test-001": {}
         }
     },
-    "SzEngineWhyRecordsResponse": {
+    "SzEngineWhyRecords": {
         "tests": {
             "test-001": {
                 "ENTITIES": [],
@@ -51957,7 +51957,7 @@
             }
         }
     },
-    "SzProductGetLicenseResponse": {
+    "SzProductGetLicense": {
         "tests": {
             "test-001": {
                 "billing": "blank",
@@ -51971,7 +51971,7 @@
             }
         }
     },
-    "SzProductGetVersionResponse": {
+    "SzProductGetVersion": {
         "tests": {
             "test-001": {
                 "BUILD_DATE": "blank",

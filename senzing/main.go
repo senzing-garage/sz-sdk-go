@@ -1,4 +1,4 @@
-package sz
+package senzing
 
 import (
 	"context"
@@ -43,11 +43,11 @@ type SzConfig interface {
 type SzConfigManager interface {
 	AddConfig(ctx context.Context, configDefinition string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
-	GetConfig(ctx context.Context, configId int64) (string, error)
+	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigList(ctx context.Context) (string, error)
 	GetDefaultConfigId(ctx context.Context) (int64, error)
-	ReplaceDefaultConfigId(ctx context.Context, currentDefaultConfigId int64, newDefaultConfigId int64) error
-	SetDefaultConfigId(ctx context.Context, configId int64) error
+	ReplaceDefaultConfigId(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error
+	SetDefaultConfigId(ctx context.Context, configID int64) error
 }
 
 // The SzDiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
@@ -55,46 +55,46 @@ type SzDiagnostic interface {
 	CheckDatastorePerformance(ctx context.Context, secondsToRun int) (string, error)
 	Destroy(ctx context.Context) error
 	GetDatastoreInfo(ctx context.Context) (string, error)
-	GetFeature(ctx context.Context, featureId int64) (string, error)
+	GetFeature(ctx context.Context, featureID int64) (string, error)
 	PurgeRepository(ctx context.Context) error
-	Reinitialize(ctx context.Context, configId int64) error
+	Reinitialize(ctx context.Context, configID int64) error
 }
 
 // The SzEngine interface is a Golang representation of Senzing's libg2.h
 type SzEngine interface {
-	AddRecord(ctx context.Context, dataSourceCode string, recordId string, recordDefinition string, flags int64) (string, error)
+	AddRecord(ctx context.Context, dataSourceCode string, recordID string, recordDefinition string, flags int64) (string, error)
 	CloseExport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
-	DeleteRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
+	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	Destroy(ctx context.Context) error
 	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
 	ExportCsvEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
 	ExportJsonEntityReport(ctx context.Context, flags int64) (uintptr, error)
 	ExportJsonEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
-	FindInterestingEntitiesByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
-	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
+	FindInterestingEntitiesByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
+	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	FindNetworkByEntityId(ctx context.Context, entityList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
 	FindNetworkByRecordId(ctx context.Context, recordList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
-	FindPathByEntityId(ctx context.Context, startEntityId int64, endEntityId int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
-	FindPathByRecordId(ctx context.Context, startDataSourceCode string, startRecordId string, endDataSourceCode string, endRecordId string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
+	FindPathByEntityId(ctx context.Context, startEntityID int64, endEntityID int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
+	FindPathByRecordId(ctx context.Context, startDataSourceCode string, startRecordID string, endDataSourceCode string, endRecordID string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
 	GetActiveConfigId(ctx context.Context) (int64, error)
-	GetEntityByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
-	GetEntityByRecordId(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
-	GetRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
+	GetEntityByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
+	GetEntityByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	GetRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetStats(ctx context.Context) (string, error)
 	GetVirtualEntityByRecordId(ctx context.Context, recordList string, flags int64) (string, error)
-	HowEntityByEntityId(ctx context.Context, entityId int64, flags int64) (string, error)
+	HowEntityByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
 	PrimeEngine(ctx context.Context) error
 	ProcessRedoRecord(ctx context.Context, redoRecord string, flags int64) (string, error)
-	ReevaluateEntity(ctx context.Context, entityId int64, flags int64) (string, error)
-	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
-	Reinitialize(ctx context.Context, configId int64) error
+	ReevaluateEntity(ctx context.Context, entityID int64, flags int64) (string, error)
+	ReevaluateRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	Reinitialize(ctx context.Context, configID int64) error
 	SearchByAttributes(ctx context.Context, attributes string, searchProfile string, flags int64) (string, error)
-	WhyEntities(ctx context.Context, entityId1 int64, entityId2 int64, flags int64) (string, error)
-	WhyRecordInEntity(ctx context.Context, dataSourceCode string, recordId string, flags int64) (string, error)
-	WhyRecords(ctx context.Context, dataSourceCode1 string, recordId1 string, dataSourceCode2 string, recordId2 string, flags int64) (string, error)
+	WhyEntities(ctx context.Context, entityID1 int64, entityID2 int64, flags int64) (string, error)
+	WhyRecordInEntity(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	WhyRecords(ctx context.Context, dataSourceCode1 string, recordID1 string, dataSourceCode2 string, recordID2 string, flags int64) (string, error)
 }
 
 // The SzProduct interface is a Golang representation of Senzing's libg2product.h
