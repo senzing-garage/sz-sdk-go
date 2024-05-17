@@ -129,8 +129,8 @@ func extractErrorNumber(message string) (int, error) {
 isIn determines if a SzErrorTypeId is in a list of SzErrorTypeIds.
 */
 func isIn(needle SzErrorTypeIds, haystack []SzErrorTypeIds) bool {
-	for _, szErrorTypeId := range haystack {
-		if needle == szErrorTypeId {
+	for _, szErrorTypeID := range haystack {
+		if needle == szErrorTypeID {
 			return true
 		}
 	}
@@ -156,37 +156,37 @@ Input
   - originalError: The error containing the message to be maintained (i.e. err.Error()).
   - errorTypeIds: An ordered list of error types to wrap the original error.
 */
-func wrapError(originalError error, errorTypeIds []SzErrorTypeIds) error {
+func wrapError(originalError error, errorTypeIDs []SzErrorTypeIds) error {
 	result := originalError
-	for _, errorTypeId := range errorTypeIds {
-		switch errorTypeId {
+	for _, errorTypeID := range errorTypeIDs {
+		switch errorTypeID {
 
 		// Category errors.
 
 		case SzBadInput:
 			result = SzBadInputError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 		case SzBase:
 			result = SzBaseError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 		case SzConfiguration:
 			result = SzConfigurationError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 		case SzRetryable:
 			result = SzRetryableError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 		case SzUnrecoverable:
 			result = SzUnrecoverableError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 
 			// Detail errors.
@@ -213,7 +213,7 @@ func wrapError(originalError error, errorTypeIds []SzErrorTypeIds) error {
 		default:
 			result = SzBaseError{
 				error:          result,
-				SzErrorTypeIds: errorTypeIds,
+				SzErrorTypeIds: errorTypeIDs,
 			}
 		}
 	}
@@ -234,7 +234,7 @@ Input
   - desiredTypeError: An error having the nested types desired in the resulting error.
 */
 func Cast(originalError error, desiredTypeError error) error {
-	var errorTypeIds []SzErrorTypeIds
+	var errorTypeIDs []SzErrorTypeIds
 
 	// Handle case of nil.
 
@@ -248,24 +248,24 @@ func Cast(originalError error, desiredTypeError error) error {
 
 	switch {
 	case errors.As(desiredTypeError, &SzBadInputError{}):
-		errorTypeIds = desiredTypeError.(SzBadInputError).SzErrorTypeIds
+		errorTypeIDs = desiredTypeError.(SzBadInputError).SzErrorTypeIds
 	case errors.As(desiredTypeError, &SzBaseError{}):
-		errorTypeIds = desiredTypeError.(SzBaseError).SzErrorTypeIds
+		errorTypeIDs = desiredTypeError.(SzBaseError).SzErrorTypeIds
 	case errors.As(desiredTypeError, &SzConfigurationError{}):
-		errorTypeIds = desiredTypeError.(SzConfigurationError).SzErrorTypeIds
+		errorTypeIDs = desiredTypeError.(SzConfigurationError).SzErrorTypeIds
 	case errors.As(desiredTypeError, &SzRetryableError{}):
-		errorTypeIds = desiredTypeError.(SzRetryableError).SzErrorTypeIds
+		errorTypeIDs = desiredTypeError.(SzRetryableError).SzErrorTypeIds
 	case errors.As(desiredTypeError, &SzUnrecoverableError{}):
-		errorTypeIds = desiredTypeError.(SzUnrecoverableError).SzErrorTypeIds
+		errorTypeIDs = desiredTypeError.(SzUnrecoverableError).SzErrorTypeIds
 	}
 
 	// Cast.
 
-	if len(errorTypeIds) > 0 {
+	if len(errorTypeIDs) > 0 {
 		if IsInList(originalError, AllSzErrorTypes) {
 			result = errors.New(result.Error())
 		}
-		result = wrapError(result, errorTypeIds)
+		result = wrapError(result, errorTypeIDs)
 	}
 	return result
 }
@@ -342,8 +342,8 @@ Input
 */
 func SzError(senzingErrorCode int, message string) error {
 	var result = errors.New(message)
-	if errorTypeIds, ok := SzErrorTypes[senzingErrorCode]; ok {
-		result = wrapError(result, errorTypeIds)
+	if errorTypeIDs, ok := SzErrorTypes[senzingErrorCode]; ok {
+		result = wrapError(result, errorTypeIDs)
 	}
 	return result
 }
@@ -384,8 +384,8 @@ Input
 */
 func IsInList(err error, errorType []SzErrorTypeIds) bool {
 	result := false
-	for _, szErrorTypeId := range errorType {
-		if Is(err, szErrorTypeId) {
+	for _, szErrorTypeID := range errorType {
+		if Is(err, szErrorTypeID) {
 			return true
 		}
 	}

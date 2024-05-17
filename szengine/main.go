@@ -12,7 +12,7 @@ const Prefix = "szengine."
 // ----------------------------------------------------------------------------
 
 // Message templates for szengine implementations.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter " + Prefix + "AddRecord(%s, %s, %s, %d).",
 	2:    "Exit  " + Prefix + "AddRecord(%s, %s, %s, %d) returned (%s, %v).",
 	3:    "Enter " + Prefix + "ClearLastException().",
@@ -220,4 +220,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific szengine messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

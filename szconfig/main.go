@@ -12,7 +12,7 @@ const Prefix = "szconfig."
 // ----------------------------------------------------------------------------
 
 // Message templates for szconfig implementations.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter " + Prefix + "AddDataSource(%v, %s).",
 	2:    "Exit  " + Prefix + "AddDataSource(%v, %s) returned (%s, %v).",
 	3:    "Enter " + Prefix + "ClearLastException().",
@@ -95,4 +95,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific szconfig messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}

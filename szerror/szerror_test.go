@@ -263,14 +263,14 @@ func TestSzerror_Cast(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(originalError, desiredTypeError)
-			assert.Error(test, actual)
+			require.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), fmt.Sprintf("%d should be %d", szErrorTypeId, actual))
+			for _, szErrorTypeID := range testCase.expectedTypes {
+				assert.True(test, Is(actual, szErrorTypeID), fmt.Sprintf("%d should be %d", szErrorTypeID, actual))
 			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
+			for _, szErrorTypeID := range testCase.falseTypes {
+				assert.False(test, Is(actual, szErrorTypeID), szErrorTypeID)
 			}
 		})
 	}
@@ -304,11 +304,11 @@ func TestSzerror_Convert(test *testing.T) {
 			require.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), szErrorTypeId)
+			for _, szErrorTypeID := range testCase.expectedTypes {
+				assert.True(test, Is(actual, szErrorTypeID), szErrorTypeID)
 			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
+			for _, szErrorTypeID := range testCase.falseTypes {
+				assert.False(test, Is(actual, szErrorTypeID), szErrorTypeID)
 			}
 		})
 	}
@@ -341,7 +341,7 @@ func TestSzerror_SzError(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.Error(test, actual)
+			require.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 		})
@@ -352,12 +352,12 @@ func TestSzerror_Is(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.Error(test, actual)
-			for _, szErrorTypeId := range testCase.expectedTypes {
-				assert.True(test, Is(actual, szErrorTypeId), szErrorTypeId)
+			require.Error(test, actual)
+			for _, szErrorTypeID := range testCase.expectedTypes {
+				assert.True(test, Is(actual, szErrorTypeID), szErrorTypeID)
 			}
-			for _, szErrorTypeId := range testCase.falseTypes {
-				assert.False(test, Is(actual, szErrorTypeId), szErrorTypeId)
+			for _, szErrorTypeID := range testCase.falseTypes {
+				assert.False(test, Is(actual, szErrorTypeID), szErrorTypeID)
 			}
 		})
 	}
@@ -367,7 +367,7 @@ func TestSzerror_IsInList(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
+			require.Error(test, actual)
 			assert.True(test, IsInList(actual, testCase.expectedTypes))
 			assert.False(test, IsInList(actual, testCase.falseTypes))
 		})

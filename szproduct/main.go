@@ -12,7 +12,7 @@ const Prefix = "szproduct."
 // ----------------------------------------------------------------------------
 
 // Message templates for szproduct implementations.
-var IdMessages = map[int]string{
+var IDMessages = map[int]string{
 	1:    "Enter " + Prefix + "ClearLastException().",
 	2:    "Exit  " + Prefix + "ClearLastException() returned (%v).",
 	3:    "Enter " + Prefix + "Destroy().",
@@ -75,4 +75,4 @@ var IdMessages = map[int]string{
 }
 
 // Status strings for specific szproduct messages.
-var IdStatuses = map[int]string{}
+var IDStatuses = map[int]string{}
