@@ -148,9 +148,9 @@ Output
   - An int64 combining all input "SZ_XXX" flags.
 */
 func Flags(flags ...int64) int64 {
-	var result int64 = 0
+	var result int64
 	for _, flag := range flags {
-		result = result | flag
+		result |= flag
 	}
 	return result
 }

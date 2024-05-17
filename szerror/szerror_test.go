@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var testCases = []struct {
@@ -262,7 +263,7 @@ func TestSzerror_Cast(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			desiredTypeError := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
 			actual := Cast(originalError, desiredTypeError)
-			assert.NotNil(test, actual)
+			assert.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 			for _, szErrorTypeId := range testCase.expectedTypes {
@@ -277,7 +278,7 @@ func TestSzerror_Cast(test *testing.T) {
 
 func TestSzerror_Cast_nil(test *testing.T) {
 	actual := Convert(nil)
-	assert.NoError(test, actual)
+	require.NoError(test, actual)
 
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
@@ -300,7 +301,7 @@ func TestSzerror_Convert(test *testing.T) {
 		test.Run(testCase.name, func(test *testing.T) {
 			originalError := errors.New(testCase.message)
 			actual := Convert(originalError)
-			assert.Error(test, actual)
+			require.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 			for _, szErrorTypeId := range testCase.expectedTypes {
@@ -340,7 +341,7 @@ func TestSzerror_SzError(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
+			assert.Error(test, actual)
 			assert.IsType(test, testCase.expectedType, actual)
 			assert.Equal(test, testCase.message, actual.Error())
 		})
@@ -351,7 +352,7 @@ func TestSzerror_Is(test *testing.T) {
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
 			actual := SzError(SzErrorCode(testCase.senzingMessage), testCase.message)
-			assert.NotNil(test, actual)
+			assert.Error(test, actual)
 			for _, szErrorTypeId := range testCase.expectedTypes {
 				assert.True(test, Is(actual, szErrorTypeId), szErrorTypeId)
 			}
