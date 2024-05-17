@@ -74,8 +74,8 @@ generate-tests: generate_senzing_unmarshal_test
 
 .PHONY: generate_senzing_unmarshal_test
 generate_senzing_unmarshal_test:
-	@rm ./senzing/unmarshal_test.go || true
-	@./bin/generate_senzing_unmarshal_test.py
+	@rm ./response/response_test.go || true
+	@./bin/generate_response_response_test.py
 
 
 .PHONY: verify
