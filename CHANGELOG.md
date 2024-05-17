@@ -10,6 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.13.0] - 2024-05-17
+
+### Changed in 0.13.0
+
+- `senzing` migrated to `response`
+- `sz` migrated to  `senzing`
+- `bin/generate_response_response_test.py` modified for `response`
+- Renamed variable to Go naming standards (e.g. `ID`, `JSON`, camelCase)
+- Changes to pass new battery of GitHub action tests
+- Refactored `szerror`
+
+### Changed in 0.12.3
+
 ## [0.12.4] - 2024-05-13
 
 ### Added in 0.12.4
