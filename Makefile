@@ -123,7 +123,7 @@ check-coverage: install-go-test-coverage
 
 .PHONY: run-golangci-lint
 run-golangci-lint:
-golangci-lint run --config=.github/linters/.golangci.yml
+	golangci-lint run --config=.github/linters/.golangci.yml
 
 # -----------------------------------------------------------------------------
 # Utility targets
