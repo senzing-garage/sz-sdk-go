@@ -42,7 +42,7 @@ The Senzing Go SDK API interfaces are documented at:
 The Senzing sz-sdk-go packages provide interface definitions for the following implementations.
 For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in package directories.
 
-- [Senzing/sz-sdk-go-base] - an SDK for calling the Senzing C library locally.
+- [Senzing/sz-sdk-go-core] - an SDK for calling the Senzing C library locally.
 - [Senzing/sz-sdk-go-grpc] - an SDK for calling the Senzing C library via
   [gRPC](https://grpc.io/) network requests.
 - [Senzing/sz-sdk-go-mock] - [mock objects]
@@ -53,7 +53,7 @@ For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in
 
 Documentation and examples for the implementations are at:
 
-- [sz-sdk-go-base]
+- [sz-sdk-go-core]
 - [sz-sdk-go-grpc]
 - [sz-sdk-go-mock]
 - [go-sdk-abstract-factory]
@@ -85,7 +85,7 @@ Documentation and examples for the implementations are at:
 [Senzing]: https://senzing.com/
 [Senzing Garage]: https://github.com/senzing-garage
 [Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
-[Senzing/sz-sdk-go-base]: https://github.com/senzing-garage/sz-sdk-go-base
+[Senzing/sz-sdk-go-core]: https://github.com/senzing-garage/sz-sdk-go-core
 [Senzing/sz-sdk-go-grpc]: https://github.com/senzing-garage/sz-sdk-go-grpc
 [Senzing/sz-sdk-go-mock]: https://github.com/senzing-garage/sz-sdk-go-mock
 [Senzing/go-sdk-abstract-factory]: https://github.com/senzing-garage/go-sdk-abstract-factory
@@ -94,6 +94,5 @@ Documentation and examples for the implementations are at:
 [Szdiagnostic]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szdiagnostic#Szdiagnostic
 [Szengine]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szengine#Szengine
 [Szproduct]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szproduct#Szproduct
-[sz-sdk-go-base]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-base
 [sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
 [sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
