@@ -74,7 +74,7 @@ type SzEngine interface {
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	FindNetworkByEntityId(ctx context.Context, entityIds string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
+	FindNetworkByEntityId(ctx context.Context, entityIDs string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
 	FindNetworkByRecordId(ctx context.Context, recordKeys string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
 	FindPathByEntityId(ctx context.Context, startEntityID int64, endEntityID int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
 	FindPathByRecordId(ctx context.Context, startDataSourceCode string, startRecordID string, endDataSourceCode string, endRecordID string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
