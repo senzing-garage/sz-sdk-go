@@ -44,7 +44,7 @@ type SzConfigManager interface {
 	AddConfig(ctx context.Context, configDefinition string, configComments string) (int64, error)
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configID int64) (string, error)
-	GetConfigList(ctx context.Context) (string, error)
+	GetConfigs(ctx context.Context) (string, error)
 	GetDefaultConfigId(ctx context.Context) (int64, error)
 	ReplaceDefaultConfigId(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error
 	SetDefaultConfigId(ctx context.Context, configID int64) error
@@ -74,8 +74,8 @@ type SzEngine interface {
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
 	FindInterestingEntitiesByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
 	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	FindNetworkByEntityId(ctx context.Context, entityList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
-	FindNetworkByRecordId(ctx context.Context, recordList string, maxDegrees int64, buildOutDegree int64, maxEntities int64, flags int64) (string, error)
+	FindNetworkByEntityId(ctx context.Context, entityIDs string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
+	FindNetworkByRecordId(ctx context.Context, recordKeys string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
 	FindPathByEntityId(ctx context.Context, startEntityID int64, endEntityID int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
 	FindPathByRecordId(ctx context.Context, startDataSourceCode string, startRecordID string, endDataSourceCode string, endRecordID string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
 	GetActiveConfigId(ctx context.Context) (int64, error)

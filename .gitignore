@@ -36,3 +36,4 @@ bin/__pycache__
 /.pytest_cache/
 
 .coverage
+coverage.html

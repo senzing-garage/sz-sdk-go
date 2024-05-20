@@ -39,8 +39,8 @@ var (
 	ErrSzBadInput               = errors.New(emptyErrorMessage)
 	ErrSzBase                   = errors.New(emptyErrorMessage)
 	ErrSzConfiguration          = errors.New(emptyErrorMessage)
-	ErrSzDatabaseConnectionLost = errors.New(emptyErrorMessage)
 	ErrSzDatabase               = errors.New(emptyErrorMessage)
+	ErrSzDatabaseConnectionLost = errors.New(emptyErrorMessage)
 	ErrSzLicense                = errors.New(emptyErrorMessage)
 	ErrSzNotFound               = errors.New(emptyErrorMessage)
 	ErrSzNotInitialized         = errors.New(emptyErrorMessage)
@@ -73,14 +73,14 @@ var SzErrorMap = map[TypeIDs]error{
 	SzBadInput:               ErrSzBadInput,
 	SzBase:                   ErrSzBase,
 	SzConfiguration:          ErrSzConfiguration,
-	SzRetryable:              ErrSzRetryable,
-	SzUnrecoverable:          ErrSzUnrecoverable,
 	SzDatabase:               ErrSzDatabase,
 	SzDatabaseConnectionLost: ErrSzDatabaseConnectionLost,
 	SzLicense:                ErrSzLicense,
 	SzNotFound:               ErrSzNotFound,
 	SzNotInitialized:         ErrSzNotInitialized,
+	SzRetryable:              ErrSzRetryable,
 	SzRetryTimeoutExceeded:   ErrSzRetryTimeoutExceeded,
 	SzUnhandled:              ErrUnhandled,
 	SzUnknownDataSource:      ErrSzUnknownDataSource,
+	SzUnrecoverable:          ErrSzUnrecoverable,
 }
