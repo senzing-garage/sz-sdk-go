@@ -15,7 +15,7 @@ import (
 mapErrorIDtoError returns the error corresponding to the requested errorTypeID integer.
 
 Input
-  - errorTypeIds: An integer from An ordered list of error types to wrap the original error.
+  - errorTypeID: An integer from An ordered list of error types to wrap the original error.
 */
 func mapErrorIDtoError(errorTypeID TypeIDs) error {
 	result, ok := SzErrorMap[errorTypeID]

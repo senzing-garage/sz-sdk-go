@@ -45,9 +45,9 @@ type SzConfigManager interface {
 	Destroy(ctx context.Context) error
 	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigs(ctx context.Context) (string, error)
-	GetDefaultConfigId(ctx context.Context) (int64, error)
-	ReplaceDefaultConfigId(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error
-	SetDefaultConfigId(ctx context.Context, configID int64) error
+	GetDefaultConfigID(ctx context.Context) (int64, error)
+	ReplaceDefaultConfigID(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error
+	SetDefaultConfigID(ctx context.Context, configID int64) error
 }
 
 // The SzDiagnostic interface is a Golang representation of Senzing's libg2diagnostic.h
@@ -69,23 +69,23 @@ type SzEngine interface {
 	Destroy(ctx context.Context) error
 	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
 	ExportCsvEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
-	ExportJsonEntityReport(ctx context.Context, flags int64) (uintptr, error)
-	ExportJsonEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
+	ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error)
+	ExportJSONEntityReportIterator(ctx context.Context, flags int64) chan StringFragment
 	FetchNext(ctx context.Context, exportHandle uintptr) (string, error)
-	FindInterestingEntitiesByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
-	FindInterestingEntitiesByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
-	FindNetworkByEntityId(ctx context.Context, entityIDs string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
-	FindNetworkByRecordId(ctx context.Context, recordKeys string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
-	FindPathByEntityId(ctx context.Context, startEntityID int64, endEntityID int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
-	FindPathByRecordId(ctx context.Context, startDataSourceCode string, startRecordID string, endDataSourceCode string, endRecordID string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
-	GetActiveConfigId(ctx context.Context) (int64, error)
-	GetEntityByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
-	GetEntityByRecordId(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	FindInterestingEntitiesByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
+	FindInterestingEntitiesByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	FindNetworkByEntityID(ctx context.Context, entityIDs string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
+	FindNetworkByRecordID(ctx context.Context, recordKeys string, maxDegrees int64, buildOutDegree int64, buildOutMaxEntities int64, flags int64) (string, error)
+	FindPathByEntityID(ctx context.Context, startEntityID int64, endEntityID int64, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
+	FindPathByRecordID(ctx context.Context, startDataSourceCode string, startRecordID string, endDataSourceCode string, endRecordID string, maxDegrees int64, exclusions string, requiredDataSources string, flags int64) (string, error)
+	GetActiveConfigID(ctx context.Context) (int64, error)
+	GetEntityByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
+	GetEntityByRecordID(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	GetRedoRecord(ctx context.Context) (string, error)
 	GetStats(ctx context.Context) (string, error)
-	GetVirtualEntityByRecordId(ctx context.Context, recordList string, flags int64) (string, error)
-	HowEntityByEntityId(ctx context.Context, entityID int64, flags int64) (string, error)
+	GetVirtualEntityByRecordID(ctx context.Context, recordList string, flags int64) (string, error)
+	HowEntityByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
 	PrimeEngine(ctx context.Context) error
 	ProcessRedoRecord(ctx context.Context, redoRecord string, flags int64) (string, error)
 	ReevaluateEntity(ctx context.Context, entityID int64, flags int64) (string, error)
