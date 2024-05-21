@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -
 
+## [0.13.2] - 2024-05-21
+
+### Changed in 0.13.2
+
+- Change "Id" to "ID"
+- Change "Json" to "JSON"
+
 ## [0.13.1] - 2024-05-20
 
 ### Changed in 0.13.1
