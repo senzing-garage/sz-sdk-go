@@ -134,7 +134,7 @@ const (
 	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll                                                                                                                                                                                                                                                                                      // The recommended default flag values for search-by-attributes
 	SzVirtualEntityDefaultFlags      = SzEntityDefaultFlags                                                                                                                                                                                                                                                                                         // The recommended default flag values for virtual-entity-analysis on entities.
 	SzWhyEntitiesDefaultFlags        = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores
-	SzWhyRecordInEntityiDefaultFlags = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
+	SzWhyRecordInEntityIDefaultFlags = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
 	SzWhyRecordsDefaultFlags         = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
 )
 

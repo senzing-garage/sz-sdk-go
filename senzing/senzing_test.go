@@ -408,7 +408,7 @@ var testCases = []struct {
 	},
 	{
 		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
-		actual:   SzWhyRecordInEntityiDefaultFlags,
+		actual:   SzWhyRecordInEntityIDefaultFlags,
 		expected: 0x0000000005B8FBC0,
 	},
 	{

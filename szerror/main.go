@@ -51,7 +51,7 @@ var (
 	ErrUnhandled                = errors.New(emptyErrorMessage)
 )
 
-// A list of all SzErrorTypeIds.
+// A list of all TypeIDs.
 var SzErrorTypesList = []TypeIDs{
 	SzBadInput,
 	SzBase,
@@ -68,7 +68,7 @@ var SzErrorTypesList = []TypeIDs{
 	SzUnrecoverable,
 }
 
-// Map of SzErrorTypeIds to corresponding error.
+// Map of TypeIDs to corresponding error.
 var SzErrorMap = map[TypeIDs]error{
 	SzBadInput:               ErrSzBadInput,
 	SzBase:                   ErrSzBase,
