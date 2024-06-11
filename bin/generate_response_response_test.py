@@ -34,7 +34,7 @@ import (
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -60,14 +60,6 @@ func printActual(test *testing.T, actual interface{}) {
 	printResult(test, "Actual", actual)
 }
 
-func testError(test *testing.T, ctx context.Context, err error) {
-	_ = ctx
-	if err != nil {
-		test.Log("Error:", err.Error())
-		assert.FailNow(test, err.Error())
-	}
-}
-
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
@@ -77,7 +69,7 @@ TEST_FUNCTION_TEMPLATE = f"""
 	ctx := context.TODO()
 	jsonString := `{{json}}`
 	result, err := {{struct}}(ctx, jsonString)
-	testError(test, ctx, err)
+	require.NoError(test, err)
 	printActual(test, result)
 """  # noqa: E101,F541,W191
 
