@@ -52,7 +52,7 @@ const (
 
 	/* flags for finding entity path data  */
 
-	SzFindPathPreferExclude // 25 excluded entities are still allowed, but not preferred
+	SzFindPathStrictAvoid // 25 excluded entities are still allowed, but not preferred
 
 	/* flags for including search result feature scores  */
 
