@@ -2,9 +2,8 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-[markdownlint](https://dlaa.me/markdownlint/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog], [markdownlint],
+and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
@@ -113,7 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed in 0.9.0
 
 - Renamed module to github.com/senzing-garage/g2-sdk-go
-- Refactor to [template-go](https://github.com/senzing-garage/template-go)
+- Refactor to [template-go]
 
 ## [0.8.0] - 2023-12-29
 
@@ -139,7 +138,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed in 0.7.4
 
-- Refactor to [template-go](https://github.com/senzing-garage/template-go)
+- Refactor to [template-go]
 - Update dependencies
   - github.com/senzing/go-observing v0.2.8
 
@@ -358,3 +357,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added to 0.1.0
 
 - Initial functionality
+
+[Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[markdownlint]: https://dlaa.me/markdownlint/
+[Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[template-go]: https://github.com/senzing-garage/template-go

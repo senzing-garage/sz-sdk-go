@@ -44,7 +44,7 @@ For hints on usage, review the top-most `main.go` and the `XXX_test.go` files in
 
 - [Senzing/sz-sdk-go-core] - an SDK for calling the Senzing C library locally.
 - [Senzing/sz-sdk-go-grpc] - an SDK for calling the Senzing C library via
-  [gRPC](https://grpc.io/) network requests.
+  [gRPC] network requests.
 - [Senzing/sz-sdk-go-mock] - [mock objects]
   for developing and testing without the Senzing C library.
 - [Senzing/go-sdk-abstract-factory] - An
@@ -60,12 +60,15 @@ Documentation and examples for the implementations are at:
 
 ## References
 
-1. [Development](docs/development.md)
-1. [Errors](docs/errors.md)
-1. [Examples](docs/examples.md)
+1. [Development]
+1. [Errors]
+1. [Examples]
 1. [Package reference]
 
 [abstract factory pattern]: https://en.wikipedia.org/wiki/Abstract_factory_pattern
+[Development]: docs/development.md
+[Errors]: docs/errors.md
+[Examples]: docs/examples.md
 [Go Reference Badge]: https://pkg.go.dev/badge/github.com/senzing-garage/sz-sdk-go.svg
 [Go Report Card]: https://goreportcard.com/report/github.com/senzing-garage/sz-sdk-go
 [Go Report Card Badge]: https://goreportcard.com/badge/github.com/senzing-garage/sz-sdk-go
@@ -78,6 +81,7 @@ Documentation and examples for the implementations are at:
 [go-test-darwin.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-darwin.yaml/badge.svg
 [go-test-windows.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-windows.yaml/badge.svg
 [go-sdk-abstract-factory]: https://pkg.go.dev/github.com/senzing-garage/go-sdk-abstract-factory
+[gRPC]: https://grpc.io/
 [License]: https://github.com/senzing-garage/sz-sdk-go/blob/main/LICENSE
 [License Badge]: https://img.shields.io/badge/License-Apache2-brightgreen.svg
 [mock objects]: https://en.wikipedia.org/wiki/Mock_object
