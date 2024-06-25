@@ -137,7 +137,7 @@ var IDMessages = map[int]string{
 	4042: Prefix + "G2_initWithConfigID(%s, %s, %d, %d) failed. Return code: %d",
 	4043: Prefix + "G2_primeEngine() failed. Return code: %d",
 	4044: Prefix + "G2_processRedoRecord(%s) failed. Return code: %d",
-	4045: Prefix + "G2_processRedoRecordWithInfo() failed. Return code: %d",
+	4045: Prefix + "G2_processRedoRecordWithInfo(%s) failed. Return code: %d",
 	4046: Prefix + "G2_reevaluateEntity(%d, %d) failed. Return code: %d",
 	4047: Prefix + "G2_reevaluateEntityWithInfo(%d, %d) failed. Return code: %d",
 	4048: Prefix + "G2_reevaluateRecord(%s, %s, %d) failed. Return code: %d",
