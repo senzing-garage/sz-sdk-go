@@ -21,6 +21,8 @@ var SzErrorTypes = map[int][]TypeIDs{
 	28:   {SzConfiguration},                       // EAS_ERR_INVALID_JSON_CONFIG_DOCUMENT - Invalid JSON config document
 	29:   {SzBase},                                // EAS_ERR_INVALID_HANDLE - Invalid Handle
 	30:   {SzConfiguration},                       // EAS_ERR_INVALID_MATCH_LEVEL - Invalid match level '{0}'
+	31:   {SzBase},                                // ??? unknown ???
+	32:   {SzBase},                                // ??? unknown ???
 	33:   {SzNotFound, SzBadInput},                // EAS_ERR_UNKNOWN_DSRC_RECORD_ID - Unknown record: dsrc[{0}], record[{1}]
 	34:   {SzConfiguration},                       // EAS_ERR_AMBIGUOUS_ENTITY_FTYPE_MISSING - AMBIGUOUS_ENTITY Feature Type is not configured
 	35:   {SzConfiguration},                       // EAS_ERR_AMBIGUOUS_TIER_FELEM_MISSING - AMBIGUOUS_TIER Feature Element is not configured
