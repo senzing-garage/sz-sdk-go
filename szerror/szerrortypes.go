@@ -256,6 +256,7 @@ var SzErrorTypes = map[int][]TypeIDs{
 	3101: {SzBase},                                // EAS_ERR_INVALID_SESSION_HANDLE - Invalid Session Handle [{0}]
 	3102: {SzBase},                                // EAS_ERR_INVALID_REPORT_HANDLE - Invalid Report Handle [{0}]
 	3103: {SzBase},                                // EAS_ERR_INVALID_EXPORT_HANDLE - Invalid Export Handle [{0}]
+	3104: {SzBase},                                // ??? unknown ???
 	3110: {SzBase},                                // EAS_ERR_RESPONSE_MESSAGE_SIZE_LARGER_THAN_BUFFER_SIZE - Response message size [{0}] is larger than buffer size [{1}]
 	3111: {SzBase},                                // EAS_ERR_RESPONSE_RESIZE_FUNCTION_IS_NOT_PROVIDED - Resize function is not provided
 	3112: {SzBase},                                // EAS_ERR_RESPONSE_RESIZE_FUNCTION_GAVE_INVALID_RESULT - Resize function returned an invalid result
