@@ -21,7 +21,13 @@ clean-osarch-specific:
 coverage-osarch-specific:
 	@go test -v -coverprofile=coverage.out -p 1 ./...
 	@go tool cover -html="coverage.out" -o coverage.html
-	@xdg-open file://$(MAKEFILE_DIRECTORY)/coverage.html
+	@explorer file://$(MAKEFILE_DIRECTORY)/coverage.html
+
+
+.PHONY: documentation-osarch-specific
+documentation-osarch-specific:
+	@start /b godoc
+	@explorer http://localhost:6060
 
 
 .PHONY: hello-world-osarch-specific
@@ -41,7 +47,7 @@ setup-osarch-specific:
 
 .PHONY: test-osarch-specific
 test-osarch-specific:
-	@go test -v -p 1 ./...
+	@go test -json -v -p 1 ./... 2>&1 | tee /tmp/gotest.log | gotestfmt
 
 # -----------------------------------------------------------------------------
 # Makefile targets supported only by this platform.

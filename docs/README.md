@@ -2,4 +2,4 @@
 
 Placeholder for [GitHub pages](https://pages.github.com/).
 
-See [https://senzing.github.io/sz-sdk-go](https://senzing.github.io/sz-sdk-go).
+See [https://garage.senzing.com/sz-sdk-go](https://garage.senzing.com/sz-sdk-go).

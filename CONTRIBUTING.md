@@ -79,7 +79,7 @@ These variables may be modified, but do not need to be modified.
 The variables are used throughout the installation procedure.
 
 ```console
-export GIT_ACCOUNT=senzing
+export GIT_ACCOUNT=senzing-garage
 export GIT_REPOSITORY=sz-sdk-go
 ```
 

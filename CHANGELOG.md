@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.13.6] - 2024-08-01
+
+### Changed in 0.13.6
+
+- Update szerrors to add ReplaceConflict
+- Update `szerrortypes.go`
+
 ## [0.13.5] - 2024-06-25
 
 ### Changed in 0.13.5
