@@ -34,6 +34,7 @@ coverage-osarch-specific:
 	@go tool cover -html="coverage.out" -o coverage.html
 	@open file://$(MAKEFILE_DIRECTORY)/coverage.html
 
+
 .PHONY: documentation-osarch-specific
 documentation-osarch-specific:
 	@godoc &

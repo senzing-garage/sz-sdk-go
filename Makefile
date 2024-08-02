@@ -1,4 +1,4 @@
-# Makefile for sz-sdk-go.
+# Makefile for Go project
 
 # Detect the operating system and architecture.
 
@@ -122,7 +122,6 @@ $(PLATFORMS):
 
 .PHONY: build
 build: build-osarch-specific
-
 
 # -----------------------------------------------------------------------------
 # Run
