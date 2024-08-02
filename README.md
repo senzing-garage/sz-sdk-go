@@ -70,33 +70,33 @@ Documentation and examples for the implementations are at:
 [Errors]: docs/errors.md
 [Examples]: docs/examples.md
 [Go Reference Badge]: https://pkg.go.dev/badge/github.com/senzing-garage/sz-sdk-go.svg
-[Go Report Card]: https://goreportcard.com/report/github.com/senzing-garage/sz-sdk-go
 [Go Report Card Badge]: https://goreportcard.com/badge/github.com/senzing-garage/sz-sdk-go
-[golangci-lint.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/golangci-lint.yaml
-[go-test-linux.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-linux.yaml
+[Go Report Card]: https://goreportcard.com/report/github.com/senzing-garage/sz-sdk-go
+[go-sdk-abstract-factory]: https://pkg.go.dev/github.com/senzing-garage/go-sdk-abstract-factory
+[go-test-darwin.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-darwin.yaml/badge.svg
 [go-test-darwin.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-darwin.yaml
+[go-test-linux.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-linux.yaml/badge.svg
+[go-test-linux.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-linux.yaml
+[go-test-windows.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-windows.yaml/badge.svg
 [go-test-windows.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-windows.yaml
 [golangci-lint.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/golangci-lint.yaml/badge.svg
-[go-test-linux.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-linux.yaml/badge.svg
-[go-test-darwin.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-darwin.yaml/badge.svg
-[go-test-windows.yaml Badge]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/go-test-windows.yaml/badge.svg
-[go-sdk-abstract-factory]: https://pkg.go.dev/github.com/senzing-garage/go-sdk-abstract-factory
+[golangci-lint.yaml]: https://github.com/senzing-garage/sz-sdk-go/actions/workflows/golangci-lint.yaml
 [gRPC]: https://grpc.io/
-[License]: https://github.com/senzing-garage/sz-sdk-go/blob/main/LICENSE
 [License Badge]: https://img.shields.io/badge/License-Apache2-brightgreen.svg
+[License]: https://github.com/senzing-garage/sz-sdk-go/blob/main/LICENSE
 [mock objects]: https://en.wikipedia.org/wiki/Mock_object
 [Package reference]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go
-[Senzing]: https://senzing.com/
 [Senzing Garage]: https://github.com/senzing-garage
 [Senzing Quick Start guides]: https://docs.senzing.com/quickstart/
+[Senzing]: https://senzing.com/
+[Senzing/go-sdk-abstract-factory]: https://github.com/senzing-garage/go-sdk-abstract-factory
 [Senzing/sz-sdk-go-core]: https://github.com/senzing-garage/sz-sdk-go-core
 [Senzing/sz-sdk-go-grpc]: https://github.com/senzing-garage/sz-sdk-go-grpc
 [Senzing/sz-sdk-go-mock]: https://github.com/senzing-garage/sz-sdk-go-mock
-[Senzing/go-sdk-abstract-factory]: https://github.com/senzing-garage/go-sdk-abstract-factory
+[sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
+[sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
 [Szconfig]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfig#Szconfig
 [Szconfigmanager]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfigmanager#Szconfigmanager
 [Szdiagnostic]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szdiagnostic#Szdiagnostic
 [Szengine]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szengine#Szengine
 [Szproduct]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szproduct#Szproduct
-[sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
-[sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
