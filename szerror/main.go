@@ -23,6 +23,7 @@ const (
 	SzLicense
 	SzNotFound
 	SzNotInitialized
+	SzReplaceConflict
 	SzRetryable
 	SzRetryTimeoutExceeded
 	SzUnhandled
@@ -44,6 +45,7 @@ var (
 	ErrSzLicense                = errors.New(emptyErrorMessage)
 	ErrSzNotFound               = errors.New(emptyErrorMessage)
 	ErrSzNotInitialized         = errors.New(emptyErrorMessage)
+	ErrSzReplaceConflict        = errors.New(emptyErrorMessage)
 	ErrSzRetryable              = errors.New(emptyErrorMessage)
 	ErrSzRetryTimeoutExceeded   = errors.New(emptyErrorMessage)
 	ErrSzUnknownDataSource      = errors.New(emptyErrorMessage)
@@ -61,6 +63,7 @@ var SzErrorTypesList = []TypeIDs{
 	SzLicense,
 	SzNotFound,
 	SzNotInitialized,
+	SzReplaceConflict,
 	SzRetryable,
 	SzRetryTimeoutExceeded,
 	SzUnhandled,
@@ -78,6 +81,7 @@ var SzErrorMap = map[TypeIDs]error{
 	SzLicense:                ErrSzLicense,
 	SzNotFound:               ErrSzNotFound,
 	SzNotInitialized:         ErrSzNotInitialized,
+	SzReplaceConflict:        ErrSzReplaceConflict,
 	SzRetryable:              ErrSzRetryable,
 	SzRetryTimeoutExceeded:   ErrSzRetryTimeoutExceeded,
 	SzUnhandled:              ErrUnhandled,

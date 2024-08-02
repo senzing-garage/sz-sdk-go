@@ -1,5 +1,8 @@
 # sz-sdk-go
 
-Placeholder for [GitHub pages](https://pages.github.com/).
+Placeholder for [GitHub pages].
 
-See [https://senzing.github.io/sz-sdk-go](https://senzing.github.io/sz-sdk-go).
+See [GitHub page].
+
+[GitHub page]: https://garage.senzing.com/sz-sdk-go
+[GitHub pages]: https://pages.github.com/
