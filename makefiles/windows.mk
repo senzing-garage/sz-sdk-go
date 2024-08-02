@@ -11,10 +11,13 @@
 
 .PHONY: clean-osarch-specific
 clean-osarch-specific:
-	del /F /S /Q $(GOPATH)/bin/$(PROGRAM_NAME)
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.html
-	del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.out
-	del /F /S /Q $(TARGET_DIRECTORY)
+	@del /F /S /Q $(GOPATH)/bin/$(PROGRAM_NAME)
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.html
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/coverage.out
+	@del /F /S /Q $(MAKEFILE_DIRECTORY)/cover.out
+	@del /F /S /Q $(TARGET_DIRECTORY)
+	@del /F /S /Q C:\Temp\sqlite
+	@taskkill /f /t/im godoc
 
 
 .PHONY: coverage-osarch-specific
@@ -32,7 +35,7 @@ documentation-osarch-specific:
 
 .PHONY: hello-world-osarch-specific
 hello-world-osarch-specific:
-	@echo "Hello World, from windows."
+	$(info Hello World, from windows.)
 
 
 .PHONY: run-osarch-specific
@@ -42,7 +45,7 @@ run-osarch-specific:
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
-	@echo "No setup required."
+	$(info No setup required.)
 
 
 .PHONY: test-osarch-specific
@@ -55,4 +58,4 @@ test-osarch-specific:
 
 .PHONY: only-windows
 only-windows:
-	@echo "Only windows has this Makefile target."
+	$(info Only windows has this Makefile target.)

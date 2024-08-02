@@ -22,10 +22,11 @@ The Senzing sz-sdk-go packages provide interface definitions for implementations
 [![Go Reference Badge]][Package reference]
 [![Go Report Card Badge]][Go Report Card]
 [![License Badge]][License]
-[![golangci-lint.yaml Badge]][golangci-lint.yaml]
 [![go-test-linux.yaml Badge]][go-test-linux.yaml]
 [![go-test-darwin.yaml Badge]][go-test-darwin.yaml]
 [![go-test-windows.yaml Badge]][go-test-windows.yaml]
+
+[![golangci-lint.yaml Badge]][golangci-lint.yaml]
 
 ## Overview
 

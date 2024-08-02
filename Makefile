@@ -15,9 +15,10 @@ PROGRAM_NAME := $(shell basename `git rev-parse --show-toplevel`)
 MAKEFILE_PATH := $(abspath $(firstword $(MAKEFILE_LIST)))
 MAKEFILE_DIRECTORY := $(shell dirname $(MAKEFILE_PATH))
 TARGET_DIRECTORY := $(MAKEFILE_DIRECTORY)/target
-BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 's/v//')
+DIST_DIRECTORY := $(MAKEFILE_DIRECTORY)/dist
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0  | sed 's/v//')
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l | sed 's/^ *//')
+BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 's/v//')
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
 GIT_REPOSITORY_NAME := $(shell basename `git rev-parse --show-toplevel`)
 GIT_VERSION := $(shell git describe --always --tags --long --dirty | sed -e 's/\-0//' -e 's/\-g.......//')
@@ -32,6 +33,7 @@ GO_ARCH = $(word 2, $(GO_OSARCH))
 
 # Conditional assignment. ('?=')
 # Can be overridden with "export"
+# Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/g2/lib"
 
 GOBIN ?= $(shell go env GOPATH)/bin
 LD_LIBRARY_PATH ?= /opt/senzing/g2/lib
@@ -106,8 +108,7 @@ setup: generate-tests setup-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: lint
-lint:
-	@${GOBIN}/golangci-lint run --config=.github/linters/.golangci.yaml
+lint: golangci-lint
 
 # -----------------------------------------------------------------------------
 # Build
@@ -115,12 +116,20 @@ lint:
 
 PLATFORMS := darwin/amd64 darwin/arm64 linux/amd64 linux/arm64 windows/amd64 windows/arm64
 $(PLATFORMS):
-	@echo Building $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
+	$(info Building $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME))
 	@GOOS=$(GO_OS) GOARCH=$(GO_ARCH) go build -o $(TARGET_DIRECTORY)/$(GO_OS)-$(GO_ARCH)/$(PROGRAM_NAME)
 
 
 .PHONY: build
 build: build-osarch-specific
+
+
+# -----------------------------------------------------------------------------
+# Run
+# -----------------------------------------------------------------------------
+
+.PHONY: run
+run: run-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Test
@@ -144,6 +153,13 @@ check-coverage:
 	@${GOBIN}/go-test-coverage --config=.github/coverage/.testcoverage.yaml
 
 # -----------------------------------------------------------------------------
+# Documentation
+# -----------------------------------------------------------------------------
+
+.PHONY: documentation
+documentation: documentation-osarch-specific
+
+# -----------------------------------------------------------------------------
 # Clean
 # -----------------------------------------------------------------------------
 
@@ -158,8 +174,8 @@ clean: clean-osarch-specific
 
 .PHONY: help
 help:
-	@echo "Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION)".
-	@echo "Makefile targets:"
+	$(info Build $(PROGRAM_NAME) version $(BUILD_VERSION)-$(BUILD_ITERATION))
+	$(info Makefile targets:)
 	@$(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs
 
 
@@ -174,3 +190,11 @@ print-make-variables:
 update-pkg-cache:
 	@GOPROXY=https://proxy.golang.org GO111MODULE=on \
 		go get $(GO_PACKAGE_NAME)@$(BUILD_TAG)
+
+# -----------------------------------------------------------------------------
+# Specific programs
+# -----------------------------------------------------------------------------
+
+.PHONY: golangci-lint
+golangci-lint:
+	@${GOBIN}/golangci-lint run --config=.github/linters/.golangci.yaml
