@@ -1,4 +1,4 @@
 /*
-The szconfig package is a wrapper over Senzing's G2Config C binding.
+The szconfig package is a wrapper over Senzing's SzConfig C binding.
 */
 package szconfig

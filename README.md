@@ -93,6 +93,7 @@ Documentation and examples for the implementations are at:
 [Senzing/sz-sdk-go-core]: https://github.com/senzing-garage/sz-sdk-go-core
 [Senzing/sz-sdk-go-grpc]: https://github.com/senzing-garage/sz-sdk-go-grpc
 [Senzing/sz-sdk-go-mock]: https://github.com/senzing-garage/sz-sdk-go-mock
+[sz-sdk-go-core]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-core
 [sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
 [sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
 [Szconfig]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go/szconfig#Szconfig

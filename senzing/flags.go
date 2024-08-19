@@ -95,7 +95,7 @@ const (
 	SzWithInfo                        // 62 return "WithInfo" information
 )
 
-// Flags used by the Senzing G2Engine.
+// Flags used by the Senzing SzEngine.
 // These flags combine single-bit flags.
 const (
 	/* Flags for exporting entity data.  */
