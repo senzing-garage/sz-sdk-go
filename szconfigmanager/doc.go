@@ -1,4 +1,4 @@
 /*
-The szconfigmanager package is a wrapper over Senzing's G2Configmgr C binding.
+Package szconfigmanager is used to modify Senzing configuration JSON documents in the Senzing datastore.
 */
 package szconfigmanager

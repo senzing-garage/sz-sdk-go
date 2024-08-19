@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.14.0] - 2024-08-19
+
+### Changed in 0.14.0
+
+- Change from `g2` to `sz`/`er`
+
 ## [0.13.6] - 2024-08-02
 
 ### Changed in 0.13.6

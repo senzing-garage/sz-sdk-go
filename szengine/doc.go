@@ -1,4 +1,4 @@
 /*
-The szengine package is a wrapper over Senzing's G2 C binding.
+Package szengine is used to add, modify, delete, and query records/entities in the Senzing engine.
 */
 package szengine

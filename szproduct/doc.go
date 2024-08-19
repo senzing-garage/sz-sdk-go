@@ -1,4 +1,4 @@
 /*
-The szproduct package is a wrapper over Senzing's G2Product C binding.
+Package szproduct is used to inspect the Senzing product.
 */
 package szproduct

@@ -4,6 +4,9 @@ package senzing
 // Constants
 // ----------------------------------------------------------------------------
 
+/*
+Empty values for parameter.
+*/
 const (
 	SzInitializeWithDefaultConfiguration int64  = 0
 	SzNoAttributes                       string = ""

@@ -1,4 +1,4 @@
 /*
-The szconfig package is a wrapper over Senzing's G2Config C binding.
+Package szconfig is used to modify the in-memory representation of a Senzing configuration.
 */
 package szconfig
