@@ -5,7 +5,7 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Test interface functions
+// Interface methods - test
 // ----------------------------------------------------------------------------
 
 func TestSzconfigmanager_Null(test *testing.T) {

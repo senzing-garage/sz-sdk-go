@@ -5,7 +5,7 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Test interface functions
+// Interface methods - test
 // ----------------------------------------------------------------------------
 
 func TestSzproduct_Null(test *testing.T) {

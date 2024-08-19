@@ -5,7 +5,7 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-// Test interface functions
+// Interface methods - test
 // ----------------------------------------------------------------------------
 
 func TestSzengine_Null(test *testing.T) {

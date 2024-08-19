@@ -1,4 +1,4 @@
 /*
-The szdiagnostic package is a wrapper over Senzing's SzDiagnostic C binding.
+Package szdiagnostic is used to inspect the Senzing environment.
 */
 package szdiagnostic
