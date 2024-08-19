@@ -32,8 +32,6 @@ More information at [sz-sdk-go].
 [sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
 [sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
 [sz-sdk-go]: https://github.com/senzing-garage/sz-sdk-go
-
-[senzing]: https://FIXME:
 */
 package main
 
@@ -41,6 +39,7 @@ import (
 	"github.com/senzing-garage/sz-sdk-go/senzing"
 )
 
-func junk() {
+// Hack to import "senzing"
+func _() {
 	_ = senzing.Bit18
 }
