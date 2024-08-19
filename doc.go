@@ -1,11 +1,9 @@
 /*
-The Senzing sz-sdk-go packages contain definitions that are common to implementations of the Senzing Go SDK.
+The Senzing sz-sdk-go packages contain interface definitions for the Senzing Go SDK.
 
 # Synopsis
 
-The Senzing [sz-sdk-go] packages contain definitions that are common to implementations of the Senzing Go SDK.
-A client of the Senzing Go SDK API would use the senzing package to maintain compatiblity across
-various Senzing Go SDK API implementations.
+The Senzing sz-sdk-go packages contain definitions, messages, and functions that are common to implementations of the Senzing Go SDK.
 
 # Overview
 
@@ -17,6 +15,15 @@ Implementations:
   - [sz-sdk-go-grpc] - An implementation that communicates with a [Senzing gRPC server].
   - [sz-sdk-go-mock] - An implementation that creates Senzing [mock objects].
 
+A client of the Senzing Go SDK API should use the following interfaces to maintain compatiblity across implementations.
+
+  - [senzing.SzAbstractFactory]
+  - [senzing.SzConfig]
+  - [senzing.SzConfigManager]
+  - [senzing.SzDiagnostic]
+  - [senzing.SzEngine]
+  - [senzing.SzProduct]
+
 More information at [sz-sdk-go].
 
 [mock objects]: https://en.wikipedia.org/wiki/Mock_object
@@ -25,5 +32,15 @@ More information at [sz-sdk-go].
 [sz-sdk-go-grpc]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-grpc
 [sz-sdk-go-mock]: https://pkg.go.dev/github.com/senzing-garage/sz-sdk-go-mock
 [sz-sdk-go]: https://github.com/senzing-garage/sz-sdk-go
+
+[senzing]: https://FIXME:
 */
 package main
+
+import (
+	"github.com/senzing-garage/sz-sdk-go/senzing"
+)
+
+func junk() {
+	_ = senzing.Bit18
+}
