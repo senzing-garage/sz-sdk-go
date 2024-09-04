@@ -37,7 +37,7 @@ var testCases = []struct {
 		expectedMessage: "Test message",
 		expectedError:   ErrSzBase,
 		expectedTypes:   []TypeIDs{SzBase},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0007",
@@ -51,8 +51,8 @@ var testCases = []struct {
 		expectedCode:    7,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzBadInput},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzBadInputError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0010",
@@ -65,8 +65,8 @@ var testCases = []struct {
 		expectedCode:    10,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzRetryable,
-		expectedTypes:   []TypeIDs{SzRetryTimeoutExceeded, SzRetryable},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzRetryTimeoutExceededError, SzRetryableError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0014",
@@ -79,8 +79,8 @@ var testCases = []struct {
 		expectedCode:    14,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzConfiguration,
-		expectedTypes:   []TypeIDs{SzConfiguration},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzConfigurationError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0023",
@@ -91,8 +91,8 @@ var testCases = []struct {
 		expectedCode:    23,
 		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
 		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzBadInput},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzBadInputError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0033",
@@ -105,8 +105,8 @@ var testCases = []struct {
 		expectedCode:    33,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzNotFound, SzBadInput},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzNotFoundError, SzBadInputError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0048",
@@ -119,8 +119,8 @@ var testCases = []struct {
 		expectedCode:    48,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzNotInitialized, SzUnrecoverable},
-		falseTypes:      []TypeIDs{SzBadInput},
+		expectedTypes:   []TypeIDs{SzNotInitializedError, SzUnrecoverableError},
+		falseTypes:      []TypeIDs{SzBadInputError},
 	},
 	{
 		name:           "szerror-0054",
@@ -133,8 +133,8 @@ var testCases = []struct {
 		expectedCode:    54,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzDatabase, SzUnrecoverable},
-		falseTypes:      []TypeIDs{SzBadInput},
+		expectedTypes:   []TypeIDs{SzDatabaseError, SzUnrecoverableError},
+		falseTypes:      []TypeIDs{SzBadInputError},
 	},
 	{
 		name:           "szerror-00087",
@@ -147,8 +147,8 @@ var testCases = []struct {
 		expectedCode:    87,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzUnhandled, SzUnrecoverable},
-		falseTypes:      []TypeIDs{SzBadInput},
+		expectedTypes:   []TypeIDs{SzUnhandledError, SzUnrecoverableError},
+		falseTypes:      []TypeIDs{SzBadInputError},
 	},
 	{
 		name:           "szerror-0999",
@@ -161,8 +161,8 @@ var testCases = []struct {
 		expectedCode:    999,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzLicense, SzUnrecoverable},
-		falseTypes:      []TypeIDs{SzBadInput},
+		expectedTypes:   []TypeIDs{SzLicenseError, SzUnrecoverableError},
+		falseTypes:      []TypeIDs{SzBadInputError},
 	},
 	{
 		name:           "szerror-1006",
@@ -175,8 +175,8 @@ var testCases = []struct {
 		expectedCode:    1006,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzRetryable,
-		expectedTypes:   []TypeIDs{SzDatabaseConnectionLost, SzRetryable},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzDatabaseConnectionLostError, SzRetryableError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-1019",
@@ -232,8 +232,8 @@ var testCases = []struct {
 		expectedCode:    1019,
 		expectedMessage: "Test message",
 		expectedError:   ErrSzConfiguration,
-		expectedTypes:   []TypeIDs{SzConfiguration},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		expectedTypes:   []TypeIDs{SzConfigurationError},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-NoCode",
@@ -247,7 +247,7 @@ var testCases = []struct {
 		expectedMessage: "",
 		expectedError:   ErrSzBase,
 		expectedTypes:   []TypeIDs{SzBase},
-		falseTypes:      []TypeIDs{SzUnrecoverable},
+		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 }
 

@@ -19,19 +19,19 @@ A collection of Senzing error types.
 */
 const (
 	SzBase TypeIDs = iota
-	SzBadInput
-	SzConfiguration
-	SzDatabase
-	SzDatabaseConnectionLost
-	SzLicense
-	SzNotFound
-	SzNotInitialized
-	SzReplaceConflict
-	SzRetryable
-	SzRetryTimeoutExceeded
-	SzUnhandled
-	SzUnknownDataSource
-	SzUnrecoverable
+	SzBadInputError
+	SzConfigurationError
+	SzDatabaseError
+	SzDatabaseConnectionLostError
+	SzLicenseError
+	SzNotFoundError
+	SzNotInitializedError
+	SzReplaceConflictError
+	SzRetryableError
+	SzRetryTimeoutExceededError
+	SzUnhandledError
+	SzUnknownDataSourceError
+	SzUnrecoverableError
 )
 
 // ----------------------------------------------------------------------------
@@ -62,36 +62,36 @@ var (
 
 // A list of all TypeIDs.
 var SzErrorTypesList = []TypeIDs{
-	SzBadInput,
+	SzBadInputError,
 	SzBase,
-	SzConfiguration,
-	SzDatabase,
-	SzDatabaseConnectionLost,
-	SzLicense,
-	SzNotFound,
-	SzNotInitialized,
-	SzReplaceConflict,
-	SzRetryable,
-	SzRetryTimeoutExceeded,
-	SzUnhandled,
-	SzUnknownDataSource,
-	SzUnrecoverable,
+	SzConfigurationError,
+	SzDatabaseError,
+	SzDatabaseConnectionLostError,
+	SzLicenseError,
+	SzNotFoundError,
+	SzNotInitializedError,
+	SzReplaceConflictError,
+	SzRetryableError,
+	SzRetryTimeoutExceededError,
+	SzUnhandledError,
+	SzUnknownDataSourceError,
+	SzUnrecoverableError,
 }
 
 // Map of TypeIDs to corresponding error instances.
 var SzErrorMap = map[TypeIDs]error{
-	SzBadInput:               ErrSzBadInput,
-	SzBase:                   ErrSzBase,
-	SzConfiguration:          ErrSzConfiguration,
-	SzDatabase:               ErrSzDatabase,
-	SzDatabaseConnectionLost: ErrSzDatabaseConnectionLost,
-	SzLicense:                ErrSzLicense,
-	SzNotFound:               ErrSzNotFound,
-	SzNotInitialized:         ErrSzNotInitialized,
-	SzReplaceConflict:        ErrSzReplaceConflict,
-	SzRetryable:              ErrSzRetryable,
-	SzRetryTimeoutExceeded:   ErrSzRetryTimeoutExceeded,
-	SzUnhandled:              ErrUnhandled,
-	SzUnknownDataSource:      ErrSzUnknownDataSource,
-	SzUnrecoverable:          ErrSzUnrecoverable,
+	SzBadInputError:               ErrSzBadInput,
+	SzBase:                        ErrSzBase,
+	SzConfigurationError:          ErrSzConfiguration,
+	SzDatabaseError:               ErrSzDatabase,
+	SzDatabaseConnectionLostError: ErrSzDatabaseConnectionLost,
+	SzLicenseError:                ErrSzLicense,
+	SzNotFoundError:               ErrSzNotFound,
+	SzNotInitializedError:         ErrSzNotInitialized,
+	SzReplaceConflictError:        ErrSzReplaceConflict,
+	SzRetryableError:              ErrSzRetryable,
+	SzRetryTimeoutExceededError:   ErrSzRetryTimeoutExceeded,
+	SzUnhandledError:              ErrUnhandled,
+	SzUnknownDataSourceError:      ErrSzUnknownDataSource,
+	SzUnrecoverableError:          ErrSzUnrecoverable,
 }
