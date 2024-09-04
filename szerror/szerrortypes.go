@@ -5,6 +5,9 @@
 
 package szerror
 
+/*
+Mapping between the Senzing error code and the error type.
+*/
 var SzErrorTypes = map[int][]TypeIDs{
 	0:    {SzBase},
 	2:    {SzBadInput},                            // EAS_ERR_INVALID_MESSAGE - Invalid Message

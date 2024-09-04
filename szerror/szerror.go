@@ -30,10 +30,11 @@ func mapErrorIDtoError(errorTypeID TypeIDs) error {
 // ----------------------------------------------------------------------------
 
 /*
-The Message function returns the string value from the Senzing error message.
+Function Message returns the string value from the Senzing error message.
+The string is defined as the text after the pipe ("|") symbol.
 
 Input
-  - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.
+  - senzingErrorMessage: The message returned from Senzing's SzXxx_getLastException message.
 */
 func Message(senzingErrorMessage string) string {
 	result := ""
@@ -45,8 +46,8 @@ func Message(senzingErrorMessage string) string {
 }
 
 /*
-The Code function returns the integer error code value from the Senzing error message.
-Example Senzing error message: "0037E|Unknown resolved entity value '-4'"
+Function Code returns the integer error code value from the Senzing error message.
+Example Senzing error message: "SENZ0037E|Unknown resolved entity value '-4'" returns 37.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.
@@ -69,7 +70,7 @@ func Code(senzingErrorMessage string) int {
 }
 
 /*
-The New function returns the integer error code value from the Senzing error message.
+Function New returns an error based on the error code and message.
 
 Input
   - senzingErrorCode: The error integer extracted from Senzing's Szxxx_getLastException message.

@@ -14,6 +14,9 @@ type TypeIDs int
 
 const emptyErrorMessage = ""
 
+/*
+A collection of Senzing error types.
+*/
 const (
 	SzBase TypeIDs = iota
 	SzBadInput
@@ -35,7 +38,11 @@ const (
 // Variables
 // ----------------------------------------------------------------------------
 
-// For "Err" prefix, see https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#error-naming
+/*
+Error instances that follow the [Err prefix] naming convention.
+
+[Err prefix]: https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#error-naming
+*/
 var (
 	ErrSzBadInput               = errors.New(emptyErrorMessage)
 	ErrSzBase                   = errors.New(emptyErrorMessage)
@@ -71,7 +78,7 @@ var SzErrorTypesList = []TypeIDs{
 	SzUnrecoverable,
 }
 
-// Map of TypeIDs to corresponding error.
+// Map of TypeIDs to corresponding error instances.
 var SzErrorMap = map[TypeIDs]error{
 	SzBadInput:               ErrSzBadInput,
 	SzBase:                   ErrSzBase,
