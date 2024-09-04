@@ -6,6 +6,7 @@
 package szerror
 
 var SzErrorTypes = map[int][]TypeIDs{
+	0:    {SzBase},
 	2:    {SzBadInput},                            // EAS_ERR_INVALID_MESSAGE - Invalid Message
 	5:    {SzBase},                                // EAS_ERR_EXCEEDED_MAX_RETRIES - Exceeded the Maximum Number of Retries Allowed
 	7:    {SzBadInput},                            // EAS_ERR_EMPTY_MESSAGE - Empty Message

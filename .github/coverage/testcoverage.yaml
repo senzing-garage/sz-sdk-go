@@ -15,11 +15,11 @@ local-prefix: "github.com/org/project"
 threshold:
   # (optional; default 0)
   # The minimum coverage that each file should have
-  file: 70
+  file: 95
 
   # (optional; default 0)
   # The minimum coverage that each package should have
-  package: 80
+  package: 95
 
   # (optional; default 0)
   # The minimum total coverage project should have

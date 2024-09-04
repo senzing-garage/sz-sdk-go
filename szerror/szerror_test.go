@@ -235,6 +235,20 @@ var testCases = []struct {
 		expectedTypes:   []TypeIDs{SzConfiguration},
 		falseTypes:      []TypeIDs{SzUnrecoverable},
 	},
+	{
+		name:           "szerror-NoCode",
+		senzingMessage: "Test message",
+		message: `{
+            "errors": [{
+                "text": "Test message"
+            }]
+        }`,
+		expectedCode:    0,
+		expectedMessage: "",
+		expectedError:   ErrSzBase,
+		expectedTypes:   []TypeIDs{SzBase},
+		falseTypes:      []TypeIDs{SzUnrecoverable},
+	},
 }
 
 // ----------------------------------------------------------------------------
@@ -267,4 +281,13 @@ func TestSzerror_SzError(test *testing.T) {
 			assert.Equal(test, testCase.message, strings.TrimSpace(actual.Error()))
 		})
 	}
+}
+
+// ----------------------------------------------------------------------------
+// Test private functions
+// ----------------------------------------------------------------------------
+
+func TestSzerror_mapErrorIDtoError(test *testing.T) {
+	err := mapErrorIDtoError(9999)
+	require.ErrorIs(test, err, ErrSzBase)
 }
