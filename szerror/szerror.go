@@ -35,6 +35,9 @@ The string is defined as the text after the pipe ("|") symbol.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's SzXxx_getLastException message.
+
+Output
+  - The text of the message after the pipe symbol.
 */
 func Message(senzingErrorMessage string) string {
 	result := ""
@@ -47,9 +50,13 @@ func Message(senzingErrorMessage string) string {
 
 /*
 Function Code returns the integer error code value from the Senzing error message.
+The integer is defined as the numerical value in the text before the pipe ("|") symbol.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.
+
+Output
+  - The integer portion of the message before the pipe symbol.
 */
 func Code(senzingErrorMessage string) int {
 	result := 0
@@ -74,6 +81,9 @@ Function New returns an error based on the error code and message.
 Input
   - senzingErrorCode: The error integer extracted from Senzing's Szxxx_getLastException message.
   - message: The message to be returned by err.Error().
+
+Output
+  - An error conforming to the error code and message.
 */
 func New(senzingErrorCode int, message string) error {
 	result := []error{}
