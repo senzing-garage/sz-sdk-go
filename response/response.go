@@ -43,9 +43,9 @@ func SzConfigManagerGetConfig(ctx context.Context, jsonString string) (*typedef.
 	return result, err
 }
 
-func SzConfigManagerGetConfigList(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigListResponse, error) {
+func SzConfigManagerGetConfigs(ctx context.Context, jsonString string) (*typedef.SzConfigManagerGetConfigsResponse, error) {
 	_ = ctx
-	result := &typedef.SzConfigManagerGetConfigListResponse{}
+	result := &typedef.SzConfigManagerGetConfigsResponse{}
 	err := json.Unmarshal([]byte(jsonString), result)
 	return result, err
 }

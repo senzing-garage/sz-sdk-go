@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.14.1] - 2024-09-05
+
+### Changed in 0.14.1
+
+- Change from `SzConfigManager.GetConfigList` to `SzConfigManager.GetConfigs`
+- Change from `buildOutDegree` to `buildOutDegrees`
+- Change from `recordList` to `recordKeys`
+
 ## [0.14.0] - 2024-08-19
 
 ### Changed in 0.14.0

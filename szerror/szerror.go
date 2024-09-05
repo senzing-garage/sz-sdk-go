@@ -20,7 +20,7 @@ Input
 func mapErrorIDtoError(errorTypeID TypeIDs) error {
 	result, ok := SzErrorMap[errorTypeID]
 	if !ok {
-		result = ErrSzBase
+		result = ErrSz
 	}
 	return result
 }
@@ -30,10 +30,14 @@ func mapErrorIDtoError(errorTypeID TypeIDs) error {
 // ----------------------------------------------------------------------------
 
 /*
-The Message function returns the string value from the Senzing error message.
+Function Message returns the string value from the Senzing error message.
+The string is defined as the text after the pipe ("|") symbol.
 
 Input
-  - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.
+  - senzingErrorMessage: The message returned from Senzing's SzXxx_getLastException message.
+
+Output
+  - The text of the message after the pipe symbol.
 */
 func Message(senzingErrorMessage string) string {
 	result := ""
@@ -45,11 +49,14 @@ func Message(senzingErrorMessage string) string {
 }
 
 /*
-The Code function returns the integer error code value from the Senzing error message.
-Example Senzing error message: "0037E|Unknown resolved entity value '-4'"
+Function Code returns the integer error code value from the Senzing error message.
+The integer is defined as the numerical value in the text before the pipe ("|") symbol.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.
+
+Output
+  - The integer portion of the message before the pipe symbol.
 */
 func Code(senzingErrorMessage string) int {
 	result := 0
@@ -69,11 +76,14 @@ func Code(senzingErrorMessage string) int {
 }
 
 /*
-The New function returns the integer error code value from the Senzing error message.
+Function New returns an error based on the error code and message.
 
 Input
   - senzingErrorCode: The error integer extracted from Senzing's Szxxx_getLastException message.
   - message: The message to be returned by err.Error().
+
+Output
+  - An error conforming to the error code and message.
 */
 func New(senzingErrorCode int, message string) error {
 	result := []error{}
