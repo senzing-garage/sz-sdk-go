@@ -35,8 +35,8 @@ var testCases = []struct {
         }`,
 		expectedCode:    5,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzBase,
-		expectedTypes:   []TypeIDs{SzBase},
+		expectedError:   ErrSz,
+		expectedTypes:   []TypeIDs{SzError},
 		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 	{
@@ -245,8 +245,8 @@ var testCases = []struct {
         }`,
 		expectedCode:    0,
 		expectedMessage: "",
-		expectedError:   ErrSzBase,
-		expectedTypes:   []TypeIDs{SzBase},
+		expectedError:   ErrSz,
+		expectedTypes:   []TypeIDs{SzError},
 		falseTypes:      []TypeIDs{SzUnrecoverableError},
 	},
 }
@@ -289,5 +289,5 @@ func TestSzerror_SzError(test *testing.T) {
 
 func TestSzerror_mapErrorIDtoError(test *testing.T) {
 	err := mapErrorIDtoError(9999)
-	require.ErrorIs(test, err, ErrSzBase)
+	require.ErrorIs(test, err, ErrSz)
 }

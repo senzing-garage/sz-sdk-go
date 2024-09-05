@@ -11,6 +11,7 @@ The following is the error type hierarchy:
 	│   ├── SzNotFoundError
 	│   └── SzUnknownDataSourceError
 	├── SzConfigurationError
+	├── SzReplaceConflictError
 	├── SzRetryableError
 	│   ├── SzDatabaseConnectionLostError
 	│   └── SzRetryTimeoutExceededError

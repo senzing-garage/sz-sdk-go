@@ -20,7 +20,7 @@ Input
 func mapErrorIDtoError(errorTypeID TypeIDs) error {
 	result, ok := SzErrorMap[errorTypeID]
 	if !ok {
-		result = ErrSzBase
+		result = ErrSz
 	}
 	return result
 }
@@ -47,7 +47,6 @@ func Message(senzingErrorMessage string) string {
 
 /*
 Function Code returns the integer error code value from the Senzing error message.
-Example Senzing error message: "SENZ0037E|Unknown resolved entity value '-4'" returns 37.
 
 Input
   - senzingErrorMessage: The message returned from Senzing's Szxxx_getLastException message.

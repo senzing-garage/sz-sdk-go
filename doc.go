@@ -1,5 +1,5 @@
 /*
-The Senzing sz-sdk-go packages contain interface definitions for the Senzing Go SDK.
+Module sz-sdk-go contains interface definitions for the Senzing Go SDK.
 
 # Synopsis
 
