@@ -157,7 +157,7 @@ var testCases = []struct {
 		expected: 0x0000000001000000,
 	},
 	{ // 26
-		name:     "SZ_FIND_PATH_PREFER_EXCLUDE",
+		name:     "SZ_FIND_PATH_STRICT_AVOID",
 		actual:   SzFindPathStrictAvoid,
 		expected: 0x0000000002000000,
 	},
