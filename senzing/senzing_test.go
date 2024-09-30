@@ -122,8 +122,8 @@ var testCases = []struct {
 		expected: 0x0000000000020000,
 	},
 	{ // 19
-		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURE_IDS",
-		actual:   SzEntityIncludeRecordFeatureIDs,
+		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURES",
+		actual:   SzEntityIncludeRecordFeatures,
 		expected: 0x0000000000040000,
 	},
 	{ // 20
@@ -207,13 +207,13 @@ var testCases = []struct {
 		expected: 0x0000000400000000,
 	},
 	{ // 36
-		name:     "Bit36",
-		actual:   Bit36,
+		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURE_DETAILS",
+		actual:   SzIncludeRecordFeatureDetails,
 		expected: 0x0000000800000000,
 	},
 	{ // 37
-		name:     "Bit37",
-		actual:   Bit37,
+		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURE_STATS",
+		actual:   SzIncludeRecordFeatureFeatureStats,
 		expected: 0x0000001000000000,
 	},
 	{ // 38
