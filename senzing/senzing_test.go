@@ -192,8 +192,8 @@ var testCases = []struct {
 		expected: 0x0000000080000000,
 	},
 	{ // 33
-		name:     "SZ_ENTITY_INCLUDE_FEATURE_ELEMENTS",
-		actual:   SzEntityIncludeFeatureElements,
+		name:     "Bit33",
+		actual:   Bit33,
 		expected: 0x0000000100000000,
 	},
 	{ // 34

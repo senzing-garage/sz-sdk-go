@@ -19,6 +19,10 @@ DIST_DIRECTORY := $(MAKEFILE_DIRECTORY)/dist
 BUILD_TAG := $(shell git describe --always --tags --abbrev=0  | sed 's/v//')
 BUILD_ITERATION := $(shell git log $(BUILD_TAG)..HEAD --oneline | wc -l | sed 's/^ *//')
 BUILD_VERSION := $(shell git describe --always --tags --abbrev=0 --dirty  | sed 's/v//')
+DOCKER_CONTAINER_NAME := $(PROGRAM_NAME)
+DOCKER_IMAGE_NAME := senzing/$(PROGRAM_NAME)
+DOCKER_BUILD_IMAGE_NAME := $(DOCKER_IMAGE_NAME)-build
+DOCKER_SUT_IMAGE_NAME := $(PROGRAM_NAME)_sut
 GIT_REMOTE_URL := $(shell git config --get remote.origin.url)
 GIT_REPOSITORY_NAME := $(shell basename `git rev-parse --show-toplevel`)
 GIT_VERSION := $(shell git describe --always --tags --long --dirty | sed -e 's/\-0//' -e 's/\-g.......//')
@@ -35,6 +39,7 @@ GO_ARCH = $(word 2, $(GO_OSARCH))
 # Can be overridden with "export"
 # Example: "export LD_LIBRARY_PATH=/path/to/my/senzing/er/lib"
 
+DOCKER_IMAGE_TAG ?= $(GIT_REPOSITORY_NAME):$(GIT_VERSION)
 GOBIN ?= $(shell go env GOPATH)/bin
 LD_LIBRARY_PATH ?= /opt/senzing/er/lib
 
@@ -65,11 +70,11 @@ hello-world: hello-world-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: dependencies-for-development
-dependencies-for-development:
+dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
 	@go install golang.org/x/tools/cmd/godoc@latest
-	@curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin v1.58.1
+	@docker-compose pull 2>/dev/null || true
 
 
 .PHONY: dependencies
@@ -150,7 +155,7 @@ coverage: coverage-osarch-specific
 check-coverage: export SENZING_LOG_LEVEL=TRACE
 check-coverage:
 	@go test ./... -coverprofile=./cover.out -covermode=atomic -coverpkg=./...
-	@${GOBIN}/go-test-coverage --config=.github/coverage/.testcoverage.yaml
+	@${GOBIN}/go-test-coverage --config=.github/coverage/testcoverage.yaml
 
 # -----------------------------------------------------------------------------
 # Documentation
@@ -183,7 +188,7 @@ help:
 print-make-variables:
 	@$(foreach V,$(sort $(.VARIABLES)), \
 		$(if $(filter-out environment% default automatic, \
-		$(origin $V)),$(warning $V=$($V) ($(value $V)))))
+		$(origin $V)),$(info $V=$($V) ($(value $V)))))
 
 
 .PHONY: update-pkg-cache
