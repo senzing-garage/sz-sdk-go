@@ -11,11 +11,11 @@ Map of Senzing error code to corresponding error type.
 var SzErrorTypes = map[int][]TypeIDs{
 	0:    {SzError},
 	2:    {SzBadInputError},                                 // EAS_ERR_INVALID_MESSAGE - Invalid Message
-	5:    {SzError},                                          // EAS_ERR_EXCEEDED_MAX_RETRIES - Exceeded the Maximum Number of Retries Allowed
+	5:    {SzError},                                         // EAS_ERR_EXCEEDED_MAX_RETRIES - Exceeded the Maximum Number of Retries Allowed
 	7:    {SzBadInputError},                                 // EAS_ERR_EMPTY_MESSAGE - Empty Message
 	10:   {SzRetryTimeoutExceededError, SzRetryableError},   // EAS_ERR_RETRY_TIMEOUT - Retry timeout exceeded RES_ENT_ID locklist [{0}]
 	14:   {SzConfigurationError},                            // EAS_ERR_INVALID_DATASTORE_CONFIGURATION_TYPE - Invalid Datastore Configuration Type
-	18:   {SzError},                                          // EAS_ERR_COULD_NOT_INITIALIZE_SYSTEM_PARAMETERS - Could not initialize system parameters
+	18:   {SzError},                                         // EAS_ERR_COULD_NOT_INITIALIZE_SYSTEM_PARAMETERS - Could not initialize system parameters
 	19:   {SzConfigurationError},                            // EAS_ERR_NO_CONFIGURATION_FOUND - Configuration not found
 	20:   {SzConfigurationError},                            // EAS_ERR_CONFIG_CANNOT_BE_NULL_DATABASE - Configuration cannot be loaded from database connection
 	21:   {SzConfigurationError},                            // EAS_ERR_CONFIG_CANNOT_BE_NULL_CONFIG_FILE - Configuration cannot be loaded from config file
@@ -24,37 +24,37 @@ var SzErrorTypes = map[int][]TypeIDs{
 	24:   {SzBadInputError},                                 // EAS_ERR_CONFLICTING_RECORD_ID_VALUES - Conflicting RECORD_ID values '{0}' and '{1}'
 	25:   {SzBadInputError},                                 // EAS_ERR_INVALID_BULK_REQUEST - Invalid Bulk Request [{0}]
 	26:   {SzBadInputError},                                 // EAS_ERR_RESERVED_WORD_USED_IN_DOCUMENT - Inbound data contains a reserved keyword '{0}'
-	27:   {SzError},                                          // EAS_ERR_INVALID_VALUE_FOR_SEARCH_ATTRIBUTES - Invalid value for search-attributes
+	27:   {SzError},                                         // EAS_ERR_INVALID_VALUE_FOR_SEARCH_ATTRIBUTES - Invalid value for search-attributes
 	28:   {SzConfigurationError},                            // EAS_ERR_INVALID_JSON_CONFIG_DOCUMENT - Invalid JSON config document
-	29:   {SzError},                                          // EAS_ERR_INVALID_VALUE_OF_MAX_ENTITIES - Invalid value of max entities '{0}'
+	29:   {SzError},                                         // EAS_ERR_INVALID_VALUE_OF_MAX_ENTITIES - Invalid value of max entities '{0}'
 	30:   {SzConfigurationError},                            // EAS_ERR_INVALID_MATCH_LEVEL - Invalid match level '{0}'
-	31:   {SzError},                                          // EAS_ERR_INVALID_VALUE_OF_MAX_DEGREE - Invalid value of max degree '{0}'
-	32:   {SzError},                                          // EAS_ERR_INVALID_VALUE_OF_BUILDOUT_DEGREE - Invalid value of build out degree '{0}'
+	31:   {SzError},                                         // EAS_ERR_INVALID_VALUE_OF_MAX_DEGREE - Invalid value of max degree '{0}'
+	32:   {SzError},                                         // EAS_ERR_INVALID_VALUE_OF_BUILDOUT_DEGREE - Invalid value of build out degree '{0}'
 	33:   {SzNotFoundError, SzBadInputError},                // EAS_ERR_UNKNOWN_DSRC_RECORD_ID - Unknown record: dsrc[{0}], record[{1}]
 	34:   {SzConfigurationError},                            // EAS_ERR_AMBIGUOUS_ENTITY_FTYPE_MISSING - AMBIGUOUS_ENTITY Feature Type is not configured
 	35:   {SzConfigurationError},                            // EAS_ERR_AMBIGUOUS_TIER_FELEM_MISSING - AMBIGUOUS_TIER Feature Element is not configured
 	36:   {SzConfigurationError},                            // EAS_ERR_AMBIGUOUS_FTYPE_ID_FELEM_MISSING - AMBIGUOUS_FTYPE_ID Feature Element is not configured
 	37:   {SzNotFoundError, SzBadInputError},                // EAS_ERR_UNKNOWN_RESOLVED_ENTITY_VALUE - Unknown resolved entity value '{0}'
-	38:   {SzError},                                          // EAS_ERR_RECORD_HAS_NO_RESOLVED_ENTITY - Data source record has no resolved entity: dsrc[{0}], recordID[{1}]
-	39:   {SzError},                                          // EAS_ERR_NO_OBSERVED_ENTITY_FOR_DSRC_ENTITY_KEY - No observed entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]
+	38:   {SzError},                                         // EAS_ERR_RECORD_HAS_NO_RESOLVED_ENTITY - Data source record has no resolved entity: dsrc[{0}], recordID[{1}]
+	39:   {SzError},                                         // EAS_ERR_NO_OBSERVED_ENTITY_FOR_DSRC_ENTITY_KEY - No observed entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]
 	40:   {SzConfigurationError},                            // EAS_ERR_CONFIG_COMPATIBILITY_MISMATCH - The engine configuration compatibility version [{0}] does not match the version of the provided config[{1}].
-	41:   {SzError},                                          // EAS_ERR_DOCUMENT_PREPROCESSING_FAILED - Document preprocessing failed
-	42:   {SzError},                                          // EAS_ERR_DOCUMENT_LOAD_PROCESSING_FAILED - Document load processing failed
-	43:   {SzError},                                          // EAS_ERR_DOCUMENT_ER_PROCESSING_FAILED - Document ER processing failed
-	44:   {SzError},                                          // EAS_ERR_CHECK_ENTITY_PROCESSING_FAILED - Check entity processing failed
-	45:   {SzError},                                          // EAS_ERR_INPUT_PROCEDURE_PROCESSING_FAILED - Input procedure processing failed
-	46:   {SzError},                                          // EAS_ERR_DOCUMENT_HASHING_PROCESSING_FAILED - Document hashing-processing failed
-	47:   {SzError},                                          // EAS_ERR_SESSION_IS_INVALID - Session is invalid
+	41:   {SzError},                                         // EAS_ERR_DOCUMENT_PREPROCESSING_FAILED - Document preprocessing failed
+	42:   {SzError},                                         // EAS_ERR_DOCUMENT_LOAD_PROCESSING_FAILED - Document load processing failed
+	43:   {SzError},                                         // EAS_ERR_DOCUMENT_ER_PROCESSING_FAILED - Document ER processing failed
+	44:   {SzError},                                         // EAS_ERR_CHECK_ENTITY_PROCESSING_FAILED - Check entity processing failed
+	45:   {SzError},                                         // EAS_ERR_INPUT_PROCEDURE_PROCESSING_FAILED - Input procedure processing failed
+	46:   {SzError},                                         // EAS_ERR_DOCUMENT_HASHING_PROCESSING_FAILED - Document hashing-processing failed
+	47:   {SzError},                                         // EAS_ERR_SESSION_IS_INVALID - Session is invalid
 	48:   {SzNotInitializedError, SzUnrecoverableError},     // EAS_ERR_G2_NOT_INITIALIZED - G2 is not initialized
 	50:   {SzNotInitializedError, SzUnrecoverableError},     // EAS_ERR_G2HASHER_NOT_INITIALIZED - G2Hasher is not initialized
 	51:   {SzBadInputError},                                 // EAS_ERR_BOTH_RECORD_ID_AND_ENT_SRC_KEY_SPECIFIED - Cannot use both Record ID and Entity Source Key in record
-	52:   {SzError},                                          // EAS_ERR_UNKNOWN_RELATIONSHIP_ID_VALUE - Unknown relationship ID value '{0}'
+	52:   {SzError},                                         // EAS_ERR_UNKNOWN_RELATIONSHIP_ID_VALUE - Unknown relationship ID value '{0}'
 	53:   {SzBadInputError},                                 // EAS_ERR_G2DIAGNOSTIC_NOT_INITIALIZED - G2Diagnostic is not initialized
 	54:   {SzDatabaseError, SzUnrecoverableError},           // EAS_ERR_G2_DATA_REPOSITORY_WAS_PURGED - Data repository was purged
-	55:   {SzError},                                          // EAS_ERR_NO_RESOLVED_ENTITY_FOR_DSRC_ENTITY_KEY - No resolved entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]
-	56:   {SzError},                                          // EAS_ERR_NO_RECORDS_EXIST_FOR_RESOLVED_ENTITY - No data source records exist for entity ID: entityID[{0}]
-	57:   {SzError},                                          // EAS_ERR_UNKNOWN_FEATURE_ID_VALUE - Unknown feature ID value '{0}'
-	58:   {SzError},                                          // EAS_ERR_G2_INITIALIZATION_FAILURE - G2 initialization process has failed
+	55:   {SzError},                                         // EAS_ERR_NO_RESOLVED_ENTITY_FOR_DSRC_ENTITY_KEY - No resolved entity for entity key: dsrc[{0}], record_id[{1}], key[{2}]
+	56:   {SzError},                                         // EAS_ERR_NO_RECORDS_EXIST_FOR_RESOLVED_ENTITY - No data source records exist for entity ID: entityID[{0}]
+	57:   {SzError},                                         // EAS_ERR_UNKNOWN_FEATURE_ID_VALUE - Unknown feature ID value '{0}'
+	58:   {SzError},                                         // EAS_ERR_G2_INITIALIZATION_FAILURE - G2 initialization process has failed
 	60:   {SzConfigurationError},                            // EAS_ERR_CONFIG_DATABASE_MISMATCH - The engine configuration does not match the records loaded into the repository:  errors[{0}].
 	61:   {SzConfigurationError},                            // EAS_ERR_AMBIGUOUS_SUPPRESSED_LIBFEAT_FELEM_MISSING - AMBIGUOUS_SUPRESSED_LIBFEAT Feature Element is not configured
 	62:   {SzConfigurationError},                            // EAS_ERR_AMBIGUOUS_TYPE_FELEM_MISSING - AMBIGUOUS_TYPE Feature Element is not configured
@@ -63,29 +63,29 @@ var SzErrorTypes = map[int][]TypeIDs{
 	65:   {SzBadInputError},                                 // EAS_ERR_SUPPRESSED_RELATION_DOMAIN_FTYPE_MISSING - SUPPRESSED_RELATION_DOMAIN Feature Type is not configured
 	66:   {SzBadInputError},                                 // EAS_ERR_UNKNOWN_GENERIC_PLAN_VALUE - Unknown generic plan value '{0}'
 	67:   {SzConfigurationError},                            // EAS_ERR_INVALID_GENERIC_PLAN_VALUE - Invalid Generic Plan ID [{0}] configured for the '{1}' retention level.'
-	68:   {SzError},                                          // EAS_ERR_UNKNOWN_ER_RESULT - Unknown ER-result.
-	69:   {SzError},                                          // EAS_ERR_NO_CANDIDATES - No candidates.
-	76:   {SzError},                                          // EAS_ERR_INBOUND_FEATURE_VERSION_NEWER_THAN_CONFIG - Inbound Feature Version [{0}] is newer than configured version [{1}] for feature type[{2}].
-	77:   {SzError},                                          // EAS_ERR_ERROR_WHEN_PRIMING_GNR - Error when priming GNR resources '{0}'
-	78:   {SzError},                                          // EAS_ERR_ERROR_WHEN_ENCRYPTING - Error when encrypting '{0}'
-	79:   {SzError},                                          // EAS_ERR_ERROR_WHEN_DECRYPTING - Error when decrypting '{0}'
-	80:   {SzError},                                          // EAS_ERR_ERROR_WHEN_VALIDATING_ENCRYPTION_SIGNATURE_COMPATIBILITY - Error when validating encryption signature compatibility '{0}'
-	81:   {SzError},                                          // EAS_ERR_ERROR_WHEN_CHECKING_DISTINCT_FEATURE_GENERALIZATION - Error when checking distinct feature generalization '{0}'
-	82:   {SzError},                                          // EAS_ERR_ERROR_WHEN_RUNNING_DQM - Error when running DQM '{0}'
-	83:   {SzError},                                          // EAS_ERR_ERROR_WHEN_CREATING_EFEATS - Error when creating EFEATS '{0}'
-	84:   {SzError},                                          // EAS_ERR_ERROR_WHEN_SIMPLE_SCORING - Error when simple scoring '{0}'
-	85:   {SzError},                                          // EAS_ERR_ERROR_WHEN_SCORING_PAIR - Error when scoring a pair '{0}'
-	86:   {SzError},                                          // EAS_ERR_ERROR_WHEN_SCORING_SET - Error when scoring a set '{0}'
+	68:   {SzError},                                         // EAS_ERR_UNKNOWN_ER_RESULT - Unknown ER-result.
+	69:   {SzError},                                         // EAS_ERR_NO_CANDIDATES - No candidates.
+	76:   {SzError},                                         // EAS_ERR_INBOUND_FEATURE_VERSION_NEWER_THAN_CONFIG - Inbound Feature Version [{0}] is newer than configured version [{1}] for feature type[{2}].
+	77:   {SzError},                                         // EAS_ERR_ERROR_WHEN_PRIMING_GNR - Error when priming GNR resources '{0}'
+	78:   {SzError},                                         // EAS_ERR_ERROR_WHEN_ENCRYPTING - Error when encrypting '{0}'
+	79:   {SzError},                                         // EAS_ERR_ERROR_WHEN_DECRYPTING - Error when decrypting '{0}'
+	80:   {SzError},                                         // EAS_ERR_ERROR_WHEN_VALIDATING_ENCRYPTION_SIGNATURE_COMPATIBILITY - Error when validating encryption signature compatibility '{0}'
+	81:   {SzError},                                         // EAS_ERR_ERROR_WHEN_CHECKING_DISTINCT_FEATURE_GENERALIZATION - Error when checking distinct feature generalization '{0}'
+	82:   {SzError},                                         // EAS_ERR_ERROR_WHEN_RUNNING_DQM - Error when running DQM '{0}'
+	83:   {SzError},                                         // EAS_ERR_ERROR_WHEN_CREATING_EFEATS - Error when creating EFEATS '{0}'
+	84:   {SzError},                                         // EAS_ERR_ERROR_WHEN_SIMPLE_SCORING - Error when simple scoring '{0}'
+	85:   {SzError},                                         // EAS_ERR_ERROR_WHEN_SCORING_PAIR - Error when scoring a pair '{0}'
+	86:   {SzError},                                         // EAS_ERR_ERROR_WHEN_SCORING_SET - Error when scoring a set '{0}'
 	87:   {SzUnhandledError, SzUnrecoverableError},          // EAS_ERR_SRD_EXCEPTION - SRD Exception '{0}'
 	88:   {SzBadInputError},                                 // EAS_ERR_UNKNOWN_SEARCH_PROFILE_VALUE - Unknown search profile value '{0}'
 	89:   {SzConfigurationError},                            // EAS_ERR_MISCONFIGURED_SEARCH_PROFILE_VALUE - Misconfigured search profile value '{0}'
 	90:   {SzConfigurationError},                            // EAS_ERR_CANNOT_ADD_LIBRARY_FEATURES_TO_DATASTORE - Cannot add library features to datastore:  '{0}'
-	91:   {SzError},                                          // EAS_ERR_TRUSTED_ID_FTYPE_MISSING - TRUSTED_ID Feature Type is not configured
-	92:   {SzError},                                          // EAS_ERR_RECORD_TYPE_FTYPE_MISSING - RECORD_TYPE Feature Type is not configured
-	93:   {SzError},                                          // EAS_ERR_CONFUSED_ENTTIY_FELEM_MISSING - YESNO_FLAG Feature Element is not configured
-	94:   {SzError},                                          // EAS_ERR_DOMAIN_NAME_FELEM_MISSING - DOMAIN_NAME Feature Element is not configured
-	95:   {SzError},                                          // EAS_ERR_SUPRESSED_RELATIONSHIP_FTYPE_ID_FELEM_MISSING - SUPRESSED_RELATIONSHIP_FTYPE_ID Feature Element is not configured
-	96:   {SzError},                                          // EAS_ERR_SUPRESSED_RELATIONSHIP_CONNECTING_FTYPE_ID_FELEM_MISSING - SUPRESSED_RELATIONSHIP_CONNECTING_FTYPE_ID Feature Element is not configured
+	91:   {SzError},                                         // EAS_ERR_TRUSTED_ID_FTYPE_MISSING - TRUSTED_ID Feature Type is not configured
+	92:   {SzError},                                         // EAS_ERR_RECORD_TYPE_FTYPE_MISSING - RECORD_TYPE Feature Type is not configured
+	93:   {SzError},                                         // EAS_ERR_CONFUSED_ENTTIY_FELEM_MISSING - YESNO_FLAG Feature Element is not configured
+	94:   {SzError},                                         // EAS_ERR_DOMAIN_NAME_FELEM_MISSING - DOMAIN_NAME Feature Element is not configured
+	95:   {SzError},                                         // EAS_ERR_SUPRESSED_RELATIONSHIP_FTYPE_ID_FELEM_MISSING - SUPRESSED_RELATIONSHIP_FTYPE_ID Feature Element is not configured
+	96:   {SzError},                                         // EAS_ERR_SUPRESSED_RELATIONSHIP_CONNECTING_FTYPE_ID_FELEM_MISSING - SUPRESSED_RELATIONSHIP_CONNECTING_FTYPE_ID Feature Element is not configured
 	999:  {SzLicenseError, SzUnrecoverableError},            // EAS_ERR_LICENSE_HAS_EXPIRED - License has expired
 	1000: {SzDatabaseError, SzUnrecoverableError},           // EAS_ERR_UNHANDLED_DATABASE_ERROR - Unhandled Database Error '{0}'
 	1001: {SzDatabaseError, SzUnrecoverableError},           // EAS_ERR_CRITICAL_DATABASE_ERROR - Critical Database Error '{0}'
@@ -108,16 +108,16 @@ var SzErrorTypes = map[int][]TypeIDs{
 	1018: {SzDatabaseError, SzUnrecoverableError},           // EAS_ERR_DATABASE_EXCEPTION_GENERATOR_NOT_SET - Database exception generator not set '{0}'
 	1019: {SzConfigurationError},                            // EAS_ERR_DATABASE_SCHEMA_TABLES_NOT_FOUND - Datastore schema tables not found. [{0}]
 	2001: {SzConfigurationError},                            // EAS_ERR_FEATURE_HAS_NO_FTYPE_CODE - Cannot process feature with no FTYPE_CODE[{0}]
-	2002: {SzError},                                          // EAS_ERR_REQUESTED_CONFIG_FOR_INVALID_FTYPE_CODE - Requested config for invalid FTYPE_CODE[{0}]
-	2003: {SzError},                                          // EAS_ERR_NO_FELEM_CODE - Cannot process OBS_FELEM with no FELEM_CODE[{0}]
-	2005: {SzError},                                          // EAS_ERR_INVALID_FELEM_CODE - FELEM_CODE[{0}] is not configured for FTYPE_CODE[{1}]
-	2006: {SzError},                                          // EAS_ERR_MISSING_ENT_SRC_KEY - OBS_ENT is missing ENT_SRC_KEY
-	2007: {SzError},                                          // EAS_ERR_MISSING_OBS_SRC_KEY - OBS is missing OBS_SRC_KEY
-	2009: {SzError},                                          // EAS_ERR_NO_OBS_ENT_FOR_ENT_SRC_KEY - No OBS_ENT found for ENT_SRC_KEY[{0}]
-	2010: {SzError},                                          // EAS_ERR_ENT_SRC_KEY_CHANGED - Expected ENT_SRC_KEY [{0}] changed to [{1}]
+	2002: {SzError},                                         // EAS_ERR_REQUESTED_CONFIG_FOR_INVALID_FTYPE_CODE - Requested config for invalid FTYPE_CODE[{0}]
+	2003: {SzError},                                         // EAS_ERR_NO_FELEM_CODE - Cannot process OBS_FELEM with no FELEM_CODE[{0}]
+	2005: {SzError},                                         // EAS_ERR_INVALID_FELEM_CODE - FELEM_CODE[{0}] is not configured for FTYPE_CODE[{1}]
+	2006: {SzError},                                         // EAS_ERR_MISSING_ENT_SRC_KEY - OBS_ENT is missing ENT_SRC_KEY
+	2007: {SzError},                                         // EAS_ERR_MISSING_OBS_SRC_KEY - OBS is missing OBS_SRC_KEY
+	2009: {SzError},                                         // EAS_ERR_NO_OBS_ENT_FOR_ENT_SRC_KEY - No OBS_ENT found for ENT_SRC_KEY[{0}]
+	2010: {SzError},                                         // EAS_ERR_ENT_SRC_KEY_CHANGED - Expected ENT_SRC_KEY [{0}] changed to [{1}]
 	2012: {SzConfigurationError},                            // EAS_ERR_ERRULE_CONFIGURED_FOR_RESOLVE_AND_RELATE - ER Rule [{0}] is configured for both resolve and relate.
 	2015: {SzConfigurationError},                            // EAS_ERR_INVALID_FTYPE_CODE - Invalid FTYPE_CODE[{0}]
-	2027: {SzError},                                          // EAS_ERR_PLUGIN_INIT - Plugin initialization error {0}
+	2027: {SzError},                                         // EAS_ERR_PLUGIN_INIT - Plugin initialization error {0}
 	2029: {SzConfigurationError},                            // EAS_ERR_REQUESTED_CONFIG_FOR_INVALID_PLUGIN - Configuration not found for plugin type: {0}
 	2034: {SzConfigurationError},                            // EAS_ERR_INVALID_CFRTN_VAL - CFRTN_ID[{0}]/FTYPE[{1}] is expecting CFRTN_VAL[{2}] which is not offered by CFUNC_ID[{3}][{4}]. Available scores are [{5}]
 	2036: {SzConfigurationError},                            // EAS_ERR_FTYPE_HAS_NO_BOM - FType configured with no Feature Elements (Bill of Materials)  FTYPE_ID[{0}] FTYPE_CODE[{1}]
@@ -139,8 +139,8 @@ var SzErrorTypes = map[int][]TypeIDs{
 	2069: {SzConfigurationError},                            // EAS_ERR_BOM_CONFIG_INVALID_FOR_SIMPLE_PLUGIN - Configured plugin for CFCALL_ID[{0}] requires exactly one value in BOM
 	2070: {SzConfigurationError},                            // EAS_ERR_EFCALL_HAS_INVALID_FUNCTION - EFeature creation call configured with invalid function ID EFCALL_ID[{0}] EFUNC_ID[{1}]
 	2071: {SzConfigurationError},                            // EAS_ERR_EFBOM_HAS_INVALID_EFCALL - EFeature BOM configured with invalid EFCALL_ID[{0}]
-	2073: {SzError},                                          // EAS_ERR_LOADING_LIBRARY - Library loading error {0}
-	2074: {SzError},                                          // EAS_ERR_SCORING_MANAGER_PLUGIN - Scoring manager: id {0} and {1} do not match
+	2073: {SzError},                                         // EAS_ERR_LOADING_LIBRARY - Library loading error {0}
+	2074: {SzError},                                         // EAS_ERR_SCORING_MANAGER_PLUGIN - Scoring manager: id {0} and {1} do not match
 	2075: {SzConfigurationError},                            // EAS_ERR_TABLE_CONFIGURED_WITH_INVALID_FTYPE_CODE - Table {0} configured with an invalid type FTYPE_CODE[{1}]
 	2076: {SzConfigurationError},                            // EAS_ERR_TABLE_CONFIGURED_WITH_INVALID_FELEM_CODE - Table {0} configured with an invalid type FELEM_CODE[{1}]
 	2079: {SzConfigurationError},                            // EAS_ERR_EFBOM_CONFIGURED_WITH_INVALID_FTYPE_ID - CFG_EFBOM configured with an invalid type FTYPE_ID[{0}]
@@ -157,7 +157,7 @@ var SzErrorTypes = map[int][]TypeIDs{
 	2093: {SzConfigurationError},                            // EAS_ERR_TABLE_CONFIGURED_WITH_DUPLICATE_EXEC_ORDER_FOR_IDENTIFIER_LIST - Table [{0}] configured with duplicate execution order value [{3}] for identifiers[{1}] with values [{2}]
 	2094: {SzConfigurationError},                            // EAS_ERR_DUPLICATE_VALUE_FOR_FIELD_IN_TABLE - Duplicate value [{2}] of field [{1}] in config [{0}]
 	2095: {SzConfigurationError},                            // EAS_ERR_TABLE_CONFIGURED_WITH_INVALID_FTYPE_CODE_FELEM_CODE_PAIR - Table {0} configured with an invalid FTYPE_CODE[{1}]/FELEM_CODE[{2}] pair
-	2097: {SzError},                                          // EAS_ERR_DUPLICATE_VALUES_FOR_FIELDS_IN_TABLE - Duplicate values [{3}][{4}] of fields [{1}][{2}] in config [{0}]
+	2097: {SzError},                                         // EAS_ERR_DUPLICATE_VALUES_FOR_FIELDS_IN_TABLE - Duplicate values [{3}][{4}] of fields [{1}][{2}] in config [{0}]
 	2099: {SzConfigurationError},                            // EAS_ERR_COUNTER_CONFIG_INVALID_THRESHOLD - Next Threshold for a counter should be no less than 10, but has NEXT_THRESH{0}
 	2101: {SzConfigurationError},                            // EAS_ERR_XPATH_OP_UNSUPPORTED - XPath operation unsupported [{0}]
 	2102: {SzConfigurationError},                            // EAS_ERR_XPATH_AXIS_UNSUPPORTED - XPath axis unsupported [{0}]
@@ -173,7 +173,7 @@ var SzErrorTypes = map[int][]TypeIDs{
 	2112: {SzConfigurationError},                            // EAS_ERR_XPATH_FRAGMENT_NOT_CONFIGURED - XPath fragment not configured[{0}]
 	2113: {SzConfigurationError},                            // EAS_ERR_XPATH_FUNCTION_UNSUPPORTED - XPath function unsupported [{0}]
 	2114: {SzConfigurationError},                            // EAS_ERR_INVALID_FTYPE_SCORESET - Cannot set score for invalid FTYPE_ID [{0}]
-	2116: {SzError},                                          // EAS_ERR_UNINITIALIZED_AMBIGUOUS_CACHE - Uninitialized Ambiguous Test Cache
+	2116: {SzError},                                         // EAS_ERR_UNINITIALIZED_AMBIGUOUS_CACHE - Uninitialized Ambiguous Test Cache
 	2117: {SzConfigurationError},                            // EAS_ERR_SCORING_CALL_HAS_NO_BOM - Scoring call configured with no Bill of Materials  CFCALL_ID[{0}].
 	2118: {SzConfigurationError},                            // EAS_ERR_BOM_CONFIG_INVALID_FOR_SCORING_PLUGIN - Configured plugin for CFCALL_ID[{0}] has invalid BOM.
 	2120: {SzConfigurationError},                            // EAS_ERR_TABLE_CONFIGURED_WITH_INVALID_FTYPE_ID - Table {0} configured with an invalid type FTYPE_ID[{1}]
@@ -259,24 +259,24 @@ var SzErrorTypes = map[int][]TypeIDs{
 	2281: {SzConfigurationError},                            // EAS_ERR_CFRTN_VALUE_ALREADY_EXISTS - Feature comparison function return value [{0}] already exists for comparison function [{1}] ftype [{2}].
 	2282: {SzConfigurationError},                            // EAS_ERR_CFUNC_EXEC_ORDER_ALREADY_EXISTS - Feature comparison function exec order value [{0}] already exists for comparison function [{1}] ftype [{2}].
 	2283: {SzConfigurationError},                            // EAS_ERR_EFUNC_CODE_DOES_NOT_EXIST - Feature expression function code [{0}] does not exist.
-	2285: {SzError},                                          // EAS_ERR_INVALID_FORMAT_FOR_ENTITIES - Invalid format for ENTITIES.
-	2286: {SzError},                                          // EAS_ERR_NO_ENTITY_ID_FOUND_FOR_ENTITY - No entity ID found for entity.
-	2287: {SzError},                                          // EAS_ERR_NO_DATA_SOURCE_FOUND - No data source found.
-	2288: {SzError},                                          // EAS_ERR_NO_RECORD_ID_FOUND - No record ID found.
+	2285: {SzError},                                         // EAS_ERR_INVALID_FORMAT_FOR_ENTITIES - Invalid format for ENTITIES.
+	2286: {SzError},                                         // EAS_ERR_NO_ENTITY_ID_FOUND_FOR_ENTITY - No entity ID found for entity.
+	2287: {SzError},                                         // EAS_ERR_NO_DATA_SOURCE_FOUND - No data source found.
+	2288: {SzError},                                         // EAS_ERR_NO_RECORD_ID_FOUND - No record ID found.
 	2289: {SzConfigurationError},                            // EAS_ERR_INVALID_FEATURE_CLASS_FOR_FEATURE_TYPE - Invalid feature class [{0}] for feature type [{1}].
 	2290: {SzConfigurationError},                            // EAS_ERR_FRAGMENT_IS_CONFIGURED_FOR_USE_IN_RULES - Rule fragment [{0}] is configured for use in rules(s) [{1}].
 	2291: {SzConfigurationError},                            // EAS_ERR_FRAGMENT_IS_CONFIGURED_FOR_USE_IN_FRAGMENT - Rule fragment [{0}] is configured for use in fragments(s) [{1}].
-	2292: {SzError},                                          // EAS_ERR_CANT_RETRIEVE_OBS_FEATURE_DATA_FOR_OBS_ENT - Could not retrieve observed feature data for observed entity [{0}].
-	2293: {SzError},                                          // EAS_ERR_NO_RECORDS_SPECIFIED - No records specified.
-	2294: {SzError},                                          // EAS_ERR_DATA_SOURCE_ID_DOES_NOT_EXIST - Data source ID [{0}] does not exist.
-	3011: {SzError},                                          // EAS_ERR_DELETE_WITH_RESOLVE_ONLY - Cannot delete an entity with type RESOLVE_ONLY
-	3101: {SzError},                                          // EAS_ERR_INVALID_SESSION_HANDLE - Invalid Session Handle [{0}]
-	3102: {SzError},                                          // EAS_ERR_INVALID_REPORT_HANDLE - Invalid Report Handle [{0}]
-	3103: {SzError},                                          // EAS_ERR_INVALID_EXPORT_HANDLE - Invalid Export Handle [{0}]
-	3104: {SzError},                                          // EAS_ERR_INVALID_CONFIG_HANDLE - Invalid Config Handle [{0}]
-	3110: {SzError},                                          // EAS_ERR_RESPONSE_MESSAGE_SIZE_LARGER_THAN_BUFFER_SIZE - Response message size [{0}] is larger than buffer size [{1}]
-	3111: {SzError},                                          // EAS_ERR_RESPONSE_RESIZE_FUNCTION_IS_NOT_PROVIDED - Resize function is not provided
-	3112: {SzError},                                          // EAS_ERR_RESPONSE_RESIZE_FUNCTION_GAVE_INVALID_RESULT - Resize function returned an invalid result
+	2292: {SzError},                                         // EAS_ERR_CANT_RETRIEVE_OBS_FEATURE_DATA_FOR_OBS_ENT - Could not retrieve observed feature data for observed entity [{0}].
+	2293: {SzError},                                         // EAS_ERR_NO_RECORDS_SPECIFIED - No records specified.
+	2294: {SzError},                                         // EAS_ERR_DATA_SOURCE_ID_DOES_NOT_EXIST - Data source ID [{0}] does not exist.
+	3011: {SzError},                                         // EAS_ERR_DELETE_WITH_RESOLVE_ONLY - Cannot delete an entity with type RESOLVE_ONLY
+	3101: {SzError},                                         // EAS_ERR_INVALID_SESSION_HANDLE - Invalid Session Handle [{0}]
+	3102: {SzError},                                         // EAS_ERR_INVALID_REPORT_HANDLE - Invalid Report Handle [{0}]
+	3103: {SzError},                                         // EAS_ERR_INVALID_EXPORT_HANDLE - Invalid Export Handle [{0}]
+	3104: {SzError},                                         // EAS_ERR_INVALID_CONFIG_HANDLE - Invalid Config Handle [{0}]
+	3110: {SzError},                                         // EAS_ERR_RESPONSE_MESSAGE_SIZE_LARGER_THAN_BUFFER_SIZE - Response message size [{0}] is larger than buffer size [{1}]
+	3111: {SzError},                                         // EAS_ERR_RESPONSE_RESIZE_FUNCTION_IS_NOT_PROVIDED - Resize function is not provided
+	3112: {SzError},                                         // EAS_ERR_RESPONSE_RESIZE_FUNCTION_GAVE_INVALID_RESULT - Resize function returned an invalid result
 	3121: {SzBadInputError},                                 // EAS_ERR_JSON_PARSING_FAILURE - JSON Parsing Failure [code={0},offset={1}]
 	3122: {SzBadInputError},                                 // EAS_ERR_JSON_PARSING_FAILURE_MUST_BE_OBJECT_OR_ARRAY - JSON Parsing Failure.  JSON must be object or array.
 	3123: {SzBadInputError},                                 // EAS_ERR_JSON_PARSING_FAILURE_OBJECT_HAS_DUPLICATE_KEYS - Json object has duplicate keys.
@@ -289,7 +289,7 @@ var SzErrorTypes = map[int][]TypeIDs{
 	7218: {SzConfigurationError},                            // EAS_ERR_DB_CLUSTER_DOES_NOT_EXIST - Cluster [{0}] does not exist
 	7220: {SzConfigurationError},                            // EAS_ERR_NO_CONFIG_REGISTERED_IN_DATASTORE - No engine configuration registered in datastore (see https://senzing.zendesk.com/hc/en-us/articles/360036587313).
 	7221: {SzConfigurationError},                            // EAS_ERR_NO_CONFIG_REGISTERED_FOR_DATA_ID - No engine configuration registered with data ID [{0}].
-	7222: {SzError},                                          // EAS_ERR_FAILED_TO_SET_SYS_VAR_IN_DATASTORE - Could not set system variable value in database for Group[{0}],Code[{1}],Value[{2}].
+	7222: {SzError},                                         // EAS_ERR_FAILED_TO_SET_SYS_VAR_IN_DATASTORE - Could not set system variable value in database for Group[{0}],Code[{1}],Value[{2}].
 	7223: {SzConfigurationError},                            // EAS_ERR_INVALID_SCHEMA_VERSION_IN_DATASTORE - Invalid version number for datastore schema [version '{0}'].
 	7224: {SzConfigurationError},                            // EAS_ERR_INVALID_SCHEMA_VERSION_IN_ENGINE - Invalid version number for engine schema [version '{0}'].
 	7226: {SzConfigurationError},                            // EAS_ERR_INCOMPATIBLE_DATASTORE_SCHEMA_VERSION - Incompatible datastore schema version: [Engine version '{0}'.  Datastore version '{1}' is installed, but must be between '{2}' and '{3}'.]
@@ -302,7 +302,7 @@ var SzErrorTypes = map[int][]TypeIDs{
 	7235: {SzConfigurationError},                            // EAS_ERR_FTYPE_CONFIGURED_AS_REL_BUT_NO_RTYPE - FTYPE_CODE[{0}] IS CONFIGURED AS A RELATIONSHIP FEATURE TYPE BUT RTYPE_ID IS NOT SET.
 	7236: {SzConfigurationError},                            // EAS_ERR_DUPLICATE_BEHAVIOR_OVERRIDE_KEY_IN_CFG_FBOVR - Duplicate behavior override keys in CFG_FBOVR -- FTYPE_ID[{0}], UTYPE_CODE[{1}] referenced in CFG_FBOVR.
 	7237: {SzConfigurationError},                            // EAS_ERR_UNKNOWN_FTYPE_IN_TABLE - Unknown FTYPE_ID[{0}] referenced in {1}.
-	7238: {SzError},                                          // EAS_ERR_DATASTORE_ENCRYPTION_CONFIGURATION_DOES_NOT_MATCH_DATASTORE - Datastore encryption configuration does not match data store:  '{0}'
+	7238: {SzError},                                         // EAS_ERR_DATASTORE_ENCRYPTION_CONFIGURATION_DOES_NOT_MATCH_DATASTORE - Datastore encryption configuration does not match data store:  '{0}'
 	7239: {SzConfigurationError},                            // EAS_ERR_INVALID_GENERIC_THRESHOLD_CANDIDATE_CAP - Invalid generic threshold {0} cap [{1}] for [GPLAN_ID[{2}], BEHAVIOR[{3}], FTYPE_ID[{4}]].
 	7240: {SzConfigurationError},                            // EAS_ERR_INCORRECT_BEHAVIOR_REFERENCED - Incorrect BEHAVIOR[{0}] referenced in CFG_GENERIC_THRESHOLD for [GPLAN_ID[{1}], FTYPE_ID[{2}]].  FType configured for behavior [{3}]
 	7241: {SzConfigurationError},                            // EAS_ERR_UNKNOWN_GPLAN_IN_TABLE - Unknown GPLAN_ID[{0}] referenced in {1}.
@@ -319,48 +319,48 @@ var SzErrorTypes = map[int][]TypeIDs{
 	7317: {SzConfigurationError},                            // EAS_ERR_FAILED_TO_OPEN_FILE - Failed to open file: {0}
 	7344: {SzConfigurationError},                            // EAS_ERR_UNKNOWN_MAPPING_DIRECTIVE - Invalid mapping directive [{0}] for attribute [{1}].
 	7426: {SzBadInputError},                                 // EAS_ERR_XLITERATOR_FAILED - Transliteration failed
-	7511: {SzError},                                          // EAS_ERR_ABORT_ER_AND_RETRY - Detected change in candidate entity[{0}].  Restarting ER evaluation.
+	7511: {SzError},                                         // EAS_ERR_ABORT_ER_AND_RETRY - Detected change in candidate entity[{0}].  Restarting ER evaluation.
 	8000: {SzBadInputError},                                 // EAS_ERR_GNRNP - GNR NameParser Failure
-	8410: {SzError},                                          // EAS_ERR_UNINITIALIZED_AMBIGUOUS_FEATURE - Cannot use uninitialized ambiguous feature.
+	8410: {SzError},                                         // EAS_ERR_UNINITIALIZED_AMBIGUOUS_FEATURE - Cannot use uninitialized ambiguous feature.
 	8501: {SzConfigurationError},                            // EAS_ERR_SALT_DIGEST_ALGORITHM_NOT_AVAILABLE - Failed to get {0} digest algorithm from ICC.
-	8502: {SzError},                                          // EAS_ERR_SALT_DIGEST_CONTEXT_CREATE_FAILED - Failed to create a digest context.
-	8503: {SzError},                                          // EAS_ERR_SALT_DIGEST_CONTEXT_INIT_FAILED - Failed {0} to initialise a digest context.
-	8504: {SzError},                                          // EAS_ERR_SALT_DIGEST_FAILED - Failed {0} to digest block {1}.
-	8505: {SzError},                                          // EAS_ERR_SALT_DIGEST_FINAL_FAILED - Failed {0} to complete digest.
-	8508: {SzError},                                          // EAS_ERR_SALT_DIGEST_UNKNOWN_EXCEPTION - Unrecognized exception thrown generating digest.
-	8509: {SzError},                                          // EAS_ERR_SALT_DIGEST_ALGORITHM_REQUIRED - Cannot generate a digest without a valid algorithm.
-	8514: {SzError},                                          // EAS_ERR_SALT_RANDOM_FAILED - Failed {0} to get random content
+	8502: {SzError},                                         // EAS_ERR_SALT_DIGEST_CONTEXT_CREATE_FAILED - Failed to create a digest context.
+	8503: {SzError},                                         // EAS_ERR_SALT_DIGEST_CONTEXT_INIT_FAILED - Failed {0} to initialise a digest context.
+	8504: {SzError},                                         // EAS_ERR_SALT_DIGEST_FAILED - Failed {0} to digest block {1}.
+	8505: {SzError},                                         // EAS_ERR_SALT_DIGEST_FINAL_FAILED - Failed {0} to complete digest.
+	8508: {SzError},                                         // EAS_ERR_SALT_DIGEST_UNKNOWN_EXCEPTION - Unrecognized exception thrown generating digest.
+	8509: {SzError},                                         // EAS_ERR_SALT_DIGEST_ALGORITHM_REQUIRED - Cannot generate a digest without a valid algorithm.
+	8514: {SzError},                                         // EAS_ERR_SALT_RANDOM_FAILED - Failed {0} to get random content
 	8516: {SzConfigurationError},                            // EAS_ERR_SALT_MUST_BE_SIZE - A salt value must be {0} bytes long but the provided one is {1} bytes.
 	8517: {SzConfigurationError},                            // EAS_ERR_SALT_DOES_NOT_MATCH_CHECKSUM - The salt value does not match the recorded checksum.
-	8520: {SzError},                                          // EAS_ERR_SALT_G2SS_INIT_FAILED - Secure Store initialization failed.
-	8521: {SzError},                                          // EAS_ERR_SALT_G2SS_TOKEN_MUST_BE_INIT - Hashing with a named salt requires the Secure Store to be initialized.
+	8520: {SzError},                                         // EAS_ERR_SALT_G2SS_INIT_FAILED - Secure Store initialization failed.
+	8521: {SzError},                                         // EAS_ERR_SALT_G2SS_TOKEN_MUST_BE_INIT - Hashing with a named salt requires the Secure Store to be initialized.
 	8522: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_SOPIN_NOT_VALID - The Security Officer (SO) PIN is not correct.
-	8524: {SzError},                                          // EAS_ERR_SALT_G2SS_INIT_UNKNOWN_EXCEPTION - Secure Store initialization failed with an unrecognized exception
+	8524: {SzError},                                         // EAS_ERR_SALT_G2SS_INIT_UNKNOWN_EXCEPTION - Secure Store initialization failed with an unrecognized exception
 	8525: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_LOAD - Secure Store is required to load salt
 	8526: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_GENERATE - Secure Store is required to generate salt
 	8527: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_IMPORT - Secure Store is required to import salt
 	8528: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_EXPORT - Secure Store is required to export salt
 	8529: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_DELETE - Secure Store is required to delete salt
-	8530: {SzError},                                          // EAS_ERR_SALT_CANNOT_OVERWRITE - You cannot overwrite an existing salt called {0}
+	8530: {SzError},                                         // EAS_ERR_SALT_CANNOT_OVERWRITE - You cannot overwrite an existing salt called {0}
 	8536: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_LEGACY - Secure Store is required to add a legacy salt
 	8538: {SzConfigurationError},                            // EAS_ERR_SALT_G2SS_REQUIRED_FOR_METHOD - Secure Store is required to change hashing method
-	8539: {SzError},                                          // EAS_ERR_SALT_G2SS_ERROR_CHANGING_METHOD - Secure Store error changing hashing method
+	8539: {SzError},                                         // EAS_ERR_SALT_G2SS_ERROR_CHANGING_METHOD - Secure Store error changing hashing method
 	8540: {SzConfigurationError},                            // EAS_ERR_SALT_WRONG_SIZE - The object called {0} is not a salt
-	8541: {SzError},                                          // EAS_ERR_SALT_BASE64_DECODE_ERROR - Base64 decoding error in salt {0} at character {1}
-	8542: {SzError},                                          // EAS_ERR_SALT_UNINITIALIZED - Must load a salt before using it.
+	8541: {SzError},                                         // EAS_ERR_SALT_BASE64_DECODE_ERROR - Base64 decoding error in salt {0} at character {1}
+	8542: {SzError},                                         // EAS_ERR_SALT_UNINITIALIZED - Must load a salt before using it.
 	8543: {SzConfigurationError},                            // EAS_ERR_SALT_NOT_FOUND - There is no salt called {0} in the Secure Store.
 	8544: {SzConfigurationError},                            // EAS_ERR_SALT_PASSWORD_NOT_STRONG_ENOUGH - The password must be stronger: {0}
 	8545: {SzConfigurationError},                            // EAS_ERR_SALT_ADMIN_NAME_REQUIRED - Specify -name and the name to use for the salt
 	8556: {SzConfigurationError},                            // EAS_ERR_SALT_ADMIN_METHOD_NOT_RECOGNISED - Hashing method {0} not supported.
 	8557: {SzConfigurationError},                            // EAS_ERR_SALT_METHOD_DOES_NOT_MATCH - The hashing method in the configuration ({1}) does not match the method ({2}) of the salt {0}
-	8593: {SzError},                                          // EAS_ERR_SALT_HMAC_CONTEXT_INIT_FAILED - Failed {0} to initialise an HMAC context.
-	8594: {SzError},                                          // EAS_ERR_SALT_HMAC_FAILED - Failed {0} to HMAC block {1}.
-	8595: {SzError},                                          // EAS_ERR_SALT_HMAC_FINAL_FAILED - Failed {0} to complete HMAC.
-	8598: {SzError},                                          // EAS_ERR_SALT_HMAC_UNKNOWN_EXCEPTION - Unrecognized exception thrown generating HMAC.
+	8593: {SzError},                                         // EAS_ERR_SALT_HMAC_CONTEXT_INIT_FAILED - Failed {0} to initialise an HMAC context.
+	8594: {SzError},                                         // EAS_ERR_SALT_HMAC_FAILED - Failed {0} to HMAC block {1}.
+	8595: {SzError},                                         // EAS_ERR_SALT_HMAC_FINAL_FAILED - Failed {0} to complete HMAC.
+	8598: {SzError},                                         // EAS_ERR_SALT_HMAC_UNKNOWN_EXCEPTION - Unrecognized exception thrown generating HMAC.
 	8599: {SzConfigurationError},                            // EAS_ERR_SALT_UNKNOWN_HASHING_METHOD - Unrecognized hashing method ({0}) requested.
 	8601: {SzConfigurationError},                            // EAS_ERR_HASHER_REQUIRES_SECURE_STORE - Using a named salt requires the Secure Store configured and running
 	8602: {SzConfigurationError},                            // EAS_ERR_HASHER_CHECKSUM_DOES_NOT_MATCH - The hashing checksum configured ({1}) does not match the checksum ({2}) of the salt named {0}
-	8603: {SzError},                                          // EAS_ERR_HASHER_UNABLE_TO_RECORD_SALT - Unable to record the configured salt
+	8603: {SzError},                                         // EAS_ERR_HASHER_UNABLE_TO_RECORD_SALT - Unable to record the configured salt
 	8604: {SzConfigurationError},                            // EAS_ERR_HASHER_REQUIRES_FUNCTION - Using hashing requires a configured hashing function
 	8605: {SzConfigurationError},                            // EAS_ERR_HASHER_EPHEMERAL_OR_NAMED_SALT - Specify either a named salt or an ephemeral one. Can not have both
 	8606: {SzConfigurationError},                            // EAS_ERR_HASHER_SALT_REQUIRED - Hashing requires a salt to be configured.
@@ -402,54 +402,54 @@ var SzErrorTypes = map[int][]TypeIDs{
 	9264: {SzConfigurationError},                            // EAS_ERR_G2SS_LOGOUT_FAILED - Secure Store logout failed: {0}.
 	9265: {SzConfigurationError},                            // EAS_ERR_G2SS_NEED_RW_SESSION - Secure Store session must be read/write.
 	9266: {SzConfigurationError},                            // EAS_ERR_G2SS_UNABLE_TO_VERIFY_KEY - Secure Store key does not meet requirements.
-	9267: {SzError},                                          // EAS_ERR_G2SS_UNABLE_TO_CREATE_KEY - Secure Store key creation failed.
-	9268: {SzError},                                          // EAS_ERR_G2SS_UNABLE_TO_CHANGE_PIN - Secure Store password change failed: {0}.
+	9267: {SzError},                                         // EAS_ERR_G2SS_UNABLE_TO_CREATE_KEY - Secure Store key creation failed.
+	9268: {SzError},                                         // EAS_ERR_G2SS_UNABLE_TO_CHANGE_PIN - Secure Store password change failed: {0}.
 	9269: {SzConfigurationError},                            // EAS_ERR_G2SS_INVALID_OLD_CREDENTIAL - Secure Store old credential is invalid.
 	9270: {SzConfigurationError},                            // EAS_ERR_G2SS_INVALID_NEW_CREDENTIAL - Secure Store new credential is invalid.
-	9271: {SzError},                                          // EAS_ERR_G2SS_OUT_OF_MEMORY - Secure Store out of memory.
-	9272: {SzError},                                          // EAS_ERR_G2SS_FIND_INIT_FAILED - Secure Store object locating failed: {0}.
-	9273: {SzError},                                          // EAS_ERR_G2SS_FIND_FAILED - Secure Store object find failed: {0}.
-	9274: {SzError},                                          // EAS_ERR_G2SS_CRYPTO_SETUP_FAILED - Secure Store setup of encryption failed: {0}.
-	9275: {SzError},                                          // EAS_ERR_G2SS_ENCRYPT_START_FAILED - Secure Store unable to start encryption: {0}.
-	9276: {SzError},                                          // EAS_ERR_G2SS_ENCRYPT_SIZE_FAILED - Secure Store unable to get the size of encrypted data: {0}.
-	9277: {SzError},                                          // EAS_ERR_G2SS_ENCRYPT_FAILED - Secure Store encryption failed: {0}.
-	9278: {SzError},                                          // EAS_ERR_G2SS_DECRYPT_START_FAILED - Secure Store unable to start decryption: {0}.
-	9279: {SzError},                                          // EAS_ERR_G2SS_DECRYPT_FAILED - Secure Store decryption failed: {0}.
-	9280: {SzError},                                          // EAS_ERR_G2SS_OBJECT_SAVE_FAILED - Secure Store unable to save object: {0}.
-	9281: {SzError},                                          // EAS_ERR_G2SS_OBJECT_DELETE_FAILED - Secure Store unable to delete object: {0}.
-	9282: {SzError},                                          // EAS_ERR_G2SS_OBJECT_CHANGE_FAILED - Secure Store unable to modify object: {0}.
-	9283: {SzError},                                          // EAS_ERR_G2SS_UNINITIALIZED - Secure Store has not been initialized
+	9271: {SzError},                                         // EAS_ERR_G2SS_OUT_OF_MEMORY - Secure Store out of memory.
+	9272: {SzError},                                         // EAS_ERR_G2SS_FIND_INIT_FAILED - Secure Store object locating failed: {0}.
+	9273: {SzError},                                         // EAS_ERR_G2SS_FIND_FAILED - Secure Store object find failed: {0}.
+	9274: {SzError},                                         // EAS_ERR_G2SS_CRYPTO_SETUP_FAILED - Secure Store setup of encryption failed: {0}.
+	9275: {SzError},                                         // EAS_ERR_G2SS_ENCRYPT_START_FAILED - Secure Store unable to start encryption: {0}.
+	9276: {SzError},                                         // EAS_ERR_G2SS_ENCRYPT_SIZE_FAILED - Secure Store unable to get the size of encrypted data: {0}.
+	9277: {SzError},                                         // EAS_ERR_G2SS_ENCRYPT_FAILED - Secure Store encryption failed: {0}.
+	9278: {SzError},                                         // EAS_ERR_G2SS_DECRYPT_START_FAILED - Secure Store unable to start decryption: {0}.
+	9279: {SzError},                                         // EAS_ERR_G2SS_DECRYPT_FAILED - Secure Store decryption failed: {0}.
+	9280: {SzError},                                         // EAS_ERR_G2SS_OBJECT_SAVE_FAILED - Secure Store unable to save object: {0}.
+	9281: {SzError},                                         // EAS_ERR_G2SS_OBJECT_DELETE_FAILED - Secure Store unable to delete object: {0}.
+	9282: {SzError},                                         // EAS_ERR_G2SS_OBJECT_CHANGE_FAILED - Secure Store unable to modify object: {0}.
+	9283: {SzError},                                         // EAS_ERR_G2SS_UNINITIALIZED - Secure Store has not been initialized
 	9284: {SzConfigurationError},                            // EAS_ERR_G2SS_INVALID_SLOT_ID - Can not obtain info on specified slot. Possibly invalid slot ID specified in Secure Store URL: {0}
 	9285: {SzConfigurationError},                            // EAS_ERR_G2SS_NO_TOKEN_IN_SLOT - No security token present in slot specified by Secure Store URL: slot ID = {0}
 	9286: {SzConfigurationError},                            // EAS_ERR_G2SS_TOKEN_NOT_FOUND - Can not obtain info for security token. Possibly invalid token label and/or slot ID specified in Secure Store URL: {0}
-	9287: {SzError},                                          // EAS_ERR_G2SS_TOKEN_IMPL_ERROR - An internal error occurred in the security token implementation library: Return Code = {0}
-	9288: {SzError},                                          // EAS_ERR_G2SS_USER_PIN_PROMPT_FAILED - Was unable to prompt user for security token authentication.
-	9289: {SzError},                                          // EAS_ERR_G2SS_LABEL_CHANGED_SINCE_CONFIG_INIT - Secure Store has been reconfigured since loading.
-	9290: {SzError},                                          // EAS_ERR_G2SS_OBJECT_NOT_FOUND - Secure Store does not have an object called {0}.
+	9287: {SzError},                                         // EAS_ERR_G2SS_TOKEN_IMPL_ERROR - An internal error occurred in the security token implementation library: Return Code = {0}
+	9288: {SzError},                                         // EAS_ERR_G2SS_USER_PIN_PROMPT_FAILED - Was unable to prompt user for security token authentication.
+	9289: {SzError},                                         // EAS_ERR_G2SS_LABEL_CHANGED_SINCE_CONFIG_INIT - Secure Store has been reconfigured since loading.
+	9290: {SzError},                                         // EAS_ERR_G2SS_OBJECT_NOT_FOUND - Secure Store does not have an object called {0}.
 	9292: {SzConfigurationError},                            // EAS_ERR_G2SS_NO_PASSWORD - No password supplied
 	9293: {SzConfigurationError},                            // EAS_ERR_G2SS_NO_SEC_STORE_PREFIX - Secure Store expects a different format (starting with {0}) when a password is supplied
 	9295: {SzConfigurationError},                            // EAS_ERR_G2SS_NO_DATA_OBJECTS - There are no Secure Store objects stored on the token
 	9296: {SzConfigurationError},                            // EAS_ERR_G2SS_SEC_STORE_ARCHIVE_BAD - The exported archive appears to be corrupted around object {0}
 	9297: {SzConfigurationError},                            // EAS_ERR_G2SS_FILE_NOT_FOUND - Secure Store failed to open {0}
 	9298: {SzConfigurationError},                            // EAS_ERR_G2SS_FILE_CONTENTS_BAD - Secure Store contents of {0} not usable.
-	9299: {SzError},                                          // EAS_ERR_G2SS_CLASS_NOT_INIT - Secure Store internal error.
+	9299: {SzError},                                         // EAS_ERR_G2SS_CLASS_NOT_INIT - Secure Store internal error.
 	9300: {SzConfigurationError},                            // EAS_ERR_G2SS_PASSWORD_CHECK_ERROR - Secure Store internal error ({0}) checking password.
 	9301: {SzConfigurationError},                            // EAS_ERR_MISSING_SEQUENCE_ENTRY - Missing Sequence Entry[{0}] in the SYS_SEQUENCE table!
-	9305: {SzError},                                          // EAS_ERR_SEQUENCE_RETRIES_FAILED - Retries failed to retrieve Sequence Entry[{0}] in the SYS_SEQUENCE table!  This may mean the CACHE_SIZE is too small.
+	9305: {SzError},                                         // EAS_ERR_SEQUENCE_RETRIES_FAILED - Retries failed to retrieve Sequence Entry[{0}] in the SYS_SEQUENCE table!  This may mean the CACHE_SIZE is too small.
 	9308: {SzConfigurationError},                            // EAS_ERR_MISSING_STATUS_ENTRY - Could not retrieve status entry[{0}] in the SYS_STATUS table!
 	9309: {SzConfigurationError},                            // EAS_ERR_SEQUENCE_HAS_BEEN_RESET - Sequence entry[{0}] has been reset.
 	9310: {SzConfigurationError},                            // EAS_ERR_INVALID_STATUS_ENTRY_VALUE - Invalid value for status entry[{0}] in the SYS_STATUS table!
-	9311: {SzError},                                          // EAS_ERR_COULD_NOT_RECORD_USAGE_TYPE - Could not record usage type [{0}] in the SYS_CODES_USED table!
-	9406: {SzError},                                          // EAS_ERR_G2SS_SESSION_MUST_NOT_BE_OPEN - Secure Store cannot fetch a value with sync if a session is already open.
+	9311: {SzError},                                         // EAS_ERR_COULD_NOT_RECORD_USAGE_TYPE - Could not record usage type [{0}] in the SYS_CODES_USED table!
+	9406: {SzError},                                         // EAS_ERR_G2SS_SESSION_MUST_NOT_BE_OPEN - Secure Store cannot fetch a value with sync if a session is already open.
 	9408: {SzConfigurationError},                            // EAS_ERR_G2SS_PASSWORD_INADEQUATE - The provided password is not strong enough: {0}
 	9409: {SzConfigurationError},                            // EAS_ERR_G2SS_FUNCTION_LIST_NOT_SET - The security token interface is not yet set
-	9410: {SzError},                                          // EAS_ERR_G2SS_PKCS_INIT_FAILED - Initializing token driver failed {0}
-	9411: {SzError},                                          // EAS_ERR_G2SS_PKCS_FINAL_FAILED - Finalizing token driver failed {0}
+	9410: {SzError},                                         // EAS_ERR_G2SS_PKCS_INIT_FAILED - Initializing token driver failed {0}
+	9411: {SzError},                                         // EAS_ERR_G2SS_PKCS_FINAL_FAILED - Finalizing token driver failed {0}
 	9413: {SzConfigurationError},                            // EAS_ERR_G2SS_INCORRECT_PASSWORD - The export file password appears to be incorrect.
 	9414: {SzBadInputError},                                 // EAS_ERR_STRING_IS_INVALID_UTF8 - Invalid data string. Data must be in UTF-8.
 	9500: {SzConfigurationError},                            // EAS_ERR_TOKEN_LIBRARY_CHECKSUM_MISMATCH - Cannot load token library. The checksum does not match the configuration of this node. Found: [{0}] Expected: [{1}]
-	9501: {SzError},                                          // EAS_TOKEN_LIBRARY_ALREADY_HASHED - Cannot hash token library. The Token Library contains previous hashed data
-	9701: {SzError},                                          // EAS_ERR_CANT_RETRIEVE_INDEX_FROM_MEMORY_ROW - Cannot retrieve index[{0}] from memory row of key[{1}], out of range!
+	9501: {SzError},                                         // EAS_TOKEN_LIBRARY_ALREADY_HASHED - Cannot hash token library. The Token Library contains previous hashed data
+	9701: {SzError},                                         // EAS_ERR_CANT_RETRIEVE_INDEX_FROM_MEMORY_ROW - Cannot retrieve index[{0}] from memory row of key[{1}], out of range!
 	9802: {SzConfigurationError},                            // EAS_ERR_INBOUND_OBS_CONFIG_CHECKSUM_MISMATCH - Configuration checksum on inbound observation [{0}] does not match this nodes configuration checksum [{1}]. Cannot process.
 	9803: {SzConfigurationError},                            // EAS_ERR_CALC_CONFIGCHKSUM_AND_PARAMSTORE_CONFIGCHKSUM_DONT_MATCH - The calculated configuration checksum [{0}] does not match the CONFIGURATION_CHECKSUM value in the parameter store [{1}].
 }
