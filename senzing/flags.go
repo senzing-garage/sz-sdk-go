@@ -45,7 +45,7 @@ const (
 	SzEntityIncludeRecordMatchingInfo   // 15 Include the record matching info for the entity
 	SzEntityIncludeRecordJSONData       // 16 Include the record json data for the entity
 	Bit18                               // 17
-	SzEntityIncludeRecordFeatureIDs     // 18 Include the features identifiers for the records
+	SzEntityIncludeRecordFeatures       // 18 Include the features identifiers for the records
 	SzEntityIncludeRelatedEntityName    // 19 Include the name of the related entities
 	SzEntityIncludeRelatedMatchingInfo  // 20 Include the record matching info of the related entities
 	SzEntityIncludeRelatedRecordSummary // 21 Include the record summary of the related entities
@@ -62,20 +62,20 @@ const (
 
 	/* flags for including search result feature scores  */
 
-	SzIncludeFeatureScores            // 26 Include feature scores
-	SzSearchIncludeStats              // 27 Include statistics from search results
-	SzEntityIncludeRecordTypes        // 28 Include the record types of the entity
-	SzEntityIncludeRelatedRecordTypes // 29 Include the record types of the related entities
-	SzFindPathIncludeMatchingInfo     // 30 Include matching info on entity paths
-	SzEntityIncludeRecordUnmappedData // 31 Include the record unmapped data for the entity
-	Bit33                             // 32
-	SzFindNetworkIncludeMatchingInfo  // 33 Include matching info on entity networks
-	SzIncludeMatchKeyDetails          // 34 Include internal features
+	SzIncludeFeatureScores             // 26 Include feature scores
+	SzSearchIncludeStats               // 27 Include statistics from search results
+	SzEntityIncludeRecordTypes         // 28 Include the record types of the entity
+	SzEntityIncludeRelatedRecordTypes  // 29 Include the record types of the related entities
+	SzFindPathIncludeMatchingInfo      // 30 Include matching info on entity paths
+	SzEntityIncludeRecordUnmappedData  // 31 Include the record unmapped data for the entity
+	Bit33                              // 32
+	SzFindNetworkIncludeMatchingInfo   // 33 Include matching info on entity networks
+	SzIncludeMatchKeyDetails           // 34 Include internal features
+	SzIncludeRecordFeatureDetails      // 35 Include attributes section
+	SzIncludeRecordFeatureFeatureStats // 36
 
 	/* Reserved  */
 
-	Bit36 // 35
-	Bit37 // 36
 	Bit38 // 37
 	Bit39 // 38
 	Bit40 // 39
