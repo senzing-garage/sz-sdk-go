@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.14.2] - 2024-10-01
+
+### Changed in 0.14.2
+
+- Update Sz Flags
+- Add `PreprocessRecord()`
+
 ## [0.14.1] - 2024-09-05
 
 ### Changed in 0.14.1
