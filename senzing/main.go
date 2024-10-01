@@ -90,6 +90,7 @@ type SzEngine interface {
 	GetStats(ctx context.Context) (string, error)
 	GetVirtualEntityByRecordID(ctx context.Context, recordKeys string, flags int64) (string, error)
 	HowEntityByEntityID(ctx context.Context, entityID int64, flags int64) (string, error)
+	PreprocessRecord(ctx context.Context, recordDefinition string, flags int64) (string, error)
 	PrimeEngine(ctx context.Context) error
 	ProcessRedoRecord(ctx context.Context, redoRecord string, flags int64) (string, error)
 	ReevaluateEntity(ctx context.Context, entityID int64, flags int64) (string, error)
