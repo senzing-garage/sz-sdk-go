@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.14.3] - 2024-10-30
+
+### Changed in 0.14.3
+
+- Moved `Reinitialize()` and `Destroy()
+
 ## [0.14.2] - 2024-10-01
 
 ### Changed in 0.14.2
