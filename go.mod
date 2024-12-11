@@ -3,7 +3,7 @@ module github.com/senzing-garage/sz-sdk-go
 go 1.22
 
 require (
-	github.com/aquilax/truncate v1.0.0
+	github.com/aquilax/truncate v1.0.1
 	github.com/senzing-garage/sz-sdk-json-type-definition v0.2.7
 	github.com/stretchr/testify v1.10.0
 )
