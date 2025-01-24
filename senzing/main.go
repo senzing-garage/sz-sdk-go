@@ -47,9 +47,12 @@ type SzConfig interface {
 // Type SzConfigManager interface is a Golang representation of Senzing's libSzconfigmgr.h
 type SzConfigManager interface {
 	AddConfig(ctx context.Context, configDefinition string, configComments string) (int64, error)
+	CreateNewConfigAddDatasources(ctx context.Context, configID int64, configComments string, dataSourceCodes ...string) (int64, error)
 	GetConfig(ctx context.Context, configID int64) (string, error)
 	GetConfigs(ctx context.Context) (string, error)
+	GetDataSources(ctx context.Context, configID int64) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
+	GetTemplateConfigID(ctx context.Context) (int64, error)
 	ReplaceDefaultConfigID(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error
 	SetDefaultConfigID(ctx context.Context, configID int64) error
 }

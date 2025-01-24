@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.15.0] - 2025-01-24
+
+### Added in 0.15.0
+
+- `createNewConfigAddDatasources`
+- `getDataSources`
+- `getTemplateConfigId`
+
 ## [0.14.4] - 2024-12-10
 
 ### Changed in 0.14.4
