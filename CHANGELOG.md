@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning].
 
 ### Added in 0.15.0
 
-- `createNewConfigAddDatasources`
+- `createNewConfig`
 - `getDataSources`
 - `getTemplateConfigId`
 
