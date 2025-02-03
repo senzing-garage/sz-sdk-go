@@ -68,16 +68,16 @@ const (
 	SzEntityIncludeRelatedRecordTypes  // 29 Include the record types of the related entities
 	SzFindPathIncludeMatchingInfo      // 30 Include matching info on entity paths
 	SzEntityIncludeRecordUnmappedData  // 31 Include the record unmapped data for the entity
-	Bit33                              // 32
+	SzSearchIncludeAllCandidates       // 32
 	SzFindNetworkIncludeMatchingInfo   // 33 Include matching info on entity networks
 	SzIncludeMatchKeyDetails           // 34 Include internal features
 	SzIncludeRecordFeatureDetails      // 35 Include attributes section
 	SzIncludeRecordFeatureFeatureStats // 36
+	SzSearchIncludeRequest             // 37
+	SzSearchIncludeRequestDetails      // 38
 
 	/* Reserved  */
 
-	Bit38 // 37
-	Bit39 // 38
 	Bit40 // 39
 	Bit41 // 40
 	Bit42 // 41

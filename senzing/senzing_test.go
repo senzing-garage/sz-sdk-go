@@ -192,8 +192,8 @@ var testCases = []struct {
 		expected: 0x0000000080000000,
 	},
 	{ // 33
-		name:     "Bit33",
-		actual:   Bit33,
+		name:     "SZ_SEARCH_INCLUDE_ALL_CANDIDATES",
+		actual:   SzSearchIncludeAllCandidates,
 		expected: 0x0000000100000000,
 	},
 	{ // 34
@@ -217,13 +217,13 @@ var testCases = []struct {
 		expected: 0x0000001000000000,
 	},
 	{ // 38
-		name:     "Bit38",
-		actual:   Bit38,
+		name:     "SZ_SEARCH_INCLUDE_REQUEST",
+		actual:   SzSearchIncludeRequest,
 		expected: 0x0000002000000000,
 	},
 	{ // 39
-		name:     "Bit39",
-		actual:   Bit39,
+		name:     "SZ_SEARCH_INCLUDE_REQUEST_DETAILS",
+		actual:   SzSearchIncludeRequestDetails,
 		expected: 0x0000004000000000,
 	},
 	{ // 40
