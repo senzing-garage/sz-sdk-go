@@ -123,7 +123,7 @@ var testCases = []struct {
 	},
 	{ // 19
 		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURES",
-		actual:   SzEntityIncludeRecordFeatures,
+		actual:   SzEntityIncludeRecordFeatureIDs,
 		expected: 0x0000000000040000,
 	},
 	{ // 20
@@ -208,12 +208,12 @@ var testCases = []struct {
 	},
 	{ // 36
 		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURE_DETAILS",
-		actual:   SzIncludeRecordFeatureDetails,
+		actual:   SzEntityIncludeRecordFeatureDetails,
 		expected: 0x0000000800000000,
 	},
 	{ // 37
 		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURE_STATS",
-		actual:   SzIncludeRecordFeatureFeatureStats,
+		actual:   SzEntityIncludeRecordFeatureStats,
 		expected: 0x0000001000000000,
 	},
 	{ // 38
@@ -374,7 +374,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_ENTITY_DEFAULT_FLAGS",
 		actual:   SzEntityDefaultFlags,
-		expected: 0x000000000038FBC0,
+		expected: 0x000000000018FBC0,
 	},
 	{
 		name:     "SZ_ENTITY_BRIEF_DEFAULT_FLAGS",
@@ -384,7 +384,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_EXPORT_DEFAULT_FLAGS",
 		actual:   SzExportDefaultFlags,
-		expected: 0x000000000038FBE1,
+		expected: 0x000000000018FBE1,
 	},
 	{
 		name:     "SZ_FIND_PATH_DEFAULT_FLAGS",
@@ -399,17 +399,17 @@ var testCases = []struct {
 	{
 		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS",
 		actual:   SzWhyEntitiesDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
 		actual:   SzWhyRecordsDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
 		actual:   SzWhyRecordInEntityIDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_HOW_ENTITY_DEFAULT_FLAGS",
@@ -419,7 +419,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS",
 		actual:   SzVirtualEntityDefaultFlags,
-		expected: 0x000000000038FBC0,
+		expected: 0x000000000000F800,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_ALL",
