@@ -374,7 +374,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_ENTITY_DEFAULT_FLAGS",
 		actual:   SzEntityDefaultFlags,
-		expected: 0x000000000038FBC0,
+		expected: 0x000000000018FBC0,
 	},
 	{
 		name:     "SZ_ENTITY_BRIEF_DEFAULT_FLAGS",
@@ -384,7 +384,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_EXPORT_DEFAULT_FLAGS",
 		actual:   SzExportDefaultFlags,
-		expected: 0x000000000038FBE1,
+		expected: 0x000000000018FBE1,
 	},
 	{
 		name:     "SZ_FIND_PATH_DEFAULT_FLAGS",
@@ -404,12 +404,12 @@ var testCases = []struct {
 	{
 		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
 		actual:   SzWhyRecordsDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
 		actual:   SzWhyRecordInEntityIDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_HOW_ENTITY_DEFAULT_FLAGS",
