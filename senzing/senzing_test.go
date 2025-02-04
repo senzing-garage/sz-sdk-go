@@ -399,7 +399,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS",
 		actual:   SzWhyEntitiesDefaultFlags,
-		expected: 0x0000000005B8FBC0,
+		expected: 0x000000000598FBC0,
 	},
 	{
 		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
@@ -419,7 +419,7 @@ var testCases = []struct {
 	{
 		name:     "SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS",
 		actual:   SzVirtualEntityDefaultFlags,
-		expected: 0x000000000038FBC0,
+		expected: 0x000000000000F800,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_ALL",
