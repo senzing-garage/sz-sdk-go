@@ -8,13 +8,15 @@ The following is the error type hierarchy:
 
 	SzError
 	├── SzBadInputError
-	│   ├── SzNotFoundError
-	│   └── SzUnknownDataSourceError
-	├── SzConfigurationError
-	├── SzReplaceConflictError
+	│	├── SzNotFoundError
+	│	└── SzUnknownDataSourceError
+	├── SzGeneralError
+	│	├── SzConfigurationError
+	│	├── SzSdkError
+	│	└── SzReplaceConflictError
 	├── SzRetryableError
-	│   ├── SzDatabaseConnectionLostError
-	│   └── SzRetryTimeoutExceededError
+	│	├── SzDatabaseConnectionLostError
+	│	└── SzRetryTimeoutExceededError
 	└── SzUnrecoverableError
 		├── SzDatabaseError
 		├── SzLicenseError

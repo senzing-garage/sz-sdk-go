@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning].
 - `getDataSources`
 - `getTemplateConfigId`
 
+## [0.14.5] - 2025-02-24
+
+### Changed in 0.14.5
+
+- Added `SzEngineFlags`
+
 ## [0.14.4] - 2024-12-10
 
 ### Changed in 0.14.4

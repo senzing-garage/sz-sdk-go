@@ -23,12 +23,14 @@ const (
 	SzConfigurationError
 	SzDatabaseConnectionLostError
 	SzDatabaseError
+	SzGeneralError
 	SzLicenseError
 	SzNotFoundError
 	SzNotInitializedError
 	SzReplaceConflictError
 	SzRetryableError
 	SzRetryTimeoutExceededError
+	SzSdkError
 	SzUnhandledError
 	SzUnknownDataSourceError
 	SzUnrecoverableError
@@ -49,12 +51,14 @@ var (
 	ErrSzConfiguration          = errors.New(emptyErrorMessage)
 	ErrSzDatabase               = errors.New(emptyErrorMessage)
 	ErrSzDatabaseConnectionLost = errors.New(emptyErrorMessage)
+	ErrSzGeneral                = errors.New(emptyErrorMessage)
 	ErrSzLicense                = errors.New(emptyErrorMessage)
 	ErrSzNotFound               = errors.New(emptyErrorMessage)
 	ErrSzNotInitialized         = errors.New(emptyErrorMessage)
 	ErrSzReplaceConflict        = errors.New(emptyErrorMessage)
 	ErrSzRetryable              = errors.New(emptyErrorMessage)
 	ErrSzRetryTimeoutExceeded   = errors.New(emptyErrorMessage)
+	ErrSzSdk                    = errors.New(emptyErrorMessage)
 	ErrSzUnhandled              = errors.New(emptyErrorMessage)
 	ErrSzUnknownDataSource      = errors.New(emptyErrorMessage)
 	ErrSzUnrecoverable          = errors.New(emptyErrorMessage)
@@ -67,12 +71,14 @@ var SzErrorTypesList = []TypeIDs{
 	SzDatabaseConnectionLostError,
 	SzDatabaseError,
 	SzError,
+	SzGeneralError,
 	SzLicenseError,
 	SzNotFoundError,
 	SzNotInitializedError,
 	SzReplaceConflictError,
 	SzRetryableError,
 	SzRetryTimeoutExceededError,
+	SzSdkError,
 	SzUnhandledError,
 	SzUnknownDataSourceError,
 	SzUnrecoverableError,
@@ -85,12 +91,14 @@ var SzErrorMap = map[TypeIDs]error{
 	SzDatabaseConnectionLostError: ErrSzDatabaseConnectionLost,
 	SzDatabaseError:               ErrSzDatabase,
 	SzError:                       ErrSz,
+	SzGeneralError:                ErrSzGeneral,
 	SzLicenseError:                ErrSzLicense,
 	SzNotFoundError:               ErrSzNotFound,
 	SzNotInitializedError:         ErrSzNotInitialized,
 	SzReplaceConflictError:        ErrSzReplaceConflict,
 	SzRetryableError:              ErrSzRetryable,
 	SzRetryTimeoutExceededError:   ErrSzRetryTimeoutExceeded,
+	SzSdkError:                    ErrSzSdk,
 	SzUnhandledError:              ErrSzUnhandled,
 	SzUnknownDataSourceError:      ErrSzUnknownDataSource,
 	SzUnrecoverableError:          ErrSzUnrecoverable,
