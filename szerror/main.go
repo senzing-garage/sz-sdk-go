@@ -23,6 +23,7 @@ const (
 	SzConfigurationError
 	SzDatabaseConnectionLostError
 	SzDatabaseError
+	SzDatabaseTransientError
 	SzGeneralError
 	SzLicenseError
 	SzNotFoundError
@@ -51,6 +52,7 @@ var (
 	ErrSzConfiguration          = errors.New(emptyErrorMessage)
 	ErrSzDatabase               = errors.New(emptyErrorMessage)
 	ErrSzDatabaseConnectionLost = errors.New(emptyErrorMessage)
+	ErrSzDatabaseTransient      = errors.New(emptyErrorMessage)
 	ErrSzGeneral                = errors.New(emptyErrorMessage)
 	ErrSzLicense                = errors.New(emptyErrorMessage)
 	ErrSzNotFound               = errors.New(emptyErrorMessage)
@@ -70,6 +72,7 @@ var SzErrorTypesList = []TypeIDs{
 	SzConfigurationError,
 	SzDatabaseConnectionLostError,
 	SzDatabaseError,
+	SzDatabaseTransientError,
 	SzError,
 	SzGeneralError,
 	SzLicenseError,
@@ -90,6 +93,7 @@ var SzErrorMap = map[TypeIDs]error{
 	SzConfigurationError:          ErrSzConfiguration,
 	SzDatabaseConnectionLostError: ErrSzDatabaseConnectionLost,
 	SzDatabaseError:               ErrSzDatabase,
+	SzDatabaseTransientError:      ErrSzDatabaseTransient,
 	SzError:                       ErrSz,
 	SzGeneralError:                ErrSzGeneral,
 	SzLicenseError:                ErrSzLicense,
