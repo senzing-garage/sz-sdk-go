@@ -73,6 +73,14 @@ TEST_FUNCTION_TEMPLATE = f"""
 	printActual(test, result)
 """  # noqa: E101,F541,W191
 
+TEST_FUNCTION_TEMPLATE_BAD = f"""
+	ctx := context.TODO()
+	badJsonString := `{{json}}`
+	result, err := {{struct}}(ctx, badJsonString)
+	require.Error(test, err)
+	printActual(test, result)
+"""  # noqa: E101,F541,W191
+
 OUTPUT_FOOTER = """
 """
 
@@ -128,6 +136,23 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
             file.write(
                 TEST_FUNCTION_TEMPLATE.format(
                     json=canonical_json(testcase_json), struct=senzing_api_class
+                )
+            )
+            file.write("}")
+    for senzing_api_class, senzing_api_class_data in response_testcases.items():
+        metadata = senzing_api_class_data.get("metadata", {})
+        if metadata.get("goSkip", False):
+            continue
+        tests = senzing_api_class_data.get("tests", {})
+        for testcase_name, testcase_json in tests.items():
+            file.write(
+                "\nfunc Test{0}_Bad_{1}(test *testing.T) {{".format(
+                    senzing_api_class, canonical_testcase_name(testcase_name)
+                )
+            )
+            file.write(
+                TEST_FUNCTION_TEMPLATE_BAD.format(
+                    json="This is not JSON", struct=senzing_api_class
                 )
             )
             file.write("}")

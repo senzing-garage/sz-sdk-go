@@ -305,3 +305,10 @@ func TestSzerror_SzError(test *testing.T) {
 		})
 	}
 }
+
+func TestSzerror_SzError_BadErrorCode(test *testing.T) {
+	test.Parallel()
+
+	err := szerror.New(999999999, "Fake message")
+	require.Error(test, err)
+}
