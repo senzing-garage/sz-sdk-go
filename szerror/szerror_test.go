@@ -1,9 +1,10 @@
-package szerror
+package szerror_test
 
 import (
 	"strings"
 	"testing"
 
+	"github.com/senzing-garage/sz-sdk-go/szerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -12,8 +13,8 @@ var testCases = []struct {
 	expectedCode    int
 	expectedMessage string
 	expectedError   error
-	expectedTypes   []TypeIDs
-	falseTypes      []TypeIDs
+	expectedTypes   []szerror.TypeIDs
+	falseTypes      []szerror.TypeIDs
 	message         string
 	name            string
 	senzingMessage  string
@@ -35,9 +36,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    5,
 		expectedMessage: "Test message",
-		expectedError:   ErrSz,
-		expectedTypes:   []TypeIDs{SzError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSz,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0007",
@@ -50,9 +51,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    7,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzBadInputError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzBadInput,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzBadInputError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0010",
@@ -64,9 +65,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    10,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzRetryable,
-		expectedTypes:   []TypeIDs{SzRetryTimeoutExceededError, SzRetryableError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzRetryable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzRetryTimeoutExceededError, szerror.SzRetryableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0014",
@@ -78,9 +79,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    14,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzConfiguration,
-		expectedTypes:   []TypeIDs{SzConfigurationError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzConfiguration,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzConfigurationError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0023",
@@ -90,9 +91,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    23,
 		expectedMessage: "Conflicting DATA_SOURCE values 'CUSTOMERS' and 'BOB'",
-		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzBadInputError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzBadInput,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzBadInputError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0033",
@@ -104,9 +105,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    33,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzBadInput,
-		expectedTypes:   []TypeIDs{SzNotFoundError, SzBadInputError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzBadInput,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzNotFoundError, szerror.SzBadInputError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-0048",
@@ -118,9 +119,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    48,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzNotInitializedError, SzUnrecoverableError},
-		falseTypes:      []TypeIDs{SzBadInputError},
+		expectedError:   szerror.ErrSzUnrecoverable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzNotInitializedError, szerror.SzUnrecoverableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
 	},
 	{
 		name:           "szerror-0054",
@@ -132,9 +133,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    54,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzDatabaseError, SzUnrecoverableError},
-		falseTypes:      []TypeIDs{SzBadInputError},
+		expectedError:   szerror.ErrSzUnrecoverable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzDatabaseError, szerror.SzUnrecoverableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
 	},
 	{
 		name:           "szerror-00087",
@@ -146,9 +147,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    87,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzUnhandledError, SzUnrecoverableError},
-		falseTypes:      []TypeIDs{SzBadInputError},
+		expectedError:   szerror.ErrSzUnrecoverable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzUnhandledError, szerror.SzUnrecoverableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
 	},
 	{
 		name:           "szerror-0999",
@@ -160,9 +161,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    999,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzUnrecoverable,
-		expectedTypes:   []TypeIDs{SzLicenseError, SzUnrecoverableError},
-		falseTypes:      []TypeIDs{SzBadInputError},
+		expectedError:   szerror.ErrSzUnrecoverable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzLicenseError, szerror.SzUnrecoverableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
 	},
 	{
 		name:           "szerror-1006",
@@ -174,9 +175,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    1006,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzRetryable,
-		expectedTypes:   []TypeIDs{SzDatabaseConnectionLostError, SzRetryableError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzRetryable,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzDatabaseConnectionLostError, szerror.SzRetryableError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-1019",
@@ -202,11 +203,20 @@ var testCases = []struct {
                             "time": "22:24:53.180436236",
                             "level": "ERROR",
                             "id": "senzing-60024007",
-                            "text": "Call to SzConfigMgr_init(Test module name, {\"PIPELINE\":{\"CONFIGPATH\":\"/etc/opt/senzing\",\"RESOURCEPATH\":\"/opt/senzing/er/resources\",\"SUPPORTPATH\":\"/opt/senzing/data\"},\"SQL\":{\"CONNECTION\":\"postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable\"}}, 0) failed. Return code: -2",
+                            "text": "Call to SzConfigMgr_init(Test module name,
+								{\"PIPELINE\":
+									{\"CONFIGPATH\":\"/etc/opt/senzing\",
+									\"RESOURCEPATH\":\"/opt/senzing/er/resources\",
+									\"SUPPORTPATH\":\"/opt/senzing/data\"},
+								\"SQL\":
+									{\"CONNECTION\":
+										\"postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable\"}}, 0) failed. Return code: -2",
                             "duration": 490035005,
                             "location": "In setupSenzingConfig() at szconfigmgr_test.go:183",
                             "errors": [{
-                                "text": "1019E|Datastore schema tables not found. [Datastore schema tables not found. [(7:42P01ERROR:  relation \"sys_vars\" does not exist LINE 1: SELECT VAR_VALUE,SYS_LSTUPD_DT FROM SYS_VARS WHERE VAR_GROUP...                                             ^ )]]"
+                                "text": "1019E|Datastore schema tables not found. [Datastore schema tables not found.
+								[(7:42P01ERROR:  relation \"sys_vars\" does not exist LINE 1:
+								SELECT VAR_VALUE,SYS_LSTUPD_DT FROM SYS_VARS WHERE VAR_GROUP...^ )]]"
                             }],
                             "details": {
                                 "1": "Test module name",
@@ -217,7 +227,8 @@ var testCases = []struct {
                                         "SUPPORTPATH": "/opt/senzing/data"
                                     },
                                     "SQL": {
-                                        "CONNECTION": "postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable"
+                                        "CONNECTION":
+										"postgresql://postgres:postgres@192.168.1.12:5432:G2/?sslmode=disable"
                                     }
                                 },
                                 "3": 0,
@@ -231,9 +242,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    1019,
 		expectedMessage: "Test message",
-		expectedError:   ErrSzConfiguration,
-		expectedTypes:   []TypeIDs{SzConfigurationError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSzConfiguration,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzConfigurationError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 	{
 		name:           "szerror-NoCode",
@@ -245,9 +256,9 @@ var testCases = []struct {
         }`,
 		expectedCode:    0,
 		expectedMessage: "",
-		expectedError:   ErrSz,
-		expectedTypes:   []TypeIDs{SzError},
-		falseTypes:      []TypeIDs{SzUnrecoverableError},
+		expectedError:   szerror.ErrSz,
+		expectedTypes:   []szerror.TypeIDs{szerror.SzError},
+		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
 	},
 }
 
@@ -256,38 +267,41 @@ var testCases = []struct {
 // ----------------------------------------------------------------------------
 
 func TestSzerror_SzErrorMessage(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := Message(testCase.senzingMessage)
+			test.Parallel()
+
+			actual := szerror.Message(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedMessage, actual, testCase.name)
 		})
 	}
 }
 
 func TestSzerror_SzErrorCode(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := Code(testCase.senzingMessage)
+			test.Parallel()
+
+			actual := szerror.Code(testCase.senzingMessage)
 			assert.Equal(test, testCase.expectedCode, actual, testCase.name)
 		})
 	}
 }
 
 func TestSzerror_SzError(test *testing.T) {
+	test.Parallel()
+
 	for _, testCase := range testCases {
 		test.Run(testCase.name, func(test *testing.T) {
-			actual := New(Code(testCase.senzingMessage), testCase.message)
+			test.Parallel()
+
+			actual := szerror.New(szerror.Code(testCase.senzingMessage), testCase.message)
 			require.ErrorIs(test, actual, testCase.expectedError)
 			assert.Equal(test, testCase.message, strings.TrimSpace(actual.Error()))
 		})
 	}
-}
-
-// ----------------------------------------------------------------------------
-// Test private functions
-// ----------------------------------------------------------------------------
-
-func TestSzerror_mapErrorIDtoError(test *testing.T) {
-	err := mapErrorIDtoError(9999)
-	require.ErrorIs(test, err, ErrSz)
 }

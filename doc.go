@@ -3,7 +3,8 @@ Module sz-sdk-go contains interface definitions for the Senzing Go SDK.
 
 # Synopsis
 
-The Senzing sz-sdk-go packages contain definitions, messages, and functions that are common to implementations of the Senzing Go SDK.
+The Senzing sz-sdk-go packages contain definitions, messages,
+and functions that are common to implementations of the Senzing Go SDK.
 
 # Overview
 
@@ -15,7 +16,7 @@ Implementations:
   - [sz-sdk-go-grpc] - An implementation that communicates with a [Senzing gRPC server].
   - [sz-sdk-go-mock] - An implementation that creates Senzing [mock objects].
 
-A client of the Senzing Go SDK API should use the following interfaces to maintain compatiblity across implementations.
+A client of the Senzing Go SDK API should use the following interfaces to maintain compatibility across implementations.
 
   - [senzing.SzAbstractFactory]
   - [senzing.SzConfig]
@@ -39,7 +40,7 @@ import (
 	"github.com/senzing-garage/sz-sdk-go/senzing"
 )
 
-// Hack to import "senzing"
+// Hack to import "senzing".
 func _() {
 	_ = senzing.Bit18
 }

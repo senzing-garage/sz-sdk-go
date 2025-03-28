@@ -1,7 +1,9 @@
-package szerror
+package szerror_test
 
 import (
 	"fmt"
+
+	"github.com/senzing-garage/sz-sdk-go/szerror"
 )
 
 // ----------------------------------------------------------------------------
@@ -9,22 +11,22 @@ import (
 // ----------------------------------------------------------------------------
 
 func ExampleMessage() {
-	senzingErrorMessage := "SENZ0033E|Test message" // Example message from Senzing Szengine.
-	result := Message(senzingErrorMessage)
+	senzingErrorMessage := "SENZ0031E|Test message" // Example message from Senzing Szengine.
+	result := szerror.Message(senzingErrorMessage)
 	fmt.Println(result)
 	// Output: Test message
 }
 
 func ExampleCode() {
-	senzingErrorMessage := "SENZ0033E|Test message" // Example message from Senzing Szengine.
-	result := Code(senzingErrorMessage)
+	senzingErrorMessage := "SENZ0032E|Test message" // Example message from Senzing Szengine.
+	result := szerror.Code(senzingErrorMessage)
 	fmt.Println(result)
-	// Output: 33
+	// Output: 32
 }
 
 func ExampleNew() {
 	senzingErrorMessage := "SENZ0033E|Test message" // Example message from Senzing Szengine.
-	err := New(Code(senzingErrorMessage), `{"messageId": 1}`)
+	err := szerror.New(szerror.Code(senzingErrorMessage), `{"messageId": 1}`)
 	fmt.Println(err)
 	// Output: {"messageId": 1}
 }

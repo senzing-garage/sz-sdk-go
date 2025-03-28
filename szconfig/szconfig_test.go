@@ -1,4 +1,4 @@
-package szconfig
+package szconfig_test
 
 import (
 	"testing"
@@ -10,4 +10,5 @@ import (
 
 func TestSzconfig_Null(test *testing.T) {
 	_ = test
+	test.Parallel()
 }

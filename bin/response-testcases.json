@@ -7,7 +7,7 @@
             }
         }
     },
-    "SzConfigExportConfig": {
+    "SzConfigExport": {
         "tests": {
             "test-000": {},
             "test-001": {
@@ -10446,7 +10446,7 @@
             }
         }
     },
-    "SzConfigManagerGetConfig": {
+    "SzConfigManagerCreateConfig": {
         "tests": {
             "test-000": {},
             "test-001": {

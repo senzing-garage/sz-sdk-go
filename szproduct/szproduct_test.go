@@ -1,4 +1,4 @@
-package szproduct
+package szproduct_test
 
 import (
 	"testing"
@@ -10,4 +10,6 @@ import (
 
 func TestSzproduct_Null(test *testing.T) {
 	_ = test
+
+	test.Parallel()
 }
