@@ -13,7 +13,25 @@ and this project adheres to [Semantic Versioning].
 
 ### Added in 0.15.0
 
-- `Sz`
+- `SzConfigManager.CreateConfigFromString()`
+- `SzConfigManager.CreateConfigFromTemplate()`
+- `SzConfigManager.SetDefaultConfig()`
+
+### Changed in 0.15.0
+
+- Old: `SzConfig.ExportConfig()` New: `SzConfig.Export()`
+- Old: `SzConfigManager.AddConfig()` New: `SzConfigManager.RegisterConfig()`
+- Old: `SzConfigManager.GetConfig()` New: `SzConfigManager.CreateConfigFromConfigID()`
+- Method signatures:
+  - `SzConfig.SzAddDataSource()`
+  - `SzConfig.DeleteDataSource()`
+  - `SzConfig.GetDataSources()`
+
+### Deleted in 0.15.0
+
+- `SzConfig.CloseConfig()`
+- `SzConfig.CreateConfig()`
+- `SzConfig.ImportConfig()`
 
 ## [0.14.5] - 2025-02-24
 
