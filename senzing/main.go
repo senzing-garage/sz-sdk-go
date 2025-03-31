@@ -24,7 +24,6 @@ Type SzAbstractFactory interface is the interface for Senzing factories followin
 [Abstract Factory pattern]: https://en.wikipedia.org/wiki/Abstract_factory_pattern
 */
 type SzAbstractFactory interface {
-	CreateConfig(ctx context.Context) (SzConfig, error)
 	CreateConfigManager(ctx context.Context) (SzConfigManager, error)
 	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
 	CreateEngine(ctx context.Context) (SzEngine, error)
