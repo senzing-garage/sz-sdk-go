@@ -36,7 +36,7 @@ type SzAbstractFactory interface {
 // Type SzConfig interface is a Golang representation of Senzing's libSzconfig.h.
 type SzConfig interface {
 	AddDataSource(ctx context.Context, dataSourceCode string) (string, error)
-	DeleteDataSource(ctx context.Context, dataSourceCode string) error
+	DeleteDataSource(ctx context.Context, dataSourceCode string) (string, error)
 	Export(ctx context.Context) (string, error)
 	GetDataSources(ctx context.Context) (string, error)
 }
