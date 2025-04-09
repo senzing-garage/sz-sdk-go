@@ -22,6 +22,7 @@ func mapErrorIDtoError(errorTypeID TypeIDs) error {
 	if !ok {
 		result = ErrSz
 	}
+
 	return result
 }
 
@@ -41,10 +42,12 @@ Output
 */
 func Message(senzingErrorMessage string) string {
 	result := ""
+
 	splits := strings.Split(senzingErrorMessage, "|")
 	if len(splits) > 1 {
 		result = strings.TrimSpace(splits[1])
 	}
+
 	return result
 }
 
@@ -60,6 +63,7 @@ Output
 */
 func Code(senzingErrorMessage string) int {
 	result := 0
+
 	if strings.Contains(senzingErrorMessage, "|") {
 		splits := strings.Split(senzingErrorMessage, "|")
 
@@ -67,11 +71,13 @@ func Code(senzingErrorMessage string) int {
 
 		regularExpression := regexp.MustCompile("[^0-9]+")
 		numericOnlyString := regularExpression.ReplaceAllString(splits[0], "")
+
 		result, err := strconv.Atoi(numericOnlyString)
 		if err == nil {
 			return result
 		}
 	}
+
 	return result
 }
 
@@ -87,11 +93,15 @@ Output
 */
 func New(senzingErrorCode int, message string) error {
 	result := []error{}
+
 	if errorTypeIDs, ok := SzErrorTypes[senzingErrorCode]; ok {
 		for _, errorTypeID := range errorTypeIDs {
 			result = append(result, mapErrorIDtoError(errorTypeID))
 		}
 	}
-	result = append(result, errors.New(message))
+
+	newError := errors.New(message) //nolint
+	result = append(result, newError)
+
 	return errors.Join(result...)
 }

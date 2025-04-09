@@ -18,26 +18,27 @@ BitNN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered
 The are referred to as "SzXxx" flags.
 */
 const (
-	SzExportIncludeMultiRecordEntities  int64 = 1 << iota // 0 Include entities with "resolved" relationships
-	SzExportIncludePossiblySame                           // 1 Include entities with "possibly same" relationships
-	SzExportIncludePossiblyRelated                        // 2 Include entities with "possibly related" relationships
-	SzExportIncludeNameOnly                               // 3 Include entities with "name only" relationships
-	SzExportIncludeDisclosed                              // 4 Include entities with "disclosed" relationships
-	SzExportIncludeSingleRecordEntities                   // 5 Include singleton entities
+	SzExportIncludeMultiRecordEntities int64 = 1 << iota // 0 Include entities with "resolved" relationships
 
-	/* flags for outputting entity relation data  */
+	SzExportIncludePossiblySame         // 1 Include entities with "possibly same" relationships
+	SzExportIncludePossiblyRelated      // 2 Include entities with "possibly related" relationships
+	SzExportIncludeNameOnly             // 3 Include entities with "name only" relationships
+	SzExportIncludeDisclosed            // 4 Include entities with "disclosed" relationships
+	SzExportIncludeSingleRecordEntities // 5 Include singleton entities
+
+	/* Flags for outputting entity relation data.  */
 
 	SzEntityIncludePossiblySameRelations    // 6 Include "possibly same" relationships on entities
 	SzEntityIncludePossiblyRelatedRelations // 7 Include "possibly related" relationships on entities
 	SzEntityIncludeNameOnlyRelations        // 8 Include "name only" relationships on entities
 	SzEntityIncludeDisclosedRelations       // 9 Include "disclosed" relationships on entities
 
-	/* flags for outputting entity feature data  */
+	/* Flags for outputting entity feature data.  */
 
 	SzEntityIncludeAllFeatures            // 10 Include all features for entities
 	SzEntityIncludeRepresentativeFeatures // 11 Include only representative features on entities
 
-	/* flags for getting extra information about an entity  */
+	/* Flags for getting extra information about an entity.  */
 
 	SzEntityIncludeEntityName           // 12 Include the name of the entity
 	SzEntityIncludeRecordSummary        // 13 Include the record summary of the entity
@@ -51,16 +52,16 @@ const (
 	SzEntityIncludeRelatedRecordSummary // 21 Include the record summary of the related entities
 	SzEntityIncludeRelatedRecordData    // 22 Include the basic record of the related entities
 
-	/* flags for extra feature data  */
+	/* Flags for extra feature data.  */
 
 	SzEntityIncludeInternalFeatures // 23 Include internal features
 	SzEntityIncludeFeatureStats     // 24 Include statistics on features
 
-	/* flags for finding entity path data  */
+	/* Flags for finding entity path data.  */
 
 	SzFindPathStrictAvoid // 25 excluded entities are still allowed, but not preferred
 
-	/* flags for including search result feature scores  */
+	/* Flags for including search result feature scores.  */
 
 	SzIncludeFeatureScores              // 26 Include feature scores
 	SzSearchIncludeStats                // 27 Include statistics from search results
@@ -76,7 +77,7 @@ const (
 	SzSearchIncludeRequest              // 37
 	SzSearchIncludeRequestDetails       // 38
 
-	/* Reserved  */
+	/* Reserved.  */
 
 	Bit40 // 39
 	Bit41 // 40
@@ -102,7 +103,7 @@ const (
 	Bit61 // 60
 	Bit62 // 61
 
-	/* Reserved for use by SDKs */
+	/* Reserved for use by SDKs. */
 
 	SzWithInfo // 62 return "WithInfo" information
 )
@@ -113,22 +114,32 @@ const (
 Flags for exporting entity data.
 */
 const (
-	SzExportIncludeAllEntities            = SzExportIncludeMultiRecordEntities | SzExportIncludeSingleRecordEntities                                          // Include all entities.
-	SzExportIncludeAllHavingRelationships = SzExportIncludeDisclosed | SzExportIncludeNameOnly | SzExportIncludePossiblyRelated | SzExportIncludePossiblySame // Include all entities with relationships.
+	SzExportIncludeAllEntities = SzExportIncludeMultiRecordEntities |
+		SzExportIncludeSingleRecordEntities // Include all entities.
+	SzExportIncludeAllHavingRelationships = SzExportIncludeDisclosed |
+		SzExportIncludeNameOnly |
+		SzExportIncludePossiblyRelated |
+		SzExportIncludePossiblySame // Include all entities with relationships.
 )
 
 /*
-Flags for outputting entity relation data
+Flags for outputting entity relation data.
 */
 const (
-	SzEntityIncludeAllRelations = SzEntityIncludeDisclosedRelations | SzEntityIncludeNameOnlyRelations | SzEntityIncludePossiblyRelatedRelations | SzEntityIncludePossiblySameRelations // Include all relationships on entities.
+	SzEntityIncludeAllRelations = SzEntityIncludeDisclosedRelations |
+		SzEntityIncludeNameOnlyRelations |
+		SzEntityIncludePossiblyRelatedRelations |
+		SzEntityIncludePossiblySameRelations // Include all relationships on entities.
 )
 
 /*
 Flags for searching for entities.
 */
 const (
-	SzSearchIncludeAllEntities     = SzSearchIncludeNameOnly | SzSearchIncludePossiblyRelated | SzSearchIncludePossiblySame | SzSearchIncludeResolved
+	SzSearchIncludeAllEntities = SzSearchIncludeNameOnly |
+		SzSearchIncludePossiblyRelated |
+		SzSearchIncludePossiblySame |
+		SzSearchIncludeResolved
 	SzSearchIncludeNameOnly        = SzExportIncludeNameOnly
 	SzSearchIncludePossiblyRelated = SzExportIncludePossiblyRelated
 	SzSearchIncludePossiblySame    = SzExportIncludePossiblySame
@@ -139,29 +150,69 @@ const (
 Recommended settings for searching by attributes.
 */
 const (
-	SzSearchByAttributesAll           = SzEntityIncludeEntityName | SzEntityIncludeRecordSummary | SzEntityIncludeRepresentativeFeatures | SzSearchIncludeAllEntities | SzIncludeFeatureScores                            // The recommended flag values for searching by attributes, returning all matching entities.
-	SzSearchByAttributesMinimalAll    = SzSearchIncludeAllEntities                                                                                                                                                        // Return minimal data with all matches.
-	SzSearchByAttributesMinimalStrong = SzSearchIncludePossiblySame | SzSearchIncludeResolved                                                                                                                             // Return minimal data with only the strongest matches.
-	SzSearchByAttributesStrong        = SzEntityIncludeEntityName | SzEntityIncludeRecordSummary | SzEntityIncludeRepresentativeFeatures | SzIncludeFeatureScores | SzSearchIncludePossiblySame | SzSearchIncludeResolved // The recommended flag values for searching by attributes, returning only strongly matching entities.
+	SzSearchByAttributesAll = SzEntityIncludeEntityName |
+		SzEntityIncludeRecordSummary |
+		SzEntityIncludeRepresentativeFeatures |
+		SzSearchIncludeAllEntities |
+		SzIncludeFeatureScores
+		// The recommended flag values for searching by attributes, returning all matching entities.
+	SzSearchByAttributesMinimalAll    = SzSearchIncludeAllEntities // Return minimal data with all matches.
+	SzSearchByAttributesMinimalStrong = SzSearchIncludePossiblySame |
+		SzSearchIncludeResolved // Return minimal data with only the strongest matches.
+	SzSearchByAttributesStrong = SzEntityIncludeEntityName |
+		SzEntityIncludeRecordSummary |
+		SzEntityIncludeRepresentativeFeatures |
+		SzIncludeFeatureScores |
+		SzSearchIncludePossiblySame |
+		SzSearchIncludeResolved
+	// The recommended flag values for searching by attributes, returning only strongly matching entities.
 )
 
 /*
-Recommended defaults
+Recommended defaults.
 */
 const (
-	SzEntityBriefDefaultFlags        = SzEntityIncludeAllRelations | SzEntityIncludeRecordMatchingInfo | SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for a brief entity result.
-	SzEntityCoreFlags                = SzEntityIncludeEntityName | SzEntityIncludeRecordData | SzEntityIncludeRecordMatchingInfo | SzEntityIncludeRecordSummary | SzEntityIncludeRepresentativeFeatures
-	SzEntityDefaultFlags             = SzEntityCoreFlags | SzEntityIncludeAllRelations | SzEntityIncludeRecordSummary | SzEntityIncludeRelatedEntityName | SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for getting entities.
-	SzExportDefaultFlags             = SzEntityDefaultFlags | SzExportIncludeAllEntities                                                                                                      // The recommended default flag values for exporting entities.
-	SzFindNetworkDefaultFlags        = SzEntityIncludeEntityName | SzEntityIncludeRecordSummary | SzFindNetworkIncludeMatchingInfo                                                            // The recommended default flag values for finding entity paths.
-	SzFindPathDefaultFlags           = SzEntityIncludeEntityName | SzEntityIncludeRecordSummary | SzFindPathIncludeMatchingInfo                                                               // The recommended default flag values for finding entity paths.
-	SzHowEntityDefaultFlags          = SzIncludeFeatureScores                                                                                                                                 // The recommended default flag values for how-analysis on entities.
-	SzRecordDefaultFlags             = SzEntityIncludeRecordJSONData                                                                                                                          // The recommended default flag values for getting records.
-	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll                                                                                                                                // The recommended default flag values for search-by-attributes
-	SzVirtualEntityDefaultFlags      = SzEntityCoreFlags                                                                                                                                      // The recommended default flag values for virtual-entity-analysis on entities.
-	SzWhyEntitiesDefaultFlags        = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores
-	SzWhyRecordInEntityIDefaultFlags = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
-	SzWhyRecordsDefaultFlags         = SzEntityDefaultFlags | SzEntityIncludeFeatureStats | SzEntityIncludeInternalFeatures | SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
+	SzEntityBriefDefaultFlags = SzEntityIncludeAllRelations |
+		SzEntityIncludeRecordMatchingInfo |
+		SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for a brief entity result.
+	SzEntityCoreFlags = SzEntityIncludeEntityName |
+		SzEntityIncludeRecordData |
+		SzEntityIncludeRecordMatchingInfo |
+		SzEntityIncludeRecordSummary |
+		SzEntityIncludeRepresentativeFeatures
+	SzEntityDefaultFlags = SzEntityCoreFlags |
+		SzEntityIncludeAllRelations |
+		SzEntityIncludeRecordSummary |
+		SzEntityIncludeRelatedEntityName |
+		SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for getting entities.
+	SzExportDefaultFlags = SzEntityDefaultFlags |
+		SzExportIncludeAllEntities // The recommended default flag values for exporting entities.
+	SzFindNetworkDefaultFlags = SzEntityIncludeEntityName |
+		SzEntityIncludeRecordSummary |
+		SzFindNetworkIncludeMatchingInfo // The recommended default flag values for finding entity paths.
+	SzFindPathDefaultFlags = SzEntityIncludeEntityName |
+		SzEntityIncludeRecordSummary |
+		SzFindPathIncludeMatchingInfo // The recommended default flag values for finding entity paths.
+	SzHowEntityDefaultFlags = SzIncludeFeatureScores
+	// The recommended default flag values for how-analysis on entities.
+	SzRecordDefaultFlags = SzEntityIncludeRecordJSONData
+	// The recommended default flag values for getting records.
+	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll
+	// The recommended default flag values for search-by-attributes.
+	SzVirtualEntityDefaultFlags = SzEntityCoreFlags
+	// The recommended default flag values for virtual-entity-analysis on entities.
+	SzWhyEntitiesDefaultFlags = SzEntityDefaultFlags |
+		SzEntityIncludeFeatureStats |
+		SzEntityIncludeInternalFeatures |
+		SzIncludeFeatureScores
+	SzWhyRecordInEntityIDefaultFlags = SzEntityDefaultFlags |
+		SzEntityIncludeFeatureStats |
+		SzEntityIncludeInternalFeatures |
+		SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
+	SzWhyRecordsDefaultFlags = SzEntityDefaultFlags |
+		SzEntityIncludeFeatureStats |
+		SzEntityIncludeInternalFeatures |
+		SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
 )
 
 /*
@@ -178,5 +229,6 @@ func Flags(flags ...int64) int64 {
 	for _, flag := range flags {
 		result |= flag
 	}
+
 	return result
 }

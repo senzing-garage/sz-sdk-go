@@ -1,4 +1,4 @@
-package szengine
+package szengine_test
 
 import (
 	"testing"
@@ -10,4 +10,5 @@ import (
 
 func TestSzengine_Null(test *testing.T) {
 	_ = test
+	test.Parallel()
 }

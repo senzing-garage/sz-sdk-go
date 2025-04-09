@@ -1,4 +1,4 @@
-package szdiagnostic
+package szdiagnostic_test
 
 import (
 	"testing"
@@ -10,4 +10,5 @@ import (
 
 func TestSzdiagnostic_Null(test *testing.T) {
 	_ = test
+	test.Parallel()
 }
