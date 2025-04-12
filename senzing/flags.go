@@ -153,18 +153,22 @@ const (
 	SzSearchByAttributesAll = SzEntityIncludeEntityName |
 		SzEntityIncludeRecordSummary |
 		SzEntityIncludeRepresentativeFeatures |
+		SzIncludeFeatureScores |
 		SzSearchIncludeAllEntities |
-		SzIncludeFeatureScores
-		// The recommended flag values for searching by attributes, returning all matching entities.
-	SzSearchByAttributesMinimalAll    = SzSearchIncludeAllEntities // Return minimal data with all matches.
+		SzSearchIncludeStats // The recommended flag values for searching by attributes, returning all matching entities.
+	SzSearchByAttributesMinimalAll = SzSearchIncludeAllEntities |
+		SzSearchIncludeStats // Return minimal data with all matches.
 	SzSearchByAttributesMinimalStrong = SzSearchIncludePossiblySame |
-		SzSearchIncludeResolved // Return minimal data with only the strongest matches.
+		SzSearchIncludeResolved |
+		SzSearchIncludeStats // Return minimal data with only the strongest matches.
 	SzSearchByAttributesStrong = SzEntityIncludeEntityName |
 		SzEntityIncludeRecordSummary |
 		SzEntityIncludeRepresentativeFeatures |
 		SzIncludeFeatureScores |
 		SzSearchIncludePossiblySame |
-		SzSearchIncludeResolved
+		SzSearchIncludeResolved |
+		SzSearchIncludeStats
+
 	// The recommended flag values for searching by attributes, returning only strongly matching entities.
 )
 
@@ -201,18 +205,10 @@ const (
 	// The recommended default flag values for search-by-attributes.
 	SzVirtualEntityDefaultFlags = SzEntityCoreFlags
 	// The recommended default flag values for virtual-entity-analysis on entities.
-	SzWhyEntitiesDefaultFlags = SzEntityDefaultFlags |
-		SzEntityIncludeFeatureStats |
-		SzEntityIncludeInternalFeatures |
-		SzIncludeFeatureScores
-	SzWhyRecordInEntityIDefaultFlags = SzEntityDefaultFlags |
-		SzEntityIncludeFeatureStats |
-		SzEntityIncludeInternalFeatures |
-		SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
-	SzWhyRecordsDefaultFlags = SzEntityDefaultFlags |
-		SzEntityIncludeFeatureStats |
-		SzEntityIncludeInternalFeatures |
-		SzIncludeFeatureScores // The recommended default flag values for why-analysis on entities.
+	SzWhyEntitiesDefaultFlags        = SzIncludeFeatureScores
+	SzWhyRecordInEntityIDefaultFlags = SzIncludeFeatureScores
+	SzWhyRecordsDefaultFlags         = SzIncludeFeatureScores
+	SzWhySearchDefaultFlags          = SzIncludeFeatureScores | SzSearchIncludeRequestDetails | SzSearchIncludeStats
 )
 
 /*
