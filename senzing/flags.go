@@ -111,18 +111,6 @@ const (
 // Compound Flags used by the Senzing SzEngine.
 
 /*
-Flags for exporting entity data.
-*/
-const (
-	SzExportIncludeAllEntities = SzExportIncludeMultiRecordEntities |
-		SzExportIncludeSingleRecordEntities // Include all entities.
-	SzExportIncludeAllHavingRelationships = SzExportIncludeDisclosed |
-		SzExportIncludeNameOnly |
-		SzExportIncludePossiblyRelated |
-		SzExportIncludePossiblySame // Include all entities with relationships.
-)
-
-/*
 Flags for outputting entity relation data.
 */
 const (
@@ -133,17 +121,15 @@ const (
 )
 
 /*
-Flags for searching for entities.
+Flags for exporting entity data.
 */
 const (
-	SzSearchIncludeAllEntities = SzSearchIncludeNameOnly |
-		SzSearchIncludePossiblyRelated |
-		SzSearchIncludePossiblySame |
-		SzSearchIncludeResolved
-	SzSearchIncludeNameOnly        = SzExportIncludeNameOnly
-	SzSearchIncludePossiblyRelated = SzExportIncludePossiblyRelated
-	SzSearchIncludePossiblySame    = SzExportIncludePossiblySame
-	SzSearchIncludeResolved        = SzExportIncludeMultiRecordEntities
+	SzExportIncludeAllEntities = SzExportIncludeMultiRecordEntities |
+		SzExportIncludeSingleRecordEntities // Include all entities.
+	SzExportIncludeAllHavingRelationships = SzExportIncludeDisclosed |
+		SzExportIncludeNameOnly |
+		SzExportIncludePossiblyRelated |
+		SzExportIncludePossiblySame // Include all entities with relationships.
 )
 
 /*
@@ -170,6 +156,20 @@ const (
 		SzSearchIncludeStats
 
 	// The recommended flag values for searching by attributes, returning only strongly matching entities.
+)
+
+/*
+Flags for searching for entities.
+*/
+const (
+	SzSearchIncludeAllEntities = SzSearchIncludeNameOnly |
+		SzSearchIncludePossiblyRelated |
+		SzSearchIncludePossiblySame |
+		SzSearchIncludeResolved
+	SzSearchIncludeNameOnly        = SzExportIncludeNameOnly
+	SzSearchIncludePossiblyRelated = SzExportIncludePossiblyRelated
+	SzSearchIncludePossiblySame    = SzExportIncludePossiblySame
+	SzSearchIncludeResolved        = SzExportIncludeMultiRecordEntities
 )
 
 /*
