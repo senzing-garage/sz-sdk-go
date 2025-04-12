@@ -89,6 +89,8 @@ var IDMessages = map[int]string{
 	76:   "Exit  " + Prefix + "WhyRecords(%s, %s, %s, %s, %d) returned (%s, %v).",
 	77:   "Enter " + Prefix + "PreprocessRecord(%s, %d).",
 	78:   "Exit  " + Prefix + "PreprocessRecord(%s, %d) returned (%s, %v).",
+	79:   "Enter " + Prefix + "WhySearch(%s, %d, %s, %d).",
+	80:   "Exit  " + Prefix + "WhySearch(%s, %d, %s, %d) returned (%s, %v).",
 	703:  "Enter " + Prefix + "RegisterObserver(%s).",
 	704:  "Exit  " + Prefix + "RegisterObserver(%s) returned (%v).",
 	705:  "Enter " + Prefix + "SetLogLevel(%s).",

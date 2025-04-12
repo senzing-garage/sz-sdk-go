@@ -197,10 +197,10 @@ const (
 	SzFindPathDefaultFlags = SzEntityIncludeEntityName |
 		SzEntityIncludeRecordSummary |
 		SzFindPathIncludeMatchingInfo // The recommended default flag values for finding entity paths.
-	SzHowEntityDefaultFlags          = SzIncludeFeatureScores        // The recommended default flag values for how-analysis on entities.
-	SzRecordDefaultFlags             = SzEntityIncludeRecordJSONData // The recommended default flag values for getting records.
-	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll       // The recommended default flag values for search-by-attributes.
-	SzVirtualEntityDefaultFlags      = SzEntityCoreFlags             // The recommended default flag values for virtual-entity-analysis on entities.
+	SzHowEntityDefaultFlags          = SzIncludeFeatureScores
+	SzRecordDefaultFlags             = SzEntityIncludeRecordJSONData
+	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll
+	SzVirtualEntityDefaultFlags      = SzEntityCoreFlags
 	SzWhyEntitiesDefaultFlags        = SzIncludeFeatureScores
 	SzWhyRecordInEntityIDefaultFlags = SzIncludeFeatureScores
 	SzWhyRecordsDefaultFlags         = SzIncludeFeatureScores
