@@ -141,6 +141,7 @@ type SzEngine interface {
 		dataSourceCode2 string,
 		recordID2 string,
 		flags int64) (string, error)
+	WhySearch(ctx context.Context, attributes string, entityID int64, searchProfile string, flags int64) (string, error)
 }
 
 // Type SzProduct interface is a Golang representation of Senzing's libSzproduct.h.

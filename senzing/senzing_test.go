@@ -400,17 +400,17 @@ var testCases = []struct {
 	{
 		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS",
 		actual:   senzing.SzWhyEntitiesDefaultFlags,
-		expected: 0x000000000598FBC0,
+		expected: 0x0000000004000000,
 	},
 	{
 		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
 		actual:   senzing.SzWhyRecordsDefaultFlags,
-		expected: 0x000000000598FBC0,
+		expected: 0x0000000004000000,
 	},
 	{
 		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
 		actual:   senzing.SzWhyRecordInEntityIDefaultFlags,
-		expected: 0x000000000598FBC0,
+		expected: 0x0000000004000000,
 	},
 	{
 		name:     "SZ_HOW_ENTITY_DEFAULT_FLAGS",
@@ -425,27 +425,27 @@ var testCases = []struct {
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_ALL",
 		actual:   senzing.SzSearchByAttributesAll,
-		expected: 0x000000000400380F,
+		expected: 0x000000000C00380F,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_STRONG",
 		actual:   senzing.SzSearchByAttributesStrong,
-		expected: 0x0000000004003803,
+		expected: 0x000000000C003803,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_ALL",
 		actual:   senzing.SzSearchByAttributesMinimalAll,
-		expected: 0x000000000000000F,
+		expected: 0x000000000800000F,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_STRONG",
 		actual:   senzing.SzSearchByAttributesMinimalStrong,
-		expected: 0x0000000000000003,
+		expected: 0x0000000008000003,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS",
 		actual:   senzing.SzSearchByAttributesDefaultFlags,
-		expected: 0x000000000400380F,
+		expected: 0x000000000C00380F,
 	},
 	{
 		name: "OR 4",
