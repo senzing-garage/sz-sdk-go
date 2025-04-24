@@ -135,9 +135,7 @@ func SzDiagnosticGetDatastoreInfo(
 	return result, err
 }
 
-func SzDiagnosticGetFeature(ctx context.Context,
-	jsonString string,
-) (*typedef.SzDiagnosticGetFeatureResponse, error) {
+func SzDiagnosticGetFeature(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
 	_ = ctx
 
 	var err error
