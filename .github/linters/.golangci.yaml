@@ -2,7 +2,6 @@ version: "2"
 run:
   modules-download-mode: readonly
 linters:
-  # See https://golangci-lint.run/usage/linters
   enable:
     - asasalint
     - asciicheck
@@ -30,10 +29,11 @@ linters:
     - fatcontext
     - forbidigo
     - forcetypeassert
+    - funcorder
     - funlen
     - ginkgolinter
     - gocheckcompilerdirectives
-    # - gochecknoglobals
+    - gochecknoglobals
     - gochecknoinits
     - gochecksumtype
     - gocognit
@@ -107,6 +107,8 @@ linters:
     - wrapcheck
     - wsl
     - zerologlint
+  disable:
+    - gochecknoglobals
   exclusions:
     generated: lax
     presets:
@@ -137,10 +139,13 @@ formatters:
     - gofmt
     - gofumpt
     - goimports
-    # - golines
+    - golines
   exclusions:
     generated: lax
     paths:
       - third_party$
       - builtin$
       - examples$
+  settings:
+    golines:
+      max-len: 120
