@@ -14,7 +14,9 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-func SzConfigAddDataSource(ctx context.Context, jsonString string) (*typedef.SzConfigAddDataSourceResponse, error) {
+func SzConfigAddDataSource(ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigAddDataSourceResponse, error) {
 	_ = ctx
 
 	var err error
@@ -29,7 +31,9 @@ func SzConfigAddDataSource(ctx context.Context, jsonString string) (*typedef.SzC
 	return result, err
 }
 
-func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
+func SzConfigExport(ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigExportConfigResponse, error) {
 	_ = ctx
 
 	var err error
@@ -44,7 +48,9 @@ func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigEx
 	return result, err
 }
 
-func SzConfigGetDataSources(ctx context.Context, jsonString string) (*typedef.SzConfigGetDataSourcesResponse, error) {
+func SzConfigGetDataSources(ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigGetDataSourcesResponse, error) {
 	_ = ctx
 
 	var err error
@@ -135,7 +141,9 @@ func SzDiagnosticGetDatastoreInfo(
 	return result, err
 }
 
-func SzDiagnosticGetFeature(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
+func SzDiagnosticGetFeature(ctx context.Context,
+	jsonString string,
+) (*typedef.SzDiagnosticGetFeatureResponse, error) {
 	_ = ctx
 
 	var err error

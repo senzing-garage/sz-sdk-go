@@ -76,6 +76,7 @@ dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
 	@go install golang.org/x/tools/cmd/godoc@latest
 	@docker-compose pull 2>/dev/null || true
+	@sudo npm install -g cspell@latest
 
 
 .PHONY: dependencies
@@ -115,7 +116,7 @@ setup: generate-tests setup-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: lint
-lint: golangci-lint
+lint: golangci-lint govulncheck cspell
 
 # -----------------------------------------------------------------------------
 # Build
@@ -201,6 +202,16 @@ update-pkg-cache:
 # Specific programs
 # -----------------------------------------------------------------------------
 
+.PHONY: cspell
+cspell:
+	@cspell .
+
+
 .PHONY: golangci-lint
 golangci-lint:
 	@${GOBIN}/golangci-lint run --config=.github/linters/.golangci.yaml
+
+
+.PHONY: govulncheck
+govulncheck:
+	@${GOBIN}/govulncheck ./...
