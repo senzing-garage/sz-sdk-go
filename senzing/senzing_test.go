@@ -124,7 +124,7 @@ var testCases = []struct {
 	},
 	{ // 19
 		name:     "SZ_ENTITY_INCLUDE_RECORD_FEATURES",
-		actual:   senzing.SzEntityIncludeRecordFeatureIDs,
+		actual:   senzing.SzEntityIncludeRecordFeatures,
 		expected: 0x0000000000040000,
 	},
 	{ // 20
