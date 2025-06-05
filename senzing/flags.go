@@ -76,10 +76,10 @@ const (
 	SzEntityIncludeRecordFeatureStats   // 36 Include the feature statistics
 	SzSearchIncludeRequest              // 37
 	SzSearchIncludeRequestDetails       // 38
+	SzEntityIncludeRecordDates          // 39 Include the record json data for the entity
 
 	/* Reserved.  */
 
-	Bit40 // 39
 	Bit41 // 40
 	Bit42 // 41
 	Bit43 // 42
@@ -176,7 +176,9 @@ const (
 Recommended defaults.
 */
 const (
-	SzEntityBriefDefaultFlags = SzEntityIncludeAllRelations |
+	SzAddRecordDefaultFlags    = SzNoFlags
+	SzDeleteRecordDefaultFlags = SzNoFlags
+	SzEntityBriefDefaultFlags  = SzEntityIncludeAllRelations |
 		SzEntityIncludeRecordMatchingInfo |
 		SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for a brief entity result.
 	SzEntityCoreFlags = SzEntityIncludeEntityName |
@@ -191,18 +193,22 @@ const (
 		SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for getting entities.
 	SzExportDefaultFlags = SzEntityDefaultFlags |
 		SzExportIncludeAllEntities // The recommended default flag values for exporting entities.
-	SzFindNetworkDefaultFlags = SzEntityIncludeEntityName |
+	SzFindInterestingEntitiesDefaultFlags = SzNoFlags
+	SzFindNetworkDefaultFlags             = SzEntityIncludeEntityName |
 		SzEntityIncludeRecordSummary |
 		SzFindNetworkIncludeMatchingInfo // The recommended default flag values for finding entity paths.
 	SzFindPathDefaultFlags = SzEntityIncludeEntityName |
 		SzEntityIncludeRecordSummary |
 		SzFindPathIncludeMatchingInfo // The recommended default flag values for finding entity paths.
 	SzHowEntityDefaultFlags          = SzIncludeFeatureScores
+	SzPreprocessRecordDefaultFlags   = SzEntityIncludeRecordFeatureDetails
 	SzRecordDefaultFlags             = SzEntityIncludeRecordJSONData
+	SzReevaluateRecordDefaultFlags   = SzNoFlags
+	SzReevaluateEntityDefaultFlags   = SzReevaluateRecordDefaultFlags
 	SzSearchByAttributesDefaultFlags = SzSearchByAttributesAll
 	SzVirtualEntityDefaultFlags      = SzEntityCoreFlags
 	SzWhyEntitiesDefaultFlags        = SzIncludeFeatureScores
-	SzWhyRecordInEntityIDefaultFlags = SzIncludeFeatureScores
+	SzWhyRecordInEntityDefaultFlags  = SzIncludeFeatureScores
 	SzWhyRecordsDefaultFlags         = SzIncludeFeatureScores
 	SzWhySearchDefaultFlags          = SzIncludeFeatureScores | SzSearchIncludeRequestDetails | SzSearchIncludeStats
 )

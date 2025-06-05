@@ -228,8 +228,8 @@ var testCases = []struct {
 		expected: 0x0000004000000000,
 	},
 	{ // 40
-		name:     "Bit40",
-		actual:   senzing.Bit40,
+		name:     "SZ_ENTITY_INCLUDE_RECORD_DATES",
+		actual:   senzing.SzEntityIncludeRecordDates,
 		expected: 0x0000008000000000,
 	},
 	{ // 41
@@ -409,7 +409,7 @@ var testCases = []struct {
 	},
 	{
 		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
-		actual:   senzing.SzWhyRecordInEntityIDefaultFlags,
+		actual:   senzing.SzWhyRecordInEntityDefaultFlags,
 		expected: 0x0000000004000000,
 	},
 	{
