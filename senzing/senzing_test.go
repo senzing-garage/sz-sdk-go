@@ -12,14 +12,14 @@ var testCases = []struct {
 	actual   int64
 	expected int64
 }{
+	{ // 0
+		name:     "SZ_NO_FLAGS",
+		actual:   senzing.SzNoFlags,
+		expected: 0x0000000000000000,
+	},
 	{ // 1
 		name:     "SZ_EXPORT_INCLUDE_MULTI_RECORD_ENTITIES",
 		actual:   senzing.SzExportIncludeMultiRecordEntities,
-		expected: 0x0000000000000001,
-	},
-	{ // 1
-		name:     "SZ_SEARCH_INCLUDE_RESOLVED",
-		actual:   senzing.SzSearchIncludeResolved,
 		expected: 0x0000000000000001,
 	},
 	{ // 2
@@ -27,29 +27,14 @@ var testCases = []struct {
 		actual:   senzing.SzExportIncludePossiblySame,
 		expected: 0x0000000000000002,
 	},
-	{ // 2
-		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_SAME",
-		actual:   senzing.SzSearchIncludePossiblySame,
-		expected: 0x0000000000000002,
-	},
 	{ // 3
 		name:     "SZ_EXPORT_INCLUDE_POSSIBLY_RELATED",
 		actual:   senzing.SzExportIncludePossiblyRelated,
 		expected: 0x0000000000000004,
 	},
-	{ // 3
-		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_RELATED",
-		actual:   senzing.SzSearchIncludePossiblyRelated,
-		expected: 0x0000000000000004,
-	},
 	{ // 4
 		name:     "SZ_EXPORT_INCLUDE_NAME_ONLY",
 		actual:   senzing.SzExportIncludeNameOnly,
-		expected: 0x0000000000000008,
-	},
-	{ // 4
-		name:     "SZ_SEARCH_INCLUDE_NAME_ONLY",
-		actual:   senzing.SzSearchIncludeNameOnly,
 		expected: 0x0000000000000008,
 	},
 	{ // 5
@@ -348,34 +333,24 @@ var testCases = []struct {
 		expected: 0x4000000000000000,
 	},
 	{
-		name:     "SZ_EXPORT_INCLUDE_ALL_ENTITIES",
-		actual:   senzing.SzExportIncludeAllEntities,
-		expected: 0x0000000000000021,
+		name:     "SZ_ADD_RECORD_DEFAULT_FLAGS",
+		actual:   senzing.SzAddRecordDefaultFlags,
+		expected: 0x0000000000000000,
 	},
 	{
-		name:     "SZ_EXPORT_INCLUDE_ALL_HAVING_RELATIONSHIPS",
-		actual:   senzing.SzExportIncludeAllHavingRelationships,
-		expected: 0x000000000000001E,
+		name:     "SZ_ADD_RECORD_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzAddRecordDefaultFlags,
+		expected: senzing.SzNoFlags,
 	},
 	{
-		name:     "SZ_ENTITY_INCLUDE_ALL_RELATIONS",
-		actual:   senzing.SzEntityIncludeAllRelations,
-		expected: 0x00000000000003C0,
+		name:     "SZ_DELETE_RECORD_DEFAULT_FLAGS",
+		actual:   senzing.SzDeleteRecordDefaultFlags,
+		expected: 0x0000000000000000,
 	},
 	{
-		name:     "SZ_SEARCH_INCLUDE_ALL_ENTITIES",
-		actual:   senzing.SzSearchIncludeAllEntities,
-		expected: 0x000000000000000F,
-	},
-	{
-		name:     "SZ_RECORD_DEFAULT_FLAGS",
-		actual:   senzing.SzRecordDefaultFlags,
-		expected: 0x0000000000010000,
-	},
-	{
-		name:     "SZ_ENTITY_DEFAULT_FLAGS",
-		actual:   senzing.SzEntityDefaultFlags,
-		expected: 0x000000000018FBC0,
+		name:     "SZ_DELETE_RECORD_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzDeleteRecordDefaultFlags,
+		expected: senzing.SzNoFlags,
 	},
 	{
 		name:     "SZ_ENTITY_BRIEF_DEFAULT_FLAGS",
@@ -383,14 +358,97 @@ var testCases = []struct {
 		expected: 0x00000000001083C0,
 	},
 	{
-		name:     "SZ_EXPORT_DEFAULT_FLAGS",
-		actual:   senzing.SzExportDefaultFlags,
-		expected: 0x000000000018FBE1,
+		name:   "SZ_ENTITY_BRIEF_DEFAULT_FLAGS-OR",
+		actual: senzing.SzEntityBriefDefaultFlags,
+		expected: senzing.SzEntityIncludeRecordMatchingInfo |
+			senzing.SzEntityIncludeAllRelations |
+			senzing.SzEntityIncludeRelatedMatchingInfo,
 	},
 	{
-		name:     "SZ_FIND_PATH_DEFAULT_FLAGS",
-		actual:   senzing.SzFindPathDefaultFlags,
-		expected: 0x0000000040003000,
+		name:     "SZ_ENTITY_CORE_FLAGS",
+		actual:   senzing.SzEntityCoreFlags,
+		expected: 0x000000000000F800,
+	},
+	{
+		name:   "SZ_ENTITY_CORE_FLAGS-OR",
+		actual: senzing.SzEntityCoreFlags,
+		expected: senzing.SzEntityIncludeRepresentativeFeatures |
+			senzing.SzEntityIncludeEntityName |
+			senzing.SzEntityIncludeRecordSummary |
+			senzing.SzEntityIncludeRecordData |
+			senzing.SzEntityIncludeRecordMatchingInfo,
+	},
+	{
+		name:     "SZ_ENTITY_DEFAULT_FLAGS",
+		actual:   senzing.SzEntityDefaultFlags,
+		expected: 0x000000000038FBC0,
+	},
+	{
+		name:   "SZ_ENTITY_DEFAULT_FLAGS-OR",
+		actual: senzing.SzEntityDefaultFlags,
+		expected: senzing.SzEntityCoreFlags |
+			senzing.SzEntityIncludeAllRelations |
+			senzing.SzEntityIncludeRelatedEntityName |
+			senzing.SzEntityIncludeRelatedRecordSummary |
+			senzing.SzEntityIncludeRelatedMatchingInfo,
+	},
+	{
+		name:     "SZ_ENTITY_INCLUDE_ALL_RELATIONS",
+		actual:   senzing.SzEntityIncludeAllRelations,
+		expected: 0x00000000000003C0,
+	},
+	{
+		name:   "SZ_ENTITY_INCLUDE_ALL_RELATIONS-OR",
+		actual: senzing.SzEntityIncludeAllRelations,
+		expected: senzing.SzEntityIncludePossiblySameRelations |
+			senzing.SzEntityIncludePossiblyRelatedRelations |
+			senzing.SzEntityIncludeNameOnlyRelations |
+			senzing.SzEntityIncludeDisclosedRelations,
+	},
+	{
+		name:     "SZ_EXPORT_DEFAULT_FLAGS",
+		actual:   senzing.SzExportDefaultFlags,
+		expected: 0x000000000038FBE1,
+	},
+	{
+		name:   "SZ_EXPORT_DEFAULT_FLAGS-OR",
+		actual: senzing.SzExportDefaultFlags,
+		expected: senzing.SzExportIncludeAllEntities |
+			senzing.SzEntityDefaultFlags,
+	},
+	{
+		name:     "SZ_EXPORT_INCLUDE_ALL_ENTITIES",
+		actual:   senzing.SzExportIncludeAllEntities,
+		expected: 0x0000000000000021,
+	},
+	{
+		name:   "SZ_EXPORT_INCLUDE_ALL_ENTITIES-OR",
+		actual: senzing.SzExportIncludeAllEntities,
+		expected: senzing.SzExportIncludeMultiRecordEntities |
+			senzing.SzExportIncludeSingleRecordEntities,
+	},
+	{
+		name:     "SZ_EXPORT_INCLUDE_ALL_HAVING_RELATIONSHIPS",
+		actual:   senzing.SzExportIncludeAllHavingRelationships,
+		expected: 0x000000000000001E,
+	},
+	{
+		name:   "SZ_EXPORT_INCLUDE_ALL_HAVING_RELATIONSHIPS-OR",
+		actual: senzing.SzExportIncludeAllHavingRelationships,
+		expected: senzing.SzExportIncludePossiblySame |
+			senzing.SzExportIncludePossiblyRelated |
+			senzing.SzExportIncludeNameOnly |
+			senzing.SzExportIncludeDisclosed,
+	},
+	{
+		name:     "SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS",
+		actual:   senzing.SzFindInterestingEntitiesDefaultFlags,
+		expected: 0x0000000000000000,
+	},
+	{
+		name:     "SZ_FIND_INTERESTING_ENTITIES_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzFindInterestingEntitiesDefaultFlags,
+		expected: senzing.SzNoFlags,
 	},
 	{
 		name:     "SZ_FIND_NETWORK_DEFAULT_FLAGS",
@@ -398,19 +456,23 @@ var testCases = []struct {
 		expected: 0x0000000200003000,
 	},
 	{
-		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS",
-		actual:   senzing.SzWhyEntitiesDefaultFlags,
-		expected: 0x0000000004000000,
+		name:   "SZ_FIND_NETWORK_DEFAULT_FLAGS-OR",
+		actual: senzing.SzFindNetworkDefaultFlags,
+		expected: senzing.SzFindNetworkIncludeMatchingInfo |
+			senzing.SzEntityIncludeEntityName |
+			senzing.SzEntityIncludeRecordSummary,
 	},
 	{
-		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
-		actual:   senzing.SzWhyRecordsDefaultFlags,
-		expected: 0x0000000004000000,
+		name:     "SZ_FIND_PATH_DEFAULT_FLAGS",
+		actual:   senzing.SzFindPathDefaultFlags,
+		expected: 0x0000000040003000,
 	},
 	{
-		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
-		actual:   senzing.SzWhyRecordInEntityDefaultFlags,
-		expected: 0x0000000004000000,
+		name:   "SZ_FIND_PATH_DEFAULT_FLAGS-OR",
+		actual: senzing.SzFindPathDefaultFlags,
+		expected: senzing.SzFindPathIncludeMatchingInfo |
+			senzing.SzEntityIncludeEntityName |
+			senzing.SzEntityIncludeRecordSummary,
 	},
 	{
 		name:     "SZ_HOW_ENTITY_DEFAULT_FLAGS",
@@ -418,9 +480,49 @@ var testCases = []struct {
 		expected: 0x0000000004000000,
 	},
 	{
-		name:     "SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS",
-		actual:   senzing.SzVirtualEntityDefaultFlags,
-		expected: 0x000000000000F800,
+		name:     "SZ_HOW_ENTITY_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzHowEntityDefaultFlags,
+		expected: senzing.SzIncludeFeatureScores,
+	},
+	{
+		name:     "SZ_PREPROCESS_RECORD_DEFAULT_FLAGS",
+		actual:   senzing.SzPreprocessRecordDefaultFlags,
+		expected: 0x0000000800000000,
+	},
+	{
+		name:     "SZ_PREPROCESS_RECORD_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzPreprocessRecordDefaultFlags,
+		expected: senzing.SzEntityIncludeRecordFeatureDetails,
+	},
+	{
+		name:     "SZ_RECORD_DEFAULT_FLAGS",
+		actual:   senzing.SzRecordDefaultFlags,
+		expected: 0x0000000000010000,
+	},
+	{
+		name:     "SZ_RECORD_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzRecordDefaultFlags,
+		expected: senzing.SzEntityIncludeRecordJSONData,
+	},
+	{
+		name:     "SZ_REEVALUATE_ENTITY_DEFAULT_FLAGS",
+		actual:   senzing.SzReevaluateEntityDefaultFlags,
+		expected: 0x0000000000000000,
+	},
+	{
+		name:     "SZ_REEVALUATE_ENTITY_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzReevaluateEntityDefaultFlags,
+		expected: senzing.SzReevaluateRecordDefaultFlags,
+	},
+	{
+		name:     "SZ_REEVALUATE_RECORD_DEFAULT_FLAGS",
+		actual:   senzing.SzReevaluateRecordDefaultFlags,
+		expected: 0x0000000000000000,
+	},
+	{
+		name:     "SZ_REEVALUATE_RECORD_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzReevaluateRecordDefaultFlags,
+		expected: senzing.SzNoFlags,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_ALL",
@@ -428,9 +530,24 @@ var testCases = []struct {
 		expected: 0x000000000C00380F,
 	},
 	{
-		name:     "SZ_SEARCH_BY_ATTRIBUTES_STRONG",
-		actual:   senzing.SzSearchByAttributesStrong,
-		expected: 0x000000000C003803,
+		name:   "SZ_SEARCH_BY_ATTRIBUTES_ALL-OR",
+		actual: senzing.SzSearchByAttributesAll,
+		expected: senzing.SzSearchIncludeAllEntities |
+			senzing.SzEntityIncludeRepresentativeFeatures |
+			senzing.SzEntityIncludeEntityName |
+			senzing.SzEntityIncludeRecordSummary |
+			senzing.SzIncludeFeatureScores |
+			senzing.SzSearchIncludeStats,
+	},
+	{
+		name:     "SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS",
+		actual:   senzing.SzSearchByAttributesDefaultFlags,
+		expected: 0x000000000C00380F,
+	},
+	{
+		name:     "SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzSearchByAttributesDefaultFlags,
+		expected: senzing.SzSearchByAttributesAll,
 	},
 	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_ALL",
@@ -438,14 +555,143 @@ var testCases = []struct {
 		expected: 0x000000000800000F,
 	},
 	{
+		name:   "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_ALL-OR",
+		actual: senzing.SzSearchByAttributesMinimalAll,
+		expected: senzing.SzSearchIncludeAllEntities |
+			senzing.SzSearchIncludeStats,
+	},
+	{
 		name:     "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_STRONG",
 		actual:   senzing.SzSearchByAttributesMinimalStrong,
 		expected: 0x0000000008000003,
 	},
 	{
-		name:     "SZ_SEARCH_BY_ATTRIBUTES_DEFAULT_FLAGS",
-		actual:   senzing.SzSearchByAttributesDefaultFlags,
-		expected: 0x000000000C00380F,
+		name:   "SZ_SEARCH_BY_ATTRIBUTES_MINIMAL_STRONG-OR",
+		actual: senzing.SzSearchByAttributesMinimalStrong,
+		expected: senzing.SzSearchIncludeResolved |
+			senzing.SzSearchIncludePossiblySame |
+			senzing.SzSearchIncludeStats,
+	},
+	{
+		name:     "SZ_SEARCH_BY_ATTRIBUTES_STRONG",
+		actual:   senzing.SzSearchByAttributesStrong,
+		expected: 0x000000000C003803,
+	},
+	{
+		name:   "SZ_SEARCH_BY_ATTRIBUTES_STRONG-OR",
+		actual: senzing.SzSearchByAttributesStrong,
+		expected: senzing.SzSearchIncludeResolved |
+			senzing.SzSearchIncludePossiblySame |
+			senzing.SzEntityIncludeRepresentativeFeatures |
+			senzing.SzEntityIncludeEntityName |
+			senzing.SzEntityIncludeRecordSummary |
+			senzing.SzIncludeFeatureScores |
+			senzing.SzSearchIncludeStats,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_ALL_ENTITIES",
+		actual:   senzing.SzSearchIncludeAllEntities,
+		expected: 0x000000000000000F,
+	},
+	{
+		name:   "SZ_SEARCH_INCLUDE_ALL_ENTITIES-OR",
+		actual: senzing.SzSearchIncludeAllEntities,
+		expected: senzing.SzSearchIncludeResolved |
+			senzing.SzSearchIncludePossiblySame |
+			senzing.SzSearchIncludePossiblyRelated |
+			senzing.SzSearchIncludeNameOnly,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_NAME_ONLY",
+		actual:   senzing.SzSearchIncludeNameOnly,
+		expected: 0x0000000000000008,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_NAME_ONLY-OR",
+		actual:   senzing.SzSearchIncludeNameOnly,
+		expected: senzing.SzExportIncludeNameOnly,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_SAME",
+		actual:   senzing.SzSearchIncludePossiblySame,
+		expected: 0x0000000000000002,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_SAME-OR",
+		actual:   senzing.SzSearchIncludePossiblySame,
+		expected: senzing.SzExportIncludePossiblySame,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_RELATED",
+		actual:   senzing.SzSearchIncludePossiblyRelated,
+		expected: 0x0000000000000004,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_POSSIBLY_RELATED-OR",
+		actual:   senzing.SzSearchIncludePossiblyRelated,
+		expected: senzing.SzExportIncludePossiblyRelated,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_RESOLVED",
+		actual:   senzing.SzSearchIncludeResolved,
+		expected: 0x0000000000000001,
+	},
+	{
+		name:     "SZ_SEARCH_INCLUDE_RESOLVED-OR",
+		actual:   senzing.SzSearchIncludeResolved,
+		expected: senzing.SzExportIncludeMultiRecordEntities,
+	},
+	{
+		name:     "SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS",
+		actual:   senzing.SzVirtualEntityDefaultFlags,
+		expected: 0x000000000000F800,
+	},
+	{
+		name:     "SZ_VIRTUAL_ENTITY_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzVirtualEntityDefaultFlags,
+		expected: senzing.SzEntityCoreFlags,
+	},
+	{
+		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS",
+		actual:   senzing.SzWhyEntitiesDefaultFlags,
+		expected: 0x0000000004000000,
+	},
+	{
+		name:     "SZ_WHY_ENTITIES_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzWhyEntitiesDefaultFlags,
+		expected: senzing.SzIncludeFeatureScores,
+	},
+	{
+		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS",
+		actual:   senzing.SzWhyRecordInEntityDefaultFlags,
+		expected: 0x0000000004000000,
+	},
+	{
+		name:     "SZ_WHY_RECORD_IN_ENTITY_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzWhyRecordInEntityDefaultFlags,
+		expected: senzing.SzIncludeFeatureScores,
+	},
+	{
+		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS",
+		actual:   senzing.SzWhyRecordsDefaultFlags,
+		expected: 0x0000000004000000,
+	},
+	{
+		name:     "SZ_WHY_RECORDS_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzWhyRecordsDefaultFlags,
+		expected: senzing.SzIncludeFeatureScores,
+	},
+	{
+		name:     "SZ_WHY_SEARCH_DEFAULT_FLAGS",
+		actual:   senzing.SzWhySearchDefaultFlags,
+		expected: 0x000000400C000000,
+	},
+	{
+		name:   "SZ_WHY_SEARCH_DEFAULT_FLAGS-OR",
+		actual: senzing.SzWhySearchDefaultFlags,
+		expected: senzing.SzIncludeFeatureScores |
+			senzing.SzSearchIncludeRequestDetails |
+			senzing.SzSearchIncludeStats,
 	},
 	{
 		name: "OR 4",

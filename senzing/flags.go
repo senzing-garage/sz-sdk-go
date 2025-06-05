@@ -188,7 +188,7 @@ const (
 		SzEntityIncludeRepresentativeFeatures
 	SzEntityDefaultFlags = SzEntityCoreFlags |
 		SzEntityIncludeAllRelations |
-		SzEntityIncludeRecordSummary |
+		SzEntityIncludeRelatedRecordSummary |
 		SzEntityIncludeRelatedEntityName |
 		SzEntityIncludeRelatedMatchingInfo // The recommended default flag values for getting entities.
 	SzExportDefaultFlags = SzEntityDefaultFlags |
