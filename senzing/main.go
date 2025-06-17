@@ -45,7 +45,7 @@ type SzConfigManager interface {
 	CreateConfigFromConfigID(ctx context.Context, configID int64) (SzConfig, error)
 	CreateConfigFromString(ctx context.Context, configDefinition string) (SzConfig, error)
 	CreateConfigFromTemplate(ctx context.Context) (SzConfig, error)
-	GetConfigs(ctx context.Context) (string, error)
+	GetConfigRegistry(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
 	RegisterConfig(ctx context.Context, configDefinition string, configComment string) (int64, error)
 	ReplaceDefaultConfigID(ctx context.Context, currentDefaultConfigID int64, newDefaultConfigID int64) error

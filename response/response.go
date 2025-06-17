@@ -79,19 +79,19 @@ func SzConfigManagerCreateConfig(
 	return result, err
 }
 
-func SzConfigManagerGetConfigs(
+func SzConfigManagerGetConfigRegistry(
 	ctx context.Context,
 	jsonString string,
-) (*typedef.SzConfigManagerGetConfigsResponse, error) {
+) (*typedef.SzConfigManagerGetConfigRegistryResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigManagerGetConfigsResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigManagerGetConfigRegistryResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzConfigManagerGetConfigs cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzConfigManagerGetConfigRegistry cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
