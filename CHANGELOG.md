@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.15.6] - 2025-06-17
+
+### Changed in 0.15.6
+
+- Renamed `SzConfigManager.GetConfigs` to `SzConfigManager.GetConfigRegistry`
+
 ## [0.15.5] - 2025-06-05
 
 ### Changed in 0.15.5
