@@ -12,6 +12,14 @@ const (
 )
 
 /*
+Flags not defined in Senzing binary
+*/
+
+const (
+	SzRedoDefaultFlags int64 = SzNoFlags
+)
+
+/*
 Flags used by the Senzing SzEngine.
 These flags are single-bit flags.
 BitNN is for bits numbered as 1..64 (not 0..63).  Comments are for bits numbered as 0..63
