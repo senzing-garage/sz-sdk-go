@@ -34,10 +34,10 @@ type SzAbstractFactory interface {
 
 // Type SzConfig interface is a Golang representation of Senzing's libSzconfig.h.
 type SzConfig interface {
-	AddDataSource(ctx context.Context, dataSourceCode string) (string, error)
-	DeleteDataSource(ctx context.Context, dataSourceCode string) (string, error)
 	Export(ctx context.Context) (string, error)
-	GetDataSources(ctx context.Context) (string, error)
+	GetDataSourceRegistry(ctx context.Context) (string, error)
+	RegisterDataSource(ctx context.Context, dataSourceCode string) (string, error)
+	UnregisterDataSource(ctx context.Context, dataSourceCode string) (string, error)
 }
 
 // Type SzConfigManager interface is a Golang representation of Senzing's libSzconfigmgr.h.
@@ -55,9 +55,9 @@ type SzConfigManager interface {
 
 // Type SzDiagnostic interface is a Golang representation of Senzing's libSzdiagnostic.h.
 type SzDiagnostic interface {
-	CheckDatastorePerformance(ctx context.Context, secondsToRun int) (string, error)
-	GetDatastoreInfo(ctx context.Context) (string, error)
+	CheckRepositoryPerformance(ctx context.Context, secondsToRun int) (string, error)
 	GetFeature(ctx context.Context, featureID int64) (string, error)
+	GetRepositoryInfo(ctx context.Context) (string, error)
 	PurgeRepository(ctx context.Context) error
 }
 
@@ -69,7 +69,7 @@ type SzEngine interface {
 		recordID string,
 		recordDefinition string,
 		flags int64) (string, error)
-	CloseExport(ctx context.Context, exportHandle uintptr) error
+	CloseExportReport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
 	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)

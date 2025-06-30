@@ -14,16 +14,19 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-func SzConfigAddDataSource(ctx context.Context, jsonString string) (*typedef.SzConfigAddDataSourceResponse, error) {
+func SzConfigRegisterDataSource(
+	ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigRegisterDataSourceResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigAddDataSourceResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigRegisterDataSourceResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzConfigAddDataSource cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzConfigRegisterDataSource cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
@@ -44,16 +47,19 @@ func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigEx
 	return result, err
 }
 
-func SzConfigGetDataSources(ctx context.Context, jsonString string) (*typedef.SzConfigGetDataSourcesResponse, error) {
+func SzConfigGetDataSourceRegistry(
+	ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigGetDataSourceRegistryResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigGetDataSourcesResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigGetDataSourceRegistryResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzConfigGetDataSources cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzConfigGetDataSourceRegistry cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
@@ -99,33 +105,33 @@ func SzConfigManagerGetConfigRegistry(
 
 // --- Diagnostic -------------------------------------------------------------
 
-func SzDiagnosticCheckDatastorePerformance(
+func SzDiagnosticCheckRepositoryPerformance(
 	ctx context.Context,
 	jsonString string,
-) (*typedef.SzDiagnosticCheckDatastorePerformanceResponse, error) {
+) (*typedef.SzDiagnosticCheckRepositoryPerformanceResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzDiagnosticCheckDatastorePerformanceResponse{} //exhaustruct:ignore
+	result := &typedef.SzDiagnosticCheckRepositoryPerformanceResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzDiagnosticCheckDatastorePerformance cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzDiagnosticCheckRepositoryPerformance cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
 }
 
-func SzDiagnosticGetDatastoreInfo(
+func SzDiagnosticGetRepositoryInfo(
 	ctx context.Context,
 	jsonString string,
-) (*typedef.SzDiagnosticGetDatastoreInfoResponse, error) {
+) (*typedef.SzDiagnosticGetRepositoryInfoResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzDiagnosticGetDatastoreInfoResponse{} //exhaustruct:ignore
+	result := &typedef.SzDiagnosticGetRepositoryInfoResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {

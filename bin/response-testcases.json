@@ -1,12 +1,4 @@
 {
-    "SzConfigAddDataSource": {
-        "tests": {
-            "test-000": {},
-            "test-001": {
-                "DSRC_ID": 1
-            }
-        }
-    },
     "SzConfigExport": {
         "tests": {
             "test-000": {},
@@ -10282,7 +10274,7 @@
             }
         }
     },
-    "SzConfigGetDataSources": {
+    "SzConfigGetDataSourceRegistry": {
         "tests": {
             "test-000": {},
             "test-001": {
@@ -10422,25 +10414,6 @@
                     {
                         "DSRC_CODE": "blank",
                         "DSRC_ID": 1
-                    }
-                ]
-            }
-        }
-    },
-    "SzConfigManagerGetConfigRegistry": {
-        "tests": {
-            "test-000": {},
-            "test-001": {
-                "CONFIGS": [
-                    {
-                        "CONFIG_COMMENTS": "blank",
-                        "CONFIG_ID": 1,
-                        "SYS_CREATE_DT": "blank"
-                    },
-                    {
-                        "CONFIG_COMMENTS": "blank",
-                        "CONFIG_ID": 1,
-                        "SYS_CREATE_DT": "blank"
                     }
                 ]
             }
@@ -30360,26 +30333,39 @@
             }
         }
     },
-    "SzDiagnosticCheckDatastorePerformance": {
+    "SzConfigManagerGetConfigRegistry": {
+        "tests": {
+            "test-000": {},
+            "test-001": {
+                "CONFIGS": [
+                    {
+                        "CONFIG_COMMENTS": "blank",
+                        "CONFIG_ID": 1,
+                        "SYS_CREATE_DT": "blank"
+                    },
+                    {
+                        "CONFIG_COMMENTS": "blank",
+                        "CONFIG_ID": 1,
+                        "SYS_CREATE_DT": "blank"
+                    }
+                ]
+            }
+        }
+    },
+    "SzConfigRegisterDataSource": {
+        "tests": {
+            "test-000": {},
+            "test-001": {
+                "DSRC_ID": 1
+            }
+        }
+    },
+    "SzDiagnosticCheckRepositoryPerformance": {
         "tests": {
             "test-000": {},
             "test-001": {
                 "insertTime": 1,
                 "numRecordsInserted": 1
-            }
-        }
-    },
-    "SzDiagnosticGetDatastoreInfo": {
-        "tests": {
-            "test-000": {},
-            "test-001": {
-                "dataStores": [
-                    {
-                        "id": "CORE",
-                        "type": "sqlite3",
-                        "location": "/home/senzing/senzing-garage.git/sz-sdk-go-core/target/test/szdiagnostic/G2C.db"
-                    }
-                ]
             }
         }
     },
@@ -30413,6 +30399,20 @@
                     {
                         "FELEM_CODE": "FULL_NAME",
                         "FELEM_VALUE": "Robert Smith"
+                    }
+                ]
+            }
+        }
+    },
+    "SzDiagnosticGetRepositoryInfo": {
+        "tests": {
+            "test-000": {},
+            "test-001": {
+                "dataStores": [
+                    {
+                        "id": "CORE",
+                        "type": "sqlite3",
+                        "location": "/home/senzing/senzing-garage.git/sz-sdk-go-core/target/test/szdiagnostic/G2C.db"
                     }
                 ]
             }
