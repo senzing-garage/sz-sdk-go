@@ -485,13 +485,13 @@ var testCases = []struct {
 		expected: senzing.SzIncludeFeatureScores,
 	},
 	{
-		name:     "SZ_PREPROCESS_RECORD_DEFAULT_FLAGS",
-		actual:   senzing.SzPreprocessRecordDefaultFlags,
+		name:     "SZ_GET_RECORD_PREVIEW_DEFAULT_FLAGS",
+		actual:   senzing.SzGetRecordPreviewDefaultFlags,
 		expected: 0x0000000800000000,
 	},
 	{
-		name:     "SZ_PREPROCESS_RECORD_DEFAULT_FLAGS-OR",
-		actual:   senzing.SzPreprocessRecordDefaultFlags,
+		name:     "SZ_GET_RECORD_PREVIEW_DEFAULT_FLAGS-OR",
+		actual:   senzing.SzGetRecordPreviewDefaultFlags,
 		expected: senzing.SzEntityIncludeRecordFeatureDetails,
 	},
 	{

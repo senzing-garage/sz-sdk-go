@@ -135,7 +135,7 @@ func SzDiagnosticGetRepositoryInfo(
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzDiagnosticGetDatastoreInfo cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzDiagnosticGetRepositoryInfo cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
