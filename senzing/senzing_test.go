@@ -486,12 +486,12 @@ var testCases = []struct {
 	},
 	{
 		name:     "SZ_GET_RECORD_PREVIEW_DEFAULT_FLAGS",
-		actual:   senzing.SzGetRecordPreviewDefaultFlags,
+		actual:   senzing.SzRecordPreviewDefaultFlags,
 		expected: 0x0000000800000000,
 	},
 	{
 		name:     "SZ_GET_RECORD_PREVIEW_DEFAULT_FLAGS-OR",
-		actual:   senzing.SzGetRecordPreviewDefaultFlags,
+		actual:   senzing.SzRecordPreviewDefaultFlags,
 		expected: senzing.SzEntityIncludeRecordFeatureDetails,
 	},
 	{
