@@ -51,8 +51,14 @@
     "unmarshalling"
   ],
   "ignorePaths": [
+    ".dockerignore",
+    ".git/*",
     ".github/linters/.golangci.yaml",
     ".gitignore",
+    ".history/*",
+    ".pydevproject",
+    ".pytest_cache/**",
+    ".vscode/cspell.json",
     "**/*.go",
     "**/*.mod",
     "**/*.sum",

@@ -209,7 +209,7 @@ const (
 		SzEntityIncludeRecordSummary |
 		SzFindPathIncludeMatchingInfo // The recommended default flag values for finding entity paths.
 	SzHowEntityDefaultFlags          = SzIncludeFeatureScores
-	SzPreprocessRecordDefaultFlags   = SzEntityIncludeRecordFeatureDetails
+	SzRecordPreviewDefaultFlags      = SzEntityIncludeRecordFeatureDetails
 	SzRecordDefaultFlags             = SzEntityIncludeRecordJSONData
 	SzReevaluateRecordDefaultFlags   = SzNoFlags
 	SzReevaluateEntityDefaultFlags   = SzReevaluateRecordDefaultFlags
