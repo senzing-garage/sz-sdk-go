@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.15.8] - 2025-07-11
+
+### Added in 0.15.8
+
+- `SzAbstractFactory.DestroyWithoutClosing`
+
 ## [0.15.7] - 2025-07-02
 
 ### Changed in 0.15.7

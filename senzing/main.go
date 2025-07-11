@@ -29,6 +29,7 @@ type SzAbstractFactory interface {
 	CreateEngine(ctx context.Context) (SzEngine, error)
 	CreateProduct(ctx context.Context) (SzProduct, error)
 	Destroy(ctx context.Context) error
+	DestroyWithoutClosing(ctx context.Context) error
 	Reinitialize(ctx context.Context, configID int64) error
 }
 
