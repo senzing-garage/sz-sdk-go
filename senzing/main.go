@@ -28,8 +28,6 @@ type SzAbstractFactory interface {
 	CreateDiagnostic(ctx context.Context) (SzDiagnostic, error)
 	CreateEngine(ctx context.Context) (SzEngine, error)
 	CreateProduct(ctx context.Context) (SzProduct, error)
-	Destroy(ctx context.Context) error
-	DestroyWithoutClosing(ctx context.Context) error
 	Reinitialize(ctx context.Context, configID int64) error
 }
 
@@ -46,6 +44,7 @@ type SzConfigManager interface {
 	CreateConfigFromConfigID(ctx context.Context, configID int64) (SzConfig, error)
 	CreateConfigFromString(ctx context.Context, configDefinition string) (SzConfig, error)
 	CreateConfigFromTemplate(ctx context.Context) (SzConfig, error)
+	Destroy(ctx context.Context) error
 	GetConfigRegistry(ctx context.Context) (string, error)
 	GetDefaultConfigID(ctx context.Context) (int64, error)
 	RegisterConfig(ctx context.Context, configDefinition string, configComment string) (int64, error)
@@ -57,6 +56,7 @@ type SzConfigManager interface {
 // Type SzDiagnostic interface is a Golang representation of Senzing's libSzdiagnostic.h.
 type SzDiagnostic interface {
 	CheckRepositoryPerformance(ctx context.Context, secondsToRun int) (string, error)
+	Destroy(ctx context.Context) error
 	GetFeature(ctx context.Context, featureID int64) (string, error)
 	GetRepositoryInfo(ctx context.Context) (string, error)
 	PurgeRepository(ctx context.Context) error
@@ -73,6 +73,7 @@ type SzEngine interface {
 	CloseExportReport(ctx context.Context, exportHandle uintptr) error
 	CountRedoRecords(ctx context.Context) (int64, error)
 	DeleteRecord(ctx context.Context, dataSourceCode string, recordID string, flags int64) (string, error)
+	Destroy(ctx context.Context) error
 	ExportCsvEntityReport(ctx context.Context, csvColumnList string, flags int64) (uintptr, error)
 	ExportCsvEntityReportIterator(ctx context.Context, csvColumnList string, flags int64) chan StringFragment
 	ExportJSONEntityReport(ctx context.Context, flags int64) (uintptr, error)
@@ -147,6 +148,7 @@ type SzEngine interface {
 
 // Type SzProduct interface is a Golang representation of Senzing's libSzproduct.h.
 type SzProduct interface {
+	Destroy(ctx context.Context) error
 	GetLicense(ctx context.Context) (string, error)
 	GetVersion(ctx context.Context) (string, error)
 }
