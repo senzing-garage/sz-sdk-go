@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning].
 ### Added in 0.15.9
 
 - `SzAbstractFactory.Close`
+- `SzConfigManager.Destroy`
+- `SzDiagnostic.Destroy`
+- `SzEngine.Destroy`
+- `SzProduct.Destroy`
 
 ### Deleted in 0.15.9
 
