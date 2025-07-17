@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.15.9] - 2025-07-17
+
+### Added in 0.15.9
+
+- `SzAbstractFactory.Close`
+- `SzConfigManager.Destroy`
+- `SzDiagnostic.Destroy`
+- `SzEngine.Destroy`
+- `SzProduct.Destroy`
+
+### Deleted in 0.15.9
+
+- `SzAbstractFactory.Destroy`
+- `SzAbstractFactory.DestroyWithoutClosing`
+
 ## [0.15.8] - 2025-07-11
 
 ### Added in 0.15.8
