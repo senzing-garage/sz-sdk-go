@@ -5,7 +5,7 @@ go 1.24.4
 require (
 	github.com/aquilax/truncate v1.0.1
 	github.com/senzing-garage/sz-sdk-json-type-definition v0.2.10
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 )
 
 require (
