@@ -7,6 +7,7 @@
 LD_LIBRARY_PATH ?= /opt/senzing/er/lib
 SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
 PATH := $(MAKEFILE_DIRECTORY)/bin:/$(HOME)/go/bin:$(PATH)
+SENZING_TOOLS_DATABASE_URL ?= sqlite3://na:na@nowhere/tmp/sqlite/G2C.db
 
 # -----------------------------------------------------------------------------
 # OS specific targets
@@ -57,7 +58,8 @@ run-osarch-specific:
 
 .PHONY: setup-osarch-specific
 setup-osarch-specific:
-	$(info No setup required.)
+	@mkdir /tmp/sqlite
+	@cp testdata/sqlite/G2C.db /tmp/sqlite/G2C.db
 
 
 .PHONY: test-osarch-specific

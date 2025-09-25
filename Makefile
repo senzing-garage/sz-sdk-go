@@ -70,7 +70,7 @@ hello-world: hello-world-osarch-specific
 # -----------------------------------------------------------------------------
 
 .PHONY: dependencies-for-development
-dependencies-for-development: dependencies-for-development-osarch-specific
+dependencies-for-development: venv dependencies-for-development-osarch-specific download-truthsets
 	@go install github.com/daixiang0/gci@latest
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
@@ -79,6 +79,11 @@ dependencies-for-development: dependencies-for-development-osarch-specific
 	@go install mvdan.cc/gofumpt@latest
 	@docker-compose pull 2>/dev/null || true
 	@sudo npm install -g cspell@latest
+	@find $(MAKEFILE_DIRECTORY)/testdata/responses_senzing/ -type f -name "*.json" -delete
+	$(activate-venv); \
+		python3 -m pip install --upgrade pip; \
+		python3 -m pip install --requirement requirements.txt; \
+		./bin/make_testdata_responses_senzing.py
 
 
 .PHONY: dependencies
@@ -87,31 +92,30 @@ dependencies:
 	@go get -t -u ./...
 	@go mod tidy
 
+
+.PHONY: venv
+venv:
+	@python3 -m venv .venv
+
 # -----------------------------------------------------------------------------
 # Generate tests
 # -----------------------------------------------------------------------------
 
 .PHONY: generate-tests
-generate-tests: generate_senzing_unmarshal_test
-
-
-.PHONY: generate_senzing_unmarshal_test
-generate_senzing_unmarshal_test:
-	@rm ./response/response_test.go || true
-	@./bin/generate_response_response_test.py
+generate-tests: \
+	response-response-test \
+	testdata-responses-senzing
 
 
 .PHONY: verify
-verify:
-	@rm ./bin/response-test-cases-verified.json || true
-	@./bin/verify_response_test_cases.py
+verify: verify_response_test_cases
 
 # -----------------------------------------------------------------------------
 # Setup
 # -----------------------------------------------------------------------------
 
 .PHONY: setup
-setup: generate-tests setup-osarch-specific
+setup: setup-osarch-specific generate-tests
 
 # -----------------------------------------------------------------------------
 # Lint
@@ -177,6 +181,10 @@ clean: clean-osarch-specific
 	@go clean -cache
 	@go clean -testcache
 
+.PHONY: restore
+restore:
+	git restore testdata/responses_senzing/*.jsonl
+
 # -----------------------------------------------------------------------------
 # Utility targets
 # -----------------------------------------------------------------------------
@@ -214,6 +222,16 @@ cspell:
 	@cspell lint --dot .
 
 
+.PHONY: download-truthsets
+download-truthsets:
+	curl -X GET --output ./testdata/truthsets/customers.jsonl \
+		https://raw.githubusercontent.com/Senzing/truth-sets/refs/heads/main/truthsets/demo/customers.jsonl
+	curl -X GET --output ./testdata/truthsets/reference.jsonl \
+		https://raw.githubusercontent.com/Senzing/truth-sets/refs/heads/main/truthsets/demo/reference.jsonl
+	curl -X GET --output ./testdata/truthsets/watchlist.jsonl \
+		https://raw.githubusercontent.com/Senzing/truth-sets/refs/heads/main/truthsets/demo/watchlist.jsonl
+
+
 .PHONY: exhaustruct
 exhaustruct:
 	exhaustruct ./...
@@ -232,6 +250,26 @@ golangci-lint:
 .PHONY: govulncheck
 govulncheck:
 	@${GOBIN}/govulncheck ./...
+
+
+.PHONY: testdata-responses-senzing
+testdata-responses-senzing:
+	@find $(MAKEFILE_DIRECTORY)/testdata/responses_senzing/ -type f -name "*.json" -delete
+	$(activate-venv); \
+		./bin/make_testdata_responses_senzing.py
+
+
+.PHONY: response-response-test
+response-response-test:
+	@rm ./response/response_test.go || true
+	@./bin/make_response_response_test.py
+
+
+.PHONY: verify_response_test_cases
+verify_response_test_cases:
+	@rm ./bin/response-test-cases-verified.json || true
+	@./bin/verify_response_test_cases.py
+
 
 # -----------------------------------------------------------------------------
 # Fixers

@@ -1,0 +1,2 @@
+senzing==4.0.3
+senzing_core==1.0.0

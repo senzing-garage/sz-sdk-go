@@ -32,12 +32,12 @@ func SzConfigRegisterDataSource(
 	return result, err
 }
 
-func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
+func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigExportResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigExportConfigResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigExportResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
