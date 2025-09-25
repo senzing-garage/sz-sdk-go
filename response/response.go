@@ -14,30 +14,12 @@ import (
 
 // --- Config -----------------------------------------------------------------
 
-func SzConfigRegisterDataSource(
-	ctx context.Context,
-	jsonString string,
-) (*typedef.SzConfigRegisterDataSourceResponse, error) {
+func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigExportResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigRegisterDataSourceResponse{} //exhaustruct:ignore
-
-	err = json.Unmarshal([]byte(jsonString), result)
-	if err != nil {
-		err = fmt.Errorf("SzConfigRegisterDataSource cannot unmarshal %s: %w", jsonString, err)
-	}
-
-	return result, err
-}
-
-func SzConfigExport(ctx context.Context, jsonString string) (*typedef.SzConfigExportConfigResponse, error) {
-	_ = ctx
-
-	var err error
-
-	result := &typedef.SzConfigExportConfigResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigExportResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
@@ -65,25 +47,43 @@ func SzConfigGetDataSourceRegistry(
 	return result, err
 }
 
-// --- ConfigManager ----------------------------------------------------------
-
-func SzConfigManagerCreateConfig(
+func SzConfigRegisterDataSource(
 	ctx context.Context,
 	jsonString string,
-) (*typedef.SzConfigManagerGetConfigResponse, error) {
+) (*typedef.SzConfigRegisterDataSourceResponse, error) {
 	_ = ctx
 
 	var err error
 
-	result := &typedef.SzConfigManagerGetConfigResponse{} //exhaustruct:ignore
+	result := &typedef.SzConfigRegisterDataSourceResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
-		err = fmt.Errorf("SzConfigManagerGetConfig cannot unmarshal %s: %w", jsonString, err)
+		err = fmt.Errorf("SzConfigRegisterDataSource cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
 }
+
+func SzConfigUnregisterDataSource(
+	ctx context.Context,
+	jsonString string,
+) (*typedef.SzConfigUnregisterDataSourceResponse, error) {
+	_ = ctx
+
+	var err error
+
+	result := &typedef.SzConfigUnregisterDataSourceResponse{} //exhaustruct:ignore
+
+	err = json.Unmarshal([]byte(jsonString), result)
+	if err != nil {
+		err = fmt.Errorf("SzConfigUnregisterDataSource cannot unmarshal %s: %w", jsonString, err)
+	}
+
+	return result, err
+}
+
+// --- ConfigManager ----------------------------------------------------------
 
 func SzConfigManagerGetConfigRegistry(
 	ctx context.Context,
@@ -123,6 +123,21 @@ func SzDiagnosticCheckRepositoryPerformance(
 	return result, err
 }
 
+func SzDiagnosticGetFeature(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
+	_ = ctx
+
+	var err error
+
+	result := &typedef.SzDiagnosticGetFeatureResponse{} //exhaustruct:ignore
+
+	err = json.Unmarshal([]byte(jsonString), result)
+	if err != nil {
+		err = fmt.Errorf("SzDiagnosticGetFeature cannot unmarshal %s: %w", jsonString, err)
+	}
+
+	return result, err
+}
+
 func SzDiagnosticGetRepositoryInfo(
 	ctx context.Context,
 	jsonString string,
@@ -136,21 +151,6 @@ func SzDiagnosticGetRepositoryInfo(
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
 		err = fmt.Errorf("SzDiagnosticGetRepositoryInfo cannot unmarshal %s: %w", jsonString, err)
-	}
-
-	return result, err
-}
-
-func SzDiagnosticGetFeature(ctx context.Context, jsonString string) (*typedef.SzDiagnosticGetFeatureResponse, error) {
-	_ = ctx
-
-	var err error
-
-	result := &typedef.SzDiagnosticGetFeatureResponse{} //exhaustruct:ignore
-
-	err = json.Unmarshal([]byte(jsonString), result)
-	if err != nil {
-		err = fmt.Errorf("SzDiagnosticGetFeature cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
@@ -351,6 +351,24 @@ func SzEngineGetEntityByRecordID(
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {
 		err = fmt.Errorf("SzEngineGetEntityByRecordID cannot unmarshal %s: %w", jsonString, err)
+	}
+
+	return result, err
+}
+
+func SzEngineGetRecordPreview(
+	ctx context.Context,
+	jsonString string,
+) (*typedef.SzEngineGetRecordPreviewResponse, error) {
+	_ = ctx
+
+	var err error
+
+	result := &typedef.SzEngineGetRecordPreviewResponse{} //exhaustruct:ignore
+
+	err = json.Unmarshal([]byte(jsonString), result)
+	if err != nil {
+		err = fmt.Errorf("SzEngineGetRecordPreview cannot unmarshal %s: %w", jsonString, err)
 	}
 
 	return result, err
@@ -578,6 +596,21 @@ func SzEngineWhyRecords(ctx context.Context, jsonString string) (*typedef.SzEngi
 	var err error
 
 	result := &typedef.SzEngineWhyRecordsResponse{} //exhaustruct:ignore
+
+	err = json.Unmarshal([]byte(jsonString), result)
+	if err != nil {
+		err = fmt.Errorf("SzEngineWhyRecords cannot unmarshal %s: %w", jsonString, err)
+	}
+
+	return result, err
+}
+
+func SzEngineWhySearch(ctx context.Context, jsonString string) (*typedef.SzEngineWhySearchResponse, error) {
+	_ = ctx
+
+	var err error
+
+	result := &typedef.SzEngineWhySearchResponse{} //exhaustruct:ignore
 
 	err = json.Unmarshal([]byte(jsonString), result)
 	if err != nil {

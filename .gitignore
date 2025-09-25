@@ -40,3 +40,13 @@ bin/__pycache__
 cover.out
 coverage.html
 coverage.out
+
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/

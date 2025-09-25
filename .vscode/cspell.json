@@ -7,6 +7,8 @@
     "buildx",
     "CCLA",
     "CODEOWNER",
+    "configmanager",
+    "CONFIGPATH",
     "covermode",
     "coverpkg",
     "coverprofile",
@@ -26,14 +28,20 @@
     "govulncheck",
     "ICLA",
     "LDFLAGS",
+    "Logf",
+    "Makio",
     "OSARCH",
     "OSTYPE",
     "pkill",
+    "RESOURCEPATH",
     "rootfs",
+    "Rotorville",
     "Senzing",
     "SENZINGSDK",
+    "Sprintf",
     "stackoverflow",
     "stretchr",
+    "SUPPORTPATH",
     "szapi",
     "Szconfig",
     "szconfigmanager",
@@ -48,7 +56,12 @@
     "taskkill",
     "testcoverage",
     "testdata",
-    "unmarshalling"
+    "truncator",
+    "truthsets",
+    "unmarshalling",
+    "venv",
+    "watchlist",
+    "Yamanaka"
   ],
   "ignorePaths": [
     ".dockerignore",
@@ -58,6 +71,7 @@
     ".history/*",
     ".pydevproject",
     ".pytest_cache/**",
+    ".venv/**",
     ".vscode/cspell.json",
     "**/*.go",
     "**/*.mod",
@@ -65,6 +79,7 @@
     "bin/generate_response_response_test.py",
     "bin/response-testcases.json",
     "bin/verify_response_test_cases.py",
-    "Makefile"
+    "Makefile",
+    "testdata/**"
   ]
 }

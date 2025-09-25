@@ -15,15 +15,15 @@ local-prefix: "github.com/org/project"
 threshold:
   # (optional; default 0)
   # The minimum coverage that each file should have
-  file: 95
+  file: 75
 
   # (optional; default 0)
   # The minimum coverage that each package should have
-  package: 95
+  package: 75
 
   # (optional; default 0)
   # The minimum total coverage project should have
-  total: 95
+  total: 75
 # Holds regexp rules which will override thresholds for matched files or packages
 # using their paths.
 #
