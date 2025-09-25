@@ -1,11 +1,17 @@
-package response
+package response_test
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
+	"github.com/senzing-garage/sz-sdk-go/response"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,3297 +24,662 @@ const (
 // Internal functions
 // ----------------------------------------------------------------------------
 
+func closeFile(t *testing.T, file *os.File) {
+	t.Helper()
+
+	err := file.Close()
+	if err != nil {
+		t.Fatalf("Could not close file: %v", err)
+	}
+}
+
+func createScanner(fileName string) (*bufio.Scanner, *os.File) {
+	testFilePath := createTestFilePath(fileName)
+
+	file, err := os.Open(testFilePath)
+	if err != nil {
+		log.Fatalf("Error opening file: %v", err)
+	}
+
+	scanner := bufio.NewScanner(file)
+	buf := make([]byte, 0, 1024*1024)
+	scanner.Buffer(buf, 1024*1024)
+
+	return scanner, file
+}
+
+func createTestFilePath(filename string) string {
+	return filepath.Join("..", "testdata", "responses_senzing", filename)
+}
+
 func truncate(aString string, length int) string {
 	return truncator.Truncate(aString, length, "...", truncator.PositionEnd)
 }
 
-func printResult(test *testing.T, title string, result interface{}) {
+func printResult(t *testing.T, title string, result interface{}) {
+	t.Helper()
+
 	if printResults {
-		test.Logf("%s: %+v", title, truncate(fmt.Sprintf("%+v", result), defaultTruncation))
+		t.Logf("%s: %+v", title, truncate(fmt.Sprintf("%+v", result), defaultTruncation))
 	}
 }
 
-func printActual(test *testing.T, actual interface{}) {
-	printResult(test, "Actual", actual)
+func printActual(t *testing.T, actual interface{}) {
+	t.Helper()
+	printResult(t, "Actual", actual)
 }
 
 // ----------------------------------------------------------------------------
 // Test interface functions
 // ----------------------------------------------------------------------------
 
-func TestSzConfigExportTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzConfigExport(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigExportTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"G2_CONFIG":{"CFG_ATTR":[{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":null,"FELEM_REQ":"blank","FTYPE_CODE":null,"INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":"blank","FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"},{"ADVANCED":"blank","ATTR_CLASS":"blank","ATTR_CODE":"blank","ATTR_ID":1,"DEFAULT_VALUE":null,"FELEM_CODE":"blank","FELEM_REQ":"blank","FTYPE_CODE":"blank","INTERNAL":"blank"}],"CFG_CFBOM":[{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"CFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1}],"CFG_CFCALL":[{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"CFCALL_ID":1,"CFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1}],"CFG_CFRTN":[{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1},{"CFRTN_ID":1,"CFUNC_ID":1,"CFUNC_RTNVAL":"blank","CLOSE_SCORE":1,"EXEC_ORDER":1,"FTYPE_ID":1,"LIKELY_SCORE":1,"PLAUSIBLE_SCORE":1,"SAME_SCORE":1,"UN_LIKELY_SCORE":1}],"CFG_CFUNC":[{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CFUNC_CODE":"blank","CFUNC_DESC":"blank","CFUNC_ID":1,"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":"blank","LANGUAGE":"blank"}],"CFG_DFBOM":[{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1}],"CFG_DFCALL":[{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1},{"DFCALL_ID":1,"DFUNC_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1}],"CFG_DFUNC":[{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"ANON_SUPPORT":"blank","CONNECT_STR":"blank","DFUNC_CODE":"blank","DFUNC_DESC":"blank","DFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null}],"CFG_DSRC":[{"CONVERSATIONAL":"blank","DSRC_CODE":"blank","DSRC_DESC":"blank","DSRC_ID":1,"DSRC_RELY":1,"RETENTION_LEVEL":"blank"},{"CONVERSATIONAL":"blank","DSRC_CODE":"blank","DSRC_DESC":"blank","DSRC_ID":1,"DSRC_RELY":1,"RETENTION_LEVEL":"blank"}],"CFG_DSRC_INTEREST":[],"CFG_EBOM":[{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":"blank"},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null},{"ETYPE_ID":1,"EXEC_ORDER":1,"FTYPE_ID":1,"UTYPE_CODE":null}],"CFG_ECLASS":[{"ECLASS_CODE":"blank","ECLASS_DESC":"blank","ECLASS_ID":1,"RESOLVE":"blank"}],"CFG_EFBOM":[{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1},{"EFCALL_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FELEM_REQ":"blank","FTYPE_ID":1}],"CFG_EFCALL":[{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"},{"EFCALL_ID":1,"EFEAT_FTYPE_ID":1,"EFUNC_ID":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"IS_VIRTUAL":"blank"}],"CFG_EFUNC":[{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null},{"CONNECT_STR":"blank","EFUNC_CODE":"blank","EFUNC_DESC":"blank","EFUNC_ID":1,"FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null}],"CFG_ERFRAG":[{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":null,"ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"},{"ERFRAG_CODE":"blank","ERFRAG_DEPENDS":"blank","ERFRAG_DESC":"blank","ERFRAG_ID":1,"ERFRAG_SOURCE":"blank"}],"CFG_ERRULE":[{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":1,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":null,"ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1},{"DISQ_ERFRAG_CODE":"blank","ERRULE_CODE":"blank","ERRULE_DESC":"blank","ERRULE_ID":1,"ERRULE_TIER":null,"QUAL_ERFRAG_CODE":"blank","REF_SCORE":1,"RELATE":"blank","RESOLVE":"blank","RTYPE_ID":1}],"CFG_ETYPE":[{"ECLASS_ID":1,"ETYPE_CODE":"blank","ETYPE_DESC":"blank","ETYPE_ID":1},{"ECLASS_ID":1,"ETYPE_CODE":"blank","ETYPE_DESC":"blank","ETYPE_ID":1}],"CFG_FBOM":[{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1},{"DERIVED":"blank","DISPLAY_DELIM":null,"DISPLAY_LEVEL":1,"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1}],"CFG_FBOVR":[{"ECLASS_ID":1,"FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","UTYPE_CODE":"blank"},{"ECLASS_ID":1,"FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","UTYPE_CODE":"blank"}],"CFG_FCLASS":[{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1},{"FCLASS_CODE":"blank","FCLASS_DESC":"blank","FCLASS_ID":1}],"CFG_FELEM":[{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"},{"DATA_TYPE":"blank","FELEM_CODE":"blank","FELEM_DESC":"blank","FELEM_ID":1,"TOKENIZE":"blank"}],"CFG_FTYPE":[{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1},{"ANONYMIZE":"blank","DERIVATION":null,"DERIVED":"blank","FCLASS_ID":1,"FTYPE_CODE":"blank","FTYPE_DESC":"blank","FTYPE_EXCL":"blank","FTYPE_FREQ":"blank","FTYPE_ID":1,"FTYPE_STAB":"blank","PERSIST_HISTORY":"blank","RTYPE_ID":1,"SHOW_IN_MATCH_KEY":"blank","USED_FOR_CAND":"blank","VERSION":1}],"CFG_GENERIC_THRESHOLD":[{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"},{"BEHAVIOR":"blank","CANDIDATE_CAP":1,"FTYPE_ID":1,"GPLAN_ID":1,"SCORING_CAP":1,"SEND_TO_REDO":"blank"}],"CFG_GPLAN":[{"GPLAN_CODE":"blank","GPLAN_DESC":"blank","GPLAN_ID":1},{"GPLAN_CODE":"blank","GPLAN_DESC":"blank","GPLAN_ID":1},{"GPLAN_CODE":"blank","GPLAN_DESC":"blank","GPLAN_ID":1}],"CFG_LENS":[{"LENS_CODE":"blank","LENS_DESC":"blank","LENS_ID":1}],"CFG_LENSRL":[],"CFG_RCLASS":[{"IS_DISCLOSED":"blank","RCLASS_CODE":"blank","RCLASS_DESC":"blank","RCLASS_ID":1},{"IS_DISCLOSED":"blank","RCLASS_CODE":"blank","RCLASS_DESC":"blank","RCLASS_ID":1}],"CFG_RTYPE":[{"BREAK_RES":"blank","RCLASS_ID":1,"REL_STRENGTH":1,"RTYPE_CODE":"blank","RTYPE_DESC":"blank","RTYPE_ID":1},{"BREAK_RES":"blank","RCLASS_ID":1,"REL_STRENGTH":1,"RTYPE_CODE":"blank","RTYPE_DESC":"blank","RTYPE_ID":1},{"BREAK_RES":"blank","RCLASS_ID":1,"REL_STRENGTH":1,"RTYPE_CODE":"blank","RTYPE_DESC":"blank","RTYPE_ID":1},{"BREAK_RES":"blank","RCLASS_ID":1,"REL_STRENGTH":1,"RTYPE_CODE":"blank","RTYPE_DESC":"blank","RTYPE_ID":1},{"BREAK_RES":"blank","RCLASS_ID":1,"REL_STRENGTH":1,"RTYPE_CODE":"blank","RTYPE_DESC":"blank","RTYPE_ID":1}],"CFG_SFCALL":[{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1},{"EXEC_ORDER":1,"FELEM_ID":1,"FTYPE_ID":1,"SFCALL_ID":1,"SFUNC_ID":1}],"CFG_SFUNC":[{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1},{"CONNECT_STR":"blank","FUNC_LIB":"blank","FUNC_VER":"blank","JAVA_CLASS_NAME":null,"LANGUAGE":null,"SFUNC_CODE":"blank","SFUNC_DESC":"blank","SFUNC_ID":1}],"CONFIG_BASE_VERSION":{"BUILD_DATE":"blank","BUILD_NUMBER":"blank","BUILD_VERSION":"blank","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"blank"},"VERSION":"blank"},"SYS_OOM":[{"FELEM_ID":1,"FTYPE_ID":1,"LENS_ID":1,"LIB_FEAT_ID":1,"LIB_FELEM_ID":1,"NEXT_THRESH":1,"OOM_LEVEL":"blank","OOM_TYPE":"blank","THRESH1_CNT":1,"THRESH1_OOM":1}]}}`
-	result, err := SzConfigExport(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistryTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCES":[{"DSRC_CODE":"blank","DSRC_ID":1},{"DSRC_CODE":"blank","DSRC_ID":1}]}`
-	result, err := SzConfigGetDataSourceRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigManagerGetConfigRegistryTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzConfigManagerGetConfigRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigManagerGetConfigRegistryTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"CONFIGS":[{"CONFIG_COMMENTS":"blank","CONFIG_ID":1,"SYS_CREATE_DT":"blank"},{"CONFIG_COMMENTS":"blank","CONFIG_ID":1,"SYS_CREATE_DT":"blank"}]}`
-	result, err := SzConfigManagerGetConfigRegistry(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigRegisterDataSourceTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzConfigRegisterDataSource(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigRegisterDataSourceTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DSRC_ID":1}`
-	result, err := SzConfigRegisterDataSource(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticCheckRepositoryPerformanceTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzDiagnosticCheckRepositoryPerformance(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticCheckRepositoryPerformanceTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"insertTime":1,"numRecordsInserted":1}`
-	result, err := SzDiagnosticCheckRepositoryPerformance(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetFeatureTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzDiagnosticGetFeature(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetFeatureTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ELEMENTS":[{"FELEM_CODE":"TOKENIZED_NM","FELEM_VALUE":"ROBERT|SMITH"},{"FELEM_CODE":"CATEGORY","FELEM_VALUE":"PERSON"},{"FELEM_CODE":"CULTURE","FELEM_VALUE":"ANGLO"},{"FELEM_CODE":"GIVEN_NAME","FELEM_VALUE":"Robert"},{"FELEM_CODE":"SUR_NAME","FELEM_VALUE":"Smith"},{"FELEM_CODE":"FULL_NAME","FELEM_VALUE":"Robert Smith"}],"FTYPE_CODE":"NAME","LIB_FEAT_ID":1}`
-	result, err := SzDiagnosticGetFeature(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetRepositoryInfoTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzDiagnosticGetRepositoryInfo(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetRepositoryInfoTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"dataStores":[{"id":"CORE","location":"/home/senzing/senzing-garage.git/sz-sdk-go-core/target/test/szdiagnostic/G2C.db","type":"sqlite3"}]}`
-	result, err := SzDiagnosticGetRepositoryInfo(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecordTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":7}],"DATA_SOURCE":"TEST","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"WITH_INFO_1"}`
-	result, err := SzEngineAddRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineDeleteRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecordTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineDeleteRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecordTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":100002}],"DATA_SOURCE":"TEST","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"DELETE_TEST"}`
-	result, err := SzEngineDeleteRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecordTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineDeleteRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecordTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineDeleteRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFetchNextTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFetchNext(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByEntityIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindInterestingEntitiesByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByEntityIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
-	result, err := SzEngineFindInterestingEntitiesByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByRecordIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindInterestingEntitiesByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByRecordIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"INTERESTING_ENTITIES":{"ENTITIES":[]}}`
-	result, err := SzEngineFindInterestingEntitiesByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0],"START_ENTITY_ID":1}],"MAX_ENTITY_LIMIT_REACHED":"blank"}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0],"START_ENTITY_ID":1}],"MAX_ENTITY_LIMIT_REACHED":"blank"}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityIDTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1},{"END_ENTITY_ID":1,"ENTITIES":[0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[]}`
-	result, err := SzEngineFindNetworkByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[1],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest015(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest016(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityIDTest017(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[1],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]},{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0,0,0,0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[0],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordIDTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"ENTITY_PATHS":[{"END_ENTITY_ID":1,"ENTITIES":[],"START_ENTITY_ID":1}]}`
-	result, err := SzEngineFindPathByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","FEATURES":{"ADDRESS":[{"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","FEAT_DESC_VALUES":[{"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","LIB_FEAT_ID":20}],"LIB_FEAT_ID":20,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","FEAT_DESC_VALUES":[{"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","LIB_FEAT_ID":3}],"LIB_FEAT_ID":3,"USAGE_TYPE":"MAILING"}],"DOB":[{"FEAT_DESC":"12/11/1978","FEAT_DESC_VALUES":[{"FEAT_DESC":"12/11/1978","LIB_FEAT_ID":2},{"FEAT_DESC":"11/12/1978","LIB_FEAT_ID":19}],"LIB_FEAT_ID":2}],"EMAIL":[{"FEAT_DESC":"bsmith@work.com","FEAT_DESC_VALUES":[{"FEAT_DESC":"bsmith@work.com","LIB_FEAT_ID":5}],"LIB_FEAT_ID":5}],"NAME":[{"FEAT_DESC":"Robert Smith","FEAT_DESC_VALUES":[{"FEAT_DESC":"Robert Smith","LIB_FEAT_ID":1},{"FEAT_DESC":"Bob J Smith","LIB_FEAT_ID":32},{"FEAT_DESC":"Bob Smith","LIB_FEAT_ID":18}],"LIB_FEAT_ID":1,"USAGE_TYPE":"PRIMARY"}],"PHONE":[{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4}],"LIB_FEAT_ID":4,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4}],"LIB_FEAT_ID":4,"USAGE_TYPE":"MOBILE"}],"RECORD_TYPE":[{"FEAT_DESC":"PERSON","FEAT_DESC_VALUES":[{"FEAT_DESC":"PERSON","LIB_FEAT_ID":16}],"LIB_FEAT_ID":16}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Robert Smith","ENTITY_KEY":"53C913F04DF04CA474389042F731333F92DCD3E7","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","RECORD_ID":"1001"},{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Bob Smith","ENTITY_KEY":"E417012A90D71444C2E190FAF313DA88C5E663B9","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"CNAME_CFF_CEXCL","INTERNAL_ID":2,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"+NAME+DOB+PHONE","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"RESOLVED","RECORD_ID":"1002"},{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Bob J Smith","ENTITY_KEY":"B327B02717D7515EC96319C0A0AD680FE532E27E","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"SF1_PNAME_CSTAB","INTERNAL_ID":3,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"+NAME+DOB+EMAIL","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"RESOLVED","RECORD_ID":"1003"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ENTITY_NAME":"blank","ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ENTITY_NAME":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_ANCHOR":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_POINTER":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"},{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_LINK":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"ERRULE_CODE":"blank","IS_AMBIGUOUS":1,"IS_DISCLOSED":1,"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank"}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest015(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest016(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest017(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest018(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest019(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest020(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"IDENTIFIER_DATA":["blank","blank","blank"],"NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"IDENTIFIER_DATA":["blank","blank"],"NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest021(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest022(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"RECORD_ID":"blank"},{"DATA_SOURCE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest023(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"RECORD_ID":"blank"},{"DATA_SOURCE":"blank","JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest024(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityIDTest025(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","FEATURES":{"ADDRESS":[{"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","FEAT_DESC_VALUES":[{"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","LIB_FEAT_ID":20}],"LIB_FEAT_ID":20,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","FEAT_DESC_VALUES":[{"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","LIB_FEAT_ID":3}],"LIB_FEAT_ID":3,"USAGE_TYPE":"MAILING"}],"DOB":[{"FEAT_DESC":"12/11/1978","FEAT_DESC_VALUES":[{"FEAT_DESC":"12/11/1978","LIB_FEAT_ID":2},{"FEAT_DESC":"11/12/1978","LIB_FEAT_ID":19}],"LIB_FEAT_ID":2}],"EMAIL":[{"FEAT_DESC":"bsmith@work.com","FEAT_DESC_VALUES":[{"FEAT_DESC":"bsmith@work.com","LIB_FEAT_ID":5}],"LIB_FEAT_ID":5}],"NAME":[{"FEAT_DESC":"Robert Smith","FEAT_DESC_VALUES":[{"FEAT_DESC":"Robert Smith","LIB_FEAT_ID":1},{"FEAT_DESC":"Bob J Smith","LIB_FEAT_ID":32},{"FEAT_DESC":"Bob Smith","LIB_FEAT_ID":18}],"LIB_FEAT_ID":1,"USAGE_TYPE":"PRIMARY"}],"PHONE":[{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4}],"LIB_FEAT_ID":4,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4}],"LIB_FEAT_ID":4,"USAGE_TYPE":"MOBILE"}],"RECORD_TYPE":[{"FEAT_DESC":"PERSON","FEAT_DESC_VALUES":[{"FEAT_DESC":"PERSON","LIB_FEAT_ID":16}],"LIB_FEAT_ID":16}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Robert Smith","ENTITY_KEY":"53C913F04DF04CA474389042F731333F92DCD3E7","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"","MATCH_LEVEL":0,"MATCH_LEVEL_CODE":"","RECORD_ID":"1001"},{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Bob Smith","ENTITY_KEY":"E417012A90D71444C2E190FAF313DA88C5E663B9","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"CNAME_CFF_CEXCL","INTERNAL_ID":2,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"+NAME+DOB+PHONE","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"RESOLVED","RECORD_ID":"1002"},{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Bob J Smith","ENTITY_KEY":"B327B02717D7515EC96319C0A0AD680FE532E27E","ENTITY_TYPE":"GENERIC","ERRULE_CODE":"SF1_PNAME_CSTAB","INTERNAL_ID":3,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"+NAME+DOB+EMAIL","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"RESOLVED","RECORD_ID":"1003"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":3}]}}`
-	result, err := SzEngineGetEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_KEY":"blank","ENTITY_TYPE":"blank","IDENTIFIER_DATA":["blank","blank","blank"],"JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"IDENTIFIER_DATA":["blank","blank","blank"],"NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCE":"CUSTOMERS","JSON_DATA":{"ADDR_LINE1":"123 Main Street, Las Vegas NV 89132","ADDR_TYPE":"MAILING","AMOUNT":"100","DATA_SOURCE":"CUSTOMERS","DATE":"1/2/18","DATE_OF_BIRTH":"12/11/1978","EMAIL_ADDRESS":"bsmith@work.com","PHONE_NUMBER":"702-919-1300","PHONE_TYPE":"HOME","PRIMARY_NAME_FIRST":"Robert","PRIMARY_NAME_LAST":"Smith","RECORD_ID":"1001","RECORD_TYPE":"PERSON","STATUS":"Active"},"RECORD_ID":"1001"}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCE":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCE":"blank","JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","DSRC_ACTION":"blank","DSRC_CODE":"blank","ENTITY_TYPE":"blank","ENT_SRC_DESC":"blank","ENT_SRC_KEY":"blank","ETYPE_CODE":"blank","NAME":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}],"OBS_SRC_KEY":"blank","RECORD_ID":"blank","SOURCE_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCE":"blank","JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"RECORD_ID":"blank"}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecordTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"DATA_SOURCE":"blank","RECORD_ID":"blank"}`
-	result, err := SzEngineGetRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRedoRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetRedoRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetStatsTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetStats(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"Robert Smith","FEATURES":{"ADDRESS":[{"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"1515 Adela Lane Las Vegas NV 89111","LIB_FEAT_ID":20,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"N","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":20,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"123 Main Street, Las Vegas NV 89132","LIB_FEAT_ID":3,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"N","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":3,"USAGE_TYPE":"MAILING"}],"ADDR_KEY":[{"FEAT_DESC":"123|MN||89132","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"123|MN||89132","LIB_FEAT_ID":14,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":14},{"FEAT_DESC":"123|MN||LS FKS","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"123|MN||LS FKS","LIB_FEAT_ID":13,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":13},{"FEAT_DESC":"1515|ATL||89111","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"1515|ATL||89111","LIB_FEAT_ID":30,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":30},{"FEAT_DESC":"1515|ATL||LS FKS","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"1515|ATL||LS FKS","LIB_FEAT_ID":31,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":31}],"DOB":[{"FEAT_DESC":"12/11/1978","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"12/11/1978","LIB_FEAT_ID":2,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"Y"},{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"11/12/1978","LIB_FEAT_ID":19,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":2}],"EMAIL":[{"FEAT_DESC":"bsmith@work.com","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"bsmith@work.com","LIB_FEAT_ID":5,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":5}],"EMAIL_KEY":[{"FEAT_DESC":"bsmith@WORK.COM","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"bsmith@WORK.COM","LIB_FEAT_ID":17,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":17}],"NAME":[{"FEAT_DESC":"Robert Smith","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"Robert Smith","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"N","USED_FOR_SCORING":"Y"},{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"Bob Smith","LIB_FEAT_ID":18,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"N","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"PRIMARY"}],"NAME_KEY":[{"FEAT_DESC":"BB|SM0","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0","LIB_FEAT_ID":22,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":22},{"FEAT_DESC":"BB|SM0|ADDRESS.CITY_STD=LS FKS","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|ADDRESS.CITY_STD=LS FKS","LIB_FEAT_ID":26,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":26},{"FEAT_DESC":"BB|SM0|DOB.MMDD_HASH=1211","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|DOB.MMDD_HASH=1211","LIB_FEAT_ID":24,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":24},{"FEAT_DESC":"BB|SM0|DOB.MMYY_HASH=1178","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|DOB.MMYY_HASH=1178","LIB_FEAT_ID":28,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":28},{"FEAT_DESC":"BB|SM0|DOB=71211","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|DOB=71211","LIB_FEAT_ID":21,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":21},{"FEAT_DESC":"BB|SM0|PHONE.PHONE_LAST_5=91300","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|PHONE.PHONE_LAST_5=91300","LIB_FEAT_ID":29,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":29},{"FEAT_DESC":"BB|SM0|POST=89111","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"BB|SM0|POST=89111","LIB_FEAT_ID":25,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":25},{"FEAT_DESC":"RBRT|SM0","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0","LIB_FEAT_ID":7,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":7},{"FEAT_DESC":"RBRT|SM0|ADDRESS.CITY_STD=LS FKS","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|ADDRESS.CITY_STD=LS FKS","LIB_FEAT_ID":8,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":8},{"FEAT_DESC":"RBRT|SM0|DOB.MMDD_HASH=1211","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|DOB.MMDD_HASH=1211","LIB_FEAT_ID":11,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":11},{"FEAT_DESC":"RBRT|SM0|DOB.MMYY_HASH=1178","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|DOB.MMYY_HASH=1178","LIB_FEAT_ID":23,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":23},{"FEAT_DESC":"RBRT|SM0|DOB.MMYY_HASH=1278","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|DOB.MMYY_HASH=1278","LIB_FEAT_ID":6,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":6},{"FEAT_DESC":"RBRT|SM0|DOB=71211","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|DOB=71211","LIB_FEAT_ID":12,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":12},{"FEAT_DESC":"RBRT|SM0|PHONE.PHONE_LAST_5=91300","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|PHONE.PHONE_LAST_5=91300","LIB_FEAT_ID":10,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":10},{"FEAT_DESC":"RBRT|SM0|POST=89111","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|POST=89111","LIB_FEAT_ID":27,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":27},{"FEAT_DESC":"RBRT|SM0|POST=89132","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"RBRT|SM0|POST=89132","LIB_FEAT_ID":9,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":9}],"PHONE":[{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":4,"USAGE_TYPE":"HOME"},{"FEAT_DESC":"702-919-1300","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"702-919-1300","LIB_FEAT_ID":4,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":4,"USAGE_TYPE":"MOBILE"}],"PHONE_KEY":[{"FEAT_DESC":"7029191300","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"7029191300","LIB_FEAT_ID":15,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"Y","USED_FOR_SCORING":"N"}],"LIB_FEAT_ID":15}],"RECORD_TYPE":[{"FEAT_DESC":"PERSON","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"N","ENTITY_COUNT":1,"FEAT_DESC":"PERSON","LIB_FEAT_ID":16,"SCORING_CAP_REACHED":"N","SUPPRESSED":"N","USED_FOR_CAND":"N","USED_FOR_SCORING":"Y"}],"LIB_FEAT_ID":16}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Robert Smith","ENTITY_KEY":"53C913F04DF04CA474389042F731333F92DCD3E7","ENTITY_TYPE":"GENERIC","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"PRIMARY"},{"LIB_FEAT_ID":2},{"LIB_FEAT_ID":3,"USAGE_TYPE":"MAILING"},{"LIB_FEAT_ID":4,"USAGE_TYPE":"HOME"},{"LIB_FEAT_ID":5},{"LIB_FEAT_ID":6},{"LIB_FEAT_ID":7},{"LIB_FEAT_ID":8},{"LIB_FEAT_ID":9},{"LIB_FEAT_ID":10},{"LIB_FEAT_ID":11},{"LIB_FEAT_ID":12},{"LIB_FEAT_ID":13},{"LIB_FEAT_ID":14},{"LIB_FEAT_ID":15},{"LIB_FEAT_ID":16},{"LIB_FEAT_ID":17}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"1001"},{"DATA_SOURCE":"CUSTOMERS","ENTITY_DESC":"Bob Smith","ENTITY_KEY":"E417012A90D71444C2E190FAF313DA88C5E663B9","ENTITY_TYPE":"GENERIC","FEATURES":[{"LIB_FEAT_ID":4,"USAGE_TYPE":"MOBILE"},{"LIB_FEAT_ID":7},{"LIB_FEAT_ID":8},{"LIB_FEAT_ID":10},{"LIB_FEAT_ID":11},{"LIB_FEAT_ID":12},{"LIB_FEAT_ID":15},{"LIB_FEAT_ID":16},{"LIB_FEAT_ID":18,"USAGE_TYPE":"PRIMARY"},{"LIB_FEAT_ID":19},{"LIB_FEAT_ID":20,"USAGE_TYPE":"HOME"},{"LIB_FEAT_ID":21},{"LIB_FEAT_ID":22},{"LIB_FEAT_ID":23},{"LIB_FEAT_ID":24},{"LIB_FEAT_ID":25},{"LIB_FEAT_ID":26},{"LIB_FEAT_ID":27},{"LIB_FEAT_ID":28},{"LIB_FEAT_ID":29},{"LIB_FEAT_ID":30},{"LIB_FEAT_ID":31}],"INTERNAL_ID":2,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"1002"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"CUSTOMERS","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":2}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":["blank"],"PHONE_DATA":["blank"],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":["blank"],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":["blank"],"PHONE_DATA":["blank"],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":["blank"],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","DSRC_ACTION":"blank","ENTITY_TYPE":"blank","ETYPE_CODE":"blank","NAME":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","DSRC_ACTION":"blank","ENTITY_TYPE":"blank","ETYPE_CODE":"blank","NAME":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","DSRC_ACTION":"blank","ENTITY_TYPE":"blank","ETYPE_CODE":"blank","NAME":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","DSRC_ACTION":"blank","ENTITY_TYPE":"blank","ETYPE_CODE":"blank","NAME":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"IDENTIFIER_DATA":["blank","blank"],"INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"},{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"},{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"ACCT_NUM":[{"ACCOUNT_DOMAIN":"blank","ACCOUNT_NUMBER":"blank"}],"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"SSN_LAST4":[{"SSN_LAST4":1}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"JSON_DATA":{"DATA_SOURCE":"blank","PHONES":[{"PHONE_NUMBER":"blank"}],"RECORD_ID":"blank","SSN":[{"SSN_NUMBER":"blank"}],"name":[{"NAME_FIRST":"blank","NAME_LAST":"blank"}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank"}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest015(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest016(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest017(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest018(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"FEATURES":{"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]}}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest019(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest020(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"IDENTIFIER_DATA":["blank","blank","blank"],"NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]},{"ADDRESS_DATA":[],"ATTRIBUTE_DATA":[],"DATA_SOURCE":"blank","ENTITY_DATA":[],"IDENTIFIER_DATA":["blank","blank"],"NAME_DATA":["blank"],"OTHER_DATA":[],"PHONE_DATA":[],"RECORD_ID":"blank","RELATIONSHIP_DATA":[]}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest021(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest022(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"RECORD_ID":"blank"},{"DATA_SOURCE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest023(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"},{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"RECORD_ID":"blank"},{"DATA_SOURCE":"blank","JSON_DATA":{"DATA_SOURCE":"blank","ENTITY_TYPE":"blank","PASSPORTS":[{"PASSPORT_NUMBER":"blank"}],"PRIMARY_NAME_FIRST":"blank","PRIMARY_NAME_LAST":"blank","RECORD_ID":"blank","SSN_NUMBER":"blank"},"RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest024(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordIDTest025(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITY":{"ENTITY_ID":1}}`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"RECORD_TYPE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"EMAIL":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"RECORD_TYPE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"EMAIL":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"RECORD_TYPE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"EMAIL":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"EMAIL":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}},{"INBOUND_VIRTUAL_ENTITY_ID":"blank","MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank"},"RESULT_VIRTUAL_ENTITY_ID":"blank","STEP":1,"VIRTUAL_ENTITY_1":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]},{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"},"VIRTUAL_ENTITY_2":{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}}]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityIDTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"HOW_RESULTS":{"FINAL_STATE":{"NEED_REEVALUATION":1,"VIRTUAL_ENTITIES":[{"MEMBER_RECORDS":[{"INTERNAL_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}],"VIRTUAL_ENTITY_ID":"blank"}]},"RESOLUTION_STEPS":[]}}`
-	result, err := SzEngineHowEntityByEntityID(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineProcessRedoRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecordTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineProcessRedoRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecordTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineProcessRedoRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecordTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineProcessRedoRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]}],"NOTICES":[{"CODE":"blank","DESCRIPTION":"blank"}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]}],"NOTICES":[{"CODE":"blank","DESCRIPTION":"blank"}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]}],"NOTICES":[{"CODE":"blank","DESCRIPTION":"blank"},{"CODE":"blank","DESCRIPTION":"blank"},{"CODE":"blank","DESCRIPTION":"blank"}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntityTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]},{"DEGREES":1,"ENTITY_ID":1,"FLAGS":["blank","blank"],"SAMPLE_RECORDS":[{"DATA_SOURCE":"blank","FLAGS":["blank","blank"],"RECORD_ID":"blank"}]}],"NOTICES":[{"CODE":"blank","DESCRIPTION":"blank"}]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateRecordTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineReevaluateRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateRecordTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"AFFECTED_ENTITIES":[{"ENTITY_ID":1}],"DATA_SOURCE":"blank","INTERESTING_ENTITIES":{"ENTITIES":[]},"RECORD_ID":"blank"}`
-	result, err := SzEngineReevaluateRecord(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ACCT_NUM":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"SSN":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"COUNTRY_OF_ASSOCIATION":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"DRLIC":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"GENDER":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"LOGIN_ID":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1},{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"COUNTRY_OF_ASSOCIATION":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}],"PASSPORT":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_ANCHOR":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_POINTER":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"SSN":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"SSN":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"REL_LINK":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"SSN":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"FEAT_DESC":"blank","LIB_FEAT_ID":1}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","FEATURE_SCORES":{"SSN":[{"CANDIDATE_FEAT":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank"}]},"MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}},{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}],"SEARCH_STATISTICS":[{"CANDIDATE_KEYS":{"FEATURE_TYPES":[{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1},{"FOUND":1,"FTYPE_CODE":"blank","GENERIC":1,"NOT_FOUND":1}],"SUMMARY":{"FOUND":1,"GENERIC":1,"NOT_FOUND":1}}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributesTest015(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"RESOLVED_ENTITIES":[{"ENTITY":{"RESOLVED_ENTITY":{"ENTITY_ID":1}},"MATCH_INFO":{"ERRULE_CODE":"blank","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank"}}]}`
-	result, err := SzEngineSearchByAttributes(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineStreamExportJSONEntityReportTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineStreamExportJSONEntityReport(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"DOB":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_ID":1}],"EMAIL_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"EMAIL":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"},{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"RECORD_TYPE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{"REL_LINK":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}]},"FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"},{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}],"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}],"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"},{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntitiesTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"MATCH_INFO":{"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyEntities(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordInEntityTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineWhyRecordInEntity(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest003(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest004(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest005(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest006(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"ENTITY_NAME":"blank","FEATURES":{"ADDRESS":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"DOB":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"EMAIL_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"NAME":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"},{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}],"RECORD_TYPE":[{"FEAT_DESC":"blank","FEAT_DESC_VALUES":[{"CANDIDATE_CAP_REACHED":"blank","ENTITY_COUNT":1,"FEAT_DESC":"blank","LIB_FEAT_ID":1,"SCORING_CAP_REACHED":"blank","SUPPRESSED":"blank","USED_FOR_CAND":"blank","USED_FOR_SCORING":"blank"}],"LIB_FEAT_ID":1}]},"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORDS":[{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","ENTITY_DESC":"blank","ENTITY_KEY":"blank","ENTITY_TYPE":"blank","ERRULE_CODE":"blank","FEATURES":[{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1,"USAGE_TYPE":"blank"},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1},{"LIB_FEAT_ID":1}],"INTERNAL_ID":1,"LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","MATCH_KEY":"blank","MATCH_LEVEL":1,"MATCH_LEVEL_CODE":"blank","RECORD_ID":"blank"}],"RECORD_SUMMARY":[{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1},{"DATA_SOURCE":"blank","FIRST_SEEN_DT":"2024-01-01T01:01:01+00:00","LAST_SEEN_DT":"2024-01-01T01:01:01+00:00","RECORD_COUNT":1}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE":[{"FEAT_DESC":"blank","FEAT_ID":1}],"PHONE_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PHONE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"RECORD_TYPE":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest007(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest008(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest009(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}]},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest010(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{"REL_LINK":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest011(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest012(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ADDR_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ADDRESS":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest013(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest014(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_LINK":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest015(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1},{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest016(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest017(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest018(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN":[{"FEAT_DESC":"blank","FEAT_ID":1}],"SSN_LAST4":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"ACCT_NUM":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"SSN_LAST4":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest019(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"},{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest020(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest021(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_LINK":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest022(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}},{"RELATED_ENTITIES":[{"ENTITY_ID":1}],"RESOLVED_ENTITY":{"ENTITY_ID":1,"RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}]}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest023(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"DRLIC":[{"FEAT_DESC":"blank","FEAT_ID":1}],"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOD":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DRLIC":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NATIONAL_ID":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PASSPORT":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest024(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"},{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}],"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest025(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}},{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{},"DISCLOSED_RELATIONS":{"REL_ANCHOR":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank","LINKED_FEAT_USAGE_TYPE":"blank"}],"REL_POINTER":[{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"},{"DOMAIN":"blank","FEAT_DESC":"blank","FEAT_ID":1,"FEAT_USAGE_TYPE":"blank","LINKED_FEAT_DESC":"blank","LINKED_FEAT_ID":1,"LINKED_FEAT_TYPE":"blank"}]},"FEATURE_SCORES":{},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest026(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"CANDIDATE_KEYS":{"DRLIC":[{"FEAT_DESC":"blank","FEAT_ID":1}],"ID_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"NAME_KEY":[{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1},{"FEAT_DESC":"blank","FEAT_ID":1}],"PASSPORT":[{"FEAT_DESC":"blank","FEAT_ID":1}]},"DISCLOSED_RELATIONS":{},"FEATURE_SCORES":{"DOB":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DOD":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"DRLIC":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NAME":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","GENERATION_MATCH":1,"GNR_FN":1,"GNR_GN":1,"GNR_ON":1,"GNR_SN":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"NATIONAL_ID":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}],"PASSPORT":[{"CANDIDATE_FEAT":"blank","CANDIDATE_FEAT_ID":1,"CANDIDATE_FEAT_USAGE_TYPE":"blank","FULL_SCORE":1,"INBOUND_FEAT":"blank","INBOUND_FEAT_ID":1,"INBOUND_FEAT_USAGE_TYPE":"blank","SCORE_BEHAVIOR":"blank","SCORE_BUCKET":"blank"}]},"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordsTest027(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"ENTITIES":[{"RESOLVED_ENTITY":{"ENTITY_ID":1}}],"WHY_RESULTS":[{"ENTITY_ID":1,"ENTITY_ID_2":1,"FOCUS_RECORDS":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"FOCUS_RECORDS_2":[{"DATA_SOURCE":"blank","RECORD_ID":"blank"}],"INTERNAL_ID":1,"INTERNAL_ID_2":1,"MATCH_INFO":{"MATCH_LEVEL_CODE":"blank","WHY_ERRULE_CODE":"blank","WHY_KEY":"blank"}}]}`
-	result, err := SzEngineWhyRecords(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetLicenseTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzProductGetLicense(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetLicenseTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"billing":"blank","contract":"blank","customer":"blank","expireDate":"blank","issueDate":"blank","licenseLevel":"blank","licenseType":"blank","recordLimit":1}`
-	result, err := SzProductGetLicense(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersionTest000(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{}`
-	result, err := SzProductGetVersion(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersionTest001(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"BUILD_DATE":"blank","BUILD_NUMBER":"blank","BUILD_VERSION":"blank","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"blank"},"PRODUCT_NAME":"blank","SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"3.5","MAXIMUM_REQUIRED_SCHEMA_VERSION":"3.99","MINIMUM_REQUIRED_SCHEMA_VERSION":"3.0"},"VERSION":"blank"}`
-	result, err := SzProductGetVersion(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersionTest002(test *testing.T) {
-	ctx := context.TODO()
-	jsonString := `{"BUILD_DATE":"blank","BUILD_NUMBER":"blank","BUILD_VERSION":"blank","COMPATIBILITY_VERSION":{"CONFIG_VERSION":"blank"},"PRODUCT_NAME":"blank","SCHEMA_VERSION":{"ENGINE_SCHEMA_VERSION":"blank","MAXIMUM_REQUIRED_SCHEMA_VERSION":"blank","MINIMUM_REQUIRED_SCHEMA_VERSION":"blank"},"VERSION":"blank"}`
-	result, err := SzProductGetVersion(ctx, jsonString)
-	require.NoError(test, err)
-	printActual(test, result)
-}
-func TestSzConfigExport_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigExport(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigExport_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigExport(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigGetDataSourceRegistry_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigGetDataSourceRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigManagerGetConfigRegistry_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigManagerGetConfigRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigManagerGetConfigRegistry_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigManagerGetConfigRegistry(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigRegisterDataSource_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigRegisterDataSource(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzConfigRegisterDataSource_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzConfigRegisterDataSource(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticCheckRepositoryPerformance_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticCheckRepositoryPerformance(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticCheckRepositoryPerformance_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticCheckRepositoryPerformance(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetFeature_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticGetFeature(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetFeature_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticGetFeature(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetRepositoryInfo_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticGetRepositoryInfo(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzDiagnosticGetRepositoryInfo_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzDiagnosticGetRepositoryInfo(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineAddRecord_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineAddRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineDeleteRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecord_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineDeleteRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecord_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineDeleteRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecord_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineDeleteRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineDeleteRecord_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineDeleteRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFetchNext_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFetchNext(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByEntityID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindInterestingEntitiesByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByEntityID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindInterestingEntitiesByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByRecordID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindInterestingEntitiesByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindInterestingEntitiesByRecordID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindInterestingEntitiesByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByEntityID_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindNetworkByRecordID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindNetworkByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test015(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test016(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByEntityID_Bad_Test017(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineFindPathByRecordID_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineFindPathByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test015(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test016(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test017(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test018(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test019(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test020(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test021(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test022(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test023(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test024(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByEntityID_Bad_Test025(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetEntityByRecordID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRecord_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetRedoRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetRedoRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetStats_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetStats(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test015(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test016(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test017(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test018(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test019(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test020(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test021(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test022(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test023(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test024(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineGetVirtualEntityByRecordID_Bad_Test025(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineGetVirtualEntityByRecordID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineHowEntityByEntityID_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineHowEntityByEntityID(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineProcessRedoRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecord_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineProcessRedoRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecord_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineProcessRedoRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineProcessRedoRecord_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineProcessRedoRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateEntity_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateRecord_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineReevaluateRecord_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineReevaluateRecord(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineSearchByAttributes_Bad_Test015(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineSearchByAttributes(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineStreamExportJSONEntityReport_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineStreamExportJSONEntityReport(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyEntities_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyEntities(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecordInEntity_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecordInEntity(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test003(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test004(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test005(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test006(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test007(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test008(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test009(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test010(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test011(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test012(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test013(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test014(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test015(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test016(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test017(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test018(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test019(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test020(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test021(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test022(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test023(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test024(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test025(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test026(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzEngineWhyRecords_Bad_Test027(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzEngineWhyRecords(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetLicense_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzProductGetLicense(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetLicense_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzProductGetLicense(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersion_Bad_Test000(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzProductGetVersion(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersion_Bad_Test001(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzProductGetVersion(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
-}
-func TestSzProductGetVersion_Bad_Test002(test *testing.T) {
-	ctx := context.TODO()
-	badJsonString := `This is not JSON`
-	result, err := SzProductGetVersion(ctx, badJsonString)
-	require.Error(test, err)
-	printActual(test, result)
+// --- Config -----------------------------------------------------------------
+
+func TestSzConfigExport(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzConfigExportResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzConfigExport(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzConfigGetDataSourceRegistry(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzConfigGetDataSourceRegistryResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzConfigGetDataSourceRegistry(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzConfigRegisterDataSource(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzConfigRegisterDataSourceResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzConfigRegisterDataSource(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzConfigUnregisterDataSource(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzConfigUnregisterDataSourceResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		if len(strings.TrimSpace(jsonString)) == 0 {
+			continue
+		}
+
+		result, err := response.SzConfigUnregisterDataSource(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+// --- ConfigManager ----------------------------------------------------------
+
+func TestSzConfigManagerGetConfigRegistry(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzConfigManagerGetConfigRegistryResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzConfigGetDataSourceRegistry(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+// --- Diagnostic -------------------------------------------------------------
+
+func TestSzDiagnosticCheckRepositoryPerformance(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzDiagnosticCheckRepositoryPerformanceResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzDiagnosticCheckRepositoryPerformance(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzDiagnosticGetFeature(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzDiagnosticGetFeatureResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzDiagnosticGetFeature(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzDiagnosticGetRepositoryInfo(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzDiagnosticGetRepositoryInfoResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzDiagnosticGetRepositoryInfo(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+// --- Engine -----------------------------------------------------------------
+
+// func TestSzEngineAddRecord(test *testing.T) {
+// }
+
+func TestSzEngineDeleteRecord(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineDeleteRecordResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzDiagnosticGetFeature(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindInterestingEntitiesByEntityID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindInterestingEntitiesByEntityIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindInterestingEntitiesByEntityID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindInterestingEntitiesByRecordID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindInterestingEntitiesByRecordIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindInterestingEntitiesByRecordID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindNetworkByEntityID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindNetworkByEntityIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindNetworkByEntityID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindNetworkByRecordID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindNetworkByRecordIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindNetworkByRecordID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindPathByEntityID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindPathByEntityIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindPathByEntityID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineFindPathByRecordID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineFindPathByRecordIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineFindPathByRecordID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetEntityByEntityID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetEntityByEntityIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetEntityByEntityID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetEntityByRecordID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetEntityByRecordIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetEntityByRecordID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetRecordPreview(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetRecordPreviewResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetRecordPreview(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetRecord(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetRecordResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetRecord(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetRedoRecord(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetRedoRecordResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetRedoRecord(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetStats(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetStatsResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetStats(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineGetVirtualEntityByRecordID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineGetVirtualEntityByRecordIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineGetVirtualEntityByRecordID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineHowEntityByEntityID(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineHowEntityByEntityIdResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineHowEntityByEntityID(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineProcessRedoRecord(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineProcessRedoRecordResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineProcessRedoRecord(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineReevaluateEntity(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineReevaluateEntityResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineReevaluateEntity(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineReevaluateRecord(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineReevaluateRecordResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineReevaluateRecord(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineSearchByAttributes(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineSearchByAttributesResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineSearchByAttributes(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineWhyEntities(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineWhyEntitiesResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineWhyEntities(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineWhyRecordInEntity(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineWhyRecordInEntityResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineWhyRecordInEntity(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineWhyRecords(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineWhyRecordsResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineWhyRecords(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzEngineWhySearch(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzEngineWhySearchResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzEngineWhySearch(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+// --- Product ----------------------------------------------------------------
+
+func TestSzProductGetLicense(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzProductGetLicenseResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzProductGetLicense(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
+}
+
+func TestSzProductGetVersion(test *testing.T) {
+	test.Parallel()
+
+	ctx := context.TODO()
+
+	scanner, file := createScanner("SzProductGetVersionResponse.jsonl")
+	defer closeFile(test, file)
+
+	for scanner.Scan() {
+		jsonString := scanner.Text()
+		result, err := response.SzProductGetVersion(ctx, jsonString)
+		require.NoError(test, err)
+		printActual(test, result)
+	}
+
+	require.NoError(test, scanner.Err())
 }

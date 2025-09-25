@@ -59,6 +59,7 @@
     "truncator",
     "truthsets",
     "unmarshalling",
+    "venv",
     "watchlist",
     "Yamanaka"
   ],
@@ -70,6 +71,7 @@
     ".history/*",
     ".pydevproject",
     ".pytest_cache/**",
+    ".venv/**",
     ".vscode/cspell.json",
     "**/*.go",
     "**/*.mod",
@@ -77,6 +79,7 @@
     "bin/generate_response_response_test.py",
     "bin/response-testcases.json",
     "bin/verify_response_test_cases.py",
-    "Makefile"
+    "Makefile",
+    "testdata/**"
   ]
 }

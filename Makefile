@@ -102,9 +102,7 @@ venv:
 # -----------------------------------------------------------------------------
 
 .PHONY: generate-tests
-generate-tests: \
-	response-response-test \
-	testdata-responses-senzing
+generate-tests: testdata-responses-senzing
 
 
 .PHONY: verify
@@ -259,17 +257,10 @@ testdata-responses-senzing:
 		./bin/make_testdata_responses_senzing.py
 
 
-.PHONY: response-response-test
-response-response-test:
-	@rm ./response/response_test.go || true
-	@./bin/make_response_response_test.py
-
-
 .PHONY: verify_response_test_cases
 verify_response_test_cases:
 	@rm ./bin/response-test-cases-verified.json || true
 	@./bin/verify_response_test_cases.py
-
 
 # -----------------------------------------------------------------------------
 # Fixers
