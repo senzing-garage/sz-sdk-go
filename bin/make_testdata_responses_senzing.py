@@ -238,7 +238,7 @@ def compare_find_interesting_entities_by_entity_id(
     """Compare find_interesting_entities_by_entity_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindInterestingEntitiesByEntityIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     for entity_id in LOADED_ENTITY_IDS:
         flag_count = 0
         for flag in FLAGS:
@@ -255,7 +255,7 @@ def compare_find_interesting_entities_by_record_id(
     """Compare find_interesting_entities_by_record_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindInterestingEntitiesByRecordIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
         record_id = record.get("record_id", "")
@@ -279,7 +279,7 @@ def compare_find_network_by_entity_id(sz_abstract_factory: SzAbstractFactory):
     """Compare find_network_by_entity_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindNetworkByEntityIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     max_degrees = 5
     build_out_degrees = 5
     build_out_max_entities = 5
@@ -315,7 +315,7 @@ def compare_find_network_by_record_id(sz_abstract_factory: SzAbstractFactory):
     """Compare find_network_by_record_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindNetworkByRecordIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     max_degrees = 5
     build_out_degrees = 5
     build_out_max_entities = 5
@@ -363,7 +363,7 @@ def compare_find_path_by_entity_id(sz_abstract_factory: SzAbstractFactory):
     """Compare find_path_by_entity_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindPathByEntityIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     max_degrees = 5
     avoid_entity_ids = None
     required_data_sources = None
@@ -390,7 +390,7 @@ def compare_find_path_by_record_id(sz_abstract_factory: SzAbstractFactory):
     """Compare find_path_by_record_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineFindPathByRecordIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
     max_degrees = 5
     avoid_record_keys = None
     required_data_sources = None
@@ -426,7 +426,7 @@ def compare_get_entity_by_entity_id(sz_abstract_factory: SzAbstractFactory):
     """Compare get_entity_by_entity_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineGetEntityByEntityIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for entity_id in LOADED_ENTITY_IDS:
         flag_count = 0
@@ -442,7 +442,7 @@ def compare_get_entity_by_record_id(sz_abstract_factory: SzAbstractFactory):
     """Compare get_entity_by_record_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineGetEntityByRecordIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
@@ -467,7 +467,7 @@ def compare_get_feature(sz_abstract_factory: SzAbstractFactory):
     sz_diagnostic = sz_abstract_factory.create_diagnostic()
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzDiagnosticGetFeatureResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     # Extract feature IDs.
 
@@ -504,7 +504,7 @@ def compare_get_record(sz_abstract_factory: SzAbstractFactory):
     """Compare get_record."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineGetRecordResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
@@ -528,7 +528,7 @@ def compare_get_record_preview(sz_abstract_factory: SzAbstractFactory):
     """Compare get_record_preview."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineGetRecordPreviewResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record_dict in LOADED_RECORD_KEYS:
 
@@ -561,7 +561,7 @@ def compare_get_virtual_entity_by_record_id(sz_abstract_factory: SzAbstractFacto
     """Compare get_virtual_entity_by_record_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineGetVirtualEntityByRecordIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
@@ -599,7 +599,7 @@ def compare_how_entity_by_entity_id(sz_abstract_factory: SzAbstractFactory):
     """Compare how_entity_by_entity_id."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineHowEntityByEntityIdResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for entity_id in LOADED_ENTITY_IDS:
         flag_count = 0
@@ -623,7 +623,7 @@ def compare_redo(sz_abstract_factory: SzAbstractFactory):
     # Get all redo records.
 
     title = "SzEngineGetRedoRecordResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     redo_records = []
     redo_record_count = 0
@@ -661,7 +661,7 @@ def compare_reevaluate_entity(sz_abstract_factory: SzAbstractFactory):
     """Compare reevaluate_entity."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineReevaluateEntityResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for entity_id in LOADED_ENTITY_IDS:
         flag_count = 0
@@ -680,7 +680,7 @@ def compare_reevaluate_record(sz_abstract_factory: SzAbstractFactory):
     """Compare reevaluate_record."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineReevaluateRecordResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
@@ -706,7 +706,7 @@ def compare_search_by_attributes(sz_abstract_factory: SzAbstractFactory):
     """Compare search_by_attributes."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineSearchByAttributesResponse"
-    test_cases = []
+    test_cases = ["{}"]
     search_profile = ""
 
     search_record_count = 0
@@ -794,7 +794,7 @@ def compare_static_method_signatures(sz_abstract_factory: SzAbstractFactory):
 
     for testcase in testcases:
         response = eval(testcase.get("testcase", ""))
-        output_file(f"{testcase.get('response')}", [response])
+        output_file(f"{testcase.get('response')}", ["{}", response])
 
 
 # -----------------------------------------------------------------------------
@@ -806,7 +806,7 @@ def compare_why_entities(sz_abstract_factory: SzAbstractFactory):
     """Compare why_entities."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineWhyEntitiesResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for entity_id in LOADED_ENTITY_IDS:
         entity_id_2 = LOADED_ENTITY_IDS[random.randint(0, FLAGS_LEN - 1)]
@@ -828,7 +828,7 @@ def compare_why_record_in_entity(sz_abstract_factory: SzAbstractFactory):
     """Compare why_record_in_entity."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineWhyRecordInEntityResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
         data_source = record.get("data_source", "")
@@ -851,7 +851,7 @@ def compare_why_records(sz_abstract_factory: SzAbstractFactory):
     """Compare why_records."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineWhyRecordsResponse"
-    test_cases = []
+    test_cases = ["{}"]
 
     for record in LOADED_RECORD_KEYS:
 
@@ -886,7 +886,7 @@ def compare_why_search(sz_abstract_factory: SzAbstractFactory):
     """Compare why_search."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineWhySearchResponse"
-    test_cases = []
+    test_cases = ["{}"]
     search_profile = ""
 
     for entity_id in LOADED_ENTITY_IDS:
@@ -914,7 +914,7 @@ def delete_records(sz_abstract_factory: SzAbstractFactory):
     """Compare delete_record."""
     sz_engine = sz_abstract_factory.create_engine()
     title = "SzEngineDeleteRecordResponse"
-    test_cases = []
+    test_cases = ["{}"]
     record_count = 0
     for record in LOADED_RECORD_KEYS:
         record_count += 1

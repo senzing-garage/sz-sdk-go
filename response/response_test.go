@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	truncator "github.com/aquilax/truncate"
@@ -139,10 +138,6 @@ func TestSzConfigUnregisterDataSource(test *testing.T) {
 
 	for scanner.Scan() {
 		jsonString := scanner.Text()
-		if len(strings.TrimSpace(jsonString)) == 0 {
-			continue
-		}
-
 		result, err := response.SzConfigUnregisterDataSource(ctx, jsonString)
 		require.NoError(test, err)
 		printActual(test, result)
@@ -163,7 +158,7 @@ func TestSzConfigManagerGetConfigRegistry(test *testing.T) {
 
 	for scanner.Scan() {
 		jsonString := scanner.Text()
-		result, err := response.SzConfigGetDataSourceRegistry(ctx, jsonString)
+		result, err := response.SzConfigManagerGetConfigRegistry(ctx, jsonString)
 		require.NoError(test, err)
 		printActual(test, result)
 	}
@@ -242,7 +237,7 @@ func TestSzEngineDeleteRecord(test *testing.T) {
 
 	for scanner.Scan() {
 		jsonString := scanner.Text()
-		result, err := response.SzDiagnosticGetFeature(ctx, jsonString)
+		result, err := response.SzEngineDeleteRecord(ctx, jsonString)
 		require.NoError(test, err)
 		printActual(test, result)
 	}
