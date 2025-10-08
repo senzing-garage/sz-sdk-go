@@ -16,8 +16,8 @@ github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2/go.mod h1:iKH
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
-github.com/senzing-garage/sz-sdk-json-type-definition v0.2.15 h1:y8Wf13DcIQwPaxb23r4JmyBBBr5QDmwzrLkK0owpTC4=
-github.com/senzing-garage/sz-sdk-json-type-definition v0.2.15/go.mod h1:7Qb78wLSa+GF8QJoaV8e9TbSSEupz5TJalwT1E7peL0=
+github.com/senzing-garage/sz-sdk-json-type-definition v0.2.16 h1:aDXhLJb/yoAfi9PA73b1lxQD8IhdTZEGqLi6TzIX2Os=
+github.com/senzing-garage/sz-sdk-json-type-definition v0.2.16/go.mod h1:ZvMbK8luojLJiW03FLXl/RVz1hIvKUo3PLNGuBLoPhs=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
