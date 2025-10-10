@@ -128,24 +128,6 @@ func TestSzConfigRegisterDataSource(test *testing.T) {
 	require.NoError(test, scanner.Err())
 }
 
-func TestSzConfigUnregisterDataSource(test *testing.T) {
-	test.Parallel()
-
-	ctx := context.TODO()
-
-	scanner, file := createScanner("SzConfigUnregisterDataSourceResponse.jsonl")
-	defer closeFile(test, file)
-
-	for scanner.Scan() {
-		jsonString := scanner.Text()
-		result, err := response.SzConfigUnregisterDataSource(ctx, jsonString)
-		require.NoError(test, err)
-		printActual(test, result)
-	}
-
-	require.NoError(test, scanner.Err())
-}
-
 // --- ConfigManager ----------------------------------------------------------
 
 func TestSzConfigManagerGetConfigRegistry(test *testing.T) {

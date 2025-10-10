@@ -1,2 +1,2 @@
+{"dataStores": [{"id": "CORE", "location": "/tmp/sqlite/G2C.db", "type": "sqlite3"}]}
 {}
-{"dataStores":[{"id":"CORE","type":"sqlite3","location":"/tmp/sqlite/G2C.db"}]}

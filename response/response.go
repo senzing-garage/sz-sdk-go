@@ -65,24 +65,6 @@ func SzConfigRegisterDataSource(
 	return result, err
 }
 
-func SzConfigUnregisterDataSource(
-	ctx context.Context,
-	jsonString string,
-) (*typedef.SzConfigUnregisterDataSourceResponse, error) {
-	_ = ctx
-
-	var err error
-
-	result := &typedef.SzConfigUnregisterDataSourceResponse{} //exhaustruct:ignore
-
-	err = json.Unmarshal([]byte(jsonString), result)
-	if err != nil {
-		err = fmt.Errorf("SzConfigUnregisterDataSource cannot unmarshal %s: %w", jsonString, err)
-	}
-
-	return result, err
-}
-
 // --- ConfigManager ----------------------------------------------------------
 
 func SzConfigManagerGetConfigRegistry(
