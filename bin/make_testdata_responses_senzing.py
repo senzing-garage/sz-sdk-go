@@ -7,15 +7,27 @@ For more information, visit https://jsontypedef.com/docs/python-codegen/
 """
 
 import json
+import logging
 import os
 import pathlib
 import random
 
+from senzing import SzAbstractFactory, SzEngineFlags, SzError
 from senzing_core import SzAbstractFactoryCore
 
-from senzing import SzAbstractFactory, SzEngineFlags, SzError
+# Logging
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 # Global variables.
+
+CURRENT_PATH = pathlib.Path(__file__).parent.resolve()
+TESTDATA_DIRECTORY = os.path.abspath(f"{CURRENT_PATH}/../testdata")
+OUTPUT_DIRECTORY = f"{TESTDATA_DIRECTORY}/responses_senzing"
+TRUTHSETS_DIRECTORY = f"{TESTDATA_DIRECTORY}/truthsets"
 
 DEBUG = 0
 HR_START = ">" * 80
@@ -101,7 +113,6 @@ FLAGS = [
 
 FLAGS_LEN = len(FLAGS)
 
-
 SEARCH_RECORDS = [
     {
         "NAME_FULL": "Susan Moony",
@@ -146,10 +157,9 @@ def add_records(sz_abstract_factory: SzAbstractFactory):
         "watchlist.jsonl",
     ]
 
-    current_path = pathlib.Path(__file__).parent.resolve()
     test_count = 0
     for filename in filenames:
-        file_path = os.path.abspath(f"{current_path}/../testdata/truthsets/{filename}")
+        file_path = f"{TRUTHSETS_DIRECTORY}/{filename}"
         with open(file_path, "r", encoding="utf-8") as input_file:
             for line in input_file:
                 line_as_dict = json.loads(line)
@@ -948,7 +958,7 @@ def create_sz_abstract_factory() -> SzAbstractFactory:
     try:
         sz_abstract_factory = SzAbstractFactoryCore(instance_name, settings)
     except SzError as err:
-        print(f"\nERROR: {err}\n")
+        logger.error("%s", err)
 
     return sz_abstract_factory
 
@@ -956,7 +966,7 @@ def create_sz_abstract_factory() -> SzAbstractFactory:
 def debug(level, message):
     """If appropriate, print debug statement."""
     if DEBUG >= level:
-        print(message)
+        logger.debug(message)
 
 
 def error_message(test_name, json_path, message, schema, fragment):
@@ -1019,6 +1029,13 @@ def is_json_subset(subset_json, full_json):
     return subset_json == full_json
 
 
+def normalize_files(directory):
+    """Deduplicate and sort JSON lines."""
+    for root, _, files in os.walk(directory):
+        for file in files:
+            remove_duplicate_lines(f"{root}/{file}")
+
+
 def output(indentation, message):
     """Create an indented message."""
     print(f"{'    ' * indentation}{message}")
@@ -1026,20 +1043,48 @@ def output(indentation, message):
 
 def output_file(filename, response):
     """Write response to a file."""
-    current_path = pathlib.Path(__file__).parent.resolve()
-    absolute_filename = os.path.abspath(
-        f"{current_path}/../testdata/responses_senzing/{filename}.jsonl"
-    )
-    with open(absolute_filename, "w", encoding="utf-8") as file:
+    with open(f"{OUTPUT_DIRECTORY}/{filename}.jsonl", "w", encoding="utf-8") as file:
         for line in response:
             file.write(f"{line}\n")
 
 
 def path_to_testdata(filename: str) -> str:
     """Determine the path to the test data."""
-    current_path = pathlib.Path(__file__).parent.resolve()
-    result = os.path.abspath(f"{current_path}/testdata/{filename}")
+    result = f"{TESTDATA_DIRECTORY}/{filename}"
     return result
+
+
+def remove_duplicate_lines(input_filepath, output_filepath=None):
+    """
+    Removes duplicate lines from a text file.
+
+    Args:
+        input_filepath (str): The path to the input file.
+        output_filepath (str, optional): The path to the output file.
+        If None, the input file will be overwritten.
+    """
+    unique_lines = set()
+    try:
+        with open(input_filepath, "r", encoding="utf-8") as infile:
+            for line in infile:
+                line = line.strip()
+                if len(line) > 0:
+                    line_as_dict = json.loads(line)
+                    unique_lines.add(json.dumps(line_as_dict, sort_keys=True))
+    except FileNotFoundError:
+        logger.warning("Error: Input file '%s' not found.", input_filepath)
+        return
+
+    if output_filepath is None:
+        output_filepath = input_filepath
+
+    try:
+        with open(output_filepath, "w", encoding="utf-8") as outfile:
+            for line in sorted(list(unique_lines)):
+                outfile.write(f"{line}\n")
+        logger.debug("Duplicates removed in '%s'.", output_filepath)
+    except IOError:
+        logger.error("Error: Could not write to output file '%s'.", output_filepath)
 
 
 def set_debug(needle, haystack):
@@ -1058,6 +1103,8 @@ def set_debug(needle, haystack):
 
 if __name__ == "__main__":
 
+    logger.info("Begin %s", os.path.basename(__file__))
+
     # Create SzAbstractFactory.
 
     the_sz_abstract_factory = create_sz_abstract_factory()
@@ -1075,3 +1122,11 @@ if __name__ == "__main__":
     # Delete test data.
 
     delete_records(the_sz_abstract_factory)
+
+    # Deduplicate and organize output files.
+
+    normalize_files(OUTPUT_DIRECTORY)
+
+    # Epilog.
+
+    logger.info("End   %s", os.path.basename(__file__))
