@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 -
 
+## [0.15.10] - 2025-10-21
+
+### Deleted in 0.15.10
+
+- SzConfigRegisterDataSource
+- SzConfigManagerCreateConfig
+
 ## [0.15.9] - 2025-07-17
 
 ### Added in 0.15.9
