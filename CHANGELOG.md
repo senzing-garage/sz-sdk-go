@@ -195,7 +195,7 @@ This project adheres to [Semantic Versioning].
 ### Changed in 0.13.0
 
 - `senzing` migrated to `response`
-- `sz` migrated to  `senzing`
+- `sz` migrated to `senzing`
 - `bin/generate_response_response_test.py` modified for `response`
 - Renamed variable to Go naming standards (e.g. `ID`, `JSON`, camelCase)
 - Changes to pass new battery of GitHub action tests
@@ -446,7 +446,7 @@ This project adheres to [Semantic Versioning].
 
 ### Changed in 0.4.0
 
-- Major refactor.  Now g2-sdk-go only contains interface information, no implementation
+- Major refactor. Now g2-sdk-go only contains interface information, no implementation
 - See g2-sdk-go-base for an implementation
 
 ## [0.3.1] - 2023-02-09
@@ -482,7 +482,7 @@ This project adheres to [Semantic Versioning].
 ### Changed in 0.2.4
 
 - Make getLastException(), getLastExceptionCode(), and clearLastException() private
-- Added code to support *goroutines*
+- Added code to support _goroutines_
 
 ## [0.2.3] - 2022-12-08
 
