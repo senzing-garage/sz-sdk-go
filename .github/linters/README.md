@@ -24,14 +24,12 @@
   - [jscpd configuration]
   - Example:
 
-      ```json
-      {
-      "ignore": [
-          "**/*.go,**/go-test*.yaml"
-      ],
+    ```json
+    {
+      "ignore": ["**/*.go,**/go-test*.yaml"],
       "threshold": 10
-      }
-      ```
+    }
+    ```
 
 ## .yaml-lint.yml
 
@@ -40,7 +38,7 @@
 - [yaml-lint]
   - [yaml-lint configuration]
 
-[.checkov.yaml]:  .checkov.yaml
+[.checkov.yaml]: .checkov.yaml
 [.golangci.yaml]: .golangci.yaml
 [.jscpd.json]: .jscpd.json
 [.yaml-lint.yml]: .yaml-lint.yml
