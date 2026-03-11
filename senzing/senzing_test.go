@@ -223,8 +223,8 @@ var testCases = []struct {
 		expected: 0x0000010000000000,
 	},
 	{ // 42
-		name:     "Bit42",
-		actual:   senzing.Bit42,
+		name:     "SzIncludeFeatureHashes",
+		actual:   senzing.SzIncludeFeatureHashes,
 		expected: 0x0000020000000000,
 	},
 	{ // 43

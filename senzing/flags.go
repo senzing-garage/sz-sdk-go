@@ -88,28 +88,28 @@ const (
 
 	/* Reserved.  */
 
-	Bit41 // 40
-	Bit42 // 41
-	Bit43 // 42
-	Bit44 // 43
-	Bit45 // 44
-	Bit46 // 45
-	Bit47 // 46
-	Bit48 // 47
-	Bit49 // 48
-	Bit50 // 49
-	Bit51 // 50
-	Bit52 // 51
-	Bit53 // 52
-	Bit54 // 53
-	Bit55 // 54
-	Bit56 // 55
-	Bit57 // 56
-	Bit58 // 57
-	Bit59 // 58
-	Bit60 // 59
-	Bit61 // 60
-	Bit62 // 61
+	Bit41                  // 40
+	SzIncludeFeatureHashes // 41 Include feature hashes
+	Bit43                  // 42
+	Bit44                  // 43
+	Bit45                  // 44
+	Bit46                  // 45
+	Bit47                  // 46
+	Bit48                  // 47
+	Bit49                  // 48
+	Bit50                  // 49
+	Bit51                  // 50
+	Bit52                  // 51
+	Bit53                  // 52
+	Bit54                  // 53
+	Bit55                  // 54
+	Bit56                  // 55
+	Bit57                  // 56
+	Bit58                  // 57
+	Bit59                  // 58
+	Bit60                  // 59
+	Bit61                  // 60
+	Bit62                  // 61
 
 	/* Reserved for use by SDKs. */
 
