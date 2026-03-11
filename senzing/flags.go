@@ -89,7 +89,7 @@ const (
 	/* Reserved.  */
 
 	Bit41 // 40
-	Bit42 // 41
+	SzIncludeFeatureHashes // 41 Include feature hashes
 	Bit43 // 42
 	Bit44 // 43
 	Bit45 // 44
