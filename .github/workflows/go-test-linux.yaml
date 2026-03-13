@@ -51,7 +51,7 @@ jobs:
         env:
           SENZING_SDK_VERSION: ${{ matrix.senzingsdk-version }}
         run: |
-          go test -json -v -p 1 -coverprofile=./cover-${SENZING_SDK_VERSION}.out -covermode=atomic -coverpkg=./... ./...  2>&1 | tee "/tmp/gotest-${SENZING_SDK_VERSION}.log" | gotestfmt
+          go test -json -v -p 1 -coverprofile="./cover-${SENZING_SDK_VERSION}.out" -covermode=atomic -coverpkg=./... ./...  2>&1 | tee "/tmp/gotest-${SENZING_SDK_VERSION}.log" | gotestfmt
 
       - name: Store coverage file
         uses: actions/upload-artifact@v6
