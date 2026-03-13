@@ -9,10 +9,17 @@ concurrency:
 permissions: {}
 
 jobs:
+
+  sdk-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      senzingsdk-versions: ${{ steps.cfg.outputs.senzingsdk-versions }}
+    steps:
+      - id: cfg
+        uses: senzing-factory/build-resources/sdk-versions@v4
   go-test-linux:
     name: "Go test with Senzing: ${{ matrix.senzingsdk-version }}; OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
-    outputs:
-      status: ${{ job.status }}
+    needs: sdk-versions
     permissions:
       contents: read
     runs-on: ${{ matrix.os }}
@@ -21,7 +28,7 @@ jobs:
       matrix:
         go: ["1.26"]
         os: [ubuntu-latest]
-        senzingsdk-version: [staging-v4]
+        senzingsdk-version: ${{ fromJSON(needs.sdk-versions.outputs.senzingsdk-versions) }}
     timeout-minutes: 30
 
     steps:
@@ -69,10 +76,10 @@ jobs:
 
   slack-notification:
     needs: [go-test-linux]
-    if: ${{ always() && contains(fromJSON('["failure", "cancelled"]'), needs.go-test-linux.outputs.status ) && github.ref_name == github.event.repository.default_branch }}
+    if: ${{ always() && contains(fromJSON('["failure", "cancelled"]'), needs.go-test-linux.result ) && github.ref_name == github.event.repository.default_branch }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
     uses: senzing-factory/build-resources/.github/workflows/build-failure-slack-notification.yaml@v4
     with:
-      job-status: ${{ needs.go-test-linux.outputs.status }}
+      job-status: ${{ needs.go-test-linux.result }}
