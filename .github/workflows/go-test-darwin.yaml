@@ -9,17 +9,8 @@ concurrency:
 permissions: {}
 
 jobs:
-  sdk-versions:
-    runs-on: ubuntu-latest
-    outputs:
-      senzingsdk-versions: ${{ steps.cfg.outputs.senzingsdk-versions }}
-    steps:
-      - id: cfg
-        uses: senzing-factory/build-resources/sdk-versions@v4
-
   go-test-darwin:
-    name: "Go test with Senzing: ${{ matrix.senzingsdk-version }}; OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
-    needs: sdk-versions
+    name: "Go test with OS: ${{ matrix.os }}; Go: ${{ matrix.go }}"
     permissions:
       contents: read
     runs-on: ${{ matrix.os }}
@@ -28,7 +19,6 @@ jobs:
       matrix:
         go: ["1.26"]
         os: [macos-latest]
-        senzingsdk-version: ${{ fromJSON(needs.sdk-versions.outputs.senzingsdk-versions) }}
     timeout-minutes: 30
 
     steps:
@@ -48,23 +38,21 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run go test
-        env:
-          SENZING_SDK_VERSION: ${{ matrix.senzingsdk-version }}
         run: |
-          go test -json -v -p 1 -coverprofile="./cover-${SENZING_SDK_VERSION}.out" -covermode=atomic -coverpkg=./... ./...  2>&1 | tee "/tmp/gotest-${SENZING_SDK_VERSION}.log" | gotestfmt
+          go test -json -v -p 1 -coverprofile=./cover.out -covermode=atomic -coverpkg=./... ./...  2>&1 | tee /tmp/gotest.log | gotestfmt
 
       - name: Store coverage file
         uses: actions/upload-artifact@v6
         with:
-          name: "cover-${{ matrix.senzingsdk-version }}.out"
-          path: "./cover-${{ matrix.senzingsdk-version }}.out"
+          name: cover.out
+          path: ./cover.out
 
       - name: Upload test log
         uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: "test-log-${{ matrix.senzingsdk-version }}"
-          path: "/tmp/gotest-${{ matrix.senzingsdk-version }}.log"
+          name: test-log
+          path: /tmp/gotest.log
           if-no-files-found: error
 
   coverage:
@@ -75,4 +63,3 @@ jobs:
     uses: senzing-factory/build-resources/.github/workflows/go-coverage.yaml@v4
     with:
       coverage-config: ./.github/coverage/testcoverage.yaml
-      profile: "cover-production-v4.out,cover-staging-v4.out"
