@@ -9,6 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const testMessage = "Test message"
+
 var testCases = []struct {
 	expectedCode    int
 	expectedMessage string
@@ -35,7 +37,7 @@ var testCases = []struct {
             ]
         }`,
 		expectedCode:    5,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSz,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -50,7 +52,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    7,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzBadInput,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzBadInputError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -64,7 +66,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    10,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzRetryable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzRetryTimeoutExceededError, szerror.SzRetryableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -78,7 +80,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    14,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzConfiguration,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzConfigurationError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -104,7 +106,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    33,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzBadInput,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzNotFoundError, szerror.SzBadInputError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -118,7 +120,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    48,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzUnrecoverable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzNotInitializedError, szerror.SzUnrecoverableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
@@ -132,7 +134,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    54,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzUnrecoverable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzDatabaseError, szerror.SzUnrecoverableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
@@ -146,7 +148,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    87,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzUnrecoverable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzUnhandledError, szerror.SzUnrecoverableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
@@ -160,7 +162,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    999,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzUnrecoverable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzLicenseError, szerror.SzUnrecoverableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzBadInputError},
@@ -174,7 +176,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    1006,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzRetryable,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzDatabaseConnectionLostError, szerror.SzRetryableError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
@@ -241,7 +243,7 @@ var testCases = []struct {
             }]
         }`,
 		expectedCode:    1019,
-		expectedMessage: "Test message",
+		expectedMessage: testMessage,
 		expectedError:   szerror.ErrSzConfiguration,
 		expectedTypes:   []szerror.TypeIDs{szerror.SzConfigurationError},
 		falseTypes:      []szerror.TypeIDs{szerror.SzUnrecoverableError},
