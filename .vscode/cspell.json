@@ -70,7 +70,8 @@
     "venv",
     "watchlist",
     "wrapcheck",
-    "Yamanaka"
+    "Yamanaka",
+    "zizmor"
   ],
   "ignorePaths": [
     ".dockerignore",
