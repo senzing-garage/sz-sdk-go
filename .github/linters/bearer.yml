@@ -1,2 +1,7 @@
 rule:
-  skip-rule: []
+  # Every finding for these rules is in development-only code, not in a
+  # shipped package: bin/*.py generate and verify test data from local files,
+  # and use `random` only to sample records for that test data.
+  skip-rule:
+    - python_lang_path_traversal
+    - python_lang_weak_random
