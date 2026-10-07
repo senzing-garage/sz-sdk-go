@@ -4,6 +4,10 @@
 
 include makefiles/osdetect.mk
 
+# Tool versions, shared across OS-specific makefiles.
+
+include makefiles/versions.mk
+
 # -----------------------------------------------------------------------------
 # Variables
 # -----------------------------------------------------------------------------
@@ -71,6 +75,7 @@ hello-world: hello-world-osarch-specific
 
 .PHONY: dependencies-for-development
 dependencies-for-development: venv dependencies-for-development-osarch-specific download-truthsets
+	@go install github.com/bombsimon/wsl/v5/cmd/wsl@latest
 	@go install github.com/daixiang0/gci@latest
 	@go install github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt@latest
 	@go install github.com/vladopajic/go-test-coverage/v2@latest
@@ -148,6 +153,10 @@ run: run-osarch-specific
 
 .PHONY: test
 test: test-osarch-specific
+
+
+.PHONY: test-verbose
+test-verbose: test-verbose-osarch-specific
 
 # -----------------------------------------------------------------------------
 # Coverage

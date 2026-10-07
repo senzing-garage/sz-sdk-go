@@ -1,4 +1,4 @@
-name: Govulncheck
+name: Bearer
 
 on:
   pull_request:
@@ -11,14 +11,10 @@ concurrency:
 permissions: {}
 
 jobs:
-  govulncheck:
+  rule_check:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        go: ["1.27"]
     timeout-minutes: 10
 
     steps:
@@ -27,11 +23,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup go
-        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - name: Bearer
+        uses: bearer/bearer-action@828eeb928ce2f4a7ca5ed57fb8b59508cb8c79bc # v2
         with:
-          go-version: ${{ matrix.go }}
-
-      - uses: golang/govulncheck-action@032d45514ae346b1db93c04b0c90b841c370344f # v1.1.0
-        with:
-          go-version-input: ${{ matrix.go }}
+          config-file: .github/linters/bearer.yml

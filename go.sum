@@ -1,7 +1,7 @@
 github.com/aquilax/truncate v1.0.1 h1:+hqGSRxnQ0F5wdPCGbi1XW4ipQ6vzpli23V9Rd+I/mc=
 github.com/aquilax/truncate v1.0.1/go.mod h1:BeMESIDMlvlS3bmg4BVvBbbZUNwWtS8uzYPAKXwwhLw=
-github.com/senzing-garage/sz-sdk-json-type-definition v0.2.19 h1:gb7oPp2jWqO9ZOlPyTWF64jbjwc961JtyMTc8IdcTvM=
-github.com/senzing-garage/sz-sdk-json-type-definition v0.2.19/go.mod h1:ASYooxIF68dFeV1k0077NLOtnp52wOPFABzUjzXmfeo=
+github.com/senzing-garage/sz-sdk-json-type-definition v0.4.0 h1:/2FjKBicJbMxXOM7RtxrWFQQWPiMGv9xdkiG2Xi3oQc=
+github.com/senzing-garage/sz-sdk-json-type-definition v0.4.0/go.mod h1:J1uC/ZqA34/CMrFQWQr2uiJyZ9TbAxoetb5DzORp8go=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
