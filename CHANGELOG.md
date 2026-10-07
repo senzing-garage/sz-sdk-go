@@ -9,6 +9,15 @@ This project adheres to [Semantic Versioning].
 
 -
 
+## [0.16.0] - 2026-10-07
+
+### Changed in 0.16.0
+
+- Update to Go 1.27.1
+- Sync repository setup files with [template-go] `v0.5.0`
+- Pin GitHub Actions to commit SHAs and golangci-lint to a fixed version
+- Update dependencies
+
 ## [0.15.15] - 2026-08-12
 
 ### Changed in 0.15.15
